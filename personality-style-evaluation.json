@@ -1,0 +1,1439 @@
+{
+  "setup_run": "First run excluded because the evaluation checker treated nested filters as a flat patch (up to 10 API calls). Production code was not at fault; corrected checker, saved raw synthetic outputs before assertions.",
+  "fixture": "One synthetic profile, three fictional jobs; all five personas reuse the same prior evidence components.",
+  "model": "gpt-5.4",
+  "profile": {
+    "query": "Ich suche eine Werkstudentenstelle für Datenanalyse und möchte Python und SQL praktisch anwenden.",
+    "skills": [
+      "Python",
+      "SQL",
+      "Git"
+    ],
+    "preferences": [
+      "konkrete Aufgaben",
+      "Lernen im Team"
+    ],
+    "cv_text": "Fiktives Testprofil: Bachelor Informatik, eigenes Python-Projekt zur Auswertung öffentlicher Daten. Grundkenntnisse SQL und Git.",
+    "filters": {
+      "employment_types": [
+        "werkstudent"
+      ],
+      "locations": [
+        "Nürnberg"
+      ],
+      "remote": [
+        "hybrid"
+      ],
+      "max_hours": 20
+    }
+  },
+  "persona": {
+    "persona_prompt": "Gesucht wird eine studentische Datenanalyse-Stelle mit belegten Python-/SQL-Aufgaben. Lernerfahrung und klare Aufgaben sind gewünscht; vertiefte Berufserfahrung ist nicht belegt.",
+    "retrieval_query": "Werkstudent Datenanalyse Python SQL",
+    "opening_message": "Python und SQL bilden den Ausgangspunkt der Suche."
+  },
+  "candidates": [
+    {
+      "job": {
+        "id": "style-a",
+        "title": "Werkstudent Datenprodukt",
+        "company": "Datenatelier (fiktiv)",
+        "employment_types": [
+          "werkstudent"
+        ],
+        "location": "Nürnberg",
+        "remote": "hybrid",
+        "hours_min": 16,
+        "hours_max": 20,
+        "requirements": "Studium Informatik oder vergleichbar; Python- und SQL-Grundkenntnisse. Git ist hilfreich.",
+        "tasks": "Du analysierst mit Python und SQL Nutzungsdaten, baust kleine Prototypen für ein Produktteam und besprichst Ergebnisse mit einer festen Fachbetreuung. Der Umfang eigener Produktentscheidungen wird nicht genannt.",
+        "benefits": "Wöchentlicher Austausch mit einer Fachbetreuung, hybride Arbeit, 16–20 Stunden.",
+        "description": "Fiktive Anzeige ausschließlich für die Stilevaluation. Du analysierst mit Python und SQL Nutzungsdaten, baust kleine Prototypen für ein Produktteam und besprichst Ergebnisse mit einer festen Fachbetreuung. Der Umfang eigener Produktentscheidungen wird nicht genannt. Wöchentlicher Austausch mit einer Fachbetreuung, hybride Arbeit, 16–20 Stunden."
+      },
+      "rrf_score": 0.03
+    },
+    {
+      "job": {
+        "id": "style-b",
+        "title": "Werkstudent Datenqualität",
+        "company": "KlarData (fiktiv)",
+        "employment_types": [
+          "werkstudent"
+        ],
+        "location": "Nürnberg",
+        "remote": "hybrid",
+        "hours_min": 16,
+        "hours_max": 20,
+        "requirements": "Studium Informatik oder vergleichbar; Python- und SQL-Grundkenntnisse. Git ist hilfreich.",
+        "tasks": "Du prüfst mit Python und SQL Datenqualität, dokumentierst nachvollziehbare Prüfschritte und verbesserst bestehende Auswertungen nach einem klaren Aufgabenplan.",
+        "benefits": "Hybride Arbeit, 16–20 Stunden; Umfang von Mentoring und Weiterbildung nicht genannt.",
+        "description": "Fiktive Anzeige ausschließlich für die Stilevaluation. Du prüfst mit Python und SQL Datenqualität, dokumentierst nachvollziehbare Prüfschritte und verbesserst bestehende Auswertungen nach einem klaren Aufgabenplan. Hybride Arbeit, 16–20 Stunden; Umfang von Mentoring und Weiterbildung nicht genannt."
+      },
+      "rrf_score": 0.03
+    },
+    {
+      "job": {
+        "id": "style-c",
+        "title": "Werkstudent Analytics",
+        "company": "LernWerk (fiktiv)",
+        "employment_types": [
+          "werkstudent"
+        ],
+        "location": "Nürnberg",
+        "remote": "hybrid",
+        "hours_min": 16,
+        "hours_max": 20,
+        "requirements": "Studium Informatik oder vergleichbar; Python- und SQL-Grundkenntnisse. Git ist hilfreich.",
+        "tasks": "Du erstellst Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen. Ergebnisse werden im Team gemeinsam besprochen.",
+        "benefits": "Ein benannter Mentor begleitet die Einarbeitung, wöchentliche fachliche Feedbacktermine, hybride Arbeit, 16–20 Stunden.",
+        "description": "Fiktive Anzeige ausschließlich für die Stilevaluation. Du erstellst Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen. Ergebnisse werden im Team gemeinsam besprochen. Ein benannter Mentor begleitet die Einarbeitung, wöchentliche fachliche Feedbacktermine, hybride Arbeit, 16–20 Stunden."
+      },
+      "rrf_score": 0.03
+    }
+  ],
+  "previous_round": {
+    "diana": {
+      "advisor": {
+        "preset": "diana"
+      },
+      "advisor_name": "DIANA-KI",
+      "search_message": "Alle drei Werkstudentenstellen passen fachlich solide zu deinem Profil, weil Python und SQL jeweils ausdrücklich in den Aufgaben vorkommen. Die Unterschiede liegen vor allem im Schwerpunkt: LernWerk beschreibt die stärkste Einarbeitung, KlarData die klarsten Arbeitsschritte und Datenatelier etwas mehr Prototypenbezug. Wenn du zwischen Mentoring und maximaler Aufgabenklarheit abwägen willst, kann ich dir die drei noch gezielt danach gegenüberstellen.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "reasons": [
+            "Python- und SQL-Analysen sind ausdrücklich Teil der Aufgaben; das passt direkt zu deinem Profil und zur gesuchten Datenanalyse-Praxis.",
+            "Die feste Fachbetreuung mit wöchentlichem Austausch stützt deinen Wunsch nach Lernen im Team.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen zu deinen weichen Präferenzen; eigener Produktspielraum bleibt offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "score": 84,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 7,
+            "learning": 6,
+            "innovation": 6,
+            "clarity": 6
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Analysen sind ausdrücklich Teil der Aufgaben; das passt direkt zu deinem Profil und zur gesuchten Datenanalyse-Praxis. Die feste Fachbetreuung mit wöchentlichem Austausch stützt deinen Wunsch nach Lernen im Team. Hybrid in Nürnberg und 16–20 Stunden passen zu deinen weichen Präferenzen; eigener Produktspielraum bleibt offen."
+        },
+        {
+          "job_id": "style-c",
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "reasons": [
+            "Python- und SQL-Auswertungen sind klar genannt; damit hast du mit deinen belegten Grundlagen eine passende fachliche Grundlage.",
+            "Mentor, Einarbeitung und wöchentliche Feedbacktermine stützen deinen Wunsch nach Lernen im Team besonders gut.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen; der Gestaltungsspielraum der Rolle bleibt offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "score": 83,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 7,
+            "learning": 6,
+            "innovation": 6,
+            "clarity": 6
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen sind klar genannt; damit hast du mit deinen belegten Grundlagen eine passende fachliche Grundlage. Mentor, Einarbeitung und wöchentliche Feedbacktermine stützen deinen Wunsch nach Lernen im Team besonders gut. Hybrid in Nürnberg und 16–20 Stunden passen; der Gestaltungsspielraum der Rolle bleibt offen."
+        },
+        {
+          "job_id": "style-b",
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "reasons": [
+            "Python- und SQL-Prüfungen der Datenqualität passen fachlich gut zu deinen belegten Grundlagen und zum Wunsch nach praktischer Anwendung.",
+            "Der klare Aufgabenplan und die dokumentierten Prüfschritte treffen deinen Wunsch nach konkreten Aufgaben.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen; Mentoring oder Weiterbildung sind nicht beschrieben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "score": 81,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 7,
+            "learning": 6,
+            "innovation": 6,
+            "clarity": 6
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Prüfungen der Datenqualität passen fachlich gut zu deinen belegten Grundlagen und zum Wunsch nach praktischer Anwendung. Der klare Aufgabenplan und die dokumentierten Prüfschritte treffen deinen Wunsch nach konkreten Aufgaben. Hybrid in Nürnberg und 16–20 Stunden passen; Mentoring oder Weiterbildung sind nicht beschrieben."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, Werkstudent Datenprodukt bei Datenatelier würde ich dir eher empfehlen: Python und SQL sind direkt Teil der Aufgaben, Git ist hilfreich, und die feste Fachbetreuung passt gut zu deinem Wunsch nach Lernen im Team. Auch hybrid in Nürnberg sowie 16–20 Stunden liegen nah an deinen Präferenzen. Vor einer Bewerbung solltest du noch klären, wie groß der Anteil Datenanalyse gegenüber Prototyping ist und wie viel eigener Produktspielraum die Rolle tatsächlich bietet.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "RerankingResult",
+          "reasoning": "medium",
+          "elapsed_seconds": 21.426,
+          "input_tokens": 4876,
+          "output_tokens": 1775
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 5.377,
+          "input_tokens": 5806,
+          "output_tokens": 389
+        }
+      ]
+    },
+    "steve": {
+      "advisor": {
+        "preset": "steve"
+      },
+      "advisor_name": "Steve-Jobs-KI",
+      "search_message": "Am stärksten wirken hier die Stellen, die Python und SQL nicht nur nennen, sondern in klare Aufgaben mit Betreuung übersetzen. Datenprodukt verbindet Analyse mit Prototypen fürs Produktteam, Analytics setzt den deutlichsten Lernrahmen mit Mentor und Feedback, Datenqualität punktet mit dem klarsten Aufgabenplan. Offen bleibt vor allem, wo du später wirklich mehr eigenen fachlichen Spielraum bekommst.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Python und SQL greifen hier direkt in echte Nutzungsdaten ein; kleine Prototypen fürs Produktteam schaffen einen klaren fachlichen Bezug.",
+            "Feste Fachbetreuung und 16–20 Stunden passen gut zu Lernen im Team und zur gewünschten Werkstudentenrolle.",
+            "Eigener Produktspielraum bleibt offen; der Umfang von Entscheidungen wird nicht genannt."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 83,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 5,
+            "learning": 5,
+            "innovation": 15,
+            "clarity": 0
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL greifen hier direkt in echte Nutzungsdaten ein; kleine Prototypen fürs Produktteam schaffen einen klaren fachlichen Bezug. Feste Fachbetreuung und 16–20 Stunden passen gut zu Lernen im Team und zur gewünschten Werkstudentenrolle. Eigener Produktspielraum bleibt offen; der Umfang von Entscheidungen wird nicht genannt."
+        },
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Python- und SQL-Auswertungen sind klar gesetzt; vorgegebene Fragestellungen machen den Einstieg fachlich sauber und greifbar.",
+            "Benannter Mentor und wöchentliche Feedbacktermine sind ein starker Beleg für Lernen im Team.",
+            "Eigener Gestaltungsspielraum bleibt unklar; die Anzeige betont vor allem vorgegebene Aufgaben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 81,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 5,
+            "learning": 5,
+            "innovation": 15,
+            "clarity": 0
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen sind klar gesetzt; vorgegebene Fragestellungen machen den Einstieg fachlich sauber und greifbar. Benannter Mentor und wöchentliche Feedbacktermine sind ein starker Beleg für Lernen im Team. Eigener Gestaltungsspielraum bleibt unklar; die Anzeige betont vor allem vorgegebene Aufgaben."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Python und SQL werden hier konkret für Datenqualität und bestehende Auswertungen eingesetzt; die Aufgaben sind klar und unmittelbar anschlussfähig.",
+            "Der klare Aufgabenplan passt stark zum Wunsch nach konkreten Aufgaben; hybrid und 16–20 Stunden treffen die Präferenzen ebenfalls.",
+            "Mentoring und Gestaltungsspielraum bleiben offen; dazu nennt die Anzeige keine belastbaren Angaben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 78,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 5,
+            "learning": 5,
+            "innovation": 15,
+            "clarity": 0
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL werden hier konkret für Datenqualität und bestehende Auswertungen eingesetzt; die Aufgaben sind klar und unmittelbar anschlussfähig. Der klare Aufgabenplan passt stark zum Wunsch nach konkreten Aufgaben; hybrid und 16–20 Stunden treffen die Präferenzen ebenfalls. Mentoring und Gestaltungsspielraum bleiben offen; dazu nennt die Anzeige keine belastbaren Angaben."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, die Stelle Werkstudent Datenprodukt bei Datenatelier würde ich dir empfehlen. Sie trifft deinen Kern sauber: Python und SQL an echten Nutzungsdaten, kleine Prototypen fürs Produktteam, dazu feste Fachbetreuung und 16–20 Stunden hybrid in Nürnberg.\n\nVor der Bewerbung solltest du drei Punkte klären: Wie frei sind die Prototypen fachlich wirklich gestaltet? Was genau heißt „feste Fachbetreuung“ im Alltag? Und mit welchen Datenquellen, Tools und Team-Schnittstellen arbeitest du konkret?",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 6.779,
+          "input_tokens": 4506,
+          "output_tokens": 487
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 4.652,
+          "input_tokens": 5933,
+          "output_tokens": 372
+        }
+      ]
+    },
+    "angela": {
+      "advisor": {
+        "preset": "angela"
+      },
+      "advisor_name": "Angela-Merkel-KI",
+      "search_message": "Alle drei Stellen passen fachlich, weil Python und SQL jeweils ausdrücklich Teil der Aufgaben sind. Wenn dir Lernbegleitung am wichtigsten ist, spricht die Stelle mit Mentor und wöchentlichen Feedbackterminen am klarsten dafür; wenn dir besonders ein klarer Aufgabenrahmen wichtig ist, wirkt die Datenqualitätsrolle am präzisesten beschrieben. Die produktnahe Rolle mit fester Fachbetreuung ist ebenfalls stimmig, lässt aber den Umfang eigener Entscheidungen offen.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Python und SQL sind hier unmittelbar für Nutzungsdatenanalysen vorgesehen; das trifft den gesuchten fachlichen Einsatz sehr genau.",
+            "Die feste Fachbetreuung und der wöchentliche Austausch sprechen für belegte Lernerfahrung im Team.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen zu deinen Präferenzen; der Umfang eigener Produktentscheidungen bleibt offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 85,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 8,
+            "learning": 2,
+            "innovation": 0,
+            "clarity": 15
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL sind hier unmittelbar für Nutzungsdatenanalysen vorgesehen; das trifft den gesuchten fachlichen Einsatz sehr genau. Die feste Fachbetreuung und der wöchentliche Austausch sprechen für belegte Lernerfahrung im Team. Hybrid in Nürnberg und 16–20 Stunden passen zu deinen Präferenzen; der Umfang eigener Produktentscheidungen bleibt offen."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Python und SQL werden hier konkret für Datenqualitätsprüfungen und Auswertungen eingesetzt; die Aufgaben sind klar und nachvollziehbar beschrieben.",
+            "Der klare Aufgabenplan und die dokumentierten Prüfschritte passen gut zum Wunsch nach konkreten Aufgaben.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen; Mentoring und Weiterbildung sind nicht näher angegeben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 85,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 8,
+            "learning": 2,
+            "innovation": 0,
+            "clarity": 15
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL werden hier konkret für Datenqualitätsprüfungen und Auswertungen eingesetzt; die Aufgaben sind klar und nachvollziehbar beschrieben. Der klare Aufgabenplan und die dokumentierten Prüfschritte passen gut zum Wunsch nach konkreten Aufgaben. Hybrid in Nürnberg und 16–20 Stunden passen; Mentoring und Weiterbildung sind nicht näher angegeben."
+        },
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen fachlich gut zu einem Einstieg in die Datenanalyse.",
+            "Benannter Mentor, wöchentliche Feedbacktermine und gemeinsame Teambesprechungen belegen die gewünschte Lernerfahrung besonders klar.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen zu deinen Präferenzen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 84,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 8,
+            "learning": 2,
+            "innovation": 0,
+            "clarity": 15
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen fachlich gut zu einem Einstieg in die Datenanalyse. Benannter Mentor, wöchentliche Feedbacktermine und gemeinsame Teambesprechungen belegen die gewünschte Lernerfahrung besonders klar. Hybrid in Nürnberg und 16–20 Stunden passen zu deinen Präferenzen."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, ich würde sie eher empfehlen. Python und SQL werden ausdrücklich praktisch eingesetzt, die 16–20 Stunden sowie hybrid in Nürnberg passen, und die feste Fachbetreuung spricht klar für Lernen im Team. Vor einer Bewerbung würde ich vor allem klären, wie konkret die Aufgaben im Alltag aussehen und wie viel eigener Gestaltungsspielraum im Produktteam tatsächlich vorgesehen ist.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 8.26,
+          "input_tokens": 4530,
+          "output_tokens": 563
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 3.625,
+          "input_tokens": 5969,
+          "output_tokens": 228
+        }
+      ]
+    },
+    "guenther": {
+      "advisor": {
+        "preset": "guenther"
+      },
+      "advisor_name": "Günther-Jauch-KI",
+      "search_message": "Für deinen Wunsch nach Datenanalyse mit Python und SQL sehen alle drei Stellen brauchbar aus, aber die Unterschiede liegen schön offen. Bei LernWerk fällt die Begleitung mit Mentor und festen Feedbackterminen besonders ins Gewicht, Datenatelier verbindet die Fachpassung mit klarer Betreuung, und bei KlarData sind die Aufgaben am klarsten beschrieben. Wenn du eher zwischen enger Lernbegleitung und besonders klar umrissenen Aufgaben abwägen willst, ist genau dort der entscheidende Unterschied.",
+      "rankings": [
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen direkt zu deinem Einstieg in Datenanalyse mit klaren Aufgaben.",
+            "Benannter Mentor, wöchentliche Feedbacktermine und gemeinsame Teambesprechungen sind ein sehr starker Lernpunkt.",
+            "Hybrid und 16–20 Stunden passen zu deinen Präferenzen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 87,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 3,
+            "learning": 17,
+            "innovation": 3,
+            "clarity": 2
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen direkt zu deinem Einstieg in Datenanalyse mit klaren Aufgaben. Benannter Mentor, wöchentliche Feedbacktermine und gemeinsame Teambesprechungen sind ein sehr starker Lernpunkt. Hybrid und 16–20 Stunden passen zu deinen Präferenzen."
+        },
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Python und SQL werden hier direkt für Nutzungsdaten und kleine Prototypen eingesetzt; das passt sehr konkret zu deinem Suchziel.",
+            "Die feste Fachbetreuung und der wöchentliche Austausch sprechen klar für gute Lernbegleitung im Team.",
+            "Hybrid und 16–20 Stunden passen zu deinen Präferenzen; wie viel eigener Produktspielraum dabei entsteht, bleibt offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 86,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 3,
+            "learning": 17,
+            "innovation": 3,
+            "clarity": 2
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL werden hier direkt für Nutzungsdaten und kleine Prototypen eingesetzt; das passt sehr konkret zu deinem Suchziel. Die feste Fachbetreuung und der wöchentliche Austausch sprechen klar für gute Lernbegleitung im Team. Hybrid und 16–20 Stunden passen zu deinen Präferenzen; wie viel eigener Produktspielraum dabei entsteht, bleibt offen."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Python und SQL werden hier praktisch für Datenqualität und Auswertungen eingesetzt; die Aufgaben sind dabei besonders klar beschrieben.",
+            "Der klare Aufgabenplan passt gut zu deinem Wunsch nach nachvollziehbaren, konkreten Tätigkeiten.",
+            "Hybrid und 16–20 Stunden passen; zum Umfang von Mentoring und Weiterbildung macht die Anzeige keine Angaben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 79,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 3,
+            "learning": 17,
+            "innovation": 3,
+            "clarity": 2
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL werden hier praktisch für Datenqualität und Auswertungen eingesetzt; die Aufgaben sind dabei besonders klar beschrieben. Der klare Aufgabenplan passt gut zu deinem Wunsch nach nachvollziehbaren, konkreten Tätigkeiten. Hybrid und 16–20 Stunden passen; zum Umfang von Mentoring und Weiterbildung macht die Anzeige keine Angaben."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, die Stelle Werkstudent Datenprodukt bei Datenatelier würde ich dir grundsätzlich empfehlen. Python und SQL werden dort direkt für Nutzungsdaten eingesetzt, kleine Prototypen passen gut zu deinem Suchziel, und die feste Fachbetreuung mit wöchentlichem Austausch spricht für gutes Lernen im Team. Vor einer Bewerbung würde ich vor allem klären, wie die Aufgaben zwischen Analyse und Prototyping verteilt sind, wie die Fachbetreuung im Alltag aussieht und wie viel eigener Produktspielraum du dabei tatsächlich hast.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 7.201,
+          "input_tokens": 4507,
+          "output_tokens": 588
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 4.665,
+          "input_tokens": 5942,
+          "output_tokens": 367
+        }
+      ]
+    },
+    "custom": {
+      "advisor": {
+        "mode": "custom",
+        "name": "Klartext",
+        "traits": [
+          "direkt",
+          "kritisch"
+        ],
+        "focus": "fachliche_tiefe",
+        "description": "Sprich nüchtern und knapp. Nenne zuerst die entscheidende offene Voraussetzung, dann die belegte Stärke und einen konkreten Prüfschritt. Keine rhetorischen Fragen."
+      },
+      "advisor_name": "Klartext-KI",
+      "search_message": "Die stärksten Optionen im vorhandenen Pool setzen Python und SQL konkret ein und machen die Aufgaben nachvollziehbar. Datenatelier verbindet das mit Prototyping und fester Fachbetreuung, LernWerk mit Mentor und engem Feedback, KlarData mit dem klarsten Aufgabenplan, aber ohne belegtes Mentoring. Prüfe als Nächstes, ob du eher betreute Einarbeitung oder etwas mehr fachliche Breite im Alltag willst.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Python- und SQL-Aufgaben sind klar belegt: Nutzungsdaten analysieren und kleine Prototypen im Produktteam bauen.",
+            "Die offene Voraussetzung ist fachliche Vertiefung über Grundkenntnisse hinaus; die Anzeige nennt dazu konkrete Praxisaufgaben, aber keinen höheren Erfahrungsanspruch.",
+            "Feste Fachbetreuung, hybrid und 16–20 Stunden passen zu den Lern- und Rahmenpräferenzen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 83,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 14,
+            "learning": 2,
+            "innovation": 2,
+            "clarity": 7
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Aufgaben sind klar belegt: Nutzungsdaten analysieren und kleine Prototypen im Produktteam bauen. Die offene Voraussetzung ist fachliche Vertiefung über Grundkenntnisse hinaus; die Anzeige nennt dazu konkrete Praxisaufgaben, aber keinen höheren Erfahrungsanspruch. Feste Fachbetreuung, hybrid und 16–20 Stunden passen zu den Lern- und Rahmenpräferenzen."
+        },
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Python- und SQL-Auswertungen sind klar belegt, aber die Aufgaben wirken fachlich etwas enger und stärker vorgegeben.",
+            "Die offene Voraussetzung ist fachliche Vertiefung über Grundkenntnisse hinaus; dafür spricht Teamfeedback, nicht jedoch breitere technische Verantwortung.",
+            "Mentor, wöchentliche Feedbacktermine, hybrid und 16–20 Stunden passen sehr gut zu Lernen im Team."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 82,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 14,
+            "learning": 2,
+            "innovation": 2,
+            "clarity": 7
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen sind klar belegt, aber die Aufgaben wirken fachlich etwas enger und stärker vorgegeben. Die offene Voraussetzung ist fachliche Vertiefung über Grundkenntnisse hinaus; dafür spricht Teamfeedback, nicht jedoch breitere technische Verantwortung. Mentor, wöchentliche Feedbacktermine, hybrid und 16–20 Stunden passen sehr gut zu Lernen im Team."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Python und SQL werden direkt für Datenqualitätsprüfungen und Auswertungen eingesetzt; die Aufgaben sind besonders klar beschrieben.",
+            "Die offene Voraussetzung ist fachliche Vertiefung über Grundkenntnisse hinaus; dazu nennt die Anzeige nur bestehende Auswertungen und keinen Mentor.",
+            "Hybrid und 16–20 Stunden passen; der Umfang von Mentoring und Weiterbildung bleibt ausdrücklich offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 81,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 14,
+            "learning": 2,
+            "innovation": 2,
+            "clarity": 7
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL werden direkt für Datenqualitätsprüfungen und Auswertungen eingesetzt; die Aufgaben sind besonders klar beschrieben. Die offene Voraussetzung ist fachliche Vertiefung über Grundkenntnisse hinaus; dazu nennt die Anzeige nur bestehende Auswertungen und keinen Mentor. Hybrid und 16–20 Stunden passen; der Umfang von Mentoring und Weiterbildung bleibt ausdrücklich offen."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, mit Vorbehalt. Die entscheidende offene Voraussetzung ist der nicht genannte Umfang eigener Produktentscheidungen; fachlich passt die Stelle sehr gut, weil Python und SQL konkret im Alltag eingesetzt werden und Fachbetreuung belegt ist. Vor der Bewerbung kläre vor allem, wie eigenständig du Analysen und Prototypen treiben sollst, welche Datenfragen typischerweise bearbeitet werden und wie die Fachbetreuung im Wochenalltag praktisch aussieht.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 8.284,
+          "input_tokens": 4099,
+          "output_tokens": 605
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 6.131,
+          "input_tokens": 5556,
+          "output_tokens": 419
+        }
+      ]
+    }
+  },
+  "limitations": "Single fixture, one sample per personality/path and iteration; not a systematic quality or latency benchmark. Previous round DIANA used medium fresh scoring; final round uses low cached explanations for every persona.",
+  "results": {
+    "angela": {
+      "advisor": {
+        "preset": "angela"
+      },
+      "advisor_name": "Angela-Merkel-KI",
+      "search_message": "Auffällig ist, dass alle drei Stellen Python und SQL konkret im Arbeitsalltag verankern. Die Stelle bei Datenatelier verbindet das mit fester Fachbetreuung, KlarData mit besonders klaren Aufgaben, und LernWerk mit dem stärksten belegten Mentoring. Wenn für Sie der Lernrahmen entscheidend ist, lohnt sich vor allem der genaue Blick auf Betreuung und Teamarbeit im Alltag.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Python und SQL sind hier unmittelbar Teil der Aufgaben, und die geforderten Grundkenntnisse sind im Profil belegt.",
+            "Die feste Fachbetreuung und der wöchentliche Austausch sprechen klar für den gewünschten Lernrahmen im Team.",
+            "Hybrid und 16–20 Stunden entsprechen der Präferenz; der Umfang eigener Produktentscheidungen bleibt offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 85,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 8,
+            "learning": 2,
+            "innovation": 0,
+            "clarity": 15
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL sind hier unmittelbar Teil der Aufgaben, und die geforderten Grundkenntnisse sind im Profil belegt. Die feste Fachbetreuung und der wöchentliche Austausch sprechen klar für den gewünschten Lernrahmen im Team. Hybrid und 16–20 Stunden entsprechen der Präferenz; der Umfang eigener Produktentscheidungen bleibt offen."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Python und SQL werden in klar beschriebenen Aufgaben zur Datenqualität direkt eingesetzt, und diese Grundlagen sind im Profil belegt.",
+            "Der klare Aufgabenplan und die dokumentierten Prüfschritte passen gut zum Wunsch nach nachvollziehbaren Aufgaben.",
+            "Hybrid und 16–20 Stunden passen; wie eng Mentoring oder Weiterbildung im Alltag ausfallen, ist nicht angegeben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 85,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 8,
+            "learning": 2,
+            "innovation": 0,
+            "clarity": 15
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL werden in klar beschriebenen Aufgaben zur Datenqualität direkt eingesetzt, und diese Grundlagen sind im Profil belegt. Der klare Aufgabenplan und die dokumentierten Prüfschritte passen gut zum Wunsch nach nachvollziehbaren Aufgaben. Hybrid und 16–20 Stunden passen; wie eng Mentoring oder Weiterbildung im Alltag ausfallen, ist nicht angegeben."
+        },
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen fachlich gut zu den belegten Grundlagen im Profil.",
+            "Mentor, wöchentliche Feedbacktermine und gemeinsame Teambesprechungen sprechen deutlich für den gewünschten Lernkontext.",
+            "Hybrid und 16–20 Stunden entsprechen der Präferenz; fachliche Tiefe über die beschriebenen Auswertungen hinaus bleibt offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 84,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 8,
+            "learning": 2,
+            "innovation": 0,
+            "clarity": 15
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen fachlich gut zu den belegten Grundlagen im Profil. Mentor, wöchentliche Feedbacktermine und gemeinsame Teambesprechungen sprechen deutlich für den gewünschten Lernkontext. Hybrid und 16–20 Stunden entsprechen der Präferenz; fachliche Tiefe über die beschriebenen Auswertungen hinaus bleibt offen."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, diese Stelle würde ich Ihnen empfehlen. Die Passung ist fachlich klar belegt: Python und SQL sind unmittelbarer Teil der Aufgaben, die geforderten Grundkenntnisse bringen Sie mit, und Git ist hier nur hilfreich. Ebenso sprechen die feste Fachbetreuung, hybrid und 16–20 Stunden deutlich für Ihre aktuellen Wünsche.\n\nVor einer Bewerbung würde ich vor allem zwei Punkte klären: wie eigenständig die Arbeit an kleinen Prototypen tatsächlich ist, und wie die Fachbetreuung im Alltag konkret aussieht. Offen ist außerdem, mit welchem Produktteam Sie Ergebnisse besprechen und wie klar die Aufgaben zwischen Analyse, Prototyping und Abstimmung verteilt sind.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 8.886,
+          "input_tokens": 4859,
+          "output_tokens": 517
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 5.596,
+          "input_tokens": 6290,
+          "output_tokens": 377
+        }
+      ]
+    },
+    "diana": {
+      "advisor": {
+        "preset": "diana"
+      },
+      "advisor_name": "DIANA-KI",
+      "search_message": "Die drei Werkstudentenstellen greifen deine belegte Python-/SQL-Grundlage passend auf, unterscheiden sich aber in der Lernumgebung. Besonders konkret wirken Fachbetreuung oder Mentoring bei Datenatelier und LernWerk; bei KlarData sind die Aufgaben sehr klar, Angaben zur Begleitung fehlen aber. Für deine Bewerbung lohnt es sich, dein Python-Projekt und deine SQL-Grundlagen jeweils direkt an den beschriebenen Analyseaufgaben festzumachen.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Die Stelle passt fachlich direkt, weil Python- und SQL-Analysen von Nutzungsdaten sowie kleine Prototypen ausdrücklich genannt sind.",
+            "Dein Profil belegt Python, SQL und Git; damit deckst du die genannten Grundkenntnisse und den hilfreichen Git-Bezug ab.",
+            "Feste Fachbetreuung, hybrid und 16–20 Stunden greifen deine Lern- und Rahmenwünsche gut auf."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 84,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 7,
+            "learning": 6,
+            "innovation": 6,
+            "clarity": 6
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Die Stelle passt fachlich direkt, weil Python- und SQL-Analysen von Nutzungsdaten sowie kleine Prototypen ausdrücklich genannt sind. Dein Profil belegt Python, SQL und Git; damit deckst du die genannten Grundkenntnisse und den hilfreichen Git-Bezug ab. Feste Fachbetreuung, hybrid und 16–20 Stunden greifen deine Lern- und Rahmenwünsche gut auf."
+        },
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Die Stelle passt fachlich gut, weil Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen direkt zu deinem Suchfokus gehören.",
+            "Dein Profil bringt mit Python, SQL und Git eine passende Grundlage für die genannten Grundkenntnisse mit.",
+            "Benannter Mentor und wöchentliche Feedbacktermine stützen deinen Wunsch nach Lernen im Team sehr konkret."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 83,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 7,
+            "learning": 6,
+            "innovation": 6,
+            "clarity": 6
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Die Stelle passt fachlich gut, weil Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen direkt zu deinem Suchfokus gehören. Dein Profil bringt mit Python, SQL und Git eine passende Grundlage für die genannten Grundkenntnisse mit. Benannter Mentor und wöchentliche Feedbacktermine stützen deinen Wunsch nach Lernen im Team sehr konkret."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Die Stelle passt fachlich gut, weil Python- und SQL-Aufgaben in der Datenqualität und bei Auswertungen klar beschrieben sind.",
+            "Dein Profil belegt Python, SQL und Git; das passt zu den geforderten Grundkenntnissen und zum hilfreichen Git-Einsatz.",
+            "Der klare Aufgabenplan spricht für konkrete Aufgaben; zum Mentoring gibt es jedoch keine belegten Angaben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 81,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 7,
+            "learning": 6,
+            "innovation": 6,
+            "clarity": 6
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Die Stelle passt fachlich gut, weil Python- und SQL-Aufgaben in der Datenqualität und bei Auswertungen klar beschrieben sind. Dein Profil belegt Python, SQL und Git; das passt zu den geforderten Grundkenntnissen und zum hilfreichen Git-Einsatz. Der klare Aufgabenplan spricht für konkrete Aufgaben; zum Mentoring gibt es jedoch keine belegten Angaben."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, Werkstudent Datenprodukt bei Datenatelier würde ich dir empfehlen. Deine belegten Python-, SQL- und Git-Grundlagen passen direkt zu den genannten Analyseaufgaben, kleinen Prototypen und zum hilfreichen Git-Bezug; feste Fachbetreuung, hybrid und 16–20 Stunden greifen deine Wünsche ebenfalls gut auf.\n\nVor der Bewerbung bleibt vor allem zu klären: wie konkret die Prototypen und Analyseaufgaben im Alltag zugeschnitten sind und wie viel eigener Entscheidungsspielraum im Produktteam tatsächlich vorgesehen ist, denn dazu nennt die Anzeige keine Details.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 8.524,
+          "input_tokens": 4687,
+          "output_tokens": 580
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 5.983,
+          "input_tokens": 6142,
+          "output_tokens": 294
+        }
+      ]
+    },
+    "steve": {
+      "advisor": {
+        "preset": "steve"
+      },
+      "advisor_name": "Steve-Jobs-KI",
+      "search_message": "Klarer Eindruck: Alle drei Rollen tragen dein Python und SQL in echte Aufgaben. Datenatelier verbindet Analyse mit Prototypen im Produktteam, LernWerk ist am stärksten bei Betreuung und Teamlernen, KlarData ist am klarsten im Arbeitszuschnitt, aber offener bei Mentoring. Wenn du zwischen Gestaltung und enger Lernbegleitung priorisieren willst, ist genau das jetzt der entscheidende Unterschied.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Stark passend: Python und SQL sind hier direkte Arbeitsmittel für Nutzungsdaten und kleine Prototypen im Produktteam.",
+            "Die feste Fachbetreuung schafft belegte Lernstruktur und macht den Einstieg für ein Profil mit Grundkenntnissen belastbar.",
+            "Hybrid in Nürnberg und 16–20 Stunden treffen die Präferenzen ohne erkennbare Abweichung."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 83,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 5,
+            "learning": 5,
+            "innovation": 15,
+            "clarity": 0
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Stark passend: Python und SQL sind hier direkte Arbeitsmittel für Nutzungsdaten und kleine Prototypen im Produktteam. Die feste Fachbetreuung schafft belegte Lernstruktur und macht den Einstieg für ein Profil mit Grundkenntnissen belastbar. Hybrid in Nürnberg und 16–20 Stunden treffen die Präferenzen ohne erkennbare Abweichung."
+        },
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Sehr stimmig: Du erstellst Python- und SQL-Auswertungen nach klaren Fragestellungen und arbeitest damit direkt an echten Analysen.",
+            "Mentor, wöchentliche Feedbacktermine und Teambesprechungen belegen starke Lern- und Teamstruktur.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen; eigener Gestaltungsspielraum wird nicht näher beschrieben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 81,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 5,
+            "learning": 5,
+            "innovation": 15,
+            "clarity": 0
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Sehr stimmig: Du erstellst Python- und SQL-Auswertungen nach klaren Fragestellungen und arbeitest damit direkt an echten Analysen. Mentor, wöchentliche Feedbacktermine und Teambesprechungen belegen starke Lern- und Teamstruktur. Hybrid in Nürnberg und 16–20 Stunden passen; eigener Gestaltungsspielraum wird nicht näher beschrieben."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Fachlich passt das: Python und SQL werden konkret für Datenqualität und Auswertungen eingesetzt.",
+            "Der klare Aufgabenplan gibt Struktur; Angaben zu Mentoring oder Weiterbildung fehlen jedoch.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen zu den Präferenzen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 78,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 5,
+            "learning": 5,
+            "innovation": 15,
+            "clarity": 0
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Fachlich passt das: Python und SQL werden konkret für Datenqualität und Auswertungen eingesetzt. Der klare Aufgabenplan gibt Struktur; Angaben zu Mentoring oder Weiterbildung fehlen jedoch. Hybrid in Nürnberg und 16–20 Stunden passen zu den Präferenzen."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, die Stelle Werkstudent Datenprodukt bei Datenatelier würde ich dir empfehlen. Python und SQL sind dort echte Arbeitsmittel, und die feste Fachbetreuung gibt dir eine saubere Lernstruktur.\n\nVor der Bewerbung klärst du einen Punkt: wie viel Gestaltung im Produktteam tatsächlich drin ist, denn der Umfang eigener Produktentscheidungen bleibt offen. Lass dir außerdem den konkreten Ablauf mit Fachbetreuung und Teamabstimmung erklären.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 11.336,
+          "input_tokens": 4804,
+          "output_tokens": 540
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 3.793,
+          "input_tokens": 6221,
+          "output_tokens": 258
+        }
+      ]
+    },
+    "guenther": {
+      "advisor": {
+        "preset": "guenther"
+      },
+      "advisor_name": "Günther-Jauch-KI",
+      "search_message": "Für deinen Wunsch nach praktischer Datenanalyse mit Lernen im Team wirkt LernWerk besonders rund: Du würdest konkret Python- und SQL-Auswertungen bearbeiten und hättest dazu belegte Begleitung durch Mentor und Feedbacktermine. Datenatelier ist ebenfalls stark, vor allem wegen der festen Fachbetreuung und der Prototypenarbeit. KlarData punktet mit sehr klaren Aufgaben, offen bleibt dort nur, wie eng die fachliche Begleitung im Alltag wirklich ist.",
+      "rankings": [
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen sehr direkt zu deinem Wunsch nach praktischer Datenanalyse mit klaren Aufgaben.",
+            "Mentor, wöchentliche fachliche Feedbacktermine und gemeinsame Besprechungen im Team belegen starkes Lernpotenzial.",
+            "Hybrid in Nürnberg und 16–20 Stunden entsprechen deiner Präferenz."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 87,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 3,
+            "learning": 17,
+            "innovation": 3,
+            "clarity": 2
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen sehr direkt zu deinem Wunsch nach praktischer Datenanalyse mit klaren Aufgaben. Mentor, wöchentliche fachliche Feedbacktermine und gemeinsame Besprechungen im Team belegen starkes Lernpotenzial. Hybrid in Nürnberg und 16–20 Stunden entsprechen deiner Präferenz."
+        },
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Python und SQL werden hier direkt für Nutzungsdaten und kleine Prototypen eingesetzt; das passt sehr konkret zu deinem Suchwunsch.",
+            "Die feste Fachbetreuung und der wöchentliche Austausch sprechen klar für Lernen im Team.",
+            "Hybrid in Nürnberg und 16–20 Stunden liegen in deiner Präferenz."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 86,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 3,
+            "learning": 17,
+            "innovation": 3,
+            "clarity": 2
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL werden hier direkt für Nutzungsdaten und kleine Prototypen eingesetzt; das passt sehr konkret zu deinem Suchwunsch. Die feste Fachbetreuung und der wöchentliche Austausch sprechen klar für Lernen im Team. Hybrid in Nürnberg und 16–20 Stunden liegen in deiner Präferenz."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Python und SQL kommen hier praktisch in der Datenqualitätsprüfung und bei Auswertungen zum Einsatz; die Fachpassung ist damit klar belegt.",
+            "Der klare Aufgabenplan passt gut zu deinem Wunsch nach konkreten, nachvollziehbaren Aufgaben.",
+            "Hybrid in Nürnberg und 16–20 Stunden passen; Mentoring und Weiterbildung sind allerdings nicht näher beschrieben."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 79,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 3,
+            "learning": 17,
+            "innovation": 3,
+            "clarity": 2
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python und SQL kommen hier praktisch in der Datenqualitätsprüfung und bei Auswertungen zum Einsatz; die Fachpassung ist damit klar belegt. Der klare Aufgabenplan passt gut zu deinem Wunsch nach konkreten, nachvollziehbaren Aufgaben. Hybrid in Nürnberg und 16–20 Stunden passen; Mentoring und Weiterbildung sind allerdings nicht näher beschrieben."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, die Stelle Werkstudent Datenprodukt bei Datenatelier würde ich dir empfehlen. Du würdest konkret mit Python und SQL Nutzungsdaten analysieren, kleine Prototypen bauen und die Ergebnisse mit einer festen Fachbetreuung besprechen; das passt sehr gut zu deinem Wunsch nach praktischer Datenanalyse und Lernen im Team. Vor der Bewerbung bleibt vor allem ein Punkt offen: Für das Gespräch beim Arbeitgeber wäre sinnvoll zu klären, wie viel eigene Verantwortung du bei den Prototypen und Produktentscheidungen im Alltag tatsächlich übernimmst.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 8.233,
+          "input_tokens": 4853,
+          "output_tokens": 575
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 4.827,
+          "input_tokens": 6284,
+          "output_tokens": 327
+        }
+      ]
+    },
+    "custom": {
+      "advisor": {
+        "mode": "custom",
+        "name": "Klartext",
+        "traits": [
+          "direkt",
+          "kritisch"
+        ],
+        "focus": "fachliche_tiefe",
+        "description": "Sprich nüchtern und knapp. Nenne zuerst die entscheidende offene Voraussetzung, dann die belegte Stärke und einen konkreten Prüfschritt. Keine rhetorischen Fragen."
+      },
+      "advisor_name": "Klartext-KI",
+      "search_message": "Fachlich sind alle drei Stellen tragfähig, weil Python und SQL jeweils ausdrücklich Teil der Aufgaben sind. Am klarsten für Lernen im Team wirkt die Stelle mit Mentor und wöchentlichen Feedbackterminen; am stärksten bei anwendungsnahen Aufgaben wirkt die Rolle mit Analysen plus kleinen Prototypen im Produktteam. Die Datenqualitäts-Stelle ist besonders sauber beschrieben, lässt aber Mentoring offen.",
+      "rankings": [
+        {
+          "job_id": "style-a",
+          "reasons": [
+            "Python- und SQL-Aufgaben sind hier klar belegt: Nutzungsdaten analysieren und kleine Prototypen für das Produktteam bauen.",
+            "Das passt zum Profil mit Python, SQL und Git sowie zum eigenen Python-Datenprojekt.",
+            "Fachbetreuung und 16–20 Stunden sind genannt; eigener Produktspielraum bleibt offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 88,
+            "preferences_fit": 93,
+            "technical_depth": 58,
+            "learning": 84,
+            "innovation": 60,
+            "clarity": 78
+          },
+          "score": 83,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 14,
+            "learning": 2,
+            "innovation": 2,
+            "clarity": 7
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Aufgaben sind hier klar belegt: Nutzungsdaten analysieren und kleine Prototypen für das Produktteam bauen. Das passt zum Profil mit Python, SQL und Git sowie zum eigenen Python-Datenprojekt. Fachbetreuung und 16–20 Stunden sind genannt; eigener Produktspielraum bleibt offen."
+        },
+        {
+          "job_id": "style-c",
+          "reasons": [
+            "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen direkt zur gesuchten studentischen Datenanalyse.",
+            "Das Profil belegt Python, SQL und Git; das eigene Datenprojekt stützt den fachlichen Einstieg.",
+            "Mentor, Teambesprechungen und 16–20 Stunden sind klar genannt; fachliche Tiefe bleibt eher grundständig."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 95,
+            "technical_depth": 48,
+            "learning": 92,
+            "innovation": null,
+            "clarity": 82
+          },
+          "score": 82,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 14,
+            "learning": 2,
+            "innovation": 2,
+            "clarity": 7
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Auswertungen nach vorgegebenen Fragestellungen passen direkt zur gesuchten studentischen Datenanalyse. Das Profil belegt Python, SQL und Git; das eigene Datenprojekt stützt den fachlichen Einstieg. Mentor, Teambesprechungen und 16–20 Stunden sind klar genannt; fachliche Tiefe bleibt eher grundständig."
+        },
+        {
+          "job_id": "style-b",
+          "reasons": [
+            "Python- und SQL-Aufgaben sind klar beschrieben: Datenqualität prüfen, Auswertungen verbessern und Prüfschritte dokumentieren.",
+            "Das passt fachlich zu den belegten Python-, SQL- und Git-Grundlagen im Profil.",
+            "Klare Aufgaben und 16–20 Stunden sind genannt; Mentoring und Weiterbildung bleiben offen."
+          ],
+          "matched_skills": [
+            "Python",
+            "SQL",
+            "Git"
+          ],
+          "missing_skills": [],
+          "components": {
+            "technical_fit": 87,
+            "preferences_fit": 90,
+            "technical_depth": 52,
+            "learning": null,
+            "innovation": null,
+            "clarity": 91
+          },
+          "score": 81,
+          "scoring_weights": {
+            "technical_fit": 60,
+            "preferences_fit": 15,
+            "technical_depth": 14,
+            "learning": 2,
+            "innovation": 2,
+            "clarity": 7
+          },
+          "scoring_version": "persona-weighted-v2",
+          "reason": "Python- und SQL-Aufgaben sind klar beschrieben: Datenqualität prüfen, Auswertungen verbessern und Prüfschritte dokumentieren. Das passt fachlich zu den belegten Python-, SQL- und Git-Grundlagen im Profil. Klare Aufgaben und 16–20 Stunden sind genannt; Mentoring und Weiterbildung bleiben offen."
+        }
+      ],
+      "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Datenatelier empfehlen? Sag mir auch, was vor einer Bewerbung noch zu klären ist.",
+      "chat_answer": "Ja, ich würde die Stelle beim Datenatelier empfehlen. Die Fachpassung ist klar: Python und SQL sind Kernaufgaben, Git ist hilfreich, dazu kommen konkrete Aufgaben, feste Fachbetreuung, hybrid und 16–20 Stunden. Vor der Bewerbung würde ich nur klären, wie tief die Prototypen fachlich gehen, wie der Alltag mit der Fachbetreuung aussieht und wie viel eigener Produktspielraum tatsächlich vorgesehen ist.",
+      "checks": {
+        "shared_components_unchanged": true,
+        "chat_action_answer": true,
+        "neutral_profile_patch": true,
+        "length_limits": true
+      },
+      "calls": [
+        {
+          "schema": "CachedRerankingResult",
+          "reasoning": "low",
+          "elapsed_seconds": 7.003,
+          "input_tokens": 4361,
+          "output_tokens": 567
+        },
+        {
+          "schema": "ChatDecision",
+          "reasoning": "medium",
+          "elapsed_seconds": 10.442,
+          "input_tokens": 5781,
+          "output_tokens": 590
+        }
+      ]
+    }
+  },
+  "review": {
+    "method": "Independent qualitative blind review; one synthetic fixture, no claim of systematic evaluation.",
+    "round_1": "Professional, but DIANA and Günther barely distinguishable; critical custom style introduced unsupported prerequisites.",
+    "round_2": "All five styles assigned correctly in blind review; more distinct and professional, no invented prerequisites. DIANA/Günther retain some overlap; Angela is more formal and longer.",
+    "invariants": "Same scores and evidence components in both rounds; answer routing neutral, all schema and length limits met."
+  }
+}

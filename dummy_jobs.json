@@ -1,0 +1,269 @@
+[
+  {
+    "jobId": 900001,
+    "version": "s",
+    "angebotstitel": "Werkstudent Machine Learning und Python (m/w/d)",
+    "prsFirma": "IsarMuster Analytics GmbH (fiktiv)",
+    "prsId": 9901,
+    "arbeitsort": "München, Deutschland",
+    "arbeitsortLat": null,
+    "arbeitsortLang": null,
+    "firLogo": null,
+    "kurzbeschreibung": "Fiktive Teststelle: Entwickle mit uns Such- und Empfehlungssysteme für Forschungsprojekte.",
+    "offerLogo": null,
+    "aktualitaetsdatum": "2026-01-15T10:00:00",
+    "arbeitszeitMin": 15.0,
+    "arbeitszeitMax": 20.0,
+    "homeOffice": "0-49% Homeoffice",
+    "spracheLand": 0,
+    "spracheDeutsch": 1,
+    "eintrittStart": null,
+    "eintrittEnde": null,
+    "bewerberportal": "https://jobs.example.invalid/900001",
+    "eMail": null,
+    "messenger": null,
+    "berufsfeld": [
+      {
+        "bezeichnung": "Softwareentwicklung, Programmierung"
+      },
+      {
+        "bezeichnung": "Data Science, Künstliche Intelligenz"
+      }
+    ],
+    "jobKategorie": [
+      {
+        "bezeichnung": "Werkstudierendenstelle und HiWi-Stellen"
+      }
+    ],
+    "anstellungsart": [
+      {
+        "bezeichnung": "Befristet"
+      }
+    ],
+    "einleitungTitel": "Über uns",
+    "einleitungTitelText": "<p>Dies ist ein vollständig fiktives Unternehmen für den lokalen Prototyp-Test.</p>",
+    "aufgabenTitel": "Deine Aufgaben",
+    "aufgabenTitelText": "<ul><li>Prototypen für semantische Suche in Python und PyTorch entwickeln.</li><li>Retrieval-Modelle mit sentence-transformers evaluieren.</li><li>SQL-Daten aufbereiten und Ergebnisse im Team besprechen.</li></ul>",
+    "erwartungenTitel": "Dein Profil",
+    "erwartungenTitelText": "<ul><li>Studium der Informatik oder Data Science.</li><li>Praxis mit Python, pandas, SQL und Grundkenntnisse in Machine Learning.</li><li>Analytische, selbstständige Arbeitsweise und Freude am fachlichen Austausch.</li><li>Gutes Deutsch und Englisch.</li></ul>",
+    "angebotTitel": "Unser Angebot",
+    "angebotTitelText": "<p>Flexible Arbeitszeiten, zwei gemeinsame Bürotage und persönliches Mentoring.</p>",
+    "kontaktTitel": null,
+    "kontaktTitelText": "",
+    "pdfDatei": null,
+    "anzeige": null
+  },
+  {
+    "jobId": 900002,
+    "version": "s",
+    "angebotstitel": "Praktikum Data Science und NLP (m/w/d)",
+    "prsFirma": "SpreeMuster Forschung UG (fiktiv)",
+    "prsId": 9902,
+    "arbeitsort": "Berlin, Deutschland",
+    "arbeitsortLat": null,
+    "arbeitsortLang": null,
+    "firLogo": null,
+    "kurzbeschreibung": "Fiktive Teststelle: Ein sechsmonatiges Forschungspraktikum zur mehrsprachigen Textanalyse.",
+    "offerLogo": null,
+    "aktualitaetsdatum": "2026-01-15T10:00:00",
+    "arbeitszeitMin": 35.0,
+    "arbeitszeitMax": 40.0,
+    "homeOffice": "50-100% Homeoffice",
+    "spracheLand": 0,
+    "spracheDeutsch": 1,
+    "eintrittStart": null,
+    "eintrittEnde": null,
+    "bewerberportal": "https://jobs.example.invalid/900002",
+    "eMail": null,
+    "messenger": null,
+    "berufsfeld": [
+      {
+        "bezeichnung": "Data Science, Künstliche Intelligenz"
+      },
+      {
+        "bezeichnung": "Forschung und Entwicklung"
+      }
+    ],
+    "jobKategorie": [
+      {
+        "bezeichnung": "Praktikum"
+      }
+    ],
+    "anstellungsart": [
+      {
+        "bezeichnung": "Befristet"
+      }
+    ],
+    "einleitungTitel": "Über uns",
+    "einleitungTitelText": "<p>Dies ist ein vollständig fiktives Unternehmen für den lokalen Prototyp-Test.</p>",
+    "aufgabenTitel": "Deine Aufgaben",
+    "aufgabenTitelText": "<ul><li>Mehrsprachige Textdaten bereinigen und annotieren.</li><li>Transformer-Modelle mit Python und Hugging Face vergleichen.</li><li>Experimente mit Precision, Recall und nDCG dokumentieren.</li></ul>",
+    "erwartungenTitel": "Dein Profil",
+    "erwartungenTitelText": "<ul><li>Fortgeschrittenes Studium in Informatik, Mathematik oder Computerlinguistik.</li><li>Python, Statistik und Erfahrung mit NLP erforderlich.</li><li>Sorgfältige Dokumentation, Neugier und Zusammenarbeit im Forschungsteam.</li></ul>",
+    "angebotTitel": "Unser Angebot",
+    "angebotTitelText": "<p>Betreute Forschungsarbeit, flexible Homeoffice-Tage und gemeinsame Lernzeiten.</p>",
+    "kontaktTitel": null,
+    "kontaktTitelText": "",
+    "pdfDatei": null,
+    "anzeige": null
+  },
+  {
+    "jobId": 900003,
+    "version": "s",
+    "angebotstitel": "Werkstudent Frontend mit React und TypeScript (m/w/d)",
+    "prsFirma": "WolkenMuster Digital GmbH (fiktiv)",
+    "prsId": 9903,
+    "arbeitsort": "Köln, Deutschland",
+    "arbeitsortLat": null,
+    "arbeitsortLang": null,
+    "firLogo": null,
+    "kurzbeschreibung": "Fiktive Teststelle: Baue barrierearme Benutzeroberflächen in einem verteilten Produktteam.",
+    "offerLogo": null,
+    "aktualitaetsdatum": "2026-01-15T10:00:00",
+    "arbeitszeitMin": 12.0,
+    "arbeitszeitMax": 20.0,
+    "homeOffice": "100% Homeoffice",
+    "spracheLand": 0,
+    "spracheDeutsch": 1,
+    "eintrittStart": null,
+    "eintrittEnde": null,
+    "bewerberportal": "https://jobs.example.invalid/900003",
+    "eMail": null,
+    "messenger": null,
+    "berufsfeld": [
+      {
+        "bezeichnung": "Softwareentwicklung, Programmierung"
+      },
+      {
+        "bezeichnung": "Grafik, Design, Webdesign"
+      }
+    ],
+    "jobKategorie": [
+      {
+        "bezeichnung": "Werkstudierendenstelle und HiWi-Stellen"
+      }
+    ],
+    "anstellungsart": [
+      {
+        "bezeichnung": "Befristet"
+      }
+    ],
+    "einleitungTitel": "Über uns",
+    "einleitungTitelText": "<p>Dies ist ein vollständig fiktives Unternehmen für den lokalen Prototyp-Test.</p>",
+    "aufgabenTitel": "Deine Aufgaben",
+    "aufgabenTitelText": "<ul><li>React-Komponenten und Tabellen-Karten umsetzen.</li><li>REST-APIs anbinden und Tests mit Testing Library schreiben.</li><li>Barrierefreiheit und responsive Layouts verbessern.</li></ul>",
+    "erwartungenTitel": "Dein Profil",
+    "erwartungenTitelText": "<ul><li>Immatrikulation in einem passenden Studiengang.</li><li>Sichere Grundlagen in JavaScript, TypeScript, React, HTML und CSS.</li><li>Klare schriftliche Kommunikation und eigenverantwortliches Arbeiten.</li></ul>",
+    "angebotTitel": "Unser Angebot",
+    "angebotTitelText": "<p>Vollständig remote innerhalb Deutschlands, flexible Arbeitszeiten und Code-Reviews.</p>",
+    "kontaktTitel": null,
+    "kontaktTitelText": "",
+    "pdfDatei": null,
+    "anzeige": null
+  },
+  {
+    "jobId": 900004,
+    "version": "s",
+    "angebotstitel": "Backend-Entwickler Python in Vollzeit (m/w/d)",
+    "prsFirma": "HafenMuster Systems GmbH (fiktiv)",
+    "prsId": 9904,
+    "arbeitsort": "Hamburg, Deutschland",
+    "arbeitsortLat": null,
+    "arbeitsortLang": null,
+    "firLogo": null,
+    "kurzbeschreibung": "Fiktive Teststelle: Entwickle zuverlässige APIs für interne Analysewerkzeuge.",
+    "offerLogo": null,
+    "aktualitaetsdatum": "2026-01-15T10:00:00",
+    "arbeitszeitMin": 40.0,
+    "arbeitszeitMax": 40.0,
+    "homeOffice": "0% Homeoffice",
+    "spracheLand": 0,
+    "spracheDeutsch": 1,
+    "eintrittStart": null,
+    "eintrittEnde": null,
+    "bewerberportal": "https://jobs.example.invalid/900004",
+    "eMail": null,
+    "messenger": null,
+    "berufsfeld": [
+      {
+        "bezeichnung": "Softwareentwicklung, Programmierung"
+      }
+    ],
+    "jobKategorie": [
+      {
+        "bezeichnung": "Berufseinstieg nach dem Studium"
+      },
+      {
+        "bezeichnung": "Berufserfahrene"
+      }
+    ],
+    "anstellungsart": [
+      {
+        "bezeichnung": "Festanstellung"
+      }
+    ],
+    "einleitungTitel": "Über uns",
+    "einleitungTitelText": "<p>Dies ist ein vollständig fiktives Unternehmen für den lokalen Prototyp-Test.</p>",
+    "aufgabenTitel": "Deine Aufgaben",
+    "aufgabenTitelText": "<ul><li>Python-Services mit Flask und PostgreSQL entwickeln.</li><li>REST-Endpunkte absichern und mit Docker ausliefern.</li><li>Monitoring, Integrationstests und technische Dokumentation pflegen.</li></ul>",
+    "erwartungenTitel": "Dein Profil",
+    "erwartungenTitelText": "<ul><li>Abgeschlossenes Informatikstudium oder vergleichbare Erfahrung.</li><li>Fundierte Python-, SQL-, Git- und Linux-Kenntnisse.</li><li>Erfahrung mit Flask und produktiven APIs.</li><li>Strukturierte Zusammenarbeit im Büro.</li></ul>",
+    "angebotTitel": "Unser Angebot",
+    "angebotTitelText": "<p>Unbefristete Anstellung, Fortbildungsbudget und feste Teamzeiten in Hamburg.</p>",
+    "kontaktTitel": null,
+    "kontaktTitelText": "",
+    "pdfDatei": null,
+    "anzeige": null
+  },
+  {
+    "jobId": 900005,
+    "version": "s",
+    "angebotstitel": "Werkstudent Content Marketing und Kommunikation (m/w/d)",
+    "prsFirma": "AlpenMuster Kommunikation GmbH (fiktiv)",
+    "prsId": 9905,
+    "arbeitsort": "München, Deutschland",
+    "arbeitsortLat": null,
+    "arbeitsortLang": null,
+    "firLogo": null,
+    "kurzbeschreibung": "Fiktive Teststelle: Erzähle verständliche Geschichten über nachhaltige Produkte.",
+    "offerLogo": null,
+    "aktualitaetsdatum": "2026-01-15T10:00:00",
+    "arbeitszeitMin": 10.0,
+    "arbeitszeitMax": 20.0,
+    "homeOffice": "0-49% Homeoffice",
+    "spracheLand": 0,
+    "spracheDeutsch": 1,
+    "eintrittStart": null,
+    "eintrittEnde": null,
+    "bewerberportal": "https://jobs.example.invalid/900005",
+    "eMail": null,
+    "messenger": null,
+    "berufsfeld": [
+      {
+        "bezeichnung": "Marketing, Werbung, Kommunikation, PR, Online Marketing, Eventmanagement"
+      }
+    ],
+    "jobKategorie": [
+      {
+        "bezeichnung": "Werkstudierendenstelle und HiWi-Stellen"
+      }
+    ],
+    "anstellungsart": [
+      {
+        "bezeichnung": "Befristet"
+      }
+    ],
+    "einleitungTitel": "Über uns",
+    "einleitungTitelText": "<p>Dies ist ein vollständig fiktives Unternehmen für den lokalen Prototyp-Test.</p>",
+    "aufgabenTitel": "Deine Aufgaben",
+    "aufgabenTitelText": "<ul><li>Redaktionspläne erstellen und Texte für Newsletter schreiben.</li><li>Social-Media-Inhalte mit Canva gestalten.</li><li>Kampagnenkennzahlen in Excel auswerten.</li></ul>",
+    "erwartungenTitel": "Dein Profil",
+    "erwartungenTitelText": "<ul><li>Studium in Kommunikation, Marketing oder einem verwandten Fach.</li><li>Sehr gutes schriftliches Deutsch, Kreativität und Organisationstalent.</li><li>Grundkenntnisse in Content-Management und Social Media.</li></ul>",
+    "angebotTitel": "Unser Angebot",
+    "angebotTitelText": "<p>Flexible Arbeitszeiten, hybride Zusammenarbeit und redaktionelles Mentoring.</p>",
+    "kontaktTitel": null,
+    "kontaktTitelText": "",
+    "pdfDatei": null,
+    "anzeige": null
+  }
+]

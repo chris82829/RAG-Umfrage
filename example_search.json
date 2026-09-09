@@ -1,0 +1,14 @@
+{
+  "profile": {
+    "query": "Ich suche eine studentische Stelle in Data Science oder Softwareentwicklung.",
+    "skills": ["Python", "SQL", "Pandas", "Git"],
+    "preferences": ["analytische Aufgaben", "Zusammenarbeit im Team", "flexible Arbeitszeiten"],
+    "cv_text": "Informatikstudent mit einem Python-Projekt zur Datenanalyse und ersten SQL-Kenntnissen.",
+    "filters": {
+      "employment_types": ["werkstudent", "praktikum"],
+      "locations": [],
+      "remote": [],
+      "max_hours": null
+    }
+  }
+}
