@@ -10,9 +10,10 @@ import json
 import logging
 from hashlib import sha256
 from time import perf_counter
-from typing import Annotated, Any, Literal, TypeVar
+from typing import Annotated, Any, Generator, Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
+from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
 
 
@@ -21,6 +22,18 @@ REQUEST_TIMEOUT_SECONDS = 90.0
 MAX_OUTPUT_TOKENS = 6000
 RERANK_OUTPUT_TOKENS = 10000
 logger = logging.getLogger(__name__)
+
+
+def _complete(steps):
+    """Keep the synchronous API while sharing validation with streaming calls."""
+    try:
+        while True:
+            next(steps)
+    except StopIteration as completed:
+        return completed.value
+    finally:
+        steps.close()
+
 
 EmploymentType = Literal[
     "werkstudent", "praktikum", "vollzeit", "teilzeit", "ausbildung", "trainee",
@@ -701,7 +714,10 @@ class OpenAIService:
                 raise LLMUnavailable("Die OpenAI-Anbindung konnte nicht initialisiert werden.") from None
         return self._client
 
-    def _parse(
+    def _parse(self, *args, **kwargs):
+        return _complete(self._parse_steps(*args, **kwargs))
+
+    def _parse_steps(
         self,
         instructions: str,
         data: dict,
@@ -709,14 +725,15 @@ class OpenAIService:
         *,
         max_output_tokens: int = MAX_OUTPUT_TOKENS,
         reasoning_effort: Literal["low", "medium"] = "medium",
-    ) -> _ResultT:
+        stream: bool = False,
+    ) -> Generator[dict, None, _ResultT]:
         started = perf_counter()
         api_status = "not_received"
         outcome = "upstream_error"
         http_status = None
         input_tokens = output_tokens = reasoning_tokens = None
         try:
-            response = self._get_client().responses.parse(
+            options = dict(
                 model=MODEL,
                 input=[
                     {"role": "system", "content": f"{_SAFETY_INSTRUCTIONS}\n\n{instructions}"},
@@ -727,6 +744,26 @@ class OpenAIService:
                 max_output_tokens=max_output_tokens,
                 store=False,
             )
+            if stream:
+                previous = ""
+                with self._get_client().responses.stream(**options) as events:
+                    for event in events:
+                        if event.type != "response.output_text.delta":
+                            continue
+                        # Decode only structured public output, never reasoning,
+                        # raw JSON or provider errors. A preview cannot commit state.
+                        try:
+                            partial = schema.model_validate(from_json(
+                                event.snapshot, allow_partial="trailing-strings"))
+                        except (ValueError, ValidationError):
+                            continue
+                        message = getattr(partial, "assistant_message", "")
+                        if message and message != previous:
+                            previous = message
+                            yield {"type": "assistant_preview", "data": partial.model_dump()}
+                    response = events.get_final_response()
+            else:
+                response = self._get_client().responses.parse(**options)
             status = getattr(response, "status", "completed")
             api_status = status if type(status) is str and status in {
                 "completed", "incomplete", "failed", "cancelled", "queued", "in_progress",
@@ -790,7 +827,10 @@ class OpenAIService:
             ProfilePatch,
         ).model_dump()
 
-    def plan_chat(
+    def plan_chat(self, *args, **kwargs) -> dict:
+        return _complete(self.plan_chat_steps(*args, **kwargs))
+
+    def plan_chat_steps(
         self,
         profile: dict,
         history: list[dict],
@@ -800,14 +840,15 @@ class OpenAIService:
         advisor: dict | None = None,
         mode: str = "auto",
         candidate_count: int = 0,
-    ) -> dict:
+        stream: bool = False,
+    ):
         """Classify intent, extract an explicit patch, and answer in one call.
 
         This proposes a decision only. The caller owns profile merging, checks
         actual differences, and applies the selected mode before doing any work.
         """
         resolved = resolve_advisor(advisor)
-        return self._parse(
+        result = yield from self._parse_steps(
             _CHAT_INSTRUCTIONS + "\n\n" + _advisor_instructions(resolved),
             {
                 "current_profile": _profile_data(profile),
@@ -819,9 +860,14 @@ class OpenAIService:
                 "candidate_count": max(0, candidate_count),
             },
             ChatDecision,
-        ).model_dump()
+            stream=stream,
+        )
+        return result.model_dump()
 
-    def rerank(
+    def rerank(self, *args, **kwargs) -> dict:
+        return _complete(self.rerank_steps(*args, **kwargs))
+
+    def rerank_steps(
         self,
         persona: dict,
         profile: dict,
@@ -831,7 +877,8 @@ class OpenAIService:
         chat_context: dict | None = None,
         advisor: dict | None = None,
         assessment_cache: dict | None = None,
-    ) -> dict:
+        stream: bool = False,
+    ):
         profile_data = _profile_data(profile)
         resolved = resolve_advisor(advisor)
         if not candidates:
@@ -861,7 +908,7 @@ class OpenAIService:
                 key=lambda job_id: score_from_components(fixed[job_id], advisor),
                 reverse=True,
             )[:5]
-        result = self._parse(
+        result = yield from self._parse_steps(
             (_CACHED_RERANKING_INSTRUCTIONS if fixed is not None else _RERANKING_INSTRUCTIONS)
             + "\n\n" + _advisor_instructions(resolved),
             {
@@ -885,6 +932,7 @@ class OpenAIService:
             CachedRerankingResult if fixed is not None else RerankingResult,
             max_output_tokens=RERANK_OUTPUT_TOKENS,
             reasoning_effort="low" if fixed is not None else "medium",
+            stream=stream,
         )
         returned_ids = [ranking.job_id for ranking in result.rankings]
         if (

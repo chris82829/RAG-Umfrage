@@ -113,22 +113,53 @@ der Button überlagert keine Stellenkarte. Die Schrittanzeige erlaubt weiterhin
 nur den aktuellen Schritt oder einen Rücksprung.
 
 Bei einer vollständigen Suche öffnet sich ein **Lade-Popup** mit animierten
-Stellenkarten und dem Hinweis: „Die Suche und persönliche Bewertung dauern meist
-etwa eine Minute. Manchmal dauert es etwas länger.“ Die verstrichene Zeit bleibt
-sichtbar; ab 90 Sekunden erscheint ein zusätzlicher Wartehinweis. Es schließt bei
-Erfolg oder Fehler automatisch. „Im Hintergrund weiterlaufen lassen“ bzw. Escape
-blendet nur das Popup aus; die Anfrage läuft weiter und die normalen Statusmeldungen
-bleiben sichtbar. Bei reduzierter Bewegung bleibt die Illustration statisch.
+Stellenkarten und einer laufenden Lichtspur. Der Hinweis lautet: „Deine Stellen
+werden gesucht und persönlich bewertet. Das kann bis zu zwei Minuten dauern.“ Es gibt
+keinen Sekundenzähler und keinen Hintergrund-Button. Der Dialog bleibt bis zum
+Erfolg oder Fehler offen; Escape blendet ihn nicht aus. Bei reduzierter Bewegung
+bleibt die Animation statisch.
 
 Das Popup erscheint erst nach dem echten Suchsignal des Backends, auch bei einer
 automatisch im Chat ausgelösten neuen Suche. Antworten, Neubewertung der vorhandenen
 Kandidaten, abgewiesene Suchaufträge oder noch nicht verfügbare Indizes öffnen es
 nicht. Es gibt keine zusätzliche KI-Anfrage und keine künstliche Mindestwartezeit.
 
-1. **Schritt 1 – Dein Profil:** „Mit Beispielprofil ausprobieren“ wählen oder
+Die erste Chatnachricht begrüßt den Nutzer, nennt die tatsächliche Anzahl der
+bewerteten Ergebnisse und verweist auf die Ergebnisübersicht links sowie mögliche
+Rückfragen. Sie unterscheidet dabei zwischen gefundenen und zunächst sichtbaren
+Stellen ab 70 Punkten; bei ausgeblendeten Treffern nennt sie die Einblendoption.
+Die Zahlen werden aus den fertigen Karten berechnet. Die persönliche KI-Erklärung
+bleibt darunter erhalten. Die Begrüßung wird einmal mit der neuen Sitzung gespeichert,
+ohne zusätzliche KI-Anfrage; spätere Antworten und bestehende Verläufe bleiben erhalten.
+
+Chatnachrichten stehen in abgerundeten Sprechblasen: KI links in hellem Grau,
+eigene Nachrichten rechts in hellem Blau. Die Score-Zeile über der Ergebnisliste
+entfällt; die Persönlichkeits-Scores bleiben an den einzelnen Stellenkarten.
+
+**Echtes Chat-Streaming:** Die Responses-API liefert den Text bereits während der
+Generierung. Das Backend liest ausschließlich das Feld `assistant_message` aus
+validierten Zwischenständen der strukturierten Antwort und sendet `assistant_text`
+als NDJSON-Snapshot. Das Frontend ersetzt damit die vorläufige Sprechblase.
+Die fertige, erneut geprüfte Antwort wird genau einmal gespeichert. Bei Abbruch,
+ungültiger Antwort oder Sitzungskonflikt bleibt der bisherige Zustand erhalten;
+ein fehlgeschlagener Stream wird nicht automatisch erneut angefragt.
+
+Die automatische Entscheidung zwischen Antwort, neuer Suche und Nachsortierung
+bleibt erhalten. Vorläufige Planungsantworten werden nur bei unveränderten
+Ergebnissen angezeigt; bei einer Neubewertung kommt der Text aus dem Reranking.
+Modell **GPT-5.4**, bisheriger Denkaufwand und alle Begründungen für bis zu
+20 Stellen bleiben unverändert. Streaming überbrückt die Textausgabe; die
+Denkphase und vollständige Suche werden dadurch nicht verkürzt.
+JSON-Clients ohne explizite NDJSON-Anforderung erhalten weiterhin die vollständige
+Antwort. Grundlage: [OpenAI Structured Outputs mit Streaming](https://developers.openai.com/api/docs/guides/structured-outputs).
+
+
+1. **Schritt 1 – Dein Profil:** „Beispielprofil“ neben „Was passt zu dir?“ wählen oder
    eigene Angaben eintragen, dann „Weiter zur Persönlichkeit“.
-2. **Schritt 2 – Persönlichkeit:** Eine Suchpersönlichkeit wählen: Standard, inspiriert von **Steve Jobs**,
-   **Angela Merkel** oder **Günther Jauch**, oder eigene Eigenschaften konfigurieren.
+2. **Schritt 2 – Persönlichkeit:** Nach einer kurzen Erklärung mit Grafik die eigene
+   KI-Beratung gestalten: Name, Bewertungsschwerpunkt, Gesprächseigenschaften und
+   optionale eigene Hinweise. Die drei Vorlagen **Steve Jobs**, **Angela Merkel**
+   und **Günther Jauch** stehen im kompakten Dropdown „Vorlage“ rechts neben „KI-Suchpersönlichkeit“ und füllen alle Felder aus; alles bleibt bearbeitbar. Das Namensfeld steht platzsparend neben „Name“. Das kleine Info-Icon neben der Überschrift öffnet die Erklärung mit Grafik.
 3. **Schritt 3 – Ergebnisse:** „Passende Jobs finden“ starten; die KI-Auswertung
    kann etwa eine Minute dauern. Begründungen und Persönlichkeits-Scores vergleichen.
 4. **Schritt 4 – Besprechen & verfeinern:** Im Chat rechts Fragen stellen oder die
@@ -429,12 +460,41 @@ wird stets übergeben.
 
 ## DIANAs Persönlichkeit
 
+Die Oberfläche startet mit einer **eigenen Persönlichkeit** und zeigt alle Felder
+direkt. Es gibt keinen Wechsel mehr zwischen getrennten Vorbild- und Eigenbau-Modi.
+Die drei bekannten Personen sind optionale, bearbeitbare Vorlagen: Ein Klick füllt
+Name, Schwerpunkt, Eigenschaften und eigene Hinweise. Gesendet werden die sichtbaren
+Felder als `mode: custom`; spätere Änderungen werden nicht durch versteckte feste
+Vorbild-Einstellungen überschrieben. Bestehende Sitzungen ändern sich erst beim
+ausdrücklichen Anwenden. Beim Bearbeiten alter Presets werden daraus eigene Entwürfe;
+die API unterstützt die bisherigen Presets weiterhin.
+
+Vor dem ersten Wechsel vom Profil zur Persönlichkeit erscheint die kurze Erklärung
+**„KI-Suchpersönlichkeit“**. Die zusammenhängende Einleitung erklärt die Rolle von
+Profil und Persönlichkeit, den Vorrang fachlicher Passung und die drei Vorlagen.
+Darunter führt die Grafik von der Persönlichkeit über Verbindungen und zwei Pfeile
+zu **„Jobs bewerten & sortieren“** und **„Mit dir sprechen“**. Der erste Bereich
+macht ausdrücklich klar, dass Nutzerprofil und KI-Persönlichkeit gemeinsam die
+Bewertung und Reihenfolge der Jobs bestimmen. Der zweite erklärt den Einfluss auf
+Antworten und Begründungen. Beispiele und ein separater
+Hinweis unter der Grafik entfallen. „Persönlichkeit erstellen“ führt zu Schritt 2;
+Schließen oder Escape bleibt beim Profil. Nach dem Bestätigen erscheint die Grafik
+bei einem Rücksprung nicht erneut. „Neu starten“ setzt diese Einführung zurück.
+Der Hilfelink **„Wie beeinflusst das meine Suche?“** öffnet sie jederzeit im
+Persönlichkeitsformular erneut, auch beim Bearbeiten. Die Grafik verwendet
+HTML/CSS und vorhandene Icons, ist auf kleinen Bildschirmen scrollbar und benötigt
+keinen zusätzlichen Modellaufruf.
+
 Die Persönlichkeit steht als `advisor` getrennt neben dem Bewerberprofil.
 Harte Filter, belegte Kenntnisse und die semantische Suchanfrage werden durch
 die Auswahl eines Vorbilds nicht verändert. GPT bewertet jeden der bis zu 20
 Kandidaten nach denselben sechs Dimensionen. Der Server berechnet daraus die
 gewichteten Scores und sortiert alle Ergebnisse danach. Es gibt keine zufälligen
 Punktaufschläge nach Namen; bei gleichwertigen Kriterien sind gleiche Scores möglich.
+
+Die folgenden Gewichte gelten für die weiterhin unterstützten, festen API-Presets.
+Die neuen editierbaren Vorlagen verwenden die darunter erläuterte Berechnung aus
+Schwerpunkt und Eigenschaften.
 
 | Kriterium | DIANA | Steve Jobs | Angela Merkel | Günther Jauch |
 | --- | ---: | ---: | ---: | ---: |
@@ -476,19 +536,33 @@ Unterstützung durch diese Personen.
 
 Eigene Varianten erlauben einen Namen, eine bis vier Eigenschaften und den
 Schwerpunkt „Ausgewogen“, „Fachliche Vertiefung“, „Lernen & Entwicklung“ oder
-„Innovation & Gestaltung“. Unter **„Eigene Beschreibung“** steht zusätzlich ein
+„Innovation & Gestaltung“. Unter **„Eigene Hinweise“** steht zusätzlich ein
 optionales Freitextfeld mit bis zu **2.000 Zeichen** zur Verfügung. Darin kannst du
 den gewünschten Gesprächsstil und den Blickwinkel für die Begründungen beschreiben.
 Der Text bleibt mit der Persönlichkeit gespeichert und wird für Chatantworten und
 Neubewertungen berücksichtigt. Eine reine Textänderung nutzt die vorhandenen
 Kandidaten und gespeicherten Teilbewertungen; sie startet keine vollständige Suche.
-Vorbilder verwenden ihre festgelegte Persönlichkeit ohne diesen Freitext.
+Die drei Vorlagen füllen auch diesen Freitext mit bearbeitbaren Stilhinweisen aus.
+Nur alte feste API-Presets ignorieren ihn weiterhin.
 
 Schwerpunkt und Eigenschaften bestimmen die Verteilung
 der ergänzenden 25 Prozentpunkte; die festen 60/15-Anteile bleiben erhalten.
 Name und Reihenfolge der ausgewählten Eigenschaften beeinflussen die Rechnung
 nicht. Die freie Beschreibung verändert keine Gewichte oder fachlichen Nachweise;
 sie prägt Formulierungen und Begründungen. Unbelegte Vorteile werden nicht ergänzt.
+
+Die unveränderten neuen Vorlagen verteilen die ergänzenden Gewichte wie folgt:
+
+| Vorlage / Ausgangspunkt | Fachliche Tiefe | Lernen | Gestaltung | Klarheit |
+| --- | ---: | ---: | ---: | ---: |
+| Eigene DIANA mit Ausgangswerten | 7 % | 7 % | 4 % | 7 % |
+| Steve Jobs | 3 % | 5 % | 15 % | 2 % |
+| Angela Merkel | 7 % | 4 % | 3 % | 11 % |
+| Günther Jauch | 2 % | 15 % | 3 % | 5 % |
+
+Fachliche Passung (60 %) und ausdrückliche Wünsche (15 %) bleiben unverändert.
+Beim Ändern von Schwerpunkt oder Eigenschaften werden die ergänzenden Gewichte
+neu berechnet. Änderungen an Namen oder Freitext verändern diese Gewichte nicht.
 
 Beispiel für einen Wechsel innerhalb derselben Sitzung:
 

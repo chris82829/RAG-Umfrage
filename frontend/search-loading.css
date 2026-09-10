@@ -37,53 +37,10 @@
   line-height: 1.65;
 }
 
-.search-loading-dialog .search-loading-elapsed {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin: 20px 0 0;
-  color: #4a6395;
-  font-size: 13px;
-  line-height: 1.5;
-  font-variant-numeric: tabular-nums;
-}
-
-.search-loading-dialog .search-loading-patience {
-  margin: 13px 0 0;
-  padding: 11px 13px;
-  border: 1px solid #e1e9f8;
-  border-radius: 9px;
-  background: #f5f8fe;
-  color: #5a6b86;
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.search-loading-dialog .search-loading-dismiss {
-  display: block;
-  width: 100%;
-  min-height: 46px;
-  margin: 24px 0 0;
-  padding: 11px 15px;
-  border: 1px solid #c6d4f4;
-  border-radius: 9px;
-  background: #edf3ff;
-  color: #2d52b0;
-  font-size: 14px;
-  font-weight: 550;
-  line-height: 1.4;
-  text-align: center;
-  touch-action: manipulation;
-  transition: background-color 140ms ease, border-color 140ms ease;
-}
-
-.search-loading-dialog .search-loading-dismiss:hover {
-  border-color: #8fa9e8;
-  background: #e3ecff;
-}
-
-.search-loading-dialog .search-loading-dismiss:active { background: #d9e5ff; }
-.search-loading-dialog .search-loading-dismiss:focus-visible { outline: 3px solid #7698ff; outline-offset: 4px; }
+/* An indeterminate sweep shows ongoing work without inventing a percentage. */
+.search-loading-track { height: 4px; margin-top: 24px; border-radius: 10px; background: #edf2fb; overflow: hidden; }
+.search-loading-track > i { display: block; width: 40%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #91afff, #315be0, #91afff); animation: search-loading-sweep 1.8s ease-in-out infinite; }
+@keyframes search-loading-sweep { from { transform: translateX(-110%); } to { transform: translateX(360%); } }
 
 .search-loading-art {
   position: relative;
@@ -170,19 +127,17 @@
 @media (max-width: 380px) {
   .search-loading-dialog { padding: 23px 20px; border-radius: 16px; }
   .search-loading-dialog h2 { font-size: 22px; }
-  .search-loading-dialog .search-loading-dismiss { padding-right: 10px; padding-left: 10px; }
 }
 
 @media (max-height: 540px) {
   .search-loading-dialog { padding: 20px; }
   .search-loading-art { display: none; }
   .search-loading-dialog h2 { font-size: 22px; }
-  .search-loading-dialog .search-loading-elapsed { margin-top: 14px; }
-  .search-loading-dialog .search-loading-dismiss { margin-top: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .search-loading-track > i,
   .search-loading-card--front,
   .search-loading-dots > i { animation: none; }
-  .search-loading-dialog .search-loading-dismiss { transition: none; }
+  .search-loading-track > i { width: 100%; opacity: .55; }
 }

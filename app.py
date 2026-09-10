@@ -114,6 +114,33 @@ def public_state(state):
                                'refresh_required': restricted_legacy_pool(state)}}
 
 
+def welcome_message(result):
+    """Use final card counts, not model guesses or the whole prefiltered corpus."""
+    jobs = result['jobs']
+    total = len(jobs)
+    # Match the initial visibility policy in frontend/score-visibility.js.
+    visible = sum(type(job.get('match', {}).get('score')) is int
+                  and 70 <= job['match']['score'] <= 100 for job in jobs)
+    if not total:
+        overview = 'Ich habe aktuell keine Stellen zur gewählten Stellenart gefunden.'
+        invitation = 'Stell mir gern Rückfragen oder lass uns deine Suche gemeinsam anpassen.'
+    else:
+        found = 'eine Stelle' if total == 1 else f'{total} Stellen'
+        overview = f'Ich habe {found} gefunden und bewertet.'
+        if visible == total:
+            overview += ' Du kannst sie links in der Ergebnisübersicht ansehen.'
+        elif visible:
+            overview += (f' Links siehst du {visible} '
+                         f"{'passende Stelle' if visible == 1 else 'passende Stellen'}; "
+                         'die übrigen kannst du dort einblenden.')
+        else:
+            overview += (' Aktuell erreicht keine 70 Punkte. '
+                         'Du kannst die Stellen links trotzdem einblenden.')
+        invitation = 'Stell mir gern Rückfragen zu den Stellen oder lass uns die Suche verfeinern.'
+    # Retain the personality's factual explanation as a separate short paragraph.
+    return f"Hallo! {overview} {invitation}\n\n{result['assistant_message']}"
+
+
 def create_app(config=None, *, retriever=None, llm=None):
     # Explicit path: never load an unrelated parent-directory .env.
     load_dotenv(BASE_DIR / '.env', override=False)
@@ -223,9 +250,23 @@ def create_app(config=None, *, retriever=None, llm=None):
         if not wants_ndjson():
             return jsonify(complete_operation(operation)), status
 
+        # Preserve HTTP errors before the first event, while forwarding the first
+        # preview/phase immediately rather than buffering the completed operation.
+        try:
+            first_event = next(operation)
+        except StopIteration as completed:
+            operation.close()
+            return Response(ndjson_line({'type': 'result', 'data': completed.value}),
+                            mimetype='application/x-ndjson',
+                            headers={'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no'})
+        except BaseException:
+            operation.close()
+            raise
+
         @stream_with_context
         def events():
             try:
+                yield ndjson_line(first_event)
                 while True:
                     try:
                         event = next(operation)
@@ -242,8 +283,10 @@ def create_app(config=None, *, retriever=None, llm=None):
             finally:
                 operation.close()
 
-        return Response(events(), mimetype='application/x-ndjson',
-                        headers={'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no'})
+        response = Response(events(), mimetype='application/x-ndjson',
+                            headers={'Cache-Control': 'no-store', 'X-Accel-Buffering': 'no'})
+        response.call_on_close(operation.close)
+        return response
 
     def parse_body(schema):
         if not request.is_json:
@@ -252,13 +295,28 @@ def create_app(config=None, *, retriever=None, llm=None):
         body = request.get_json()
         return schema.model_validate(body), None
 
-    def rank_candidates(profile, persona, candidates, filtered_count, advisor,
+    def model_steps(method, *args, **kwargs):
+        stream_method = getattr(language_model, f'{method}_steps', None)
+        if wants_ndjson() and callable(stream_method):
+            return (yield from stream_method(*args, **kwargs, stream=True))
+        return getattr(language_model, method)(*args, **kwargs)
+
+    def rank_candidate_steps(profile, persona, candidates, filtered_count, advisor,
                         chat_message=None, chat_context=None, assessment_cache=None):
         with timed_phase('rerank'):
-            reranked = language_model.rerank(persona or {}, profile, candidates,
-                                             advisor=advisor, chat_message=chat_message,
-                                             chat_context=chat_context,
-                                             assessment_cache=assessment_cache)
+            steps = model_steps('rerank', persona or {}, profile, candidates,
+                                advisor=advisor, chat_message=chat_message,
+                                chat_context=chat_context, assessment_cache=assessment_cache)
+            try:
+                while True:
+                    try:
+                        event = next(steps)
+                    except StopIteration as completed:
+                        reranked = completed.value
+                        break
+                    yield {'type': 'assistant_text', 'text': event['data']['assistant_message']}
+            finally:
+                steps.close()
         lookup = {item['job']['id']: item for item in candidates}
         cards = []
         for result in reranked['rankings']:
@@ -314,8 +372,9 @@ def create_app(config=None, *, retriever=None, llm=None):
                                       persona['retrieval_query'], profile['query']] if x)
         with timed_phase('retrieval'):
             candidates = engine.search(jobs, query, top_k=20)
-        return {**rank_candidates(profile, persona, candidates, len(jobs), advisor,
-                                   chat_message, {**(chat_context or {}), 'scope': 'new_search'}),
+        ranked = yield from rank_candidate_steps(profile, persona, candidates, len(jobs), advisor,
+                                   chat_message, {**(chat_context or {}), 'scope': 'new_search'})
+        return {**ranked,
                 '_persona_fingerprint': current_fingerprint,
                 'chat_action': 'search'}
 
@@ -343,6 +402,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=body.advisor.model_dump())
+            result['assistant_message'] = welcome_message(result)
             state = {**result, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
             session_id = sessions.create(state)
@@ -374,74 +434,91 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error_response({'code': 'not_found', 'message': 'Chat nicht gefunden.'}, 404)
         state, version = saved
         previous_advisor = AdvisorConfig.model_validate(state.get('advisor', {})).model_dump()
-        advisor = body.advisor.model_dump() if body.advisor is not None else previous_advisor
-        profile = body.profile.model_dump() if body.profile is not None else state['profile']
-        context = {'messages': state['messages'][-12:], 'jobs': state['jobs'][:20]}
-        action = 'answer'
-        answer = 'Dein Suchprofil ist unverändert. Die bisherigen Empfehlungen bleiben erhalten.'
-        if body.message:
-            with timed_phase('chat_plan'):
-                decision = language_model.plan_chat(profile, context['messages'], body.message,
-                                                    jobs=context['jobs'], advisor=advisor,
-                                                    mode=body.mode,
-                                                    candidate_count=len(state.get('_candidates', [])))
-            try:
-                profile = merge_profile(profile, decision['profile_patch'])
-            except ValidationError:
-                raise LLMUnavailable('Die KI hat eine ungültige Profiländerung vorgeschlagen.') from None
-            action, answer = decision['action'], decision['assistant_message']
-        core_changed, preferences_changed = profile_changes(state['profile'], profile)
-        advisor_changed = advisor != previous_advisor
-        planned_action = action
-        # The server, not the model, decides whether changed hard criteria may be
-        # applied to cached jobs. A new search is mandatory for retrieval changes.
-        if body.mode == 'search' or core_changed:
-            action = 'search'
-        elif body.mode == 'rerank':
-            action = 'rerank'
-        elif action != 'search' and (preferences_changed or advisor_changed):
-            action = 'rerank'
-
-        refresh_required = restricted_legacy_pool(state)
-        if action == 'rerank' and refresh_required and body.mode != 'rerank':
-            # Once, on an actual matching request, rebuild pools that were
-            # previously narrowed by location, work model or hours. Plain
-            # questions still leave stored results and scores untouched.
-            action = 'search'
-
-        if body.mode == 'rerank' and refresh_required:
-            action = 'answer'
-            answer = ('Deine bisherige Auswahl wurde noch nach Ort, Arbeitsmodell oder Stunden '
-                      'vorab eingeschränkt. Starte einmal „Neue Suche“, damit auch andere '
-                      'Stellen berücksichtigt werden. Danach kannst du wieder nur neu bewerten.')
-            profile, advisor = state['profile'], previous_advisor
-        elif body.mode == 'rerank' and (core_changed or planned_action == 'search'):
-            action = 'answer'
-            answer = ('Dafür ist eine neue Suche nötig, weil sich die Suchkriterien ändern '
-                      'oder weitere Stellen benötigt werden. Wähle „Neue Suche“ oder „Automatisch“. '
-                      'Dein bisheriges Profil und die Ergebnisse bleiben erhalten.')
-            profile, advisor = state['profile'], previous_advisor
-        elif action == 'rerank' and '_candidates' not in state:
-            action = 'answer'
-            answer = ('Für diesen älteren Chat wurden nur die angezeigten Empfehlungen gespeichert. '
-                      'Wähle einmal „Neue Suche“, um die vollständige Auswahl für späteres '
-                      'Nachsortieren zu speichern. Dein Profil und die Ergebnisse bleiben erhalten.')
-            profile, advisor = state['profile'], previous_advisor
-        elif action == 'rerank' and not state['_candidates']:
-            action = 'answer'
-            answer = ('Deine bisherige Suche hat keine passenden Stellen gefunden. '
-                      'Zum Nachsortieren sind deshalb keine Jobs vorhanden. '
-                      'Ändere dein Suchprofil oder starte eine neue Suche.')
-            profile, advisor = state['profile'], previous_advisor
-
         def operation():
+            advisor = body.advisor.model_dump() if body.advisor is not None else previous_advisor
+            profile = body.profile.model_dump() if body.profile is not None else state['profile']
+            context = {'messages': state['messages'][-12:], 'jobs': state['jobs'][:20]}
+            action = 'answer'
+            answer = 'Dein Suchprofil ist unverändert. Die bisherigen Empfehlungen bleiben erhalten.'
+            if body.message:
+                with timed_phase('chat_plan'):
+                    steps = model_steps('plan_chat', profile, context['messages'], body.message,
+                                        jobs=context['jobs'], advisor=advisor, mode=body.mode,
+                                        candidate_count=len(state.get('_candidates', [])))
+                    try:
+                        while True:
+                            try:
+                                event = next(steps)
+                            except StopIteration as completed:
+                                decision = completed.value
+                                break
+                            preview = event['data']
+                            preview_profile = merge_profile(profile, preview['profile_patch'])
+                            # Only show a planner answer when the server can keep
+                            # the current results. Search/rerank confirmations are
+                            # replaced by the actual ranking response later.
+                            if (body.mode == 'auto' and preview['action'] == 'answer'
+                                    and advisor == previous_advisor
+                                    and not any(profile_changes(state['profile'], preview_profile))):
+                                yield {'type': 'assistant_text', 'text': preview['assistant_message']}
+                    finally:
+                        steps.close()
+                try:
+                    profile = merge_profile(profile, decision['profile_patch'])
+                except ValidationError:
+                    raise LLMUnavailable('Die KI hat eine ungültige Profiländerung vorgeschlagen.') from None
+                action, answer = decision['action'], decision['assistant_message']
+            core_changed, preferences_changed = profile_changes(state['profile'], profile)
+            advisor_changed = advisor != previous_advisor
+            planned_action = action
+            # The server, not the model, decides whether changed hard criteria may be
+            # applied to cached jobs. A new search is mandatory for retrieval changes.
+            if body.mode == 'search' or core_changed:
+                action = 'search'
+            elif body.mode == 'rerank':
+                action = 'rerank'
+            elif action != 'search' and (preferences_changed or advisor_changed):
+                action = 'rerank'
+
+            refresh_required = restricted_legacy_pool(state)
+            if action == 'rerank' and refresh_required and body.mode != 'rerank':
+                # Once, on an actual matching request, rebuild pools that were
+                # previously narrowed by location, work model or hours. Plain
+                # questions still leave stored results and scores untouched.
+                action = 'search'
+
+            if body.mode == 'rerank' and refresh_required:
+                action = 'answer'
+                answer = ('Deine bisherige Auswahl wurde noch nach Ort, Arbeitsmodell oder Stunden '
+                          'vorab eingeschränkt. Starte einmal „Neue Suche“, damit auch andere '
+                          'Stellen berücksichtigt werden. Danach kannst du wieder nur neu bewerten.')
+                profile, advisor = state['profile'], previous_advisor
+            elif body.mode == 'rerank' and (core_changed or planned_action == 'search'):
+                action = 'answer'
+                answer = ('Dafür ist eine neue Suche nötig, weil sich die Suchkriterien ändern '
+                          'oder weitere Stellen benötigt werden. Wähle „Neue Suche“ oder „Automatisch“. '
+                          'Dein bisheriges Profil und die Ergebnisse bleiben erhalten.')
+                profile, advisor = state['profile'], previous_advisor
+            elif action == 'rerank' and '_candidates' not in state:
+                action = 'answer'
+                answer = ('Für diesen älteren Chat wurden nur die angezeigten Empfehlungen gespeichert. '
+                          'Wähle einmal „Neue Suche“, um die vollständige Auswahl für späteres '
+                          'Nachsortieren zu speichern. Dein Profil und die Ergebnisse bleiben erhalten.')
+                profile, advisor = state['profile'], previous_advisor
+            elif action == 'rerank' and not state['_candidates']:
+                action = 'answer'
+                answer = ('Deine bisherige Suche hat keine passenden Stellen gefunden. '
+                          'Zum Nachsortieren sind deshalb keine Jobs vorhanden. '
+                          'Ändere dein Suchprofil oder starte eine neue Suche.')
+                profile, advisor = state['profile'], previous_advisor
+
             if action == 'search':
                 result = yield from match_steps(
                     profile, chat_message=body.message or 'Erkläre kurz die neue Auswahl.',
                     chat_context=context, advisor=advisor, persona=state.get('persona'),
                     saved_persona_fingerprint=state.get('_persona_fingerprint'))
             elif action == 'rerank':
-                result = rank_candidates(profile, state.get('persona'), state['_candidates'],
+                result = yield from rank_candidate_steps(profile, state.get('persona'), state['_candidates'],
                                          state['retrieval']['filtered_count'], advisor,
                                          body.message or 'Bewerte die vorhandene Auswahl neu und erkläre sie kurz.',
                                          {**context, 'scope': 'existing_candidates'},

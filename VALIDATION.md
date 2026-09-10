@@ -1,8 +1,171 @@
-# Validierung am 09.09.2026
+# Validierung am 10.09.2026
 
 Laufzeit: Python 3.12.14, lokale isolierte `.venv` auf macOS ARM64.
 
-Aktuelle Änderung: Git-Repository für die Übergabe an
+Aktuelle Änderung: Die grüne Zusammenfassung des Suchwunsches oberhalb der
+Persönlichkeitsauswahl ist entfernt, einschließlich der ungenutzten CSS-Regeln.
+Die Angaben bleiben im Suchprofil erhalten. Produktionsbuild erfolgreich;
+Suchseite und aktuelle Assets per HTTP geprüft. Keine neuen Tests oder
+Backendänderungen für diese Entfernung.
+
+Vorangegangene Änderung: „Wie beeinflusst das meine Suche?“ ist jetzt ein kleines
+Info-Icon direkt neben „KI-Suchpersönlichkeit“. Der separate Textbutton entfällt.
+Das Icon öffnet weiterhin denselben Erklärdialog mit Grafik; Tooltip, zugänglicher
+Name, Tastaturbedienung und Lade-Sperre bleiben erhalten.
+
+Produktionsbuild und React-SSR-Prüfung von Position, Icon, Beschriftung und
+Lade-Sperre erfolgreich. Suchseite und aktuelle Assets per HTTP bestätigt.
+Keine neuen Tests, Backendänderungen oder Browserprüfung für diese Layoutänderung.
+
+Vorangegangene Änderung: Die Formularüberschrift heißt „KI-Suchpersönlichkeit“.
+„Vorlage“ steht als kompakte Auswahl mit Pfeil rechts daneben. Die native
+Auswahl mit drei Personen, automatisches Ausfüllen, Fokusziel und Lade-Sperren
+bleiben erhalten. Flexible Überschrift und mindestens 44 Pixel Bedienhöhe
+berücksichtigen schmale Chatbereiche und Mobilgeräte.
+
+Produktionsbuild erfolgreich. Neuer gemeinsamer Kopfbereich, Standardpersönlichkeit,
+drei Vorlagen sowie aktive/gesperrte Auswahl per React-SSR geprüft. Suchseite
+und aktuelle Assets per HTTP bestätigt. Keine neuen Tests, Backendänderungen
+oder Browserprüfung für diese Layoutänderung.
+
+Vorangegangene Änderung: Suchhinweis „Das kann bis zu zwei Minuten dauern.“ und eine
+Begrüßung in der ersten Chatnachricht nach der Suche. Der Server ergänzt nach der
+Bewertung die tatsächliche Trefferzahl, die sichtbare Teilmenge ab 70 Punkten,
+den Verweis auf die Ergebnisübersicht links und die Einladung zu Rückfragen.
+Die ursprüngliche persönliche KI-Erklärung bleibt im nächsten Absatz erhalten.
+Bei null sichtbaren Treffern wird keine sichtbare Stellenliste behauptet;
+weniger passende Stellen können weiterhin eingeblendet werden.
+
+Die Begrüßung wird einmal mit dem neuen Chat gespeichert. Keine zusätzliche
+KI-Anfrage, keine geänderten Modelle, Scores oder Folgeantworten. Produktionsbuild
+erfolgreich; lokaler Server neu gestartet und aktuelle Assets per HTTP geprüft.
+**175 API-Tests bestanden.** Sie prüfen unter anderem gemischte, komplett sichtbare,
+ausgeblendete, einzelne und leere Ergebnisse sowie gespeicherte Begrüßungen und
+unveränderte Folgeantworten. Kein kostenpflichtiger Modell- oder Browsertest.
+
+Vorangegangene Änderung: kompaktere Profilerstellung. Der kurze Button „Beispielprofil“
+steht neben „Was passt zu dir?“, der Einleitungssatz entfällt. Vorlagen werden
+über ein natives Dropdown gewählt; Name und Eingabe stehen in einer Zeile.
+Die drei Vorlagen füllen weiterhin alle Felder, danach bleiben sie bearbeitbar.
+Beschriftungen, Hinweise und Auswahlerfolg bleiben für Screenreader zugänglich.
+Bedienelemente behalten mindestens 44 Pixel Höhe, schmale Container verwenden
+kompakte Beschriftungen und flexible Eingabebreiten.
+
+Produktionsbuild und alle **70 Frontend-Tests erfolgreich**. Profilkopf,
+Bearbeitungsansicht und Standardpersönlichkeit plus drei Vorlagen per React-SSR
+geprüft. Suchseite und aktuelle Assets per HTTP bestätigt.
+Keine neuen Tests oder Backendänderungen für diese Layoutänderung.
+
+Vorangegangene Änderung: KI-Sprechblasen, echtes Streaming und kompaktere Ergebnisse.
+Die zusätzliche Persönlichkeits-Score-Zeile über den Stellen ist entfernt. Das
+Such-Popup zeigt animierte Karten und eine Lichtspur ohne Zeitangabe oder
+Hintergrund-Button. Auch im Chat ersetzt eine Punkteanimation den Sekundenzähler.
+
+- GPT-5.4, Prompts, Ausgabegrenzen, Reasoning-Stufen und vollständige Begründungen
+  für alle bis zu 20 Kandidaten bleiben erhalten.
+- Responses-SDK-Streaming, strukturierte Zwischenstände, NDJSON-Transport und
+  React-Vorschau verbunden. Keine zusätzliche API-Anfrage pro Nachricht.
+- Vorschautext ändert keine Session. Ergebnisprüfung und optimistische Sperre
+  gelten weiterhin; Abbruch/Fehler schließen den Upstream und speichern keine
+  Teilantwort. Reine Fragen lösen weder neue Suche noch Neubewertung aus.
+- **449 Backend-Tests bestanden, 1 optionaler Test übersprungen.** Darunter echte
+  OpenAI-SDK-SSE-Verarbeitung mit simuliertem HTTP-Transport: frühe Textausgabe,
+  Unicode/JSON-Escapes, Abbruch, 20 Stellen mit vollständigen Begründungen sowie
+  unverändertes Modell und unveränderte Reasoning-Einstellungen.
+- **70 Frontend-Tests bestanden**, inklusive Text vor Endergebnis, getrennten
+  UTF-8-Bytes, Fehlern und unvollständigen Streams ohne automatisches Wiederholen.
+- Produktionsbuild erfolgreich; beide Sprechblasen und der Suchdialog per React-SSR
+  geprüft. Lokaler Server neu gestartet, Startseite, Suche, Modellkonfiguration,
+  bereiter Index sowie aktuelle Build-Assets per HTTP bestätigt.
+  Kein Browser- oder kostenpflichtiger Modelltest;
+  die neuen Streaming-Tests verwenden kontrollierte Antworten.
+
+Vorangegangene Änderung: Koffer-Icon bei „Jobs bewerten & sortieren“ in der Info
+durch Lucides `ArrowDownWideNarrow` ersetzt: absteigende Balken mit Sortierpfeil.
+Größe, Farbe und zugänglicher Begleittext bleiben erhalten. Produktionsbuild
+erfolgreich; Suchseite und aktuelle Assets inklusive neuem Icon per HTTP geprüft.
+Keine neuen Tests, Backendänderungen oder Browserprüfung für diesen Iconwechsel.
+Änderungen bleiben lokal.
+
+Vorangegangene Änderung: Info-Überschrift und zentrales Grafiklabel heißen
+„KI-Suchpersönlichkeit“. Der Bereich „Jobs bewerten & sortieren“ erklärt ausdrücklich,
+dass Nutzerprofil und KI-Persönlichkeit gemeinsam die Bewertung und Reihenfolge
+bestimmen. Einleitung, fachlicher Vorrang, Gesprächsbereich und Pfeilverbindungen
+bleiben erhalten; Beispiele und separater Hinweis bleiben entfernt.
+
+Produktionsbuild erfolgreich. Beide Dialogvarianten per React-Server-Rendering
+auf Titel, gemeinsame Bewertungsgrundlage und zwei Pfeile geprüft. Suchseite und
+aktuelle Assets per HTTP geprüft; ausgelieferte Dateien entsprechen dem Build.
+Keine neuen Tests, Backendänderungen, Modellaufrufe oder Browserprüfung für diese
+Textänderung. Änderungen bleiben lokal.
+
+Vorangegangene Änderung: Gewünschten Einleitungstext im Persönlichkeitsdialog exakt
+zusammengeführt, einschließlich fachlicher Passung und Vorlagenhinweis. Der separate
+Hinweis unter der Grafik entfällt. Grafik mit zentraler Persönlichkeit, Verbindungen
+und zwei Pfeilen zu den farbigen Wirkungsbereichen wiederhergestellt. Die kurze
+Überschrift und die Entfernung der Beispiele bleiben erhalten. Zwei Spalten und
+Pfeile bleiben auch bei schmaler Darstellung verbunden; Dialoghöhe ist begrenzt
+und der Inhalt bei Bedarf scrollbar.
+
+Produktionsbuild erfolgreich. Beide Dialogvarianten per React-Server-Rendering
+geprüft: exakter Einleitungstext, zusätzlicher Hinweis genau einmal in der Einleitung,
+zwei Pfeile und zwei Wirkungsbereiche, keine Beispiele oder erzwungenen Titelumbrüche.
+Suchseite und aktuelle Assets per HTTP geprüft; ausgelieferte Dateien entsprechen
+dem Build. Keine neuen Tests, Backendänderungen, Modellaufrufe oder Browserprüfung.
+Änderungen bleiben lokal.
+
+Vorangegangene Änderung: Persönlichkeits-Einführung vereinfacht. Kurze Überschrift
+„Deine Persönlichkeit“ ohne erzwungenen Zeilenumbruch und mit responsiver Schriftgröße.
+Zwei farbige Bereiche mit Icons erklären in je einem Satz „Stellen bewerten“ und
+„Mit dir sprechen“. Beispiele (einschließlich auskommentierter Reste), zusätzliche
+Unterüberschrift, zentrale Wiederholung und Pfeilverzweigung entfernt. Die Grundlage
+bleibt in einem kurzen Satz erklärt. Beide Bereiche stehen auch mobil in klarer
+Lesereihenfolge untereinander. Vorlagenauswahl und Erstellungsfelder bleiben erhalten.
+
+Produktionsbuild erfolgreich. Beide Dialogvarianten per React-Server-Rendering
+geprüft: kurze Überschrift ohne `<br>`, genau zwei Wirkungsbereiche, keine Beispiele,
+passender Bestätigungsbutton. Suchseite und aktuelle Assets per HTTP geprüft;
+ausgelieferte Dateien stimmen mit dem Build überein. Keine neuen Tests,
+Backendänderungen, Modellaufrufe oder Browserprüfung für diese Darstellungsänderung.
+Änderungen bleiben lokal.
+
+Vorangegangene Änderung: Die Persönlichkeitskonfiguration startet als eigene,
+direkt bearbeitbare KI-Beratung. Drei optionale Vorlagen (Steve Jobs, Angela Merkel,
+Günther Jauch) füllen Name, Bewertungsschwerpunkt, Gesprächseigenschaften und freie
+Hinweise vollständig aus. Die Oberfläche sendet diese sichtbaren Werte als
+`mode: custom`; nachträgliche Änderungen bleiben erhalten. Der frühere Moduswechsel
+und die vier nicht bearbeitbaren Vorbildkarten sind entfernt. Alte Sitzungen
+bleiben unverändert, bis ein Entwurf ausdrücklich angewendet wird; feste API-Presets
+bleiben kompatibel. Die Backend-Formeln und Modellpfade sind unverändert.
+
+Eine kurze native Dialog-Einführung vor dem ersten Wechsel zu Schritt 2 zeigt eine
+HTML/CSS-Grafik mit zwei Wirkungen: ergänzende Gewichtung/Score/Reihenfolge sowie
+Gesprächston/Rückfragen/Begründungen. Bestätigen öffnet die Erstellung, Schließen
+oder Escape kehrt zum Profil zurück. Die Einführung ist über den Hilfelink erneut
+aufrufbar und wird bei einem Rücksprung nicht automatisch wiederholt. „Neu starten“
+setzt den Einführungsstatus zurück. Native Modalität, Fokus auf die Überschrift,
+Schließen vor dem Schrittwechsel, zugängliche Beschriftungen, mobile Umbrüche und
+begrenzte Dialoghöhe mit internem Scrollen sind im Quelltext berücksichtigt.
+Formulierung und Feldhilfen verdeutlichen die Trennung von Suchprofil und Beratung.
+
+**66 Frontend-Tests bestanden**, darunter fünf neue Regressionstests für Standard,
+Vorlagenbefüllung, bearbeitete Felder, unabhängige Entwürfe und Legacy-Konvertierung.
+**227 bestehende Python-Tests für Bewertung und LLM-Anbindung bestanden.** Zusätzlich
+fünf tatsächlich aus den Frontend-Funktionen erzeugte Konfigurationen durch das
+Python-Schema und zehn gemockte Chat-/Bewertungspfade geprüft: Eigenschaften,
+Schwerpunkt und Freitext kommen unverändert an, Freitext bleibt außerhalb der
+Systemanweisungen. Gegenläufige Lern-/Gestaltungsbelege ändern bei gleicher
+Fachpassung die Reihenfolge entsprechend der jeweiligen Vorlage.
+
+React-Server-Rendering mit Standard und allen drei Vorlagen geprüft: genau drei
+Vorlagen, alle Eingabefelder sichtbar, keine alten Modus-Radios; Dialog enthält
+beide Wirkungsbereiche und die Einstiegsaktion. Produktionsbuild erfolgreich.
+Lokalen Server nach festgestelltem Stillstand neu gestartet; Health, vollständiger
+Index (8.537 Anzeigen), Suchseite und exakte Build-Assets per HTTP geprüft.
+Keine Browserprüfung und keine echten Modellaufrufe für diese Änderung.
+Alle Änderungen bleiben lokal und uncommitted; kein weiterer GitHub-Push.
+
+Vorangegangene Änderung (09.09.2026): Git-Repository für die Übergabe an
 `https://github.com/chris82829/RAG-Umfrage` eingerichtet, Branch `main`.
 Die README enthält einen Einstieg für einen frischen Clone einschließlich
 Frontend-Build und lokaler Konfiguration. `.gitignore` schützt API-Schlüssel,

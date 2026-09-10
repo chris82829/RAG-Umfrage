@@ -41,6 +41,7 @@ test('multiple work models chosen in chat survive editing the profile', () => {
 
 test('preset remains valid after clearing a custom name and switching modes', () => {
   const a = validateAdvisor({ ...defaultAdvisor, mode: 'preset', preset: 'angela', name: '', traits: [] });
+  assert.equal(a.mode, 'preset');
   assert.equal(a.preset, 'angela');
   assert.ok(a.name.length > 0);
   assert.deepEqual(Object.keys(advisorPresets), ['diana', 'steve', 'angela', 'guenther']);
@@ -75,7 +76,7 @@ test('AI names follow saved personalities and normalize custom names without dup
   assert.equal(advisorAiLabel(undefined), 'DIANA-KI');
   assert.equal(advisorAiLabel({}), 'DIANA-KI');
   for (const [preset, expected] of Object.entries({ diana: 'DIANA-KI', steve: 'Steve-Jobs-KI', angela: 'Angela-Merkel-KI', guenther: 'Günther-Jauch-KI' })) {
-    assert.equal(advisorAiLabel({ ...defaultAdvisor, preset }), expected);
+    assert.equal(advisorAiLabel({ ...defaultAdvisor, mode: 'preset', preset }), expected);
   }
   for (const [name, expected] of [['  Alex   Weber  ', 'Alex-Weber-KI'], ['Özlem', 'Özlem-KI'], ['Alex-ki', 'Alex-KI'], ['Alex KI', 'Alex-KI'], ['Alex-KI', 'Alex-KI'], ['Lern\nBegleitung', 'Lern-Begleitung-KI']]) {
     const advisor = Object.freeze({ ...defaultAdvisor, mode: 'custom', name });
@@ -87,7 +88,7 @@ test('AI names follow saved personalities and normalize custom names without dup
 test('score labels follow the selected personality, including old sessions and custom names', () => {
   assert.equal(advisorScoreLabel(undefined), 'DIANA-Score');
   for (const [preset, expected] of Object.entries({ diana: 'DIANA-Score', steve: 'Steve-Jobs-Score', angela: 'Angela-Merkel-Score', guenther: 'Günther-Jauch-Score' })) {
-    assert.equal(advisorScoreLabel({ ...defaultAdvisor, preset }), expected);
+    assert.equal(advisorScoreLabel({ ...defaultAdvisor, mode: 'preset', preset }), expected);
   }
   assert.equal(advisorScoreLabel({ ...defaultAdvisor, mode: 'custom', name: '  Alex   Weber  ' }), 'Alex-Weber-Score');
   assert.equal(advisorScoreLabel({ ...defaultAdvisor, mode: 'custom', name: 'Özlem' }), 'Özlem-Score');

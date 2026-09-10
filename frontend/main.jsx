@@ -5,6 +5,7 @@ import { emptyForm, exampleForm, fromProfile, labels, makeProfile, profileSummar
 import './style.css';
 import './job-reasons.css';
 import './job-card-actions.css';
+import './chat-bubbles.css';
 import useChatResize from './useChatResize.js';
 import { messagePreview } from './chat-layout.js';
 import { actionFeedback, candidatePool, canSendChat, pendingFeedback, profileChangeAction, recoveredSubmission, submittedChangeApplied } from './chat-actions.js';
@@ -17,8 +18,9 @@ import SearchLoadingDialog from './SearchLoadingDialog.jsx';
 import { requestOperation } from './search-request.js';
 import { canVisitJourneyStep, currentJourneyStep } from './journey-state.js';
 import AdvisorPicker from './AdvisorPicker.jsx';
+import PersonalityIntroDialog from './PersonalityIntroDialog.jsx';
 import AboutPage from './AboutPage.jsx';
-import { defaultAdvisor, advisorAiLabel, advisorScoreLabel, validateAdvisor } from './advisor.js';
+import { defaultAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
 
 const STORAGE_KEY = 'jobkompass-session-v1';
 const currentPage = () => window.location.pathname === '/suche' ? 'search' : 'about';
@@ -26,7 +28,7 @@ function CompassAvatar({ className = '' }) { return <span className={`compass-av
 function ChatMessageText({ text, assistant }) {
   const [expanded, setExpanded] = useState(false);
   const preview = assistant ? messagePreview(text) : text;
-  return <><div className="message-text">{expanded ? text : preview}</div>{preview !== text && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}</>;
+  return <div className="message-bubble"><div className="message-text">{expanded ? text : preview}</div>{preview !== text && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}</div>;
 }
 const demoIds = new Set(['900001', '900002', '900003', '900004', '900005']);
 function remember(id) { try { id ? localStorage.setItem(STORAGE_KEY, id) : localStorage.removeItem(STORAGE_KEY); } catch { /* The server session remains usable without browser storage. */ } }
@@ -125,7 +127,7 @@ function ScoreNotice({ lowCount, total, showLowScores, scoreLabel, busy, onToggl
   </div>;
 }
 
-function ProfileForm({ form, setForm, onSubmit, busy, ready, advisor, setAdvisor, step, onNext, onBack, editMode = false }) {
+function ProfileForm({ form, setForm, onSubmit, busy, ready, advisor, setAdvisor, step, onNext, onBack, onExplainAdvisor, editMode = false }) {
   const assistantName = advisorAiLabel(advisor);
   const update = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const heading = useRef(null);
@@ -135,8 +137,7 @@ function ProfileForm({ form, setForm, onSubmit, busy, ready, advisor, setAdvisor
   }, [step, editMode]);
   return <form className="profile-form" onSubmit={!editMode && step === 1 ? onNext : onSubmit}>
     {editMode || step === 1 ? <>
-    <div className="profile-intro"><span className="step-label">DEIN SUCHPROFIL</span><h2 ref={heading} tabIndex={-1}>{editMode ? 'Dein Profil bearbeiten' : 'Was passt zu dir?'}</h2><p>{editMode ? 'Passe deine Angaben an. Dein Chat und deine Persönlichkeit bleiben erhalten.' : 'Ein paar Angaben reichen für deine ersten Empfehlungen.'}</p></div>
-    {!editMode && <button type="button" className="example-button" onClick={() => setForm({ ...exampleForm })} disabled={busy}><CompassAvatar className="inline-compass" />Mit Beispielprofil ausprobieren<ArrowUpRight size={15} /></button>}
+    <div className={`profile-intro${editMode ? '' : ' profile-intro--compact'}`}><span className="step-label">DEIN SUCHPROFIL</span><div className="profile-intro-row"><h2 ref={heading} tabIndex={-1}>{editMode ? 'Dein Profil bearbeiten' : 'Was passt zu dir?'}</h2>{!editMode && <button type="button" className="example-button" aria-label="Mit Beispielprofil ausprobieren" title="Mit Beispielprofil ausprobieren" onClick={() => setForm({ ...exampleForm })} disabled={busy}>Beispielprofil<ArrowUpRight size={14} aria-hidden="true" /></button>}</div>{editMode && <p>Passe deine Angaben an. Dein Chat und deine Persönlichkeit bleiben erhalten.</p>}</div>
     <label>Was möchtest du machen?<textarea value={form.query} onChange={e => update('query', e.target.value)} maxLength={3000} rows={3} placeholder="Zum Beispiel: Ich suche einen Einstieg in Data Science …" disabled={busy} /></label>
     <label>Deine Fähigkeiten<input value={form.skills} onChange={e => update('skills', e.target.value)} placeholder="Python, SQL, Projektmanagement …" disabled={busy} /><span className="field-hint">Mit Kommas trennen</span></label>
     <label>Was ist dir bei der Arbeit wichtig?<input value={form.preferences} onChange={e => update('preferences', e.target.value)} placeholder="Teamarbeit, selbstständig arbeiten …" disabled={busy} /><span className="field-hint">Deine Wünsche fließen in die persönliche Bewertung ein.</span></label>
@@ -149,8 +150,7 @@ function ProfileForm({ form, setForm, onSubmit, busy, ready, advisor, setAdvisor
     </div></details>
     {editMode ? <><div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy}>{busy ? 'Profil wird angewendet …' : 'Profil anwenden'}<ArrowRight size={18} /></button></div><p className="privacy-note">Geänderte Wünsche und Erfahrung fließen in die Neubewertung ein. Suchziel, Fähigkeiten oder Stellenart starten eine neue Suche.</p></> : <button type="submit" className="primary-button" disabled={busy}>Weiter zur Persönlichkeit<ArrowRight size={18} /></button>}
     </> : <>
-    <div className="profile-recap"><Check size={16} /><span>{form.query || form.skills || 'Dein Suchprofil ist ausgefüllt.'}</span></div>
-    <AdvisorPicker value={advisor} onChange={setAdvisor} disabled={busy} headingRef={heading} />
+    <AdvisorPicker value={advisor} onChange={setAdvisor} disabled={busy} headingRef={heading} onExplain={onExplainAdvisor} />
     <div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Zurück</button>
     <button type="submit" className="primary-button" disabled={busy || !ready}>{!ready ? 'Suchindex wird vorbereitet …' : busy ? 'Deine Suche wird ausgewertet …' : 'Passende Jobs finden'}{!busy && ready && <ArrowRight size={18} />}</button></div>
     <p className="privacy-note">Dein Profil und ausgewählte Stellen werden zur KI-Auswertung an OpenAI übermittelt.</p>
@@ -167,6 +167,8 @@ function App() {
   const [form, setForm] = useState({ ...emptyForm });
   const [onboardingStep, setOnboardingStep] = useState(1);
   const [onboardingStarted, setOnboardingStarted] = useState(false);
+  const [personalityIntro, setPersonalityIntro] = useState(null);
+  const personalityIntroSeen = useRef(false);
   const [advisor, setAdvisor] = useState({ ...defaultAdvisor });
   const [editor, setEditor] = useState(null);
   const [operation, setOperation] = useState(null);
@@ -175,10 +177,8 @@ function App() {
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState('');
   const [error, setError] = useState('');
-  const [elapsed, setElapsed] = useState(0);
-  const [searchStartedAt, setSearchStartedAt] = useState(null);
-  const [searchElapsed, setSearchElapsed] = useState(0);
-  const [searchPopupDismissed, setSearchPopupDismissed] = useState(false);
+  const [searchActive, setSearchActive] = useState(false);
+  const [streamingText, setStreamingText] = useState('');
   const [indexState, setIndexState] = useState(null);
   const [mobileView, setMobileView] = useState('jobs');
   const [activity, setActivity] = useState('results');
@@ -186,6 +186,7 @@ function App() {
   const generation = useRef(0);
   const sending = useRef(false);
   const messagesEnd = useRef(null);
+  const followChat = useRef(true);
   const workspace = useRef(null);
   const previousPage = useRef(page);
   // Each editor retains its local draft when the guide opens another area.
@@ -239,19 +240,12 @@ function App() {
     return () => { alive = false; clearInterval(timer); };
   }, [indexState?.required, indexState?.status]);
   useEffect(() => {
-    if (!busy) { setElapsed(0); return; }
-    const start = Date.now();
-    const timer = setInterval(() => setElapsed(Math.floor((Date.now() - start) / 1000)), 1000);
-    return () => clearInterval(timer);
-  }, [busy]);
-  useEffect(() => { messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, [session?.messages?.length, pending]);
+    followChat.current = true;
+    messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [session?.messages?.length, pending]);
   useEffect(() => {
-    if (searchStartedAt === null) { setSearchElapsed(0); return; }
-    const update = () => setSearchElapsed(Math.floor((Date.now() - searchStartedAt) / 1000));
-    update();
-    const timer = setInterval(update, 1000);
-    return () => clearInterval(timer);
-  }, [searchStartedAt]);
+    if (streamingText && followChat.current) messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+  }, [streamingText]);
 
   function markSteps(...steps) {
     setCompletedSteps(previous => {
@@ -267,7 +261,7 @@ function App() {
   }
   async function run(body, endpoint, kind = 'chat') {
     if (sending.current) return;
-    sending.current = true; setBusy(true); setError(''); setSearchStartedAt(null); setSearchPopupDismissed(false);
+    sending.current = true; setBusy(true); setError(''); setSearchActive(false); setStreamingText('');
     let operationMode = kind === 'profile' ? profileChangeAction(session?.profile, body.profile) : body.mode || 'auto';
     if (kind === 'profile' && operationMode === 'rerank' && candidatePool(session).refreshRequired) operationMode = 'search';
     setOperation({ kind, mode: operationMode, assistantName: advisorAiLabel(body.advisor || session?.advisor || advisor) });
@@ -297,14 +291,16 @@ function App() {
     try {
       const result = await requestOperation(endpoint, body, phase => {
         if (generation.current !== turn || phase !== 'search') return;
-        setSearchStartedAt(previous => previous ?? Date.now());
+        setSearchActive(true); setStreamingText('');
         setOperation(previous => previous ? { ...previous, mode: 'search' } : previous);
+      }, text => {
+        if (generation.current === turn) setStreamingText(text);
       });
       if (generation.current !== turn) return;
       accept(result);
     } catch (e) {
       if (generation.current !== turn) return;
-      setSearchStartedAt(null);
+      setSearchActive(false); setStreamingText('');
       if (endpoint === '/chat' && session) {
         // Restore after conflicts or lost replies; never automatically resend a paid request.
         try {
@@ -318,7 +314,7 @@ function App() {
         } catch (restoreError) { if (restoreError.status === 404) { remember(null); setSession(null); setEditor(null); setOnboardingStep(1); setOnboardingStarted(false); setMobileView('jobs'); editorDrafts.current = { profile: false, advisor: false }; setActivity('results'); setCompletedSteps([]); } }
       }
       setError(e.status === 409 ? 'Dein Chat wurde zwischenzeitlich geändert. Der aktuelle Verlauf ist geladen; deine Eingabe bleibt erhalten.' : e instanceof TypeError ? 'Die Verbindung wurde unterbrochen. Deine Eingabe bleibt erhalten.' : e.message);
-    } finally { if (generation.current === turn) { sending.current = false; setBusy(false); setPending(''); setOperation(null); setSearchStartedAt(null); } }
+    } finally { if (generation.current === turn) { sending.current = false; setBusy(false); setPending(''); setOperation(null); setSearchActive(false); setStreamingText(''); } }
   }
   function beginOnboarding() {
     if (booting || busy || session) return;
@@ -327,12 +323,21 @@ function App() {
   function nextOnboardingStep(event) {
     event.preventDefault();
     if (booting || busy) return;
-    try { makeProfile(form); setError(''); markSteps(1); setOnboardingStep(2); } catch (e) { setError(e.message); }
+    try {
+      makeProfile(form); setError(''); markSteps(1);
+      if (personalityIntroSeen.current) setOnboardingStep(2);
+      else setPersonalityIntro('onboarding');
+    } catch (e) { setError(e.message); }
+  }
+  function continuePersonalityIntro() {
+    personalityIntroSeen.current = true;
+    setPersonalityIntro(null);
+    if (personalityIntro === 'onboarding') setOnboardingStep(2);
   }
   function startSearch(event) {
     event.preventDefault();
     if (booting || busy || !indexReady) return;
-    try { const body = { profile: makeProfile(form), advisor: validateAdvisor(advisor) }; markSteps(1, 2); void run(body, '/onboard', 'onboard'); } catch (e) { setError(e.message); }
+    try { const body = { profile: makeProfile(form), advisor: validateAdvisor(editableAdvisor(advisor)) }; markSteps(1, 2); void run(body, '/onboard', 'onboard'); } catch (e) { setError(e.message); }
   }
   function sendMessage(event) {
     event.preventDefault();
@@ -348,7 +353,7 @@ function App() {
   function applyAdvisor(event) {
     event.preventDefault();
     if (!session || busy || !candidatePool(session).canRerank) return;
-    try { void run({ session_id: session.session_id, advisor: validateAdvisor(advisor), mode: 'rerank' }, '/chat', 'advisor'); } catch (e) { setError(e.message); }
+    try { void run({ session_id: session.session_id, advisor: validateAdvisor(editableAdvisor(advisor)), mode: 'rerank' }, '/chat', 'advisor'); } catch (e) { setError(e.message); }
   }
   function cancelEditor() {
     if (busy) return;
@@ -434,6 +439,7 @@ function App() {
   }
   function reset() {
     if (busy) return;
+    personalityIntroSeen.current = false; setPersonalityIntro(null);
     generation.current++; remember(null); setSession(null); setRevealedResults(null); setOnboardingStep(1); setOnboardingStarted(false); setDraft(''); setPending(''); setError(''); setEditor(null); setMobileView('jobs'); setActivity('results'); setCompletedSteps([]); editorDrafts.current = { profile: false, advisor: false };
   }
   function navigate(nextPage, event) {
@@ -492,7 +498,6 @@ function App() {
         {indexState?.required && !indexReady && <div className="index-notice" role="status"><strong>{indexState.status === 'failed' ? 'Suchindex noch nicht vollständig' : 'Deine gesamte Jobdatenbank wird vorbereitet'}</strong><p>{indexState.completed.toLocaleString('de-DE')} von {indexState.total.toLocaleString('de-DE')} Anzeigen sind für die semantische Suche indexiert. Du kannst dein Profil schon ausfüllen.</p><progress value={indexState.completed} max={indexState.total || 1} aria-label="Fortschritt der Indexierung" /></div>}
         {error && (showWelcome || mobileView === 'jobs') && <div className={`error-banner${showWelcome ? '' : ' journey-mobile-error'}`} role="alert">{error}</div>}
         {booting ? <div className="empty-state" role="status"><span className="spinner" /><p>Deine Jobsuche wird geladen …</p></div> : session ? <>
-          <div className="list-caption"><span>{scoreLabel} 1–100</span></div>
           <div id="ranked-jobs" className="jobs-list" aria-busy={busy}>
             {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} />)}
             {!jobs.length && <div className="empty-state"><Search size={34} strokeWidth={1.3} /><h2>Hier ist noch Platz für deinen Match.</h2><p>{profileInfo.hardFilters.length && !pool.refreshRequired ? 'Aktuell gibt es keine Stellen zur gewählten Stellenart. Du kannst im Suchprofil oder Chat weitere Stellenarten einbeziehen.' : 'Aktuell liegen keine Stellenempfehlungen vor. Prüfe dein Suchprofil oder starte eine neue Suche.'}</p><button className="text-button" disabled={busy} onClick={() => { setDraft(profileInfo.hardFilters.length ? 'Welche Stellenarten sind aktuell ausgewählt und welche weiteren kommen für mich infrage?' : 'Welche Angaben sind aktuell in meinem Suchprofil gespeichert?'); showChat(); }}>Suchprofil im Chat besprechen <ArrowRight size={15} /></button></div>}
@@ -514,8 +519,8 @@ function App() {
         </AssistantActionArea>}
         {error && <div className="error-banner" role="alert">{error}</div>}
         {indexState?.required && !indexReady && <p className="index-chat-status" role="status">Suchindex: {indexState.completed.toLocaleString('de-DE')} von {indexState.total.toLocaleString('de-DE')} Anzeigen vorbereitet. {session ? 'Fragen und das Bewerten gespeicherter Jobs bleiben möglich. Neue Suchen sind nach Abschluss verfügbar.' : 'Deine Suche ist nach Abschluss verfügbar.'}</p>}
-        {!session ? <div className="profile-scroll"><ProfileForm form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={setAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} />{busy && <p className="waiting-note" role="status">Die persönliche Auswertung dauert meist etwa eine Minute. Bisher: {elapsed} Sekunden.</p>}</div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker value={advisor} onChange={editAdvisorDraft} disabled={busy} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
-          <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite">{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><div className="message-text">{pending}</div></div>}{busy && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="thinking"><span className="spinner" />{progressLabel}.<small>{elapsed} Sekunden</small></div></div>}<div ref={messagesEnd} /></div>
+        {!session ? <div className="profile-scroll"><ProfileForm form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={setAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} onExplainAdvisor={() => setPersonalityIntro('help')} /></div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker value={advisor} onChange={editAdvisorDraft} disabled={busy} onExplain={() => setPersonalityIntro('help')} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
+          <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite" onScroll={event => { const feed = event.currentTarget; followChat.current = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80; }}>{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><ChatMessageText text={pending} assistant={false} /></div>}{busy && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="message-bubble" aria-busy="true">{streamingText ? <div className="message-text streaming-text">{streamingText}</div> : <div className="chat-typing"><span className="sr-only">{progressLabel}</span><span aria-hidden="true"><i /><i /><i /></span></div>}</div></div>}<div ref={messagesEnd} /></div>
           <div className="chat-bottom">{chatSuggestions.length > 0 && <details className="chat-examples"><summary>Vorschläge für deinen nächsten Schritt</summary><div className="suggestions">{chatSuggestions.map(suggestion => <button key={suggestion.id} disabled={busy} onClick={() => { setDraft(suggestion.message); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><Plus size={13} />{suggestion.label}</button>)}</div></details>}
             {!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum erneuten Bewerten sind gerade keine gespeicherten Jobs verfügbar.'} Du kannst im Chat um eine neue Suche bitten.</p>}
             <form className="chat-composer" onSubmit={sendMessage}><label className="sr-only" htmlFor="chat-input">Nachricht an {assistantName}</label><textarea id="chat-input" rows={2} maxLength={3000} value={draft} onChange={e => setDraft(e.target.value)} placeholder="Was möchtest du wissen oder ändern?" disabled={busy} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); sendMessage(e); } }} /><button type="submit" aria-label="Nachricht senden" disabled={busy || !canSendChat('auto', draft, session)}><ArrowUp size={20} /></button></form>
@@ -525,7 +530,7 @@ function App() {
       </aside>
     </main>
     {session && mobileView === 'jobs' && <div className="mobile-assistant-access"><button type="button" className="journey-next-button" disabled={busy || booting} onClick={() => { selectAssistantView('chat'); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><MessageCircle size={17} aria-hidden="true" />Profil & Chat öffnen<ArrowRight size={16} aria-hidden="true" /></button></div>}
-  </div>{page === 'about' && <AboutPage onStart={event => navigate('search', event)} />}<SearchLoadingDialog open={busy && searchStartedAt !== null && !searchPopupDismissed && page === 'search'} elapsed={searchElapsed} assistantName={pendingAssistantName} onDismiss={() => setSearchPopupDismissed(true)} /></>;
+  </div>{page === 'about' && <AboutPage onStart={event => navigate('search', event)} />}<PersonalityIntroDialog open={personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={busy && searchActive && page === 'search'} assistantName={pendingAssistantName} /></>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

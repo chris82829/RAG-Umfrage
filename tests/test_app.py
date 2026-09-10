@@ -1636,3 +1636,150 @@ def test_closing_stream_after_phase_does_not_start_models_or_create_session(setu
     assert not llm.calls and not retriever.calls
     with app.extensions['chat_store'].connect() as db:
         assert db.execute('SELECT COUNT(*) FROM chat_sessions').fetchone()[0] == 0
+
+
+def install_chat_stream(llm, *, fail=False):
+    def steps(*args, **kwargs):
+        assert kwargs.pop('stream') is True
+        decision = llm.plan_chat(*args, **kwargs)
+        for text in ['Python', decision['assistant_message']]:
+            yield {'type': 'assistant_preview', 'data': {**decision, 'assistant_message': text}}
+        if fail:
+            raise LLMUnavailable('Die Verbindung zur KI wurde unterbrochen.')
+        return decision
+    llm.plan_chat_steps = steps
+
+
+def test_chat_text_arrives_before_commit_and_final_message_is_saved_once(setup):
+    app, client, retriever, llm = setup
+    initial = client.post('/api/onboard', json=payload()).json
+    before = app.extensions['chat_store'].get(initial['session_id'])
+    llm.patch, llm.action = {}, 'answer'
+    install_chat_stream(llm)
+    retriever.calls.clear()
+    response = client.post('/api/chat', json={'session_id': initial['session_id'], 'message': 'Warum?'},
+                           headers=STREAM_HEADERS, buffered=False)
+    iterator = iter(response.response)
+    try:
+        assert json.loads(next(iterator)) == {'type': 'assistant_text', 'text': 'Python'}
+        assert app.extensions['chat_store'].get(initial['session_id']) == before
+        remaining = [json.loads(event) for event in iterator]
+    finally:
+        response.close()
+    assert [event['type'] for event in remaining] == ['assistant_text', 'result']
+    final = remaining[-1]['data']
+    assert len(final['messages']) == len(initial['messages']) + 2
+    assert final['messages'][-1]['content'] == llm.answer
+    assert_recommendations_unchanged(initial, final)
+    assert not retriever.calls
+
+
+@pytest.mark.parametrize('failure', ['disconnect', 'upstream', 'conflict'])
+def test_partial_answer_never_commits_on_failure(setup, failure):
+    app, client, _, llm = setup
+    initial = client.post('/api/onboard', json=payload()).json
+    store = app.extensions['chat_store']
+    before = store.get(initial['session_id'])
+    llm.patch, llm.action = {}, 'answer'
+    install_chat_stream(llm, fail=failure == 'upstream')
+    response = client.post('/api/chat', json={'session_id': initial['session_id'], 'message': 'Warum?'},
+                           headers=STREAM_HEADERS, buffered=False)
+    iterator = iter(response.response)
+    assert json.loads(next(iterator))['type'] == 'assistant_text'
+    if failure == 'disconnect':
+        response.close()
+        assert store.get(initial['session_id']) == before
+        return
+    if failure == 'conflict':
+        state, version = before
+        store.update(initial['session_id'], {**state, 'assistant_message': 'Parallel gespeichert.'}, version)
+        before = store.get(initial['session_id'])
+    events = [json.loads(event) for event in iterator]
+    response.close()
+    assert events[-1]['type'] == 'error'
+    assert events[-1]['status'] == (409 if failure == 'conflict' else 503)
+    assert not any(event['type'] == 'result' for event in events)
+    assert store.get(initial['session_id']) == before
+
+
+@pytest.mark.parametrize('action,patch,mode', [
+    ('rerank', {}, 'auto'), ('search', {}, 'auto'),
+    ('answer', {'skills': ['Rust']}, 'auto'),
+    ('answer', {'preferences': ['Mentoring']}, 'auto'),
+    ('answer', {}, 'rerank'), ('answer', {}, 'search'),
+])
+def test_chat_dispatch_does_not_stream_a_planner_answer_that_will_be_replaced(setup, action, patch, mode):
+    _, client, _, llm = setup
+    initial = client.post('/api/onboard', json=payload()).json
+    llm.patch, llm.action = patch, action
+    install_chat_stream(llm)
+    events = stream_events(client.post('/api/chat', json={'session_id': initial['session_id'],
+                            'message': 'Bitte anpassen.', 'mode': mode}, headers=STREAM_HEADERS))
+    assert not any(event['type'] == 'assistant_text' for event in events)
+    assert events[-1]['type'] == 'result'
+    assert events[-1]['data']['chat_action'] in {'search', 'rerank'}
+
+
+def test_rerank_text_streams_without_search_popup_or_candidate_changes(setup):
+    app, client, retriever, llm = setup
+    initial = client.post('/api/onboard', json=payload()).json
+    before = app.extensions['chat_store'].get(initial['session_id'])
+    retriever.calls.clear()
+    def steps(*args, **kwargs):
+        assert kwargs.pop('stream') is True
+        result = llm.rerank(*args, **kwargs)
+        yield {'type': 'assistant_preview', 'data': {**result, 'assistant_message': 'Diese Stellen'}}
+        return result
+    llm.rerank_steps = steps
+    response = client.post('/api/chat', json={'session_id': initial['session_id'], 'mode': 'rerank'},
+                           headers=STREAM_HEADERS, buffered=False)
+    iterator = iter(response.response)
+    assert json.loads(next(iterator)) == {'type': 'assistant_text', 'text': 'Diese Stellen'}
+    assert app.extensions['chat_store'].get(initial['session_id']) == before
+    events = [json.loads(event) for event in iterator]
+    response.close()
+    assert [event['type'] for event in events] == ['result']
+    assert events[-1]['data']['candidate_pool'] == initial['candidate_pool']
+    assert not retriever.calls
+
+
+@pytest.mark.parametrize('scores,expected', [
+    ([95, 85, 70], ['3 Stellen gefunden und bewertet', 'links in der Ergebnisübersicht ansehen']),
+    ([80, 70, 69], ['3 Stellen gefunden und bewertet', 'Links siehst du 2 passende Stellen', 'übrigen']),
+    ([70, 69, 35], ['3 Stellen gefunden und bewertet', 'Links siehst du 1 passende Stelle', 'übrigen']),
+    ([69, 40, 1], ['3 Stellen gefunden und bewertet', 'keine 70 Punkte', 'trotzdem einblenden']),
+    ([70], ['eine Stelle gefunden und bewertet', 'links in der Ergebnisübersicht ansehen']),
+    ([69], ['eine Stelle gefunden und bewertet', 'trotzdem einblenden']),
+    ([], ['keine Stellen zur gewählten Stellenart', 'Suche gemeinsam anpassen']),
+])
+def test_welcome_counts_actual_cards_and_respects_hidden_results(scores, expected):
+    from app import welcome_message
+    explanation = 'Python ist belegt; Betreuung bleibt noch zu klären.'
+    result = {'jobs': [{'match': {'score': score}} for score in scores],
+              'assistant_message': explanation}
+    before = deepcopy(result)
+    message = welcome_message(result)
+    assert message.startswith('Hallo! ')
+    assert 'Rückfragen' in message
+    assert all(fragment in message for fragment in expected)
+    assert message.endswith(explanation)
+    assert result == before
+
+
+def test_welcome_is_saved_once_at_onboarding_and_followup_keeps_normal_answer(setup):
+    app, client, retriever, llm = setup
+    initial = client.post('/api/onboard', json=payload(), headers=STREAM_HEADERS)
+    data = stream_events(initial)[-1]['data']
+    greeting = data['assistant_message']
+    assert greeting.startswith('Hallo! ')
+    assert f"{len(data['jobs'])} Stellen gefunden und bewertet" in greeting
+    assert 'links' in greeting and 'Rückfragen' in greeting
+    assert data['messages'][0]['content'] == greeting
+    assert client.get(f"/api/sessions/{data['session_id']}").json['messages'][0]['content'] == greeting
+    assert llm.calls == ['persona', 'rerank']
+    retriever.calls.clear()
+    llm.patch, llm.action = {}, 'answer'
+    reply = client.post('/api/chat', json={'session_id': data['session_id'], 'message': 'Warum passt die erste Stelle?'}).json
+    assert reply['assistant_message'] == llm.answer
+    assert reply['messages'][0]['content'] == greeting
+    assert not retriever.calls

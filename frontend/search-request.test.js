@@ -168,3 +168,58 @@ test('requestOperation does not retry a conflict or a failed network request', a
   await assert.rejects(requestOperation('/chat', { session_id: 'session' }), Error);
   assert.equal(fetch.mock.callCount(), 2);
 });
+
+test('chat text is visible before the terminal result and stays separate from persisted messages',
+  { timeout: 2000 }, async () => {
+    let controller;
+    const response = new Response(new ReadableStream({ start(value) { controller = value; } }),
+      { headers: { 'Content-Type': 'application/x-ndjson' } });
+    let sawText;
+    const preview = new Promise(resolve => { sawText = resolve; });
+    let settled = false;
+    const reading = readOperationResponse(response, () => assert.fail('No search phase'), sawText);
+    reading.then(() => { settled = true; }, () => { settled = true; });
+    controller.enqueue(encoder.encode(line({ type: 'assistant_text', text: 'Python passt' })));
+    assert.equal(await preview, 'Python passt');
+    assert.equal(settled, false);
+    const data = { chat_action: 'answer', messages: [{ role: 'assistant', content: 'Python passt zu deinen Kenntnissen.' }] };
+    controller.enqueue(encoder.encode(line({ type: 'result', data })));
+    controller.close();
+    assert.deepEqual(await reading, data);
+  });
+
+test('text snapshots survive split unicode chunks and replace rather than duplicate partial words', async () => {
+  const data = { chat_action: 'answer', assistant_message: 'Grüße 🧭' };
+  const bytes = encoder.encode([
+    { type: 'assistant_text', text: 'Grü' },
+    { type: 'assistant_text', text: data.assistant_message },
+    { type: 'result', data },
+  ].map(line).join(''));
+  const texts = [];
+  assert.deepEqual(await readOperationResponse(streamResponse(Array.from(bytes, byte => Uint8Array.of(byte))),
+    undefined, text => texts.push(text)), data);
+  assert.deepEqual(texts, ['Grü', 'Grüße 🧭']);
+});
+
+test('partial chat text never substitutes for a final result after failure or disconnection', async () => {
+  for (const ending of ['', line({ type: 'error', status: 503, error: { message: 'Verbindung unterbrochen.' } })]) {
+    const texts = [];
+    await assert.rejects(readOperationResponse(streamResponse([
+      line({ type: 'assistant_text', text: 'Eine unvollständige' }), ending,
+    ]), undefined, text => texts.push(text)), understandableError);
+    assert.deepEqual(texts, ['Eine unvollständige']);
+  }
+});
+
+test('invalid text snapshots are rejected and requestOperation forwards valid previews', async t => {
+  for (const text of [null, {}, 'x'.repeat(1801)]) {
+    await assert.rejects(readOperationResponse(streamResponse([line({ type: 'assistant_text', text })])), understandableError);
+  }
+  const data = { assistant_message: 'Eine Antwort.' };
+  t.mock.method(globalThis, 'fetch', async () => streamResponse([
+    line({ type: 'assistant_text', text: 'Eine' }), line({ type: 'result', data }),
+  ]));
+  const texts = [];
+  assert.deepEqual(await requestOperation('/chat', { message: 'Warum?' }, undefined, text => texts.push(text)), data);
+  assert.deepEqual(texts, ['Eine']);
+});

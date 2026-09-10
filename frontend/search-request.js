@@ -5,7 +5,7 @@ function responseError(data, status) {
 }
 
 /** Read actual server phases without guessing the intent of a chat message. */
-export async function readOperationResponse(response, onPhase = () => {}) {
+export async function readOperationResponse(response, onPhase = () => {}, onText = () => {}) {
   if (!response.ok || !response.headers.get('content-type')?.includes('application/x-ndjson')) {
     let data;
     try { data = await response.json(); }
@@ -27,6 +27,13 @@ export async function readOperationResponse(response, onPhase = () => {}) {
     catch { throw new Error('Die Serverantwort konnte nicht gelesen werden. Bitte versuche es erneut.'); }
     if (!event || typeof event !== 'object') throw new Error('Die Serverantwort ist unvollständig.');
     if (event.type === 'error') throw responseError(event, event.status || 500);
+    if (event.type === 'assistant_text') {
+      if (typeof event.text !== 'string' || event.text.length > 1800) {
+        throw new Error('Der Antworttext konnte nicht gelesen werden.');
+      }
+      // Snapshots replace the preview; only the final result commits a message.
+      onText(event.text);
+    }
     if (event.type === 'phase' && event.phase === 'search' && !searchReported) {
       searchReported = true;
       onPhase('search');
@@ -63,11 +70,11 @@ export async function readOperationResponse(response, onPhase = () => {}) {
   }
 }
 
-export async function requestOperation(path, body, onPhase = () => {}) {
+export async function requestOperation(path, body, onPhase = () => {}, onText = () => {}) {
   const response = await fetch(`/api${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/x-ndjson' },
     body: JSON.stringify(body),
   });
-  return readOperationResponse(response, onPhase);
+  return readOperationResponse(response, onPhase, onText);
 }
