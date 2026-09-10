@@ -95,10 +95,10 @@ def test_persona_uses_exact_model_structured_output_and_data_boundary(profile, p
 
     assert service.generate_persona(profile) == persona
     kwargs = client.responses.parse.call_args.kwargs
-    assert kwargs["model"] == "gpt-5.4"
+    assert kwargs["model"] == "gpt-5.4-2026-03-05"
     assert kwargs["text_format"] is PersonaResult
     assert kwargs["store"] is False
-    assert kwargs["reasoning"] == {"effort": "medium"}
+    assert kwargs["reasoning"] == {"effort": "none"}
     assert kwargs["max_output_tokens"] == 6000
     assert "tools" not in kwargs
     assert [message["role"] for message in kwargs["input"]] == ["system", "user"]
@@ -382,7 +382,7 @@ def test_chat_planning_answers_in_one_structured_call_without_mutating_inputs(pr
     client.responses.parse.assert_called_once()
     kwargs = client.responses.parse.call_args.kwargs
     assert kwargs['text_format'] is ChatDecision
-    assert kwargs['model'] == 'gpt-5.4'
+    assert kwargs['model'] == 'gpt-5.4-2026-03-05'
     assert kwargs['store'] is False
     assert 'tools' not in kwargs
     data = json.loads(kwargs['input'][1]['content'])
@@ -743,7 +743,7 @@ def test_assessment_cache_prevents_component_drift_when_advisor_changes(profile,
     assert data['selected_job_ids'] == [item['job_id'] for item in second['rankings']]
     assert client.responses.parse.call_count == 2
     assert client.responses.parse.call_args.kwargs['text_format'] is CachedRerankingResult
-    assert client.responses.parse.call_args.kwargs['reasoning'] == {'effort': 'low'}
+    assert client.responses.parse.call_args.kwargs['reasoning'] == {'effort': 'none'}
 
 
 @pytest.mark.parametrize('change', ['profile', 'preferences', 'locations', 'remote', 'hours', 'cv',
@@ -789,7 +789,7 @@ def test_changed_evidence_or_invalid_assessment_cache_triggers_fresh_components(
     assert result['rankings'][0]['score'] == 90
     assert result['assessment_cache']['components'] == {'a': components(90)}
     assert client.responses.parse.call_args.kwargs['text_format'] is RerankingResult
-    assert client.responses.parse.call_args.kwargs['reasoning'] == {'effort': 'medium'}
+    assert client.responses.parse.call_args.kwargs['reasoning'] == {'effort': 'none'}
     data = json.loads(client.responses.parse.call_args.kwargs['input'][1]['content'])
     assert data['fixed_components'] is None
     assert 'UNTRUSTED_CACHE_SENTINEL' not in client.responses.parse.call_args.kwargs['input'][1]['content']
@@ -1104,8 +1104,8 @@ def test_cached_schema_has_only_explanations_and_preserves_public_results(profil
     assert schema['$defs']['CachedRankedJob']['additionalProperties'] is False
     assert 'ScoreComponents' not in schema['$defs']
     assert 'components' in fresh_schema['$defs']['RankedJob']['properties']
-    assert client.responses.parse.call_args.kwargs['reasoning'] == {'effort': 'low'}
-    assert client.responses.parse.call_args.kwargs['model'] == 'gpt-5.4'
+    assert client.responses.parse.call_args.kwargs['reasoning'] == {'effort': 'none'}
+    assert client.responses.parse.call_args.kwargs['model'] == 'gpt-5.4-2026-03-05'
 
 
 def repeated_description_job(job_id='a'):
@@ -1225,7 +1225,7 @@ def test_llm_timing_logs_only_fixed_labels_and_validated_usage(profile, persona,
     records = [record for record in caplog.records if record.name == 'llm_service']
     assert len(records) == 1
     message = records[0].getMessage()
-    for expected in ('schema=PersonaResult', 'model=gpt-5.4', 'api_status=completed',
+    for expected in ('schema=PersonaResult', 'model=gpt-5.4-2026-03-05', 'reasoning_effort=none', 'api_status=completed',
                      'outcome=parsed', 'elapsed_ms=125', 'input_tokens=123',
                      'output_tokens=45', 'reasoning_tokens=12'):
         assert expected in message
@@ -1245,7 +1245,7 @@ def test_timing_logger_can_use_application_configuration_without_changing_sdk_lo
 
 
 @pytest.mark.parametrize('method', ['generate_persona', 'refine_profile', 'plan_chat', 'fresh_rerank'])
-def test_only_valid_cached_explanations_use_reduced_reasoning(profile, persona, method):
+def test_all_non_cached_paths_disable_reasoning(profile, persona, method):
     output = {
         'generate_persona': persona,
         'refine_profile': neutral_patch(),
@@ -1262,8 +1262,8 @@ def test_only_valid_cached_explanations_use_reduced_reasoning(profile, persona, 
     else:
         service.rerank(persona, profile, [candidate('a')])
     kwargs = client.responses.parse.call_args.kwargs
-    assert kwargs['reasoning'] == {'effort': 'medium'}
-    assert kwargs['model'] == 'gpt-5.4'
+    assert kwargs['reasoning'] == {'effort': 'none'}
+    assert kwargs['model'] == 'gpt-5.4-2026-03-05'
     assert set(kwargs) == {'model', 'input', 'text_format', 'reasoning', 'max_output_tokens', 'store'}
 
 
@@ -1351,7 +1351,7 @@ def test_custom_rename_reuses_all_twenty_assessments_without_score_or_order_chan
     assert second['assessment_cache'] == first['assessment_cache']
     kwargs = client.responses.parse.call_args.kwargs
     assert kwargs['text_format'] is CachedRerankingResult
-    assert kwargs['reasoning'] == {'effort': 'low'}
+    assert kwargs['reasoning'] == {'effort': 'none'}
     assert json.loads(kwargs['input'][1]['content'])['assistant_preferences']['name'] == 'Sam-Zimmer-KI'
     assert 'Sam-Zimmer-KI' not in kwargs['input'][0]['content']
     assert client.responses.parse.call_count == 2
@@ -1400,8 +1400,8 @@ def test_selected_style_reaches_every_conversation_path_without_expanding_author
         assert example not in json.dumps(data.get('candidates', data.get('visible_jobs')))
     assert 'CUSTOM_NAME_SENTINEL' not in system['content']
     assert 'CUSTOM_DESCRIPTION_SENTINEL' not in system['content']
-    assert kwargs['model'] == 'gpt-5.4'
-    assert kwargs['reasoning'] == {'effort': 'low' if method == 'cached_rerank' else 'medium'}
+    assert kwargs['model'] == 'gpt-5.4-2026-03-05'
+    assert kwargs['reasoning'] == {'effort': 'none'}
     assert kwargs['text_format'] is {
         'plan_chat': ChatDecision, 'fresh_rerank': RerankingResult, 'cached_rerank': CachedRerankingResult,
     }[method]

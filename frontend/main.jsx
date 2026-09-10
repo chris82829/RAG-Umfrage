@@ -20,9 +20,17 @@ import { canVisitJourneyStep, currentJourneyStep } from './journey-state.js';
 import AdvisorPicker from './AdvisorPicker.jsx';
 import PersonalityIntroDialog from './PersonalityIntroDialog.jsx';
 import AboutPage from './AboutPage.jsx';
+import SurveyPage from './SurveyPage.jsx';
+import AdminPage from './AdminPage.jsx';
+import PrivacyGate from './PrivacyGate.jsx';
+import {consentHeaders} from './privacy.js';
+import { appPath, appSessionStorage, surveyRun } from './app-session.js';
+import { hasChatMessage, hasSearchResults, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
+import './action-motion.css';
 import { defaultAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
 
-const STORAGE_KEY = 'jobkompass-session-v1';
+const sessionStorageAccess = appSessionStorage();
+const isEmbeddedSurvey = Boolean(surveyRun(window.location.search));
 const currentPage = () => window.location.pathname === '/suche' ? 'search' : 'about';
 function CompassAvatar({ className = '' }) { return <span className={`compass-avatar ${className}`} aria-hidden="true"><Compass strokeWidth={1.7} /></span>; }
 function ChatMessageText({ text, assistant }) {
@@ -31,9 +39,9 @@ function ChatMessageText({ text, assistant }) {
   return <div className="message-bubble"><div className="message-text">{expanded ? text : preview}</div>{preview !== text && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}</div>;
 }
 const demoIds = new Set(['900001', '900002', '900003', '900004', '900005']);
-function remember(id) { try { id ? localStorage.setItem(STORAGE_KEY, id) : localStorage.removeItem(STORAGE_KEY); } catch { /* The server session remains usable without browser storage. */ } }
+function remember(id) { sessionStorageAccess.remember(id); }
 async function api(path, body) {
-  const response = await fetch(`/api${path}`, { method: body ? 'POST' : 'GET', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+  const response = await fetch(`/api${path}`, { method: body ? 'POST' : 'GET', headers: { ...consentHeaders(), ...(body ? { 'Content-Type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined });
   const data = await response.json();
   if (!response.ok) {
     const error = new Error(data.error?.message || 'Die Anfrage konnte nicht verarbeitet werden.');
@@ -148,11 +156,11 @@ function ProfileForm({ form, setForm, onSubmit, busy, ready, advisor, setAdvisor
       <fieldset disabled={busy}><legend>Bevorzugtes Arbeitsmodell</legend><div className="choice-group">{Object.entries(remoteLabels).map(([value, label]) => <label className={`choice ${form.remote.includes(value) ? 'selected' : ''}`} key={value}><input type="checkbox" checked={form.remote.includes(value)} onChange={() => update('remote', form.remote.includes(value) ? form.remote.filter(x => x !== value) : [...form.remote, value])} />{form.remote.includes(value) && <Check size={13} />}{label}</label>)}</div><p className="field-hint">Mehrere Wünsche sind möglich. Ohne Auswahl bevorzugst du kein Arbeitsmodell.</p></fieldset><label>Gewünschte Wochenstunden, höchstens<input type="number" min="1" max="80" step="0.5" value={form.hours} onChange={e => update('hours', e.target.value)} placeholder="Pro Woche" disabled={busy} /><span className="field-hint">Ein Wunsch für die Bewertung, keine feste Obergrenze für die Suche.</span></label>
       <label>Ausbildung, Erfahrung oder Lebenslauf <span className="optional">optional</span><textarea value={form.cv} onChange={e => update('cv', e.target.value)} maxLength={16000} rows={4} placeholder="Zum Beispiel Studium, Ausbildung, Projekte und bisherige Berufserfahrung." disabled={busy} /><span className="field-hint">Hilft {assistantName}, deine Erfahrung und die fachliche Passung einzuschätzen.</span></label>
     </div></details>
-    {editMode ? <><div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy}>{busy ? 'Profil wird angewendet …' : 'Profil anwenden'}<ArrowRight size={18} /></button></div><p className="privacy-note">Geänderte Wünsche und Erfahrung fließen in die Neubewertung ein. Suchziel, Fähigkeiten oder Stellenart starten eine neue Suche.</p></> : <button type="submit" className="primary-button" disabled={busy}>Weiter zur Persönlichkeit<ArrowRight size={18} /></button>}
+    {editMode ? <><div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy}>{busy ? 'Profil wird angewendet …' : 'Profil anwenden'}<ArrowRight size={18} /></button></div><p className="privacy-note">Geänderte Wünsche und Erfahrung fließen in die Neubewertung ein. Suchziel, Fähigkeiten oder Stellenart starten eine neue Suche.</p></> : <button type="submit" className="primary-button diana-action-motion" disabled={busy}>Weiter zur Persönlichkeit<ArrowRight className="diana-action-arrow" size={18} /></button>}
     </> : <>
     <AdvisorPicker value={advisor} onChange={setAdvisor} disabled={busy} headingRef={heading} onExplain={onExplainAdvisor} />
     <div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Zurück</button>
-    <button type="submit" className="primary-button" disabled={busy || !ready}>{!ready ? 'Suchindex wird vorbereitet …' : busy ? 'Deine Suche wird ausgewertet …' : 'Passende Jobs finden'}{!busy && ready && <ArrowRight size={18} />}</button></div>
+    <button type="submit" className="primary-button diana-action-motion" disabled={busy || !ready}>{!ready ? 'Suchindex wird vorbereitet …' : busy ? 'Deine Suche wird ausgewertet …' : 'Passende Jobs finden'}{!busy && ready && <ArrowRight className="diana-action-arrow" size={18} />}</button></div>
     <p className="privacy-note">Dein Profil und ausgewählte Stellen werden zur KI-Auswertung an OpenAI übermittelt.</p>
     </>}
   </form>;
@@ -178,6 +186,7 @@ function App() {
   const [pending, setPending] = useState('');
   const [error, setError] = useState('');
   const [searchActive, setSearchActive] = useState(false);
+  const [surveySearchProfile, setSurveySearchProfile] = useState(null);
   const [streamingText, setStreamingText] = useState('');
   const [indexState, setIndexState] = useState(null);
   const [mobileView, setMobileView] = useState('jobs');
@@ -192,7 +201,17 @@ function App() {
   // Each editor retains its local draft when the guide opens another area.
   // Only explicit cancellation or a successful save discards that draft.
   const editorDrafts = useRef({ profile: false, advisor: false });
-  const chatLayout = useChatResize(workspace);
+  const chatLayout = useChatResize(workspace, !session);
+
+  const surveyResultsReady = !booting && !busy && hasSearchResults(session);
+  const surveySearching = busy && searchActive;
+  const surveyGoal = searchGoalSuggestion(surveyResultsReady ? session?.profile : surveySearchProfile);
+  const surveyChatCompleted = hasChatMessage(session);
+  const surveyAssistantName=operation?.assistantName || advisorAiLabel(session?.advisor || advisor);
+  useEffect(() => reportSurveyProgress(window, surveyResultsReady, { searching: surveySearching, searchGoal: surveyGoal, chatCompleted: surveyChatCompleted, assistantName:surveyAssistantName }, () => {
+    setEditor(null); setMobileView('chat'); setActivity('chat');
+    requestAnimationFrame(() => document.getElementById('chat-input')?.focus());
+  }), [surveyResultsReady, surveySearching, surveyGoal, surveyChatCompleted, surveyAssistantName]);
 
   useEffect(() => {
     const onPopState = () => setPage(currentPage());
@@ -221,7 +240,7 @@ function App() {
         if (!alive) return;
         setCatalog(jobs.jobs); setTotal(jobs.total); setIndexState(index);
         let saved;
-        try { saved = localStorage.getItem(STORAGE_KEY); } catch { /* Optional device-local session pointer. */ }
+        saved = sessionStorageAccess.read();
         if (saved && /^[A-Za-z0-9_-]{32,100}$/.test(saved)) {
           try {
             const data = await api(`/sessions/${saved}`);
@@ -261,6 +280,7 @@ function App() {
   }
   async function run(body, endpoint, kind = 'chat') {
     if (sending.current) return;
+    setSurveySearchProfile(body.profile || session?.profile || null);
     sending.current = true; setBusy(true); setError(''); setSearchActive(false); setStreamingText('');
     let operationMode = kind === 'profile' ? profileChangeAction(session?.profile, body.profile) : body.mode || 'auto';
     if (kind === 'profile' && operationMode === 'rerank' && candidatePool(session).refreshRequired) operationMode = 'search';
@@ -446,7 +466,7 @@ function App() {
     if (event && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
     event?.preventDefault();
     if (nextPage === page) return;
-    window.history.pushState(null, '', nextPage === 'about' ? '/' : '/suche');
+    window.history.pushState(null, '', appPath(nextPage, window.location.search));
     setPage(nextPage);
   }
   const jobs = session?.jobs || [];
@@ -487,12 +507,12 @@ function App() {
   return <><div className="app-shell" hidden={page === 'about'}>
     <header className={`topbar${showHeaderJourney ? ' topbar--with-journey' : ''}`}>
       <div className="topbar-inner">
-        <a href="/" className="brand" aria-label="DIANA Startseite" onClick={event => navigate('about', event)}><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></a>
+        {isEmbeddedSurvey ? <div className="brand"><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></div> : <a href="/" className="brand" aria-label="DIANA Startseite" onClick={event => navigate('about', event)}><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></a>}
         {showHeaderJourney && <div className="topbar-journey"><JourneyGuide iconOnly activeStep={activeStep} completedSteps={completedSteps} busy={busy || booting} hasSession={!!session} onSelect={visitJourneyStep} /></div>}
         <div className="local-status"><i aria-hidden="true" />{allDemo ? `${total} fiktive Beispielstellen` : `${total.toLocaleString('de-DE')} Stellenanzeigen`}</div>
       </div>
     </header>
-    <main ref={workspace} data-journey-step={activeStep} className={`workspace view-${mobileView} ${showWelcome ? 'is-welcome' : ''} ${chatLayout.dragging ? 'is-resizing' : ''}`} style={{ '--chat-width': `${chatLayout.width}px` }}>
+    <main ref={workspace} data-journey-step={activeStep} className={`workspace view-${mobileView} ${!session ? 'is-onboarding' : ''} ${showWelcome ? 'is-welcome' : ''} ${chatLayout.dragging ? 'is-resizing' : ''}`} style={{ '--chat-width': `${chatLayout.width}px` }}>
       <section className="jobs-panel" aria-label={session ? 'Stellenangebote' : 'So funktioniert DIANA'} onPointerDownCapture={() => { if (session && !editor && !busy && !booting) setActivity('results'); }} onFocusCapture={() => { if (session && !editor && !busy && !booting) setActivity('results'); }}>
         <div className="jobs-heading"><div><span className="eyebrow">DEINE JOBSUCHE</span><h1 id="diana-results-heading" tabIndex={-1}>{session ? 'Deine Empfehlungen' : 'So funktioniert DIANA'}</h1></div>{session && <ProfileSummaryPopover key={session.session_id} summary={profileInfo} disabled={busy || booting || page !== 'search'} context={`${page}-${mobileView}-${editor}`} onEdit={() => selectAssistantView('profile')} />}</div>
         {indexState?.required && !indexReady && <div className="index-notice" role="status"><strong>{indexState.status === 'failed' ? 'Suchindex noch nicht vollständig' : 'Deine gesamte Jobdatenbank wird vorbereitet'}</strong><p>{indexState.completed.toLocaleString('de-DE')} von {indexState.total.toLocaleString('de-DE')} Anzeigen sind für die semantische Suche indexiert. Du kannst dein Profil schon ausfüllen.</p><progress value={indexState.completed} max={indexState.total || 1} aria-label="Fortschritt der Indexierung" /></div>}
@@ -508,7 +528,7 @@ function App() {
       </section>
       <div className="split-handle" {...chatLayout.separatorProps}><GripVertical size={17} aria-hidden="true" /></div>
       <aside id="diana-chat" className="assistant-panel" aria-label={session ? `Chat mit ${assistantName}` : 'Persönlicher Jobberater'} onPointerDownCapture={() => { if (session && !editor && !busy && !booting) { setActivity('chat'); markSteps(3); } }} onFocusCapture={() => { if (session && !editor && !busy && !booting) { setActivity('chat'); markSteps(3); } }}>
-        {showWelcome ? <div className="onboarding-welcome"><button id="start-onboarding" type="button" className="primary-button" onClick={beginOnboarding} disabled={booting || busy}><span className="onboarding-start-copy"><strong>Jetzt Profil erstellen</strong><span>Hier klicken und loslegen</span></span><span className="onboarding-start-arrow" aria-hidden="true"><ArrowRight size={22} /></span></button></div> : <>
+        {showWelcome ? <div className="onboarding-welcome"><button id="start-onboarding" type="button" className="primary-button diana-action-motion" onClick={beginOnboarding} disabled={booting || busy}><span className="onboarding-start-copy"><strong>Jetzt Profil erstellen</strong><span>Hier klicken und loslegen</span></span><span className="onboarding-start-arrow diana-action-arrow" aria-hidden="true"><ArrowRight size={22} /></span></button></div> : <>
         {session && <AssistantActionArea key={session.session_id} feedback={!busy ? feedback : ''}>
           <div className="assistant-actions" role="group" aria-label="Aktionen für deine Jobsuche">
             <button type="button" className="rerank-button" onClick={rerankJobs} disabled={busy || booting || !!editor || !pool.canRerank}><RotateCcw size={16} aria-hidden="true" /><span>{pool.count} Jobs neu sortieren</span></button>
@@ -530,7 +550,11 @@ function App() {
       </aside>
     </main>
     {session && mobileView === 'jobs' && <div className="mobile-assistant-access"><button type="button" className="journey-next-button" disabled={busy || booting} onClick={() => { selectAssistantView('chat'); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><MessageCircle size={17} aria-hidden="true" />Profil & Chat öffnen<ArrowRight size={16} aria-hidden="true" /></button></div>}
-  </div>{page === 'about' && <AboutPage onStart={event => navigate('search', event)} />}<PersonalityIntroDialog open={personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={busy && searchActive && page === 'search'} assistantName={pendingAssistantName} /></>;
+  </div>{page === 'about' && <AboutPage />}<PersonalityIntroDialog open={personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={!isEmbeddedSurvey && busy && searchActive && page === 'search'} assistantName={pendingAssistantName} /></>;
 }
 
-createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
+const isSurveyPage = /^\/umfrage\/?$/.test(window.location.pathname);
+const isSearchPage = window.location.pathname === '/suche';
+const isAdminPage = window.location.pathname === '/verwaltung';
+const isPrivacyPage = window.location.pathname === '/datenschutz';
+createRoot(document.getElementById('root')).render(<React.StrictMode>{isAdminPage ? <AdminPage /> : isPrivacyPage ? <PrivacyGate informationOnly /> : isSurveyPage || isSearchPage ? <PrivacyGate>{isSurveyPage ? <SurveyPage /> : <App />}</PrivacyGate> : <AboutPage />}</React.StrictMode>);

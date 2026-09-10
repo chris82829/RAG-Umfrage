@@ -87,6 +87,10 @@ class HybridRetriever:
                     ) from None
             return self._encoder
 
+    def prepare_query_encoder(self) -> None:
+        """Load E5 and run one short query before the first user search."""
+        self._encode([f"Instruct: {QUERY_INSTRUCTION}\nQuery: Python SQL Datenanalyse"])
+
     def _encode(self, texts: list[str]) -> np.ndarray:
         try:
             with self._inference_lock:

@@ -9,7 +9,133 @@ Persönlichkeit gewichteter Score von **1 bis 100**, ergänzt um **zwei bis drei
 kurze Begründungs-Stichpunkte**. Die lokale Konfiguration
 verwendet jetzt alle **8.537 Anzeigen** aus deiner Datei.
 
+## Datenschutz-Stand
+
+Der neue lokale Stand enthält Einwilligung, Teilnahme-ID und gezielten Widerruf.
+Er ist noch **nicht live freigegeben**: `privacy_settings.json` bleibt gesperrt,
+bis Verantwortlichkeit, OpenAI-Vertrags-/Übermittlungsgrundlage und technische
+Schutzmaßnahmen verbindlich dokumentiert sind. Details und Löschanfragen:
+[PRIVACY.md](PRIVACY.md). Es wurden keine bestehenden Forschungsdaten gelöscht.
+Vollständige Einzelantworten sollen auch nach der Promotion für die beschriebenen
+Forschungszwecke nutzbar bleiben; ihre Erforderlichkeit wird mindestens jährlich geprüft.
+
 ## Webseite ausprobieren
+
+### Umfrage mit eingebetteter Jobsuche
+
+Der Einstieg ist die **[Vorstellungsseite](http://127.0.0.1:5050/)** mit
+Forschungsprojekt, Foto und Kontaktdaten. **„Umfrage starten“** führt zu `/umfrage`.
+Der Ablauf ist:
+
+1. **DIANA nutzen:** Die Jobsuche öffnet sich direkt nach „Umfrage starten“.
+   Während einer vollständigen Suche erscheint **„Wartezeit nutzen · Fragen beantworten“**.
+   In einem Dialog können Altersgruppe, Geschlecht, Studien-/Ausbildungsstand und
+   optionale Fachrichtung sowie Fragen zur Einrichtung der Persönlichkeit beantwortet
+   werden. Die Suche läuft im eingebetteten Fenster weiter. Sobald sie fertig ist,
+   zeigt der Dialog „Ergebnisse ansehen“; bereits eingegebene Antworten bleiben erhalten.
+2. **Angaben prüfen oder nachholen:** Erst nach Abschluss der ersten Suche
+   (DIANA-Schritt 3) erscheint **„Weitere Fragen für die Umfrage beantworten“**.
+   Der Button führt erst weiter, nachdem mindestens eine eigene Nachricht im Chat
+   erfolgreich gesendet wurde. Sonst erscheint ein Hinweis mit „Zum Chat“, der den
+   Chat auch auf dem Handy öffnet. Die automatische Begrüßung zählt nicht.
+   Während der Wartezeit bereits beantwortete Fragen werden übersprungen; fehlende demografische Angaben können dort ergänzt werden. Persönliche Auswahlfelder
+   bieten „Keine Angabe“; die Fachrichtung darf leer bleiben.
+3. **Rückmeldung:** fünf aufeinanderfolgende Seiten nach Kategorien:
+   **Suchvorhaben**, **KI-Suchpersönlichkeit**, **Suchen im Gespräch**,
+   **Was war nützlich?** und **Gesamterfahrung**. Das Suchvorhaben wird aus dem abgeschickten DIANA-Suchprofil
+   als bearbeitbarer Vorschlag übernommen. Eigene Änderungen, auch ein bewusst
+   geleertes Feld, werden bei weiteren Suchen nicht überschrieben. Fragen zur
+   Gesprächserfahrung und zu den Begründungen folgen erst nach dem Systemtest.
+
+Die Fragebogenversion **diana-v4** verwendet passende Antwortformate:
+- **Ja/Nein:** Eigenschaften selbst angepasst, Chat selbst genutzt, Suchwünsche im Chat verändert.
+- **Fünf beschriftete Abstufungen:** Einrichtung, Verständlichkeit, erkennbare Eigenschaften,
+  Bedienbarkeit, zusätzlicher Nutzen und Wiederverwendungsabsicht.
+- **1–10:** Nützlichkeit von Score, Begründungen, personalisiertem Chat und personalisierter
+  Suche sowie die Hilfe des Chats beim Konkretisieren der Suchwünsche.
+- **Freitext:** Suchvorhaben; Fachrichtung und Verbesserungsvorschläge optional.
+
+„Nicht genutzt“ bzw. „Kann ich nicht beurteilen“ ermöglichen ehrliche fehlende Bewertungen.
+Wer den Chat nicht selbst genutzt hat, überspringt Chat-Hilfe, Suchverfeinerung und
+Chat-Nützlichkeit. Ein Wechsel auf „Nein“ löscht vorherige Antworten auf diese Folgefragen.
+Verständlichkeit der Wirkung auf Ranking und Gespräch wird getrennt abgefragt.
+Bewertet wird der Suchprozess mit einer einstellbaren Persönlichkeit, nicht die Qualität
+oder Passung der gefundenen Stellen. Während der Suche werden nur Demografie,
+Suchvorhaben und die bereits erfolgte Einrichtung abgefragt.
+Fragetexte, Kategorien, Auswahlwerte und Exportbeschriftungen stammen aus
+`survey_definition.json`. Auf Mobilgeräten erscheinen die zehn Skalenwerte in
+zwei Reihen mit fünf großen Auswahlflächen. Die Systemansicht verwendet die
+dynamische Bildschirmhöhe und berücksichtigt den unteren sicheren Bereich.
+
+Weitergehen erfordert die Angaben der aktuellen Seite. Zurückgehen behält alle
+Antworten. Die eingebettete Jobsuche bleibt beim Wechsel zum Fragebogen und
+während des Wartezeit-Dialogs eingebunden. Die eingebettete
+Jobsuche verwendet einen eigenen Sitzungsschlüssel und übernimmt keine bestehende
+normale DIANA-Sitzung. Formularentwurf und Teilnahmebestätigung bleiben im selben
+Browser-Tab über `sessionStorage` auch nach einem Neuladen erhalten. Bei blockiertem
+Browser-Speicher funktioniert die Teilnahme im laufenden Tab weiterhin; ein
+Neuladen beginnt dann ohne den Entwurf.
+
+Die Freigabe für die weiteren Fragen erfolgt erst mit einem vollständigen
+Suchergebnis, auch bei null Treffern oder ausschließlich ausgeblendeten niedrigen
+Scores. Katalogdaten, eine laufende Suche oder gestreamte Textteile reichen nicht.
+Die Jobsuche meldet der Umfrageseite den abgeschlossenen Schritt, den Suchstatus
+und einen auf 1.000 Zeichen begrenzten Vorschlag zum Suchvorhaben mit der Testlauf-ID.
+Lebenslauf und Chatverlauf werden dabei nicht übertragen. Die empfangende Seite
+prüft Herkunft, eingebettetes Fenster, Testlauf und Nachrichtenformat. Die Freigabe bleibt nach einem Neuladen oder Zurückgehen erhalten.
+Ältere unvollständige Entwürfe ohne bestätigten Abschluss kehren zur Systemansicht
+zurück; ihre Antworten bleiben erhalten. „Umfrage starten“, „Jetzt Profil
+erstellen“ und der freigegebene Umfrage-Button verwenden dieselbe auffällige
+Animation mit zwei versetzt auslaufenden blauen Wellen und einem Pfeilimpuls.
+Die Wellen bleiben auch beim Darüberfahren sichtbar; auf dem Handy bietet die
+Fußleiste genügend Abstand zum Rand. Bei reduzierter Bewegung entfällt die Animation.
+
+`POST /api/survey-responses` validiert und speichert die Antworten in der Tabelle
+`survey_responses` der konfigurierten SQLite-Datenbank. Gespeichert werden eine
+zufällige Teilnahme-ID, der UTC-Zeitpunkt, die Fragebogenversion `diana-v4` sowie
+die demografischen Angaben, das Suchvorhaben, Nutzungsangaben, Bewertungen und optionales Feedback. Die Antworten
+werden nach jeder Eingabe automatisch als Entwurf an den Server gesendet (kurze Bündelung bei Texteingaben). Beim Abschluss werden sie vollständig validiert und als abgeschlossene Teilnahme gespeichert.
+Die Tabelle enthält keine Suchprofile, Chatverläufe oder
+Chat-Sitzungs-IDs. Neue Suchsitzungen liegen nur noch im Arbeitsspeicher und verfallen nach einer Stunde ohne Such-/Chataktion oder beim Neustart. Ein Widerruf sperrt sie.
+Demografische Angaben verändern das Matching nicht und werden nicht an das LLM gesendet.
+Wiederholtes Absenden derselben Teilnahme mit denselben Antworten erzeugt keinen
+zweiten Eintrag. Die Teilnahme-ID dient der Wiederholungssicherheit, nicht einer
+Identitätsprüfung oder Sperre gegen mehrere Teilnahmen in verschiedenen Tabs.
+
+Unter **[/verwaltung](http://127.0.0.1:5050/verwaltung)** gibt es eine
+passwortgeschützte Übersicht mit Einzelantworten, ID-Suche, Versionsfilter,
+gezielter Löschung und numerischem **CSV-Export für Numiqo**. Das Auswertungspaket
+enthält zusätzlich Codebuch und Modell-/Konfigurationsnachweise.
+Einrichtung und Import: **[ADMIN.md](ADMIN.md)**. Die Export-Endpunkte sind
+nur nach Anmeldung zugänglich.
+
+Der bisherige lesbare Export bleibt zusätzlich über die Serverkonsole verfügbar.
+Im Projektverzeichnis ausführen:
+
+```bash
+.venv/bin/flask --app app:create_app survey-export --output instance/umfrage.csv
+```
+
+Der Export enthält die deutschen Fragen und Antworttexte als CSV (Semikolon,
+UTF-8 mit BOM, geeignet für Excel). Bereits vorhandene Dateien werden nicht
+überschrieben; für spätere Exporte einen neuen Dateinamen wählen. Freitext wird
+gegen die Interpretation als Tabellenformel abgesichert. Umfrageantworten und
+Exporte unter `instance/` bleiben außerhalb von Git und Quellcode-ZIP.
+Bereits gespeicherte Antworten und noch geöffnete Fragebögen der Versionen v1–v3
+bleiben unterstützt. V4 erhält eigene `v4_`-Variablen im Numiqo-Export und `V4:`-Spalten
+im lesbaren Export. Die bisherigen Spalten bleiben erhalten und werden nicht umcodiert.
+Begleitende `_status`-Spalten unterscheiden beantwortet, nicht genutzt, nicht beurteilbar,
+keine Angabe, übersprungen, optional leer und andere Fragebogenversionen. Ja=1 und Nein=0
+sind gültige Antworten; fehlende Zahlen bleiben leer. Der neutrale Wert „Unentschieden“
+bei Wiederverwendung ist 3 und kein fehlender Wert.
+
+Beim Neuladen eines unfertigen V2/V3-Browserentwurfs bleiben Suchlauf, Teilnahme-ID,
+Demografie und Suchvorhaben erhalten. Geänderte Fragen müssen neu beantwortet werden;
+alte Ratings werden niemals zu Ja/Nein umgedeutet. Bereits bestätigte Teilnahmen
+bleiben abgeschlossen. Wurde eine alte Teilnahme gespeichert, aber die Bestätigung ging
+verloren, verhindert die beibehaltene ID ein zweites Speichern mit geänderten Antworten
+(409-Konflikt); die ursprüngliche Antwort bleibt in der Verwaltung erhalten.
+Der eingefrorene V3-Fragebogen liegt in `survey_definition_v3.json`.
 
 ### Frisch von GitHub starten
 
@@ -36,7 +162,8 @@ des Git-Repositories. `pnpm build` erzeugt den für Flask benötigten Frontend-B
 
 Öffne die **[DIANA-Startseite](http://127.0.0.1:5050/)**: Sie stellt das
 Forschungsprojekt und Christoph Scharnagl mit Foto und Kontaktdaten vor.
-„Jobsuche starten“ führt zur **[Jobsuche](http://127.0.0.1:5050/suche)**.
+„Umfrage starten“ führt zur **[Umfrage](http://127.0.0.1:5050/umfrage)**.
+Die eigenständige **[Jobsuche](http://127.0.0.1:5050/suche)** bleibt direkt erreichbar.
 Die Startseite ist auch unter `/index.html` erreichbar. Wenn der Server bereits läuft,
 musst du keinen weiteren starten. „Port 5050 is in use“ heißt in diesem Fall, dass
 der vorhandene Server den Port schon belegt.
@@ -282,10 +409,11 @@ Schrittübersicht und der Button „Besprechen & verfeinern“ zur jeweiligen An
 
 Das DIANA-Logo führt zur Startseite `/` mit einer kurzen Vorstellung von DIANA
 und Christoph Scharnagl, seinem Foto und den beruflichen Kontaktdaten. Der große
-Button „Jobsuche starten“ steht rechts neben dem Projekttext, mobil direkt darunter.
+Button „Umfrage starten“ steht rechts neben dem Projekttext, mobil direkt darunter.
 Der frühere Link `/mehr-erfahren` bleibt als Einstieg in dieselbe Infoseite gültig.
-Profilentwürfe, Chats, Ergebnisse und die gewählte Chatbreite bleiben beim Wechsel
-zu `/suche` und zurück erhalten; beide Seiten sind direkt aufrufbar.
+In der eingebetteten Umfrageansicht ist das Logo nicht verlinkt, damit es keine
+weitere Umfrage innerhalb der Jobsuche öffnet. Die Testsuche und ihre Entwürfe
+bleiben beim Wechsel zwischen System und Fragebogen erhalten.
 
 Die Bewertung heißt je nach gespeicherter Persönlichkeit **DIANA-Score**,
 **Steve-Jobs-Score**, **Angela-Merkel-Score**, **Günther-Jauch-Score** oder
@@ -450,8 +578,7 @@ Die vorhandenen API-Felder `filters.locations`, `filters.remote` und
 Containername bedeutet für diese Felder ausdrücklich keine harte Filterung.
 Zustand und Ergebnisse werden erst nach
 erfolgreicher Verarbeitung gespeichert. Parallele Änderungen derselben Sitzung
-liefern bei einem Konflikt HTTP 409. Der Verlauf bleibt in SQLite nach Neustarts
-erhalten; maximal 100 Nachrichten werden aufbewahrt, die letzten zwölf dienen
+liefern bei einem Konflikt HTTP 409. Der Verlauf bleibt im Produktivmodus nur im RAM und überlebt keinen Neustart; maximal 100 Nachrichten werden aufbewahrt, die letzten zwölf dienen
 dem LLM als Gesprächskontext. Für Rückfragen kennt das antwortende GPT außerdem
 alle bis zu 20 bewerteten Karten in ihrer sortierten Reihenfolge samt
 Begründungen, auch für Fragen zu Stellen hinter Rang fünf. Die KI weiß, dass
@@ -692,14 +819,23 @@ OpenAI wird serverseitig über die Responses API mit Pydantic Structured Outputs
 `store=False`, 90 Sekunden Timeout, einem Retry und begrenzter Ausgabelänge
 aufgerufen. Das Ausgabelimit beträgt 10.000 Tokens für bis zu 20 vollständige
 Bewertungen, sonst 6.000; der Chattext bleibt auf 900 Zeichen begrenzt.
-Das ausdrücklich gewünschte Modell bleibt `gpt-5.4`.
+Alle OpenAI-Aufrufe verwenden den festen Snapshot **`gpt-5.4-2026-03-05`**.
+Der Modellname wird nicht automatisch auf einen anderen Snapshot umgestellt.
+Neue Teilnahmen werden dem verwendeten Systemstand zugeordnet; alte Antworten
+ohne Nachweis bleiben als unbekannt gekennzeichnet. Details: [ADMIN.md](ADMIN.md).
 [GPT-5.4](https://developers.openai.com/api/docs/models/gpt-5.4),
 [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
 
-Neue fachliche Bewertungen, Persona-Erzeugung und Chatplanung verwenden weiterhin
-`reasoning.effort=medium`. Nur der Begründungsschritt bei vollständig validierten,
-bereits gespeicherten Teilbewertungen verwendet `low`; die Scores werden dabei
-unverändert aus dem Cache berechnet. Die Suchpersona hat kompaktere Textziele;
+Alle KI-Aufrufe verwenden jetzt zentral **`reasoning.effort=none`**: neue fachliche
+Bewertungen, Persona-Erzeugung, Profilverfeinerung, Chatplanung sowie Begründungen
+aus bereits gespeicherten Teilbewertungen. Diese Einstellung wird von
+[GPT-5.4 offiziell unterstützt](https://developers.openai.com/api/docs/models/gpt-5.4).
+Die bisherigen Werte `medium` und `low` werden nicht mehr gesetzt. Die Scores
+werden bei gültigen gespeicherten Teilbewertungen weiterhin aus dem Cache berechnet.
+Structured Outputs, Streaming, alle 20 Bewertungen, die Begründungen und die
+Persönlichkeitsgewichtung bleiben erhalten. `/api/health` meldet den aktiven
+Denkaufwand als `openai_reasoning_effort`; die Performance-Logs enthalten ihn ebenfalls.
+Die Suchpersona hat kompaktere Textziele;
 Grenzen für Fachpassung, Scores und Begründungen bleiben erhalten. Die Optimierung
 folgt den [OpenAI-Empfehlungen zur Latenz](https://developers.openai.com/api/docs/guides/latency-optimization):
 weniger wiederholte Anfragen und weniger überflüssige Ein- und Ausgabe.
@@ -707,7 +843,16 @@ Datensparsame Performance-Logs messen die Suchphasen und GPT-Aufrufe ohne
 Profiltexte, Stelleninhalte, Schlüssel oder Sitzungskennungen. Eine konkrete
 Wartezeit ist weiterhin von Modellantwort, Umfang und Auslastung abhängig.
 
-Ein kontrollierter Einzelvergleich für das Nachsortieren von 20 fiktiven Stellen
+Zwei vollständige Live-Suchen am 10.09.2026 mit GPT-5.4 und `none` über alle
+8.537 Anzeigen dauerten **63,3 s direkt nach Neustart** und **40,6 s bei geladenem
+E5-Modell**. Im zweiten Lauf entfielen 3,6 s auf BM25/Vektorsuche/RRF, 4,7 s auf
+die Persona und 31,0 s auf die Bewertung aller 20 Stellen mit Begründungen.
+Dies sind zwei Einzelmessungen mit einem fiktiven Profil, keine Zeitgarantie;
+der erste Lauf hatte einen parallelen Chat-Aufruf. Die
+[vollständigen Messwerte](search-latency-benchmark-2026-09-10.json) enthalten
+Phasen, Tokenzahlen und die Zeit bis zum ersten gestreamten Chattext.
+
+Ein früherer kontrollierter Einzelvergleich (vor der Umstellung auf `none`) für das Nachsortieren von 20 fiktiven Stellen
 mit bereits gespeicherten Teilbewertungen ergab **27,6 → 18,0 Sekunden**
 (rund **35 % kürzer**). Alle Scores blieben gleich. Dies misst den wiederholten
 Begründungsschritt, nicht die erste Vollsuche; die Wartezeit kann schwanken.
@@ -727,6 +872,10 @@ Eine empirische Bestätigung erfordert annotierte Profile und
 Jobs, etwa für Recall@20, NDCG@5, Precision@5 und Ablationen der drei Suchstufen.
 
 ## Tests und Gunicorn
+
+Für die separate Docker-Installation auf dem Forschungsserver, Port 5051,
+siehe [Betrieb und Aktualisierung](DEPLOYMENT.md). Der Container lädt E5 vor der
+ersten Anfrage und speichert Daten dauerhaft außerhalb des Images.
 
 ```bash
 .venv/bin/python -m pytest -q
@@ -748,8 +897,18 @@ Gunicorn-Start mit MPS brach ein Worker wegen der macOS-Initialisierung nach
 `fork()` ab. Der lokale Flask-Start vermeidet diesen Prozesswechsel; Gunicorn
 bleibt die vorgesehene Deployment-Option auf einem geeigneten Server.
 
-Dies ist ein lokaler Prototyp. Die zufällige Sitzungs-ID erlaubt Zugriff auf den
-zugehörigen Chat und ist wie ein Zugangstoken zu behandeln. Für öffentliches
+Der lokale Start lädt E5 jetzt vor dem Öffnen des HTTP-Ports und führt eine kurze
+Probe-Inferenz aus. Dabei entstehen keine GPT-Anfragen und kein neuer
+Dokumentindex. Auf dem Docker-Server übernimmt die Vorladung bereits der
+Gunicorn-Worker. Das reduziert den Kaltstart bei der ersten Suche, nicht die
+Zeit für das Erzeugen der GPT-Bewertungen und Begründungen.
+
+Vor den ersten Ergebnissen erhält das rechte Eingabeformular standardmäßig
+60 % der Arbeitsfläche (höchstens 800 Pixel; links bleiben mindestens 400 Pixel).
+Die Trennlinie bleibt bedienbar. Nach der Suche wird die separat gespeicherte
+Chatbreite verwendet. Auf schmalen Geräten bleibt die einspaltige Ansicht bestehen.
+
+Dies ist ein lokaler Prototyp. Für den Zugriff auf eine Suchsitzung wird zusätzlich die zugehörige aktive Einwilligung geprüft. Für öffentliches
 Deployment fehlen insbesondere Benutzeranmeldung, Zugriffskontrolle und
 Rate-Limits. CORS ist auf die konfigurierten lokalen React-Ursprünge begrenzt.
 Profile, CV-Ausschnitte und die Kandidatentexte werden zur Auswertung an OpenAI
@@ -764,7 +923,7 @@ es ist keine Zusage zur vollständigen Datenlöschung beim Anbieter.
 - `retrieval.py`: BM25, tatsächliches E5, Vektorcache und RRF.
 - `llm_service.py`: Persona, Gesprächsänderungen und geprüftes JSON-Reranking.
 - `advisor.py`: vorgegebene und individuelle DIANA-Persönlichkeiten.
-- `schemas.py`, `session_store.py`: Eingabeschemata und persistente Chats.
+- `schemas.py`, `session_store.py`: Eingabeschemata und zeitlich begrenzte RAM-Sitzungen (SQLite-Store nur für Legacy-/Testfälle).
 - `dummy_jobs.json`: fünf eindeutig fiktive Anzeigen im Originalformat.
 - `requirements.txt`, `requirements-dev.txt`: festgelegte direkte Abhängigkeiten.
 - `.env.example`, `example_search.json`: Konfiguration und fertige API-Anfrage.
@@ -789,3 +948,49 @@ Für den vollständigen, wiederaufnehmbaren Indexaufbau auf diesem Mac:
 Vorbereitung. `GET /api/index-status` meldet den Fortschritt. Der Build speichert
 Vektoren in kleinen Blöcken, sodass eine Unterbrechung bereits berechnete
 Anzeigen nicht verliert.
+
+### Chat vor der Rückmeldung · 10.09.2026
+
+Der eingebettete DIANA-Chat meldet eine bestätigte Nutzernachricht als reines
+Fortschrittssignal, ohne den Nachrichtentext zu übertragen. Quelle, Ursprung und
+Umfragelauf werden geprüft. Der Fortschritt bleibt für diesen Browserlauf erhalten;
+die Ja/Nein-Selbstauskunft wird dadurch nicht automatisch ausgefüllt. Die frühere
+Filterführung und gespeicherte Antworten bleiben erhalten. Diese Änderung macht
+Chatnutzung zur Voraussetzung für die Rückmeldung; beim Vergleichen früherer und
+späterer Teilnahmen den jeweiligen Systemstand berücksichtigen.
+
+Im Wartezeit-Dialog steht „Zurück zum System“ links als dezenter Button; die weitere
+Fragegruppe rechts als hervorgehobener Button. „Wartezeit nutzen“ verwendet ebenfalls
+die Wellenanimation. Der Hinweis zur Teilnahme-ID nennt die anklickbare Kontaktadresse.
+
+### Automatisches Speichern und Zwischenfragen · 10.09.2026
+
+`PUT /api/survey-drafts` sichert den vollständigen aktuellen Antwortentwurf mit einer
+monotonen Revision. Serverbestätigungen, Wiederholungen, Reihenfolge und konkurrierende
+Speicheranfragen werden geprüft. `GET /api/survey-drafts/<submission_id>` liefert nur den
+eigenen Entwurf nach Einwilligung. Kein Profil oder Chattext wird dabei übertragen.
+Auswahlwerte werden nach Eingabe gesichert; Text wird kurz gebündelt. Bei Netzfehlern
+bleibt der Browserentwurf erhalten und die Oberfläche bietet einen erneuten Versuch.
+Noch nicht bestätigte Antworten sind nicht garantiert auf dem Server gespeichert.
+
+Entwürfe stehen in `survey_drafts`, abgeschlossene Antworten in `survey_responses`.
+Der Abschluss entfernt den Entwurf atomar; spätere Autosaves können ihn nicht wieder
+anlegen. Die Verwaltung zeigt beide mit `response_status` (completed / in_progress),
+Statusfilter und `last_saved_at_utc`. In Numiqo unvollständige Teilnahmen bewusst
+separat auswerten; bei noch nicht beantworteten Pflichtfragen steht `unanswered`.
+Der ältere lesbare CLI-Export bleibt auf abgeschlossene Antworten beschränkt.
+Widerruf, administrative Löschung und Studienende erfassen auch Entwürfe.
+
+Im eingebetteten System rendert die Umfrageseite das Warte-Popup. Dort öffnet der
+animierte Button „Fragen in der Zwischenzeit beantworten“ die noch offenen Vorabfragen.
+Das Fragenfenster hat rechts oben ein Schließen-Kreuz und „Weitere Fragen“ für den
+nächsten Block. Nach dem letzten beantworteten Block schließt es nach bestätigtem
+Speichern automatisch. Das Warte-Popup bleibt während der Berechnung sichtbar, ohne
+den Fragenbutton, wenn nichts mehr offen ist. Der Button für den nachgelagerten
+Fragebogen ist während Suche und Zwischenfragen ausgeblendet. Bereits beantwortete
+Vorabfragen und leere dadurch erledigte Kategorien werden später übersprungen.
+
+Die Datenschutzhinweise nennen ausdrücklich das fortlaufende Speichern auch bei
+Abbruch. Eine vorhandene Teilnahme kann den geänderten Hinweis ausdrücklich erneut
+akzeptieren; ihre ID bleibt erhalten, der frühere Einwilligungswortlaut wird archiviert.
+Ein bereits widerrufener Zugang bleibt gesperrt.

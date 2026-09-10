@@ -1,3 +1,4 @@
+import {consentHeaders} from './privacy.js';
 function responseError(data, status) {
   const error = new Error(data?.error?.message || 'Die Anfrage konnte nicht verarbeitet werden.');
   error.status = status;
@@ -73,7 +74,7 @@ export async function readOperationResponse(response, onPhase = () => {}, onText
 export async function requestOperation(path, body, onPhase = () => {}, onText = () => {}) {
   const response = await fetch(`/api${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/x-ndjson' },
+    headers: { ...consentHeaders(), 'Content-Type': 'application/json', Accept: 'application/x-ndjson' },
     body: JSON.stringify(body),
   });
   return readOperationResponse(response, onPhase, onText);

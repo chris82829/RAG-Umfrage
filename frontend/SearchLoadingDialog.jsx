@@ -1,8 +1,8 @@
 import React, { useEffect, useId, useRef } from 'react';
-import { BriefcaseBusiness, Search } from 'lucide-react';
+import { ArrowRight, BriefcaseBusiness, Search } from 'lucide-react';
 import './search-loading.css';
 
-export default function SearchLoadingDialog({ open, assistantName = 'DIANA-KI' }) {
+export default function SearchLoadingDialog({ open, assistantName = 'DIANA-KI', onQuestions }) {
   const dialog = useRef(null);
   const heading = useRef(null);
   const id = useId();
@@ -29,6 +29,7 @@ export default function SearchLoadingDialog({ open, assistantName = 'DIANA-KI' }
     </div>
     <h2 ref={heading} id={`${id}-title`} tabIndex={-1}>{assistantName} sucht passende Stellen</h2>
     <p id={`${id}-description`} className="search-loading-description">Deine Stellen werden gesucht und persönlich bewertet. Das kann bis zu zwei Minuten dauern.</p>
+    {onQuestions && <button className="survey-primary diana-action-motion search-loading-questions" type="button" onClick={onQuestions}>Fragen in der Zwischenzeit beantworten<ArrowRight className="diana-action-arrow" size={18}/></button>}
     <div className="search-loading-track" role="status"><span className="sr-only">Suche und Bewertung laufen.</span><i aria-hidden="true" /></div>
   </dialog>;
 }

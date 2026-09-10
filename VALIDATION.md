@@ -2,7 +2,326 @@
 
 Laufzeit: Python 3.12.14, lokale isolierte `.venv` auf macOS ARM64.
 
-Aktuelle Änderung: Die grüne Zusammenfassung des Suchwunsches oberhalb der
+Aktuelle UI-Anpassung: Sichtbarere Hauptaktionen durch dauerhaften Kontrastrand,
+stärkeren Schatten, zwei breitere Wellen im Abstand von 1,1 Sekunden und
+bewegten Pfeil. Zusätzlich beim Weitergehen im Profil, beim Starten der Suche,
+auf allen Fragebogenseiten sowie beim Abschließen. Größere Hauptaktion in der
+Umfrage-Fußleiste. Auf kleinen Bildschirmen begrenzte Wellen, bei reduzierter
+Bewegung statische Hervorhebung. Einwilligung, Antwortauswahl und optionale
+Nebenaktionen werden durch diese Anpassung nicht animiert.
+
+104 Frontend-Tests und SSR-Prüfungen für Weiter/Abschluss/Ergebnisse bestanden;
+Produktionsbuild erfolgreich. Der zuvor zurückgenommene Änderungswunsch zu
+Wartezeit-Fragen und Such-Popup bleibt unangetastet.
+
+
+Aktuelle Änderung: Betriebsfreigabe im Admin-Panel über authentifiziertes
+GET/PUT `/api/admin/study-status`. CSRF-Schutz und strikt boolesche Eingabe.
+SQLite speichert Freigabe/Pause und Änderungszeitpunkt dauerhaft; der Status
+wirkt auch auf bestehende Sitzungen und verspätete Schreibvorgänge. Pausieren
+löscht keine Antworten und blockiert keinen Widerruf. Endgültig beendete Studien
+bleiben geschlossen. Freigabe/Pause ändert nicht die Version des Einwilligungstexts.
+
+277 Backend-Tests bestanden; neue Fälle prüfen Zugriffsschutz, Freigabe trotz
+initial gesperrter Konfiguration, Pause, erneute Freigabe, erhaltene Antworten,
+Einwilligungsnachweis, Status in einer zweiten Store-Instanz und endgültiges Ende.
+React-SSR prüft die Admin-Steuerung für offen/pausiert/beendet; Build erfolgreich.
+Server ausgerollt und über die authentifizierte Admin-API freigegeben. Öffentliche
+Teilnehmer-API meldet ready=true, CSRF-/Anmeldeschutz und weiterhin erforderliche
+Einwilligung bestätigt. Antwortanzahl unverändert; keine Testantworten oder
+GPT-Aufrufe erzeugt. Lokale Teilnahme ebenfalls freigegeben.
+
+
+Aktualisierung: Alleinige Benennung von Christoph Scharnagl als Verantwortlichem
+auf Vorgabe des Studienleiters. Kompakter Einwilligungseinstieg mit Link zu den
+vollständigen Hinweisen unter `/datenschutz`, statt aller Hinweisabschnitte
+direkt vor der Checkbox. Leere Checkbox bestätigt Kenntnisnahme und ausdrückliche
+Einwilligung; das Öffnen des Links wird nicht erzwungen oder protokolliert.
+
+Prüfung: 16 Datenschutztests bestanden, React-SSR bestätigt versteckte Langtexte
+am Einstieg, öffentlich erreichbare vollständige Hinweise und unverändert leere
+Checkbox mit deaktiviertem Absenden. Produktionsbuild erfolgreich. Die Änderung
+wird auf Port 5051 übernommen; bestehende Freigabesperre bleibt unverändert.
+
+
+Aktuelle Änderung: Passwortgeschützte Umfrageverwaltung unter `/verwaltung` mit
+ID-/Versionsfilter, Einzelansicht, expliziter Löschbestätigung und Numiqo-CSV.
+ZIP mit Codebuch und versionierten Systemmanifesten. OpenAI-Snapshot fest auf
+`gpt-5.4-2026-03-05`, weiterhin `reasoning.effort=none`. Neue Teilnahmen erhalten
+technische Provenienz; historische Antworten bleiben ohne nachträgliche Zuordnung.
+
+Prüfung: **455 Backend-Tests und 104 Frontend-Tests bestanden**. Abgedeckt sind
+Anmeldung, Cookie/CSRF, Fehlversuchsbegrenzung, gezielte Löschung samt Widerruf,
+Formelschutz, numerische Codes, fehlende Angaben, getrennte 1–5-/1–10-Skalen und
+Modellzuordnung. React-SSR prüft Anmeldung, Exportsteuerung und gesperrte
+Löschbestätigung bis zur Eingabe der ID. Produktionsbuild erfolgreich.
+Lokaler authentifizierter HTTP-Test: Anmeldung, gefilterte Übersicht, CSV mit
+28 Spalten, ZIP mit fünf Dateien, Abmeldung und Zugriffsverweigerung ohne Anmeldung.
+Alle vier Seiten erreichbar; Health meldet den festen Snapshot. Verfügbarkeit
+des Snapshots per OpenAI-Modellabfrage bestätigt, keine Completion ausgeführt.
+
+Keine echten Antworten gelöscht und keine Daten zu Numiqo übertragen.
+Anschließend auf ausdrücklichen Wunsch auf Port 5051 ausgerollt: alter
+Anwendungsstand und SQLite gesichert, ein vorhandener Antwortdatensatz erhalten.
+Anmeldung mit gewünschtem Passwort ohne Nutzernamen, ZIP-Export und Abmeldung
+auf dem Server geprüft. Andere Docker-Projekte unverändert. Die noch ausstehende
+Studienfreigabe bleibt gesperrt (siehe PRIVACY.md).
+
+Vorangegangene Änderung: Lokale Einwilligung vor Systemstart mit serverseitiger Sperre,
+versioniertem Nachweis und Widerruf. Eigenständige öffentliche DIANA-Teilnahme-ID,
+Kopieren, E-Mail-Löschanfrage, Anzeige im Abschluss und im CSV. Gezielte Adminlöschung
+mit Vorschau. Produktive Suchsitzungen nur im RAM mit Ablauf; keine automatische
+Löschung der Forschungsdaten zum Promotionsende. Vollständige Einzelantworten für
+konkret benannte Forschung mit regelmäßiger Erforderlichkeitsprüfung vorgesehen.
+
+Prüfung: **269 Backend-Tests und 104 Frontend-Tests bestanden**. React-SSR prüft
+Einwilligungssperre, leere Checkbox, Impressumslink, Widerruf, Teilnahme-ID und
+E-Mail-Link im Abschluss. Tests prüfen fremde IDs, exakte CSV-Zuordnung, gezielte
+Löschung, Retries, Sperre verspäteter Schreibvorgänge nach administrativem Widerruf
+sowie RAM-Ablauf. Build erfolgreich. Lokale vier Routen und aktuelle Assets per
+HTTP bestätigt, API verweigert Anfragen ohne Einwilligung mit 428.
+
+Keine Browserprüfung oder Live-GPT-Anfrage. Keine echten Antworten/Chats gelöscht.
+Nicht auf den Server ausgerollt: privacy_settings.json bleibt bis zur Klärung der
+in PRIVACY.md aufgeführten Verantwortlichkeits-, Vertrags-/Drittland- und technischen
+Details gesperrt. Die alten Serverdaten wurden nicht verändert.
+
+Vorangegangene Änderung: Vier separate 1–10-Fragen zur Nützlichkeit von Score,
+Passungsbegründungen, personalisiertem Chatbot und personalisierter Suche im
+neuen Block „Was war nützlich?“. Eigene Skalen-Endpunkte „Gar nicht nützlich“
+und „Sehr nützlich“. Alle Bewertungsfragen stehen in kompakten, nummerierten
+Karten mit sichtbarer Antwortmarkierung und mobilen 5er-Reihen.
+
+Fragebogenversion v3 enthält 13 Bewertungen. Der Server akzeptiert weiterhin
+v1/v2, exportiert ältere Antworten ohne erfundene neue Werte und erhält deren
+Wiederholungssicherheit. Unfertige v2-Entwürfe übernehmen vorhandene Antworten;
+bereits abgeschlossene v2-Teilnahmen behalten ihre Bestätigung.
+
+Prüfung: **102 Frontend-Tests und 72 Backend-Umfragetests bestanden**.
+Produktionsbuild erfolgreich. React-SSR bestätigt vier Karten, 40 Auswahlwerte,
+korrekte Skalen-Endpunkte, Antwortmarkierung, eindeutige zugängliche IDs sowie
+unveränderten Einstieg und Wartezeit-Fragen. Lokale und Server-Seiten samt aktuellen
+Assets bytegenau per HTTP bestätigt; v3-Vertrag mit 13 Bewertungen im laufenden
+Container geprüft. Keine Browserprüfung oder GPT-Anfrage.
+
+Vorangegangene Änderung: Direkter Einstieg in DIANA nach „Umfrage starten“.
+Während einer vollständigen Suche lassen sich im Wartezeit-Dialog demografische
+Angaben, Suchvorhaben und zwei Fragen zur Einrichtung der KI beantworten.
+Das eingebettete System bleibt aktiv. Nach Ende der Berechnung bleibt der
+Dialog offen und bietet „Ergebnisse ansehen“. Fehlende Angaben werden im späteren
+Fragebogen nachgeholt; die Freigabe bleibt an den abgeschlossenen Schritt 3 gebunden.
+Das abgeschickte Suchprofil liefert einen bearbeitbaren Vorschlag zum Suchvorhaben.
+Manuelle Änderungen und geleerte Antworten bleiben auch bei weiteren Suchen erhalten.
+
+Prüfung: **100 Frontend-Tests und 63 Backend-Umfragetests bestanden**.
+Geprüft wurden unter anderem Herkunft und Testlauf der Nachrichten, begrenzte
+Datenübertragung ohne Lebenslauf/Chat, Schutz eigener Änderungen, Entwurfs-Migration,
+Navigation, Abschlussvalidierung und Speicherung ohne zusätzliche Metadaten.
+React-SSR bestätigt direkten Systemstart, beide Wartefrageblöcke, 1–10-Skalen,
+bearbeitbaren Suchvorschlag und Ergebnis-Rückkehr. Produktionsbuild erfolgreich.
+Seiten und aktuelle Assets lokal sowie auf Server-Port 5051 bytegenau per HTTP
+bestätigt; Health-Endpunkt antwortet erfolgreich. Persistente Laufzeitdaten bleiben
+erhalten. Keine Browserprüfung oder zusätzliche GPT-Anfrage.
+
+Vorangegangene Änderung: „Keine Vorlage“ ist im Persönlichkeitsmenü auswählbar und
+stellt einen unabhängigen neutralen Entwurf ohne Prominenten-Hinweise her.
+Das Freitextfeld „Eigene Hinweise“ ist dauerhaft sichtbar; die Klappfunktion
+entfällt. Die grüne Markierung der Ergebnisphase wird als nicht interaktive
+Vordergrund-Ebene über dem scrollenden Stellenbereich gezeichnet. Auf Mobilgeräten
+liegt sie nur über der Ergebnisansicht, nicht über dem Chat.
+
+Prüfung: **16 Frontend-Tests bestanden**, inklusive neutraler Vorlagenauswahl.
+React-SSR bestätigt die auswählbare Leeroption und das direkt sichtbare
+Freitextfeld mit erhaltenen Vorlageninhalten. Produktionsbuild erfolgreich.
+Seiten und aktuelle Assets lokal sowie auf Port 5051 per HTTP bestätigt;
+Server-Container healthy, Laufzeitdaten erhalten. Keine Browserprüfung, Backendänderung oder zusätzliche GPT-Anfrage.
+
+Vorangegangene Änderung: Rechter Einstiegsbereich erhält standardmäßig 60 % der
+Arbeitsfläche, begrenzt auf 800 Pixel und mindestens 400 Pixel Platz für die
+linke Anleitung. Die Trennlinie bleibt mit Maus und Tastatur bedienbar.
+Einstiegsbreite und gespeicherte Ergebnis-Chatbreite sind getrennt; die mobile
+Einspaltenansicht bleibt bestehen. Eingabeformulare sind auf 720 Pixel begrenzt.
+
+Der lokale Start lädt E5 jetzt vor dem HTTP-Server und führt eine kurze
+Probe-Inferenz durch. Keine Dokument-Neuindexierung oder GPT-Anfrage beim
+Vorbereiten; bei Ladefehlern bleibt ein späterer Versuch über die Suche möglich.
+Der Docker-Server lädt E5 bereits vor dem Annehmen von Anfragen. GPT-5.4 mit
+`none` bleibt unverändert; GPT-5.4 mini wurde nur als Vergleichskandidat besprochen.
+
+Prüfung: **193 Python-Tests und 23 Frontend-Tests bestanden**. Neue Prüfungen
+betreffen eine initiale Query-Inferenz ohne Dokumentcacheaufbau und die Breite
+mit erhaltenem Platz für die Anleitung. Build erfolgreich. Lokaler Start
+bestätigt E5 bereit vor Öffnen des HTTP-Ports; Server-Log bestätigt vorgewärmtes
+E5. Seiten und Assets lokal und auf Port 5051 bytegenau geprüft, GPT-Modell und
+Denkaufwand über Health bestätigt. Keine Browserprüfung oder Live-GPT-Anfrage.
+
+Vorangegangene Änderung: Persönlichkeitsformular an den Stil des Suchprofils angepasst:
+gemeinsame kompakte Überschrift, dezenter blauer Vorlagen-Button, normale
+Feldbeschriftungen und identische Feldabstände. Zusätzliche Freitext-Hinweise
+liegen wie die weiteren Profilwünsche in einem anfangs geschlossenen Abschnitt.
+Drei Vorlagen, Name, Gewichtung, Eigenschaften, Freitextwerte und Info-Dialog
+bleiben erhalten, auch beim erneuten Bearbeiten einer Persönlichkeit.
+
+Prüfung: **27 vorhandene Frontend-Tests bestanden**; React-SSR bestätigt den
+anfangs geschlossenen Zusatzbereich, erhaltene Vorlagenwerte und den Info-Dialog.
+Produktionsbuild erfolgreich. Lokale und Server-Seiten samt aktuellen Assets
+bytegenau per HTTP geprüft. Server-Container auf Port 5051 aktualisiert und
+healthy; dauerhafte Daten unverändert. Keine Browserprüfung oder Live-LLM-Anfrage.
+
+Server-Umfrage per vorhandenem CLI exportiert: zum Exportzeitpunkt 0 vollständig
+abgesendete Antworten. CSV in Downloads gespeichert, UTF-8-BOM/Semikolon und
+21 Spalten geprüft. Export-/Download-Anleitung in `DEPLOYMENT.md` ergänzt.
+
+Vorangegangene Bereitstellung: DIANA als eigenes Docker-Compose-Projekt `diana-survey`
+auf `ifaiforschung.informatik.fh-nuernberg.de:5051` gestartet. Server-Verzeichnis
+`/home/master/diana-survey`; bestehende sieben Container und deren Startzeiten
+unverändert. CPU-Image mit festgelegtem Embedding-Stack, ein Gunicorn-Worker,
+vier Threads, E5-Vorladung ohne GPT-Aufruf, nicht privilegierter Nutzer,
+6 CPUs/12 GB RAM als Obergrenze, automatische Neustarts und Healthcheck.
+
+Übertragen wurden die aktuellen Build-Dateien, 8.537 Stellen, der vollständige
+Vektorcache und der per SHA-256 geprüfte Modell-Snapshot. Chat- und Umfragetabellen
+starten leer; der API-Schlüssel liegt nur in einer Server-Umgebungsdatei (0600),
+nicht im Image. Laufzeitdaten sind persistent eingebunden.
+
+Prüfung über die VPN-erreichbare Adresse: Startseite, Umfrage, eingebettete Suche
+und sämtliche referenzierten Build-Assets stimmen bytegenau mit dem lokalen
+Build überein. Health meldet GPT-5.4/`none`, Index vollständig. Ungültige
+Umfrageantworten werden abgelehnt. Eine vollständige Live-Suche liefert 20 Jobs
+mit mindestens zwei Begründungen; Chat-Sitzung erfolgreich wieder geladen.
+Nur diese eigens angelegte Testsitzung anschließend gelöscht. Gesamtdauer
+**66,923 Sekunden** (erste Textvorschau 66,488 s), Einzelmessung auf dem Server.
+`pip check` fehlerfrei, Container healthy, kein API-Schlüssel unter `/app/.env`.
+Keine Browserprüfung und keine Änderungen an bestehenden Server-Projekten.
+Details: `server-deployment-check-2026-09-10.json`; Betrieb: `DEPLOYMENT.md`.
+
+Vorangegangene Prüfung: Lokalen Server neu gestartet und zwei vollständige Live-Suchen
+über den vom Frontend verwendeten Streaming-Endpunkt `/api/onboard` gemessen.
+Fiktives Data-Science-/Softwareprofil, Angela-Merkel-KI, keine Stellenart ausgeschlossen:
+alle 8.537 Anzeigen berücksichtigt, jeweils 20 Stellen mit mindestens zwei
+Begründungen bewertet. Nur die beiden eigens erzeugten Testsitzungen anschließend
+gelöscht; keine Umfrageantworten angelegt oder bestehenden Sitzungen verändert.
+
+Erste Suche nach Neustart: **63,302 s** insgesamt (Datenbank 1,120 s,
+Persona 7,259 s, Retrieval einschließlich E5-Laden 26,488 s, Reranking 27,345 s).
+Zweite frische Suche im selben Prozess: **40,604 s** insgesamt (Datenbank 1,125 s,
+Persona 4,730 s, Retrieval 3,642 s, Reranking 30,979 s). GPT macht im zweiten Lauf
+rund 88 % der Gesamtzeit aus. Beide GPT-Aufrufe je Lauf bestätigen `none` und
+null Reasoning-Tokens. Erste gestreamte Chattexte nach 60,870 bzw. 40,347 s;
+Streaming liefert bei dieser Vollsuche also erst kurz vor dem fertigen Ergebnis Text.
+
+Einzelmessungen, keine belastbare Latenzverteilung oder Qualitätsbewertung.
+Während des ersten Laufs gab es einen unabhängigen Chat-Aufruf; dessen Phasen
+wurden aus der Aufschlüsselung entfernt. Bestehender Vektorcache war vollständig,
+keine Browser-Renderzeit gemessen. Details: `search-latency-benchmark-2026-09-10.json`.
+Server bleibt mit geladenem E5-Modell verfügbar; Health und Startseite bestätigt.
+
+Vorangegangene Änderung: Die drei Buttons „Umfrage starten“, „Jetzt Profil erstellen“
+und „Weitere Fragen für die Umfrage beantworten“ teilen sich eine deutlichere
+Animation mit zwei versetzt auslaufenden blauen Wellen und einem Pfeilimpuls.
+Die Animation bleibt beim Überfahren aktiv. Zusätzlicher Abstand an der
+Umfrage-Fußleiste lässt die Wellen auch auf schmalen Bildschirmen auslaufen.
+Deaktivierte Buttons und die Systemeinstellung für reduzierte Bewegung bleiben
+berücksichtigt. Die Freigabe des Weiter-Buttons erst nach Schritt 3 ist unverändert.
+
+Prüfung: **23 vorhandene Frontend-Tests bestanden**, Produktionsbuild erfolgreich.
+Startseite, Umfrage, eingebettete Suche und aktuelle Assets per HTTP bestätigt.
+Keine Browserprüfung, Backendänderung oder Live-LLM-Anfrage.
+
+Vorangegangene Änderung: GPT-5.4 verwendet für alle Anfragen zentral
+`reasoning.effort=none`. Die bisherigen Werte `medium` und `low` entfallen bei
+Persona-Erzeugung, Profilverfeinerung, Chat, frischen Bewertungen und der erneuten
+Begründung gespeicherter Bewertungen. Modell, Streaming, Structured Outputs,
+Ausgabelimits, alle 20 Bewertungen, Begründungen und Persönlichkeitsgewichtung
+bleiben erhalten. Health-Endpunkt und Performance-Logs melden den aktiven Denkaufwand.
+
+Die [offizielle GPT-5.4-Modellseite](https://developers.openai.com/api/docs/models/gpt-5.4)
+bestätigt `none` als unterstützten Wert. Prüfung: **521 Python-Tests bestanden,
+1 übersprungen**. Vorhandene API-/SDK-Tests prüfen `none` in sämtlichen Aufrufpfaden,
+einschließlich echter SDK-Serialisierung mit simulierten Streaming-Antworten und
+vollständigen Begründungen für 20 Stellen. Keine Live-LLM-Anfrage oder neue
+Latenzmessung; frühere Benchmarkwerte im README sind ausdrücklich als historisch
+gekennzeichnet. Frontend unverändert.
+Lokalen Server neu gestartet; `/api/health` bestätigt `gpt-5.4`, Denkaufwand
+`none` und weiterhin 8.537 Stellen.
+
+Vorangegangene Änderung: „Weitere Fragen für die Umfrage beantworten“ und seine
+Fußleiste erscheinen erst nach einer vollständig abgeschlossenen ersten Suche
+(DIANA-Schritt 3). Die Freigabe kommt aus dem eingebetteten System, mit Prüfung
+von Ursprung, Fenster und Testlauf-ID. Wiederhergestellte Suchsitzungen werden
+ebenfalls erkannt; Laden, Fehler und Textvorschauen geben den Fragebogen nicht frei.
+Auch null Treffer und ausgeblendete Scores zählen als abgeschlossene Suche.
+Die Freigabe bleibt für diesen Testlauf bei Rücksprüngen und Neuladen erhalten.
+
+„Umfrage starten“, „Jetzt Profil erstellen“ und der neue Weiter-Button teilen sich
+eine dezente Einblend-, Leucht- und Pfeilanimation. Deaktivierte Buttons und die
+Systemeinstellung für reduzierte Bewegung werden berücksichtigt. Keine Änderung
+an Matching, Modellen, API oder Antwortdaten der Umfrage.
+
+Prüfung: **93 Frontend-Tests bestanden**, darunter neue Tests für die
+Abschlussmeldung, Wiederherstellung, falsche bzw. veraltete Fensterereignisse und
+die gesperrte Vorwärtsnavigation vor Schritt 3. React-SSR bestätigt die fehlende
+Fußleiste vor dem Abschluss und den animierten Button danach, bei unverändertem
+Vorschaufenster. Produktionsbuild und HTTP-Prüfung der aktuellen Seiten und Assets
+erfolgreich. Keine Browserprüfung, zusätzlichen LLM-Aufrufe oder Backendänderungen.
+
+Vorangegangene Änderung: Umfrage als geführter Ablauf ab der Vorstellungsseite `/` bzw.
+`/index.html`. „Umfrage starten“ öffnet zuerst demografische Angaben, danach die
+eingebettete Jobsuche und anschließend vier nacheinander gezeigte Kategorien:
+Suchvorhaben, KI-Suchpersönlichkeit, Suchen im Gespräch und Gesamterfahrung.
+Die Systemseite enthält ausschließlich DIANA und den Weiter-Button. Die Vorschau
+wird erst nach den demografischen Angaben geladen und bleibt bei Rücksprüngen
+eingebunden. Der Maximieren-Button entfällt.
+
+Neun Bewertungsfragen verwenden ausschließlich 1–10 mit einheitlichen
+Zustimmungsankern. Der Inhalt bewertet die Suche und Beratung mit der Persönlichkeit;
+keine Frage bewertet die Passung der gefundenen Jobs. Das Suchvorhaben wird
+gesondert als Text erfasst. Demografische Auswahlfelder erlauben „Keine Angabe“,
+die Studien-/Fachrichtung ist optional. Formulare und CSV verwenden eine gemeinsame
+Fragedefinition. Eine neue Version `diana-v2` trennt die Daten von der früheren
+1–5-Skala. Gespeicherte V1-Antworten bleiben erhalten und haben eigene Exportspalten.
+
+Validierung: **520 Python-Tests bestanden, 1 übersprungen; 84 Frontend-Tests
+bestanden.** Die Umfragetests prüfen zusätzlich die 1–10-Grenzen aller neun
+Skalen, demografische Auswahlwerte, Suchvorhaben, Vorwärts-/Rückwärtsnavigation,
+Reparatur ungültiger gespeicherter Schritte und getrennte V1-/V2-Exporte.
+React-SSR prüft den Einstieg über die Vorstellungsseite, das verzögerte Laden der
+Vorschau, die reine Systemansicht mit einem Button, die einzelnen Kategorien,
+anfangs leere Radio-Gruppen und das Sperren beim Speichern. Produktionsbuild
+erfolgreich. Mobile CSS: fünf Skalenwerte pro Zeile, einspaltige Demografie,
+mindestens 44 Pixel hohe Bedienelemente, Systemansicht mit dynamischer Viewporthöhe
+und Safe-Area-Abstand. Keine Browser- oder reale Geräteprüfung, keine zusätzlichen
+Live-LLM-Anfragen. Testantworten ausschließlich in temporären Datenbanken.
+Lokalen Flask-Server neu gestartet; Vorstellung, `/index.html`, `/umfrage`,
+eingebettete Suchroute und aktuelle Build-Assets per HTTP bestätigt.
+
+Vorangegangene Änderung: Zusätzliche Umfrageseite `/umfrage` mit zwei Schritten,
+eingebetteter und vergrößerbarer DIANA-Jobsuche sowie den vier vorgegebenen Fragen.
+Das Vorschaufenster bleibt beim Wechsel zum Fragebogen eingebunden. Eine eigene
+Browser-Sitzung trennt die Testsuche von einer normalen DIANA-Sitzung. Der
+Fragebogen speichert einen Entwurf im selben Tab und zeigt erst nach bestätigter
+Serverspeicherung eine Danke-Seite.
+
+Antworten werden separat von Suchprofilen und Chatverläufen in SQLite gespeichert.
+Der neue POST-Endpunkt prüft Pflichtfelder, Skalenwerte, Antwortoptionen und
+Textlänge. Eine zufällige Teilnahme-ID verhindert doppelte Einträge bei
+wiederholten oder gleichzeitigen Requests. CSV-Export über den Flask-Befehl
+`survey-export`, mit deutschen Beschriftungen, UTF-8-BOM und Formelabsicherung;
+kein öffentlicher Export und kein Überschreiben vorhandener Dateien.
+
+Validierung: **493 Python-Tests bestanden, 1 übersprungen; 80 Frontend-Tests
+bestanden.** Davon 36 neue Backend- und 10 neue Frontend-Tests für die Umfrage,
+einschließlich dauerhafter Speicherung, gleichzeitiger Wiederholungen, ungültiger
+Eingaben, Export, Antwortentwürfen, Verbindungsfehlern und Sitzungstrennung.
+React-SSR prüft die eingebettete Suchroute, vier beschriftete Fragengruppen,
+15 anfangs nicht ausgewählte Antworten und die Sperre während des Speicherns.
+Produktionsbuild erfolgreich; `/umfrage`, `/umfrage/`, Startseite, eingebettete
+Suchroute und aktuelle Build-Assets per HTTP geprüft. Lokales Backend mit
+8.537 Stellen und unverändertem GPT-5.4 erreichbar.
+Keine Browserprüfung oder zusätzlichen Live-LLM-Aufrufe;
+alle Testantworten ausschließlich in temporären Testdatenbanken.
+
+Vorangegangene Änderung: Die grüne Zusammenfassung des Suchwunsches oberhalb der
 Persönlichkeitsauswahl ist entfernt, einschließlich der ungenutzten CSS-Regeln.
 Die Angaben bleiben im Suchprofil erhalten. Produktionsbuild erfolgreich;
 Suchseite und aktuelle Assets per HTTP geprüft. Keine neuen Tests oder

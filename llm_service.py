@@ -17,7 +17,8 @@ from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
 
 
-MODEL = "gpt-5.4"
+MODEL = "gpt-5.4-2026-03-05"
+REASONING_EFFORT = "none"
 REQUEST_TIMEOUT_SECONDS = 90.0
 MAX_OUTPUT_TOKENS = 6000
 RERANK_OUTPUT_TOKENS = 10000
@@ -724,7 +725,6 @@ class OpenAIService:
         schema: type[_ResultT],
         *,
         max_output_tokens: int = MAX_OUTPUT_TOKENS,
-        reasoning_effort: Literal["low", "medium"] = "medium",
         stream: bool = False,
     ) -> Generator[dict, None, _ResultT]:
         started = perf_counter()
@@ -740,7 +740,7 @@ class OpenAIService:
                     {"role": "user", "content": json.dumps(data, ensure_ascii=False, allow_nan=False)},
                 ],
                 text_format=schema,
-                reasoning={"effort": reasoning_effort},
+                reasoning={"effort": REASONING_EFFORT},
                 max_output_tokens=max_output_tokens,
                 store=False,
             )
@@ -802,9 +802,9 @@ class OpenAIService:
             # Only fixed labels and validated numeric counters: no request,
             # response, exception body, credentials or user-provided log fields.
             self._performance_logger.info(
-                "llm_request schema=%s model=%s api_status=%s outcome=%s http_status=%s "
+                "llm_request schema=%s model=%s reasoning_effort=%s api_status=%s outcome=%s http_status=%s "
                 "elapsed_ms=%d input_tokens=%s output_tokens=%s reasoning_tokens=%s",
-                schema.__name__, MODEL, api_status, outcome, http_status,
+                schema.__name__, MODEL, REASONING_EFFORT, api_status, outcome, http_status,
                 round((perf_counter() - started) * 1000),
                 input_tokens, output_tokens, reasoning_tokens,
             )
@@ -931,7 +931,6 @@ class OpenAIService:
             },
             CachedRerankingResult if fixed is not None else RerankingResult,
             max_output_tokens=RERANK_OUTPUT_TOKENS,
-            reasoning_effort="low" if fixed is not None else "medium",
             stream=stream,
         )
         returned_ids = [ranking.job_id for ranking in result.rankings]

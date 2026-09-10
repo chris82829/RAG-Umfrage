@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { CHAT_WIDTH_KEY, DEFAULT_CHAT_WIDTH, chatWidthBounds, clampChatWidth, keyboardChatWidth } from './chat-layout.js';
+import { CHAT_WIDTH_KEY, DEFAULT_CHAT_WIDTH, chatWidthBounds, clampChatWidth, keyboardChatWidth, onboardingChatWidth } from './chat-layout.js';
 
-export default function useChatResize(workspaceRef) {
-  const [preferredWidth, setWidth] = useState(() => {
+export default function useChatResize(workspaceRef, onboarding = false) {
+  const [preferredWidth, setPreferredWidth] = useState(() => {
     try {
       const stored = localStorage.getItem(CHAT_WIDTH_KEY);
       return stored === null ? DEFAULT_CHAT_WIDTH : clampChatWidth(Number(stored), 1600);
     } catch { return DEFAULT_CHAT_WIDTH; }
   });
   const [containerWidth, setContainerWidth] = useState(1200);
+  const [setupWidth, setSetupWidth] = useState(null);
   const [dragging, setDragging] = useState(false);
   const drag = useRef(null);
-  const width = clampChatWidth(preferredWidth, containerWidth);
+  const width = clampChatWidth(onboarding ? setupWidth ?? onboardingChatWidth(containerWidth) : preferredWidth, containerWidth);
+  const setWidth = onboarding ? setSetupWidth : setPreferredWidth;
   const bounds = chatWidthBounds(containerWidth);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export default function useChatResize(workspaceRef) {
     onPointerUp(event) { finish(event); },
     onPointerCancel(event) { finish(event, true); },
     onLostPointerCapture() { drag.current = null; setDragging(false); },
-    onDoubleClick() { setWidth(DEFAULT_CHAT_WIDTH); },
+    onDoubleClick() { setWidth(onboarding ? null : DEFAULT_CHAT_WIDTH); },
     onKeyDown(event) {
       if (event.key === 'Escape' && drag.current) {
         event.preventDefault(); setWidth(drag.current.width);

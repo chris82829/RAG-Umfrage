@@ -33,6 +33,16 @@ def job(identifier, text):
     return {"id": identifier, "search_text": text}
 
 
+def test_startup_prepares_only_query_encoder_without_building_document_cache(tmp_path):
+    encoder = RecordingEncoder()
+    retriever = HybridRetriever(tmp_path, encoder=encoder)
+    retriever.prepare_query_encoder()
+    assert len(encoder.calls) == 1
+    assert encoder.calls[0][0] == [f"Instruct: {QUERY_INSTRUCTION}\nQuery: Python SQL Datenanalyse"]
+    assert not list(tmp_path.rglob('*.npy'))
+    assert retriever.search([job('a', 'Python data')], 'Python')[0]['job']['id'] == 'a'
+
+
 def test_tokenizer_preserves_specialist_keywords_and_unicode():
     assert tokenize("C++ C# .NET Python Qualitätsprüfung München") == [
         "c++", "c#", ".net", "python", "qualitätsprüfung", "münchen"

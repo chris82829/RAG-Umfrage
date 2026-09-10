@@ -76,6 +76,16 @@ def payload(**filters):
                         'filters': filters}}
 
 
+def test_health_reports_gpt54_without_reasoning_and_without_model_calls(setup):
+    _, client, retriever, llm = setup
+    response = client.get('/api/health')
+    assert response.status_code == 200
+    assert response.json['openai_model'] == 'gpt-5.4-2026-03-05'
+    assert response.json['openai_reasoning_effort'] == 'none'
+    assert retriever.calls == []
+    assert llm.calls == []
+
+
 def import_additional_jobs(app, tmp_path, count=25):
     template = json.loads((Path(__file__).resolve().parents[1] / 'dummy_jobs.json').read_text())[0]
     clones = []

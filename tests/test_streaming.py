@@ -25,7 +25,7 @@ class ResponseStream(httpx.SyncByteStream):
     def __iter__(self):
         text = json.dumps(self.output, ensure_ascii=True)
         response = {'id': 'resp_test', 'object': 'response', 'created_at': 1,
-                    'model': 'gpt-5.4', 'status': 'in_progress', 'output': [], 'error': None}
+                    'model': 'gpt-5.4-2026-03-05', 'status': 'in_progress', 'output': [], 'error': None}
         item = {'id': 'msg_test', 'type': 'message', 'role': 'assistant',
                 'status': 'in_progress', 'content': []}
         part = {'type': 'output_text', 'text': '', 'annotations': []}
@@ -66,7 +66,7 @@ def sdk_service(output, **kwargs):
     return OpenAIService('offline-test-key', client=client), stream, requests
 
 
-def test_chat_stream_is_incremental_decodes_escapes_and_preserves_model_and_reasoning():
+def test_chat_stream_is_incremental_decodes_escapes_and_disables_reasoning():
     output = {'action': 'answer', 'profile_patch': PATCH,
               'assistant_message': 'Python passt.\n„München“ und Teamarbeit 🧭 sind deine Wünsche.'}
     service, transport, requests = sdk_service(output)
@@ -86,8 +86,8 @@ def test_chat_stream_is_incremental_decodes_escapes_and_preserves_model_and_reas
     assert 'PRIVATE' not in json.dumps(previews)
     assert transport.closed and transport.completed
     assert len(requests) == 1
-    assert requests[0]['model'] == 'gpt-5.4'
-    assert requests[0]['reasoning'] == {'effort': 'medium'}
+    assert requests[0]['model'] == 'gpt-5.4-2026-03-05'
+    assert requests[0]['reasoning'] == {'effort': 'none'}
     assert requests[0]['store'] is False and requests[0]['stream'] is True
     assert requests[0]['text']['format']['type'] == 'json_schema'
 
@@ -108,7 +108,7 @@ def test_stream_cancellation_and_connection_failure_close_upstream(abort):
 
 
 @pytest.mark.parametrize('cached', [False, True])
-def test_rerank_stream_keeps_all_twenty_jobs_reasons_and_effort(cached):
+def test_rerank_stream_keeps_all_twenty_jobs_reasons_without_reasoning(cached):
     from test_llm_service import candidate, ranking
     candidates = [candidate(str(i)) for i in range(20)]
     rankings = [ranking(str(i)) for i in range(20)]
@@ -132,5 +132,5 @@ def test_rerank_stream_keeps_all_twenty_jobs_reasons_and_effort(cached):
     assert result == baseline
     assert len(result['rankings']) == 20
     assert all(len(job['reasons']) == 2 for job in result['rankings'])
-    assert requests[0]['model'] == 'gpt-5.4'
-    assert requests[0]['reasoning'] == {'effort': 'low' if cached else 'medium'}
+    assert requests[0]['model'] == 'gpt-5.4-2026-03-05'
+    assert requests[0]['reasoning'] == {'effort': 'none'}

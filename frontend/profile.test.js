@@ -2,9 +2,19 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { makeProfile, exampleForm, emptyForm, fromProfile, activeFilters, profileSummary } from './profile.js';
 import { defaultAdvisor, validateAdvisor, sameAdvisor, advisorAiLabel, advisorPresets, advisorScoreLabel } from './advisor.js';
-import { clampChatWidth, chatWidthBounds, keyboardChatWidth, messagePreview } from './chat-layout.js';
+import { clampChatWidth, chatWidthBounds, keyboardChatWidth, messagePreview, onboardingChatWidth } from './chat-layout.js';
 import { actionFeedback, candidatePool, canSendChat, pendingFeedback, profileChangeAction, recoveredSubmission, submittedChangeApplied } from './chat-actions.js';
 import { MIN_MATCH_SCORE, resultVisibilityKey, scoreVisibility } from './score-visibility.js';
+
+test('onboarding gives the right panel more space without squeezing the guide or overflowing', () => {
+  assert.equal(onboardingChatWidth(1200), 720);
+  assert.equal(onboardingChatWidth(1600), 800);
+  for (const size of [851, 900, 1024, 1200, 1600]) {
+    const width = onboardingChatWidth(size);
+    assert.ok(width >= 360);
+    assert.ok(size - width - 12 >= 400);
+  }
+});
 
 test('profile sends clean lists and numeric hours to the strict API', () => {
   const p = makeProfile({ ...exampleForm, skills: 'Python, SQL; Python\nC++', hours: '20', location: ' München, Berlin ' });

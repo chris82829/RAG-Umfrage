@@ -20,6 +20,7 @@ export const advisorTemplates = {
   guenther: { ...advisorPresets.guenther, instructions: 'Inspiriert von Günther Jauch: Erkläre anschaulich und im Dialog. Übersetze Aufgaben in den Arbeitsalltag und stelle eine gezielte Rückfrage, wenn sie bei der Entscheidung hilft. Bleibe freundlich und sachlich.' },
 };
 export function advisorFromTemplate(key) {
+  if (key === '') return editableAdvisor();
   if (!Object.hasOwn(advisorTemplates, key)) throw new Error('Diese Persönlichkeitsvorlage ist nicht verfügbar.');
   const template = advisorTemplates[key];
   return { ...defaultAdvisor, name: template.name, traits: [...template.traits], focus: template.focus, description: template.instructions };

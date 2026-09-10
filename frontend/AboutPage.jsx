@@ -2,11 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import portrait from './assets/christoph-scharnagl.png';
 import './about-landing.css';
+import './action-motion.css';
+import './privacy.css';
 
 // Research/bio: supplied presentation, slides 1, 11, 12.
 // Contact: https://www.th-nuernberg.de/person/scharnagl-christoph/
 // Institute/address: official IFAI team and contact page (see README).
-export default function AboutPage({ onStart }) {
+export default function AboutPage() {
   const heading = useRef(null);
   useEffect(() => { heading.current?.focus({ preventScroll: true }); }, []);
   return <main className="about-page about-landing">
@@ -19,7 +21,7 @@ export default function AboutPage({ onStart }) {
         <p>Das Promotionsvorhaben verbindet die Erfassung persönlicher Angaben mit einem anpassbaren Matching und verständlichen Ergebnissen. Am Beispiel der Jobsuche untersucht es, wie diese Bereiche zusammenwirken und wie Nutzerinnen und Nutzer Empfehlungen im Dialog nachvollziehen und mitgestalten können.</p>
       </section>
       <div className="about-launch">
-        <a href="/suche" className="about-start-link" onClick={onStart}><span>Jobsuche starten</span><span className="about-start-arrow" aria-hidden="true"><ArrowRight size={23} /></span></a>
+        <a href="/umfrage" className="about-start-link diana-action-motion"><span>Umfrage starten</span><span className="about-start-arrow diana-action-arrow" aria-hidden="true"><ArrowRight size={23} /></span></a>
       </div>
       </div>
       <section className="about-person" aria-labelledby="researcher-name">
@@ -36,6 +38,7 @@ export default function AboutPage({ onStart }) {
           </address>
         </div>
       </section>
+      <footer className="about-legal"><a href="/datenschutz">Datenschutz</a><a href="https://www.hochschuljobboerse.de/impressum" target="_blank" rel="noopener noreferrer">Impressum der Hochschuljobbörse</a></footer>
     </div>
   </main>;
 }

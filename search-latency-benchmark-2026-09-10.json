@@ -1,0 +1,179 @@
+{
+  "measured_at": "2026-09-10T10:13:37.170629+00:00",
+  "model": "gpt-5.4",
+  "reasoning_effort": "none",
+  "endpoint": "/api/onboard",
+  "transport": "application/x-ndjson",
+  "profile": {
+    "profile": {
+      "query": "Ich suche eine studentische Stelle in Data Science oder Softwareentwicklung.",
+      "skills": [
+        "Python",
+        "SQL",
+        "Datenanalyse"
+      ],
+      "preferences": [
+        "Analytische Aufgaben",
+        "Teamarbeit",
+        "flexible Arbeitszeiten"
+      ],
+      "filters": {
+        "employment_types": [],
+        "locations": [
+          "Nürnberg"
+        ],
+        "max_hours": 20
+      }
+    },
+    "advisor": {
+      "mode": "preset",
+      "preset": "angela"
+    }
+  },
+  "notes": [
+    "Two sequential real full searches, no persona or assessment reuse across sessions.",
+    "Persisted document embeddings already complete; first run includes process-cold E5 loading.",
+    "Synthetic applicant profile; only benchmark-created chat sessions deleted after each run.",
+    "Server HTTP timings; browser rendering and population-level latency not measured.",
+    "A separate concurrent chat request was observed during the first run. Its ChatDecision/chat_plan logs are excluded; the first run was not an isolated load benchmark.",
+    "BM25 index is rebuilt and stored document vectors are read from disk for each search; retrieval phase also includes query encoding and RRF. Individual substeps not separately instrumented."
+  ],
+  "runs": [
+    {
+      "case": "first_search_after_restart",
+      "http_status": 200,
+      "total_seconds": 63.302,
+      "first_event_seconds": 1.177,
+      "first_assistant_text_seconds": 60.87,
+      "phases": [
+        {
+          "event": "matching_phase",
+          "phase": "prefilter",
+          "elapsed_ms": 1120.24,
+          "status": "ok"
+        },
+        {
+          "event": "matching_phase",
+          "phase": "persona",
+          "elapsed_ms": 7259.25,
+          "status": "ok",
+          "cache_hit": false
+        },
+        {
+          "event": "matching_phase",
+          "phase": "retrieval",
+          "elapsed_ms": 26487.61,
+          "status": "ok"
+        },
+        {
+          "event": "matching_phase",
+          "phase": "rerank",
+          "elapsed_ms": 27344.59,
+          "status": "ok"
+        }
+      ],
+      "llm_requests": [
+        {
+          "schema": "PersonaResult",
+          "model": "gpt-5.4",
+          "reasoning_effort": "none",
+          "api_status": "completed",
+          "outcome": "parsed",
+          "http_status": "None",
+          "elapsed_ms": "7259",
+          "input_tokens": "1043",
+          "output_tokens": "290",
+          "reasoning_tokens": "0"
+        },
+        {
+          "schema": "RerankingResult",
+          "model": "gpt-5.4",
+          "reasoning_effort": "none",
+          "api_status": "completed",
+          "outcome": "parsed",
+          "http_status": "None",
+          "elapsed_ms": "27329",
+          "input_tokens": "23035",
+          "output_tokens": "2762",
+          "reasoning_tokens": "0"
+        }
+      ],
+      "error_code": null,
+      "filtered_jobs": 8537,
+      "candidate_count": 20,
+      "ranked_jobs": 20,
+      "jobs_scoring_at_least_70": 12,
+      "all_jobs_have_reasons": true,
+      "benchmark_session_deleted": true,
+      "gpt_share_percent": 54.6
+    },
+    {
+      "case": "repeat_with_loaded_model",
+      "http_status": 200,
+      "total_seconds": 40.604,
+      "first_event_seconds": 1.147,
+      "first_assistant_text_seconds": 40.347,
+      "phases": [
+        {
+          "event": "matching_phase",
+          "phase": "prefilter",
+          "elapsed_ms": 1124.95,
+          "status": "ok"
+        },
+        {
+          "event": "matching_phase",
+          "phase": "persona",
+          "elapsed_ms": 4730.18,
+          "status": "ok",
+          "cache_hit": false
+        },
+        {
+          "event": "matching_phase",
+          "phase": "retrieval",
+          "elapsed_ms": 3641.7,
+          "status": "ok"
+        },
+        {
+          "event": "matching_phase",
+          "phase": "rerank",
+          "elapsed_ms": 30978.87,
+          "status": "ok"
+        }
+      ],
+      "llm_requests": [
+        {
+          "schema": "PersonaResult",
+          "model": "gpt-5.4",
+          "reasoning_effort": "none",
+          "api_status": "completed",
+          "outcome": "parsed",
+          "http_status": "None",
+          "elapsed_ms": "4729",
+          "input_tokens": "1043",
+          "output_tokens": "295",
+          "reasoning_tokens": "0"
+        },
+        {
+          "schema": "RerankingResult",
+          "model": "gpt-5.4",
+          "reasoning_effort": "none",
+          "api_status": "completed",
+          "outcome": "parsed",
+          "http_status": "None",
+          "elapsed_ms": "30973",
+          "input_tokens": "23410",
+          "output_tokens": "3000",
+          "reasoning_tokens": "0"
+        }
+      ],
+      "error_code": null,
+      "filtered_jobs": 8537,
+      "candidate_count": 20,
+      "ranked_jobs": 20,
+      "jobs_scoring_at_least_70": 12,
+      "all_jobs_have_reasons": true,
+      "benchmark_session_deleted": true,
+      "gpt_share_percent": 87.9
+    }
+  ]
+}

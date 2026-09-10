@@ -17,12 +17,16 @@ from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException
 
 from data_store import JobStore
-from llm_service import LLMUnavailable, OpenAIService, PersonaResult
+from llm_service import MODEL, REASONING_EFFORT, LLMUnavailable, OpenAIService, PersonaResult
 from retrieval import EmbeddingUnavailable, HybridRetriever
 from schemas import ChatInput, Profile, SearchInput
-from session_store import SessionConflict, SessionStore
+from session_store import SessionConflict, SessionStore, EphemeralSessionStore
 from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
+from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
+from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice
+from study_release import StudyReleases
+from admin import register_admin
 
 BASE_DIR = Path(__file__).resolve().parent
 MATCHING_POLICY_VERSION = 'employment-only-v1'
@@ -156,6 +160,10 @@ def create_app(config=None, *, retriever=None, llm=None):
         CORS_ORIGINS=os.getenv('CORS_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173'),
         MAX_CONTENT_LENGTH=128 * 1024,
         JSON_SORT_KEYS=False,
+        ADMIN_PASSWORD_HASH=os.getenv('DIANA_ADMIN_PASSWORD_HASH', ''),
+        PRIVACY_REQUIRED=not (config or {}).get('TESTING', False),
+        PERSIST_CHAT_SESSIONS=(config or {}).get('TESTING', False),
+        PRIVACY_SETTINGS_PATH=BASE_DIR / 'privacy_settings.json',
     )
     if config:
         app.config.update(config)
@@ -171,7 +179,12 @@ def create_app(config=None, *, retriever=None, llm=None):
     store.initialize()
     if app.config['SEED_DUMMY_DATA']:
         store.seed_if_empty(BASE_DIR / 'dummy_jobs.json')
-    sessions = SessionStore(db_path)
+    sessions = (SessionStore if app.config['PERSIST_CHAT_SESSIONS'] else EphemeralSessionStore)(db_path)
+    privacy = PrivacyStore(db_path)
+    notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
+    releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
+    surveys = SurveyStore(db_path)
+    register_admin(app, surveys, privacy, releases, sessions, notice)
     engine = retriever or HybridRetriever(
         cache_dir=project_path(app.config['EMBEDDING_CACHE_DIR']),
         device=app.config['E5_DEVICE'], batch_size=app.config['E5_BATCH_SIZE'])
@@ -180,7 +193,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     language_model = llm or OpenAIService(api_key=app.config['OPENAI_API_KEY'],
                                         performance_logger=performance_logger)
     app.extensions.update(job_store=store, chat_store=sessions, retriever=engine,
-                          llm_service=language_model)
+                          llm_service=language_model, survey_store=surveys, privacy_store=privacy, study_releases=releases)
 
     @contextmanager
     def timed_phase(phase, **metadata):
@@ -196,16 +209,107 @@ def create_app(config=None, *, retriever=None, llm=None):
                 'elapsed_ms': round((time.monotonic() - started) * 1000, 2),
                 'status': status, **metadata}, separators=(',', ':')))
 
+    def consent_token():
+        return request.headers.get('X-Diana-Consent', '')
+
+    def consent_link(kind):
+        if not app.config['PRIVACY_REQUIRED']:
+            return None
+        token = consent_token()
+        def attach(db, record_id):
+            privacy.attach(token, notice, kind, record_id, db)
+            digest = privacy.require(token, notice, db)
+            if kind == 'chat':
+                releases.mark_run(digest, db)
+            elif not db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (record_id,)).fetchone():
+                releases.capture_response(digest, record_id, db)
+        return attach
+
+    @app.before_request
+    def require_consent():
+        if request.method == 'OPTIONS' or not app.config['PRIVACY_REQUIRED']:
+            return
+        if request.endpoint in {'search', 'onboard', 'chat', 'get_session', 'delete_session', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
+            privacy.require(consent_token(), notice)
+            if request.endpoint == 'get_survey_draft' and not privacy.owns(consent_token(), 'survey', request.view_args['submission_id']):
+                return jsonify(draft=None)
+            if request.endpoint in {'get_session', 'delete_session'} and not privacy.owns(consent_token(), 'chat', request.view_args['session_id']):
+                raise ConsentRequired()
+
+    @app.after_request
+    def privacy_headers(response):
+        response.headers['Referrer-Policy'] = 'no-referrer'
+        if request.path.startswith('/api/'):
+            response.headers['Cache-Control'] = 'no-store'
+        return response
+
+    @app.get('/api/privacy')
+    def privacy_status():
+        active = False
+        try:
+            privacy.require(consent_token(), notice)
+            active = True
+        except ConsentRequired:
+            pass
+        study = privacy.study_status(notice)
+        return jsonify(notice={**notice, 'ready': study['enabled']}, study=study,
+                       active=active, receipt=privacy.receipt(consent_token()))
+
+    @app.post('/api/privacy/consent')
+    def accept_consent():
+        body, error = parse_body(ConsentInput)
+        if error:
+            return error
+        privacy.accept(body, notice)
+        return jsonify(accepted=True, version=notice['version'], receipt=privacy.receipt(body.token))
+
+    @app.delete('/api/privacy/consent')
+    def withdraw_consent():
+        for session_id in privacy.withdraw(consent_token()):
+            sessions.delete(session_id)
+        return jsonify(withdrawn=True)
+
     @app.get('/')
     @app.get('/index.html')
     @app.get('/suche')
     @app.get('/mehr-erfahren')
+    @app.get('/umfrage')
+    @app.get('/umfrage/')
+    @app.get('/datenschutz')
+    @app.get('/verwaltung')
     def website():
         return send_from_directory(BASE_DIR / 'web-dist', 'index.html', max_age=0)
 
     @app.get('/assets/<path:filename>')
     def website_asset(filename):
         return send_from_directory(BASE_DIR / 'web-dist' / 'assets', filename)
+
+    @app.put('/api/survey-drafts')
+    def save_survey_draft():
+        body, error = parse_body(SurveyDraftRequest)
+        if error:
+            return error
+        try:
+            return jsonify(surveys.save_draft(body.root, before_save=consent_link('survey')))
+        except SurveyConflict as failure:
+            return error_response({'code': 'survey_conflict', 'message': str(failure)}, 409)
+
+    @app.get('/api/survey-drafts/<submission_id>')
+    def get_survey_draft(submission_id):
+        return jsonify(draft=surveys.get_draft(submission_id))
+
+    @app.post('/api/survey-responses')
+    def submit_survey():
+        body, error = parse_body(SurveyRequest)
+        if error:
+            return error
+        try:
+            created = surveys.save(body.root, before_save=consent_link('survey'))
+        except SurveyConflict as error:
+            return error_response({'code': 'survey_conflict', 'message': str(error)}, 409)
+        response = jsonify(saved=True)
+        response.headers['Cache-Control'] = 'no-store'
+        return response, 201 if created else 200
 
     @app.get('/api/jobs')
     def browse_jobs():
@@ -383,7 +487,8 @@ def create_app(config=None, *, retriever=None, llm=None):
 
     @app.get('/api/health')
     def health():
-        return jsonify(status='ok', jobs=store.count(), openai_model='gpt-5.4',
+        return jsonify(status='ok', jobs=store.count(), openai_model=MODEL,
+                       openai_reasoning_effort=REASONING_EFFORT,
                        embedding_model='intfloat/multilingual-e5-large-instruct',
                        openai_configured=bool(app.config['OPENAI_API_KEY']),
                        readiness='Modelle werden erst bei Suche oder warmup geladen.')
@@ -405,7 +510,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             result['assistant_message'] = welcome_message(result)
             state = {**result, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
-            session_id = sessions.create(state)
+            session_id = sessions.create(state, before_save=consent_link('chat'))
             return {'session_id': session_id, **public_state(state)}
 
         return operation_response(operation(), status=201)
@@ -429,6 +534,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         body, error = parse_body(ChatInput)
         if error:
             return error
+        if app.config['PRIVACY_REQUIRED'] and not privacy.owns(consent_token(), 'chat', body.session_id):
+            raise ConsentRequired()
         saved = sessions.get(body.session_id)
         if not saved:
             return error_response({'code': 'not_found', 'message': 'Chat nicht gefunden.'}, 404)
@@ -535,7 +642,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             messages.append({'role': 'assistant', 'content': result['assistant_message'],
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
             new_state = {**result, 'messages': messages[-100:]}
-            sessions.update(body.session_id, new_state, version)
+            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat'))
             return {'session_id': body.session_id, **public_state(new_state)}
 
         return operation_response(operation())
@@ -547,6 +654,10 @@ def create_app(config=None, *, retriever=None, llm=None):
                   for item in error.errors(include_input=False, include_context=False)]
         return error_response({'code': 'validation_error', 'message': 'Eingaben prüfen.',
                                'fields': fields}, 400)
+
+    @app.errorhandler(ConsentRequired)
+    def consent_error(error):
+        return error_response({'code': 'consent_required', 'message': 'Bitte prüfe die Datenschutzhinweise und deine Einwilligung. Die Studie muss dafür freigegeben sein.'}, 428)
 
     @app.errorhandler(LLMUnavailable)
     def llm_error(error):
@@ -570,6 +681,44 @@ def create_app(config=None, *, retriever=None, llm=None):
         # Class only: SDK exception strings may contain submitted personal information.
         app.logger.error('Request failed (%s)', type(error).__name__)
         return error_response({'code': 'internal_error', 'message': 'Interner Verarbeitungsfehler.'}, 500)
+
+    @app.cli.command('privacy-delete')
+    @click.option('--participation-id', required=True, help='Exakte DIANA-Teilnahme-ID der Löschanfrage.')
+    @click.option('--confirm', is_flag=True, help='Zugeordnete Antworten tatsächlich löschen und Einwilligung widerrufen.')
+    def delete_participant(participation_id, confirm):
+        records = privacy.participant_records(participation_id)
+        if records is None:
+            raise click.ClickException('Teilnahme-ID nicht gefunden.')
+        if not confirm:
+            click.echo(f"Vorschau: {records.get('survey', 0)} Umfrageantworten, {records.get('chat', 0)} Sitzungskennungen. Zum Löschen --confirm ergänzen.")
+            return
+        for session_id in privacy.delete_participant(participation_id):
+            sessions.delete(session_id)
+        click.echo('Teilnahme widerrufen; zugeordnete Antworten aus der aktiven Datenbank gelöscht. Exporte und Sicherungen separat berücksichtigen.')
+
+    @app.cli.command('privacy-end-study')
+    @click.option('--confirm', is_flag=True, help='Endgültige Löschung der Umfrageantworten und Nachweise bestätigen.')
+    def end_study(confirm):
+        """Deliberately close the study and delete its data; never runs automatically."""
+        if not confirm:
+            raise click.ClickException('Diese Aktion löscht alle Umfrageantworten und Einwilligungsnachweise. --confirm ist erforderlich.')
+        for session_id in privacy.end_study():
+            sessions.delete(session_id)
+        click.echo('Studie geschlossen; Umfrageantworten und Nachweise gelöscht. Exporte, Sicherungen und historische Chatdaten müssen separat geprüft werden.')
+
+    @app.cli.command('survey-export')
+    @click.option('--output', required=True, type=click.Path(dir_okay=False, path_type=Path),
+                  help='Neue CSV-Datei für die Umfrageauswertung (UTF-8, Semikolon).')
+    def survey_export(output):
+        """Export survey answers locally; no public download endpoint."""
+        try:
+            with output.open('x', encoding='utf-8-sig', newline='') as stream:
+                count = surveys.export_csv(stream)
+        except FileExistsError:
+            raise click.ClickException('Die Zieldatei existiert bereits. Bitte einen neuen Dateinamen wählen.') from None
+        except OSError as error:
+            raise click.ClickException(f'CSV konnte nicht geschrieben werden ({type(error).__name__}).') from None
+        click.echo(f'{count} Umfrageantworten exportiert: {output}')
 
     @app.cli.command('import-jobs')
     @click.argument('path', type=click.Path(exists=True, dir_okay=False, path_type=Path))
@@ -610,4 +759,11 @@ def create_app(config=None, *, retriever=None, llm=None):
 
 if __name__ == '__main__':
     app = create_app()
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('E5 wird vor dem lokalen Serverstart vorbereitet; kein GPT-Aufruf.')
+    try:
+        app.extensions['retriever'].prepare_query_encoder()
+        app.logger.info('E5 ist geladen und für Suchanfragen bereit.')
+    except EmbeddingUnavailable:
+        app.logger.warning('E5 konnte nicht vorgeladen werden. Ein neuer Versuch erfolgt bei der Suche.')
     app.run(host='127.0.0.1', port=int(os.getenv('PORT', '5050')), debug=False)

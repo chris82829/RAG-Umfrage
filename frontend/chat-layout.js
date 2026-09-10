@@ -7,6 +7,9 @@ export function clampChatWidth(width, containerWidth) {
   const bounds = chatWidthBounds(containerWidth);
   return Math.round(Math.min(bounds.max, Math.max(bounds.min, Number.isFinite(width) ? width : DEFAULT_CHAT_WIDTH)));
 }
+export function onboardingChatWidth(containerWidth) {
+  return clampChatWidth(containerWidth * 0.6, containerWidth);
+}
 export function keyboardChatWidth(key, width, containerWidth, shift = false) {
   const bounds = chatWidthBounds(containerWidth);
   const step = shift ? 50 : 20;

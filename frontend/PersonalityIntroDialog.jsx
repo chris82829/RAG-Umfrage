@@ -36,6 +36,6 @@ export default function PersonalityIntroDialog({ open, onboarding = false, onCon
       </section>
       </div>
     </div>
-    <button type="button" className="personality-intro-continue" onClick={() => closeThen(onContinue)}>{onboarding ? 'Persönlichkeit erstellen' : 'Verstanden'}<ArrowRight size={17} aria-hidden="true" /></button>
+    <button type="button" className={`personality-intro-continue${onboarding ? ' diana-action-motion' : ''}`} onClick={() => closeThen(onContinue)}>{onboarding ? 'Persönlichkeit erstellen' : 'Verstanden'}<ArrowRight className="diana-action-arrow" size={17} aria-hidden="true" /></button>
   </dialog>;
 }

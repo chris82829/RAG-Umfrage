@@ -1,0 +1,14 @@
+{
+  "url": "http://ifaiforschung.informatik.fh-nuernberg.de:5051",
+  "total_seconds": 66.923,
+  "first_assistant_text_seconds": 66.488,
+  "filtered_jobs": 8537,
+  "ranked_jobs": 20,
+  "all_jobs_have_reasons": true,
+  "session_restoration_verified": true,
+  "model": "gpt-5.4",
+  "reasoning_effort": "none",
+  "survey_invalid_input_rejected": true,
+  "frontend_assets_match_local_build": true,
+  "test_session_deleted": true
+}

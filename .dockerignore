@@ -1,0 +1,15 @@
+**
+!Dockerfile
+!requirements.txt
+!requirements-server.txt
+!*.py
+!dummy_jobs.json
+!survey_definition.json
+!web-dist/
+!web-dist/**
+
+!privacy_settings.json
+
+!survey_definition_v3.json
+
+!survey_definition_v4.json

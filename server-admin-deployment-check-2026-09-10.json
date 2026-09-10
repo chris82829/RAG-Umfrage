@@ -1,0 +1,11 @@
+{
+  "requested_password_login": "passed",
+  "username_required": false,
+  "survey_answers": 1,
+  "export": "passed",
+  "logout": "passed",
+  "model": "gpt-5.4-2026-03-05",
+  "reasoning": "none",
+  "public_routes_and_assets": "passed",
+  "privacy_ready": false
+}

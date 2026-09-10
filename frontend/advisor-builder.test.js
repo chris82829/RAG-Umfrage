@@ -11,6 +11,15 @@ test('new users start with an editable, valid custom personality and exactly thr
   assert.throws(() => advisorFromTemplate('__proto__'));
 });
 
+test('no template restores an independent neutral draft without celebrity instructions', () => {
+  const value = advisorFromTemplate('');
+  assert.deepEqual(value, editableAdvisor());
+  assert.equal(validateAdvisor(value).mode, 'custom');
+  assert.equal(value.description, '');
+  value.traits.push('direkt');
+  assert.deepEqual(advisorFromTemplate('').traits, defaultAdvisor.traits);
+});
+
 test('templates fill all editable fields and never submit the hidden fixed preset mode', () => {
   for (const [key, template] of Object.entries(advisorTemplates)) {
     const draft = advisorFromTemplate(key);
