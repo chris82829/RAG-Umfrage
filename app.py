@@ -23,6 +23,7 @@ from schemas import ChatInput, Profile, SearchInput
 from session_store import SessionConflict, SessionStore, EphemeralSessionStore
 from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
+from study_assignment import NEUTRAL_ADVISOR, StudyAssignments
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice
 from study_release import StudyReleases
@@ -184,6 +185,8 @@ def create_app(config=None, *, retriever=None, llm=None):
     notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
     releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
     surveys = SurveyStore(db_path)
+    assignments = StudyAssignments(surveys, privacy, notice)
+    app.extensions['study_assignments'] = assignments
     register_admin(app, surveys, privacy, releases, sessions, notice)
     engine = retriever or HybridRetriever(
         cache_dir=project_path(app.config['EMBEDDING_CACHE_DIR']),
@@ -284,13 +287,20 @@ def create_app(config=None, *, retriever=None, llm=None):
     def website_asset(filename):
         return send_from_directory(BASE_DIR / 'web-dist' / 'assets', filename)
 
+    @app.post('/api/study-assignment')
+    def assign_study():
+        return jsonify(assignments.assign(consent_token()))
+
     @app.put('/api/survey-drafts')
     def save_survey_draft():
         body, error = parse_body(SurveyDraftRequest)
         if error:
             return error
         try:
+            assignments.validate_answers(consent_token(), body.root.version, body.root.answers.model_dump())
             return jsonify(surveys.save_draft(body.root, before_save=consent_link('survey')))
+        except ValueError as failure:
+            return error_response({'code':'assignment_mismatch','message':str(failure)},400)
         except SurveyConflict as failure:
             return error_response({'code': 'survey_conflict', 'message': str(failure)}, 409)
 
@@ -304,7 +314,10 @@ def create_app(config=None, *, retriever=None, llm=None):
         if error:
             return error
         try:
+            assignments.validate_answers(consent_token(), body.root.version, body.root.model_dump())
             created = surveys.save(body.root, before_save=consent_link('survey'))
+        except ValueError as failure:
+            return error_response({'code':'assignment_mismatch','message':str(failure)},400)
         except SurveyConflict as error:
             return error_response({'code': 'survey_conflict', 'message': str(error)}, 409)
         response = jsonify(saved=True)
@@ -498,17 +511,19 @@ def create_app(config=None, *, retriever=None, llm=None):
         body, error = parse_body(SearchInput)
         if error:
             return error
-        return jsonify(public_state(match(body.profile.model_dump(), advisor=body.advisor.model_dump())))
+        return jsonify(public_state(match(body.profile.model_dump(), advisor=assignments.advisor(consent_token(), body.advisor.model_dump()))))
 
     @app.post('/api/onboard')
     def onboard():
         body, error = parse_body(SearchInput)
         if error:
             return error
+        assigned = assignments.get(consent_token())
+        search_advisor = dict(NEUTRAL_ADVISOR) if assigned and assigned['arm']=='B' else body.advisor.model_dump()
         def operation():
-            result = yield from match_steps(body.profile.model_dump(), advisor=body.advisor.model_dump())
+            result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)
-            state = {**result, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
+            state = {**result, '_study_arm': assigned['arm'] if assigned else None, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
             session_id = sessions.create(state, before_save=consent_link('chat'))
             return {'session_id': session_id, **public_state(state)}
@@ -520,6 +535,9 @@ def create_app(config=None, *, retriever=None, llm=None):
         saved = sessions.get(session_id)
         if not saved:
             return jsonify(error={'code': 'not_found', 'message': 'Chat nicht gefunden.'}), 404
+        assigned = assignments.get(consent_token())
+        if assigned and saved[0].get('_study_arm') != assigned['arm']:
+            return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
         return jsonify(session_id=session_id, **public_state({**saved[0],
                        'advisor': saved[0].get('advisor', AdvisorConfig().model_dump())}))
 
@@ -540,9 +558,13 @@ def create_app(config=None, *, retriever=None, llm=None):
         if not saved:
             return error_response({'code': 'not_found', 'message': 'Chat nicht gefunden.'}, 404)
         state, version = saved
-        previous_advisor = AdvisorConfig.model_validate(state.get('advisor', {})).model_dump()
+        assigned = assignments.get(consent_token())
+        if assigned and state.get('_study_arm') != assigned['arm']:
+            return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
+        previous_advisor = assignments.advisor(consent_token(), AdvisorConfig.model_validate(state.get('advisor', {})).model_dump())
+        selected_advisor = assignments.advisor(consent_token(), body.advisor.model_dump() if body.advisor is not None else previous_advisor)
         def operation():
-            advisor = body.advisor.model_dump() if body.advisor is not None else previous_advisor
+            advisor = selected_advisor
             profile = body.profile.model_dump() if body.profile is not None else state['profile']
             context = {'messages': state['messages'][-12:], 'jobs': state['jobs'][:20]}
             action = 'answer'
@@ -641,7 +663,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             messages = state['messages'] + ([{'role': 'user', 'content': body.message}] if body.message else [])
             messages.append({'role': 'assistant', 'content': result['assistant_message'],
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
-            new_state = {**result, 'messages': messages[-100:]}
+            new_state = {**result, '_study_arm': state.get('_study_arm'), 'messages': messages[-100:]}
             sessions.update(body.session_id, new_state, version, before_save=consent_link('chat'))
             return {'session_id': body.session_id, **public_state(new_state)}
 

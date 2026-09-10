@@ -1,13 +1,12 @@
 import {consentHeaders} from './privacy.js';
-import previousDefinition from '../survey_definition_v4.json' with { type: 'json' };
 import definition from '../survey_definition.json' with { type: 'json' };
 
 export const SURVEY_VERSION = definition.version;
 export const SURVEY_STORAGE_KEY = `diana-survey:${SURVEY_VERSION}`;
-export const demographics = definition.demographics;
+export const demographics = {...definition.demographics,fields:definition.demographics.fields.filter(field=>!field.systemProvided)};
 export const surveyCategories = definition.categories;
 export const surveyScale = definition.scale;
-export const surveyFields = [demographics, ...surveyCategories].flatMap(group => group.fields);
+export const surveyFields = [definition.demographics, ...surveyCategories].flatMap(group => group.fields);
 export const surveyStages = ['system', 'demographics', ...surveyCategories.map(group => group.id)];
 export const waitingQuestionFields = ['search_goal', 'personality_customized', 'personality_setup'].map(name => surveyFields.find(field => field.name === name));
 export const waitingQuestionGroups = [demographics, {id: 'setup', title: 'Weitere Fragen', fields: waitingQuestionFields}];
@@ -64,11 +63,11 @@ export function waitingFieldDone(state, field) {
 }
 
 export function remainingWaitingGroups(state) {
-  return waitingQuestionGroups.map(group=>({...group,fields:group.fields.filter(field=>!waitingFieldDone(state,field))})).filter(group=>group.fields.length);
+  return waitingQuestionGroups.map(group=>({...group,fields:group.fields.filter(field=>fieldVisible(field,state.answers) && !waitingFieldDone(state,field))})).filter(group=>group.fields.length);
 }
 
 export function markWaitingFields(state, fields) {
-  const valid=fields.filter(field=>!Object.keys(surveyErrors(state.answers,[field])).length).map(field=>field.name);
+  const valid=fields.filter(field=>fieldVisible(field,state.answers) && !Object.keys(surveyErrors(state.answers,[field])).length).map(field=>field.name);
   return reviseSurvey(state,{...(valid.includes('search_goal')?{searchGoalEdited:true}:{}),waitingAnswered:[...new Set([...(state.waitingAnswered || []),...valid])]});
 }
 
@@ -83,7 +82,7 @@ export function finishWaitingIfReady(state) {
 
 export function displaySurveyGroup(state, stage=state.stage) {
   const group=stageGroup(stage);
-  return group ? {...group,fields:group.fields.filter(field=>!waitingFieldDone(state,field))} : null;
+  return group ? {...group,fields:group.fields.filter(field=>fieldVisible(field,state.answers) && !waitingFieldDone(state,field))} : null;
 }
 
 export function stageGroup(stage) {
@@ -123,14 +122,14 @@ export function newSurveyState(cryptoSource = globalThis.crypto) {
 
 export function loadSurveyState(storage, fresh = newSurveyState) {
   try {
-    const state = JSON.parse(storage.getItem(SURVEY_STORAGE_KEY) ?? storage.getItem('diana-survey:diana-v4') ?? storage.getItem('diana-survey:diana-v3') ?? storage.getItem('diana-survey:diana-v2'));
-    if ([SURVEY_VERSION, 'diana-v4', 'diana-v3', 'diana-v2'].includes(state?.version) && /^[a-f0-9]{32}$/.test(state.submissionId)
+    const state = JSON.parse(storage.getItem(SURVEY_STORAGE_KEY) ?? storage.getItem('diana-survey:diana-v5') ?? storage.getItem('diana-survey:diana-v4') ?? storage.getItem('diana-survey:diana-v3') ?? storage.getItem('diana-survey:diana-v2'));
+    if ([SURVEY_VERSION, 'diana-v5', 'diana-v4', 'diana-v3', 'diana-v2'].includes(state?.version) && /^[a-f0-9]{32}$/.test(state.submissionId)
         && /^[a-f0-9]{32}$/.test(state.runId) && surveyStages.includes(state.stage)
         && typeof state.submitted === 'boolean' && typeof state.systemOpened === 'boolean') {
       // Completed old questionnaires must never be resubmitted under a new version.
       if (state.version !== SURVEY_VERSION && state.submitted) return state;
       const migrated = state.version !== SURVEY_VERSION;
-      const unchanged = new Set([...demographics.fields.map(field => field.name), 'search_goal', ...(state.version==='diana-v4' ? unchangedV4Fields : [])]);
+      const unchanged = new Set([...demographics.fields.map(field => field.name), 'search_goal']);
       const answers = emptyAnswers();
       for (const field of surveyFields) {
         if (migrated && !unchanged.has(field.name)) continue;
@@ -147,7 +146,7 @@ export function loadSurveyState(storage, fresh = newSurveyState) {
         waitingAnswered:Array.isArray(state.waitingAnswered) ? [...new Set(state.waitingAnswered)].filter(name=>waitingQuestionGroups.some(group=>group.fields.some(field=>field.name===name))) : [],
         searchGoalSuggestion: typeof state.searchGoalSuggestion === 'string' && state.searchGoalSuggestion.length <= 1000 ? state.searchGoalSuggestion : '',
         searchGoalEdited: typeof state.searchGoalEdited === 'boolean' ? state.searchGoalEdited : Boolean(answers.search_goal), answers };
-      if (migrated) { restored.waitingAnswered=restored.waitingAnswered.filter(name=>unchanged.has(name)); restored.draftRevision=Math.max(Date.now(),restored.draftRevision+1); }
+      if (migrated) { restored.runId=newSurveyState().runId; restored.systemCompleted=false; restored.chatCompleted=false; restored.stage='system'; restored.waitingAnswered=restored.waitingAnswered.filter(name=>unchanged.has(name)); restored.draftRevision=Math.max(Date.now(),restored.draftRevision+1); }
       return { ...restored, stage: reachableStage(restored) };
     }
   } catch { /* Draft storage is optional. */ }
@@ -174,21 +173,24 @@ export async function submitSurvey(state, { request = globalThis.fetch, signal }
   if (data?.saved !== true) throw new Error('Die Speicherbestätigung fehlt. Bitte versuche es erneut.');
 }
 
-// Preserve only answers whose response type has not changed. Never rescale old categories.
-const previousFields=[previousDefinition.demographics,...previousDefinition.categories].flatMap(group=>group.fields);
-const unchangedV4Fields=surveyFields.filter(field=>previousFields.some(old=>old.name===field.name && old.kind===field.kind)).map(field=>field.name);
+// Only demographic facts and the search goal carry into the new experiment.
+const transferableFields=[...demographics.fields.map(field=>field.name),'search_goal'];
 export function restoreServerDraft(previous,draft) {
   if(draft.completed)return {...previous,submitted:true};
   if(draft.version===SURVEY_VERSION) {
     if(draft.revision<=(previous.draftRevision || 0))return previous;
     return {...previous,answers:Object.fromEntries(surveyFields.map(field=>[field.name,draft.answers[field.name]??emptyAnswers()[field.name]])),draftRevision:draft.revision,waitingAnswered:draft.waiting_answered || [],searchGoalEdited:true};
   }
-  if(draft.version==='diana-v4') {
+  if(['diana-v4','diana-v5'].includes(draft.version)) {
     const answers={...previous.answers};
-    // A local migration may have advanced the revision; retain any new answers already entered.
-    for(const name of unchangedV4Fields)if(answers[name]==='' || answers[name]===null)answers[name]=draft.answers[name]??answers[name];
+    for(const name of transferableFields)if(answers[name]==='' || answers[name]===null)answers[name]=draft.answers[name]??answers[name];
     return {...previous,answers,draftRevision:Math.max(previous.draftRevision || 0,draft.revision+1),
-      waitingAnswered:[...new Set([...(previous.waitingAnswered || []),...(draft.waiting_answered || []).filter(name=>unchangedV4Fields.includes(name))])]};
+      waitingAnswered:[...new Set([...(previous.waitingAnswered || []),...(draft.waiting_answered || []).filter(name=>transferableFields.includes(name))])]};
   }
   return previous;
+}
+export function applyStudyAssignment(state,assignment) {
+  if(!['B','C'].includes(assignment?.arm))throw new Error('Studienzuordnung konnte nicht geladen werden.');
+  const answers=changeSurveyAnswer(state.answers,'study_arm',assignment.arm);
+  return reviseSurvey(state,{answers,assignment});
 }

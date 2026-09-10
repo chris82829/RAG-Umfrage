@@ -125,3 +125,7 @@ zweite Teilnahme anzulegen. Löschung über dieselbe Teilnahme-ID entfernt auch 
 ## Fragebogen V5
 
 Alle subjektiven Bewertungen verwenden 1–10. Neue Antworten stehen in `v5_`-Spalten, historische V4-Werte unverändert in `v4_`-Spalten. Die Frage nach einer eigenen Chatnachricht entfällt in V5. Filter und Codebuch unterscheiden beide Versionen; Werte verschiedener Skalen nicht ungeprüft zusammenfassen.
+
+## B/C-Vergleich (V6)
+
+In der Verwaltung lassen sich B und C separat filtern; die Tabelle zeigt die Variante. CSV/Numiqo-ZIP enthalten `study_arm`, `experiment_id`, `assigned_at_utc`, `prior_exposure` sowie die v6_-Antwortspalten. Nur V6-Teilnahmen erhalten diese Experimentmetadaten. Persönlichkeitsfragen sind bei B als `skipped` gekennzeichnet. Abbrüche können unter `Unvollständig` betrachtet werden.

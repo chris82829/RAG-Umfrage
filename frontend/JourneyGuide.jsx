@@ -11,18 +11,19 @@ const steps = [
   { number: 4, title: 'Besprechen & verfeinern', shortTitle: 'Chat & Suche', Icon: MessagesSquare, description: 'Fragen stellen und deine Suche anpassen.' },
 ];
 
-export default function JourneyGuide({ activeStep = 1, completedSteps = [], compact = false, iconOnly = false, busy = false, hasSession = false, onSelect }) {
+export default function JourneyGuide({ neutral = false, activeStep = 1, completedSteps = [], compact = false, iconOnly = false, busy = false, hasSession = false, onSelect }) {
   return <nav className={`journey-guide ${iconOnly ? 'journey-guide--icons' : compact ? 'journey-guide--compact' : 'journey-guide--expanded'}`} aria-label="Schritte deiner Jobsuche" aria-busy={busy}>
     <ol className="journey-list" role="list">
-      {steps.map(({ number, title, shortTitle, Icon, description }) => {
+      {steps.filter(step=>!neutral || step.number!==2).map(({ number, title, shortTitle, Icon, description },index) => {
+        const displayNumber=index+1;
         const active = activeStep === number;
         const complete = completedSteps.includes(number);
         const locked = !canVisitJourneyStep(number, { hasSession, activeStep });
-        const accessibleLabel = `Schritt ${number}: ${title}${active ? ', aktuell' : ''}${complete ? ', bereits erledigt' : ''}${locked ? ', zuerst den aktuellen Schritt fortsetzen' : ''}`;
+        const accessibleLabel = `Schritt ${displayNumber}: ${title}${active ? ', aktuell' : ''}${complete ? ', bereits erledigt' : ''}${locked ? ', zuerst den aktuellen Schritt fortsetzen' : ''}`;
         return <li className="journey-item" key={number}>
           <button type="button" className={`journey-step journey-step--${number}${active ? ' is-current' : ''}${complete ? ' is-complete' : ''}`} aria-label={accessibleLabel} title={iconOnly ? accessibleLabel : undefined} aria-current={active ? 'step' : undefined} disabled={busy || locked} onClick={() => onSelect?.(number)}>
             <span className="journey-step-heading">
-              <span className="journey-step-number"><span className="journey-sr-only">Schritt </span>{number}</span>
+              <span className="journey-step-number"><span className="journey-sr-only">Schritt </span>{displayNumber}</span>
               <Icon className="journey-step-icon" size={23} strokeWidth={1.6} aria-hidden="true" />
               {iconOnly ? complete && <Check className="journey-header-check" size={11} strokeWidth={2.5} aria-hidden="true" /> : <>
                 {active && <span className="journey-current">{complete && <Check className="journey-complete-check" size={11} aria-hidden="true" />}Aktuell</span>}

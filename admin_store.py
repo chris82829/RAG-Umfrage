@@ -5,10 +5,10 @@ import json
 import zipfile
 from datetime import datetime, timezone
 
-from survey_store import VERSIONED_FIELDS, V4_SURVEY_DEFINITION, SURVEY_FIELDS, LEGACY_SURVEY_FIELDS, SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, choice_codes, answer_status, QUESTIONS, spreadsheet_text, ADDED_VALUE_LABELS, PREFERENCE_LABELS
+from survey_store import V5_SURVEY_DEFINITION, VERSIONED_FIELDS, V4_SURVEY_DEFINITION, SURVEY_FIELDS, LEGACY_SURVEY_FIELDS, SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, choice_codes, answer_status, QUESTIONS, spreadsheet_text, ADDED_VALUE_LABELS, PREFERENCE_LABELS
 
 LEGACY_FIELDS = ['chat_helpfulness','added_value','future_preference','feedback']
-META_FIELDS = ['participation_id','submitted_at_utc','survey_version','study_release_ids','openai_models','reasoning_efforts','response_status','last_saved_at_utc']
+META_FIELDS = ['participation_id','submitted_at_utc','survey_version','study_release_ids','openai_models','reasoning_efforts','response_status','last_saved_at_utc','study_arm','experiment_id','assigned_at_utc','prior_exposure']
 
 
 class AdminSurveyData:
@@ -18,20 +18,23 @@ class AdminSurveyData:
     def records(self):
         releases=self.releases.all()
         with self.surveys.connect() as db:
-            rows=db.execute('''SELECT s.*, p.participation_id, m.metadata_json FROM (
+            rows=db.execute('''SELECT s.*, p.participation_id, m.metadata_json, a.arm, a.experiment_id, a.assigned_at, a.prior_exposure FROM (
                 SELECT submission_id,created_at,created_at AS updated_at,answers_json,'completed' AS response_status FROM survey_responses
                 UNION ALL
                 SELECT submission_id,created_at,updated_at,answers_json,'in_progress' AS response_status FROM survey_drafts
                 WHERE submission_id NOT IN (SELECT submission_id FROM survey_responses)) s
                 LEFT JOIN privacy_links l ON l.record_id=s.submission_id AND l.kind='survey'
                 LEFT JOIN privacy_consents p ON p.token_hash=l.token_hash
+                LEFT JOIN study_assignments a ON a.token_hash=l.token_hash
                 LEFT JOIN survey_response_metadata m ON m.submission_id=s.submission_id
                 ORDER BY s.updated_at DESC, s.submission_id DESC''').fetchall()
         result=[]
         for row in rows:
             answers=json.loads(row['answers_json'])
+            experiment=answers.get('version')=='diana-v6'
             ids=json.loads(row['metadata_json']).get('release_ids',[]) if row['metadata_json'] else []
             result.append(dict(id=row['submission_id'], participation_id=row['participation_id'] or row['submission_id'],
+                               study_arm=row['arm'] if experiment else '', experiment_id=row['experiment_id'] if experiment else '', assigned_at_utc=row['assigned_at'] if experiment else '', prior_exposure=row['prior_exposure'] if experiment else '',
                                consent_linked=bool(row['participation_id']), submitted_at_utc=row['created_at'] if row['response_status']=='completed' else '',
                                response_status=row['response_status'],last_saved_at_utc=row['updated_at'],
                                survey_version=answers.pop('version'), answers=answers, study_release_ids=ids,
@@ -39,16 +42,16 @@ class AdminSurveyData:
                                reasoning_efforts=sorted({releases[key]['reasoning_effort'] for key in ids if key in releases})))
         return result
 
-    def filtered(self, query='', version='', status=''):
+    def filtered(self, query='', version='', status='', arm=''):
         return [row for row in self.records() if (not query or query.casefold() in row['participation_id'].casefold())
-                and (not version or row['survey_version']==version) and (not status or row['response_status']==status)]
+                and (not version or row['survey_version']==version) and (not status or row['response_status']==status) and (not arm or row['study_arm']==arm)]
 
     def detail(self, response_id):
         row=next((row for row in self.records() if row['id']==response_id),None)
         if row:
             links=self.privacy.participant_records(row['participation_id']) if row['consent_linked'] else None
             row['deletion_count']=links.get('survey',1) if links is not None else 1
-            row['definition']=SURVEY_DEFINITION if row['survey_version']=='diana-v5' else V4_SURVEY_DEFINITION if row['survey_version']=='diana-v4' else LEGACY_SURVEY_DEFINITION
+            row['definition']=SURVEY_DEFINITION if row['survey_version']=='diana-v6' else V5_SURVEY_DEFINITION if row['survey_version']=='diana-v5' else V4_SURVEY_DEFINITION if row['survey_version']=='diana-v4' else LEGACY_SURVEY_DEFINITION
             if row['survey_version']=='diana-v1':
                 row['definition']={'version':'diana-v1','demographics':{'fields':[
                     dict(name=name,title=title,options=list(ADDED_VALUE_LABELS.items()) if name=='added_value'
@@ -70,7 +73,10 @@ class AdminSurveyData:
         return True
 
     def codebook(self):
-        result=[dict(variable=key,question=key,level='nominal',codes={},missing='empty',versions=['diana-v1','diana-v2','diana-v3','diana-v4','diana-v5']) for key in META_FIELDS]
+        result=[dict(variable=key,question=key,level='nominal',codes={},missing='empty',versions=['diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6']) for key in META_FIELDS]
+        for item in result:
+            if item['variable']=='study_arm': item['codes']={'B':'Chatbot ohne wählbare Persönlichkeit','C':'Personalisierter Chat- und Suchbot'}
+            if item['variable']=='prior_exposure': item['codes']={'0':'Keine frühere DIANA-Suchsitzung unter dieser Teilnahme-ID','1':'Frühere DIANA-Suchsitzung vorhanden'}
         for field in LEGACY_SURVEY_FIELDS:
             scale=field.get('scale',{'low':'Trifft überhaupt nicht zu','high':'Trifft voll und ganz zu'})
             result.append(dict(variable=field['name'],question=field['title'],
@@ -103,7 +109,7 @@ class AdminSurveyData:
         writer.writerow(META_FIELDS+[field['name'] for field in LEGACY_SURVEY_FIELDS]+['v1_'+name for name in LEGACY_FIELDS]+[column for version, fields in VERSIONED_FIELDS.items() for field in fields for column in (version[6:]+'_'+field['name'], version[6:]+'_'+field['name']+'_status')])
         for row in rows:
             values=[row['participation_id'],row['submitted_at_utc'],row['survey_version'],
-                    '|'.join(row['study_release_ids']),'|'.join(row['openai_models']),'|'.join(row['reasoning_efforts']),row['response_status'],row['last_saved_at_utc']]
+                    '|'.join(row['study_release_ids']),'|'.join(row['openai_models']),'|'.join(row['reasoning_efforts']),row['response_status'],row['last_saved_at_utc'],row['study_arm'],row['experiment_id'],row['assigned_at_utc'],row['prior_exposure']]
             for field in LEGACY_SURVEY_FIELDS:
                 value=row['answers'].get(field['name'],'') if row['survey_version'] in ('diana-v2','diana-v3') else ''
                 if field['kind']=='choice' and value!='':
@@ -133,5 +139,5 @@ class AdminSurveyData:
             archive.writestr('codebook.csv',csvbook.getvalue().encode('utf-8-sig'))
             archive.writestr('codebook.json',json.dumps(book,ensure_ascii=False,indent=2))
             archive.writestr('study_manifest.json',json.dumps(manifest,ensure_ascii=False,indent=2))
-            archive.writestr('README.txt','In Numiqo: Import/Export > Datei auswählen > diana_numiqo.csv. UTF-8, Semikolon. Eine Zeile pro Teilnahme. response_status unterscheidet completed (abgeschlossen) und in_progress (unvollständig); für reine Abschlussauswertungen completed filtern. last_saved_at_utc ist der letzte Speicherzeitpunkt, submitted_at_utc bleibt bei Entwürfen leer. Codes im Codebuch. V5: Alle Bewertungen ordinal 1–10, Ja=1 und Nein=0; getrennte v5_-Spalten. Die Frage zur Chatnutzung entfällt. V4: Ja=1, Nein=0; beschriftete Abstufungen ordinal 1–5, Nützlichkeit und Chat-Hilfe ordinal 1–10. V4-Variablen beginnen mit v4_, ältere Antworten stehen unverändert in getrennten Spalten. _status unterscheidet Nicht genutzt, Nicht beurteilbar, übersprungen und andere Fragebogenversionen. Die neutrale Wiederverwendungsantwort Unentschieden ist ein gültiger Wert 3. Frageformulierung und Filterführung im Codebuch berücksichtigen; Versionen nicht ungeprüft zusammenfassen. Leere Zellen sind fehlende Werte, nicht Null; auch „Keine Angabe“ wird leer exportiert. ID/Datum/Modellspalten als nominal behandeln. Keine automatische Datenübertragung. CSV-Freitext mit Formelpräfix erhält ein führendes Apostroph als Schutz für Tabellenprogramme. Die Daten sind pseudonymisiert, nicht anonym.\n')
+            archive.writestr('README.txt','In Numiqo: Import/Export > Datei auswählen > diana_numiqo.csv. UTF-8, Semikolon. Eine Zeile pro Teilnahme. response_status unterscheidet completed (abgeschlossen) und in_progress (unvollständig); für reine Abschlussauswertungen completed filtern. last_saved_at_utc ist der letzte Speicherzeitpunkt, submitted_at_utc bleibt bei Entwürfen leer. Codes im Codebuch. V6 / diana-bc-v1: study_arm dokumentiert die serverseitige 50:50-Zufallszuordnung B oder C. prior_exposure=1 kennzeichnet eine bereits vorhandene Suchsitzung vor der Zuordnung. Gemeinsame Ergebnisfragen stehen in v6_-Spalten. Persönlichkeitsfragen sind in B skipped. search_effort ist gegenläufig: hohe Werte bedeuten hohen Aufwand. Keine Zusammenfassung aller Bewertungen zu einem ungeprüften Gesamtwert. V5: Alle Bewertungen ordinal 1–10, Ja=1 und Nein=0; getrennte v5_-Spalten. Die Frage zur Chatnutzung entfällt. V4: Ja=1, Nein=0; beschriftete Abstufungen ordinal 1–5, Nützlichkeit und Chat-Hilfe ordinal 1–10. V4-Variablen beginnen mit v4_, ältere Antworten stehen unverändert in getrennten Spalten. _status unterscheidet Nicht genutzt, Nicht beurteilbar, übersprungen und andere Fragebogenversionen. Die neutrale Wiederverwendungsantwort Unentschieden ist ein gültiger Wert 3. Frageformulierung und Filterführung im Codebuch berücksichtigen; Versionen nicht ungeprüft zusammenfassen. Leere Zellen sind fehlende Werte, nicht Null; auch „Keine Angabe“ wird leer exportiert. ID/Datum/Modellspalten als nominal behandeln. Keine automatische Datenübertragung. CSV-Freitext mit Formelpräfix erhält ein führendes Apostroph als Schutz für Tabellenprogramme. Die Daten sind pseudonymisiert, nicht anonym.\n')
         return stream.getvalue()

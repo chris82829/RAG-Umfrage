@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCheck, Compass, LoaderCircle, MessageCircle, X } from 'lucide-react';
-import { restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, stageGroup, submitSurvey, surveyCategories, surveyErrors, surveyScale, surveyStages, suggestSearchGoal, waitingQuestionGroups } from './survey.js';
+import { applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, stageGroup, submitSurvey, surveyCategories, surveyErrors, surveyScale, surveyStages, suggestSearchGoal, waitingQuestionGroups } from './survey.js';
 import './survey.css';
 import SearchLoadingDialog from './SearchLoadingDialog.jsx';
 import {createSurveyAutosave} from './survey-autosave.js';
@@ -53,13 +53,14 @@ export function SurveyQuestion({ field, value, onChange, busy, error, suggestion
 }
 
 export function SurveyForm({ group = demographics, answers = emptyAnswers(), onChange, onSubmit, onBack, saveStatus, onRetry, busy = false, errors = {}, error = '', formRef, headingRef, searchSuggestion }) {
-  const categoryIndex = surveyCategories.findIndex(category => category.id === group.id);
-  const last = categoryIndex === surveyCategories.length - 1;
+  const categories=surveyCategories.filter(category=>visibleFields(category.fields,answers).length);
+  const categoryIndex = categories.findIndex(category => category.id === group.id);
+  const last = categoryIndex === categories.length - 1;
   return <form className="survey-form" ref={formRef} onSubmit={onSubmit} noValidate>
     <div className="survey-form-intro">
-      <p className="survey-eyebrow">{categoryIndex < 0 ? 'ÜBER DICH' : `RÜCKMELDUNG · KATEGORIE ${categoryIndex + 1} VON ${surveyCategories.length}`}</p>
+      <p className="survey-eyebrow">{categoryIndex < 0 ? 'ÜBER DICH' : `RÜCKMELDUNG · KATEGORIE ${categoryIndex + 1} VON ${categories.length}`}</p>
       <h1 ref={headingRef} tabIndex={-1}>{group.title}</h1><p>{group.description}</p>
-      {categoryIndex >= 0 && <progress className="survey-progress" value={categoryIndex} max={surveyCategories.length} aria-label={`${categoryIndex} von ${surveyCategories.length} Frageblöcken abgeschlossen`} />}
+      {categoryIndex >= 0 && <progress className="survey-progress" value={categoryIndex} max={categories.length} aria-label={`${categoryIndex} von ${categories.length} Frageblöcken abgeschlossen`} />}
     </div>
     <div className={group.id === 'demographics' ? 'survey-demographics-grid' : undefined}>
       {visibleFields(group.fields, answers).map((field, index) => <SurveyQuestion key={field.name} field={field} number={index + 1} value={answers[field.name]} onChange={onChange} busy={busy} error={errors[field.name]} suggestion={searchSuggestion} />)}
@@ -135,6 +136,8 @@ export default function SurveyPage({ initial, participationId }) {
   const [chatRequired, setChatRequired] = useState(false);
   const [saveStatus,setSaveStatus]=useState('idle');
   const [hydrated,setHydrated]=useState(false);
+  const [assignmentReady,setAssignmentReady]=useState(false);
+  const [assignmentAttempt,setAssignmentAttempt]=useState(0);
   const latestState=useRef(state);latestState.current=state;
   const alive=useRef(true);
   const autosave=useRef(null);
@@ -157,14 +160,21 @@ export default function SurveyPage({ initial, participationId }) {
   useEffect(()=>{
     if(state.submitted){setHydrated(true);return;}
     let cancelled=false;const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),10000);
-    fetch('/api/survey-drafts/'+state.submissionId,{headers:consentHeaders(),signal:controller.signal}).then(response=>{
-      if(!response.ok)throw new Error('Entwurf konnte nicht geladen werden.');return response.json();
-    }).then(({draft})=>{
-      if(!draft || cancelled)return;
-      setState(previous=>restoreServerDraft(previous,draft));
-    }).catch(()=>{/* Local drafts can still be edited and retried. */}).finally(()=>{clearTimeout(timeout);if(!cancelled)setHydrated(true);});
+    (async()=>{
+      const response=await fetch('/api/survey-drafts/'+state.submissionId,{headers:consentHeaders(),signal:controller.signal});
+      if(!response.ok)throw new Error('Deine Teilnahme konnte nicht geladen werden. Bitte versuche es erneut.');
+      const {draft}=await response.json();
+      if(cancelled)return;
+      if(draft?.completed){setState(previous=>({...previous,submitted:true}));setHydrated(true);return;}
+      const assigned=await fetch('/api/study-assignment',{method:'POST',headers:consentHeaders(),signal:controller.signal});
+      if(!assigned.ok)throw new Error('Deine Studienvariante konnte nicht geladen werden. Bitte versuche es erneut.');
+      const assignment=await assigned.json();
+      if(cancelled)return;
+      setState(previous=>applyStudyAssignment(draft?restoreServerDraft(previous,draft):previous,assignment));
+      setAssignmentReady(true);setHydrated(true);setError('');
+    })().catch(failure=>{if(!cancelled)setError(failure.message);}).finally(()=>clearTimeout(timeout));
     return()=>{cancelled=true;clearTimeout(timeout);controller.abort();};
-  },[state.submissionId]);
+  },[state.submissionId,assignmentAttempt]);
   useEffect(()=>{
     if(!hydrated || state.submitted)return;
     autosave.current.enqueue(state);
@@ -282,12 +292,13 @@ export default function SurveyPage({ initial, participationId }) {
 
   return <div className={`survey-page${systemActive ? ' is-system' : ''}`}>
     {/* The live iframe stays mounted across question pages and return visits. */}
-    {state.systemOpened && <section className="survey-system-view" hidden={!systemActive} aria-label="DIANA ausprobieren">
+    {!state.submitted && !assignmentReady && <div className="empty-state" role="status"><p>{error || 'Dein Systemtest wird vorbereitet …'}</p>{error && <button className="survey-primary" onClick={()=>setAssignmentAttempt(value=>value+1)}>Erneut versuchen</button>}</div>}
+    {state.systemOpened && assignmentReady && <section className="survey-system-view" hidden={!systemActive} aria-label="DIANA ausprobieren">
       <iframe ref={frame} title="DIANA Jobsuche – interaktiv ausprobieren" src={`/suche?embed=survey&run=${state.runId}`} referrerPolicy="same-origin" onLoad={() => requestSurveyProgress(frame.current?.contentWindow, window.location.origin, state.runId)} />
       {!searching && !waitingOpen && state.systemCompleted && <div className="survey-system-actions"><button className="survey-primary diana-action-motion" type="button" onClick={advance}>Weitere Fragen für die Umfrage beantworten<ArrowRight className="diana-action-arrow" size={18}/></button></div>}
     </section>}
     <div className="survey-questionnaire" hidden={systemActive}>
-      <header className="survey-header"><a href="/" className="survey-brand" aria-label="Über DIANA und Christoph Scharnagl"><span><Compass size={23} strokeWidth={1.7} /></span><strong>DIANA<small>Umfrage</small></strong></a><span className="survey-header-label">{state.submitted ? 'Abgeschlossen' : 'Deine Erfahrung mit der KI-Suchpersönlichkeit'}</span></header>
+      <header className="survey-header"><a href="/" className="survey-brand" aria-label="Über DIANA und Christoph Scharnagl"><span><Compass size={23} strokeWidth={1.7} /></span><strong>DIANA<small>Umfrage</small></strong></a><span className="survey-header-label">{state.submitted ? 'Abgeschlossen' : 'Deine Erfahrung mit dem Suchsystem'}</span></header>
       <main className="survey-main">
         {state.submitted ? <div className="survey-thanks"><span className="survey-thanks-icon"><CheckCheck size={32} /></span><h1 ref={heading} tabIndex={-1}>Danke für deine Teilnahme!</h1><p>Deine Antworten wurden gespeichert. Du hilfst uns damit, das Suchen mit einer KI-Suchpersönlichkeit weiterzuentwickeln.</p><ParticipationId value={participationId}/><a className="survey-back" href="/"><ArrowLeft size={17} />Zur Vorstellung</a></div>
           : group && <SurveyForm group={group} answers={state.answers} onChange={change} onSubmit={send} onBack={back} busy={busy} errors={errors} error={error} formRef={form} headingRef={heading} searchSuggestion={state.searchGoalSuggestion} saveStatus={saveStatus} onRetry={retrySave} />}

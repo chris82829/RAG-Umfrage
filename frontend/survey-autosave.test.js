@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createSurveyAutosave,draftPayload} from './survey-autosave.js';
 import {newSurveyState,reviseSurvey,markWaitingFields,finishWaitingIfReady,remainingWaitingGroups,waitingQuestionGroups,nextSurveyState,displaySurveyGroup,saveSurveyState,loadSurveyState,restoreServerDraft} from './survey.js';
 const response=revision=>new Response(JSON.stringify({saved:true,completed:false,revision}),{status:200});
-const state=(revision,answers={})=>({...newSurveyState(),draftRevision:revision,answers:{...newSurveyState().answers,...answers}});
+const state=(revision,answers={})=>({...newSurveyState(),draftRevision:revision,answers:{...newSurveyState().answers,study_arm:'C',...answers}});
 
 test('autosave sends questionnaire values only, preserving partial text and explicit clearing',()=>{
  const source=state(1,{search_goal:'P',gender:'',chat_used:'no',chat_helpfulness:9,profile:{cv:'PRIVATE'}});
@@ -52,11 +52,11 @@ test('waiting answers skip demographics and search goal and only leave unasked p
  source=markWaitingFields(source,waitingQuestionGroups[0].fields);
  source=finishWaitingIfReady(source);
  assert.equal(remainingWaitingGroups(source).length,0);
- const next=nextSurveyState(source);assert.equal(next.stage,'personality');
- assert.deepEqual(displaySurveyGroup(next).fields.map(f=>f.name),['personality_clarity_search','personality_clarity_chat','personality_consistency']);
+ const next=nextSurveyState(source);assert.equal(next.stage,'overall');
+ assert.deepEqual(displaySurveyGroup(next,'personality').fields.map(f=>f.name),['personality_clarity_search','personality_clarity_chat','personality_consistency','personalized_chat_usefulness','personalized_search_usefulness']);
  const memory=new Map();const storage={getItem:key=>memory.get(key)||null,setItem:(key,value)=>memory.set(key,value)};
  saveSurveyState(storage,source);assert.deepEqual(loadSurveyState(storage).waitingAnswered,source.waitingAnswered);
- assert.equal(nextSurveyState(loadSurveyState(storage)).stage,'personality');
+ assert.equal(nextSurveyState(loadSurveyState(storage)).stage,'overall');
 });
 
 test('partly answered waiting blocks retain unanswered and optional questions; invalid fields are never skipped',()=>{
@@ -75,12 +75,12 @@ test('revisions remain monotonic even when the clock does not advance',()=>{
 });
 
 
-test('v4 migration retains unchanged answers but never treats a five-category code as a 1–10 rating',()=>{
+test('v4 migration starts a fresh experiment and never reuses historical outcome ratings',()=>{
  const old={...state(20,{search_goal:'Data Science',personality_setup:'4',score_usefulness:7,personality_customized:'yes'}),version:'diana-v4',waitingAnswered:['personality_setup','personality_customized']};
  const storage={getItem:key=>key==='diana-survey:diana-v4'?JSON.stringify(old):null};
  const next=loadSurveyState(storage);
- assert.equal(next.version,'diana-v5');assert.equal(next.answers.personality_setup,null);
- assert.equal(next.answers.score_usefulness,7);assert.equal(next.answers.personality_customized,'yes');
+ assert.equal(next.version,'diana-v6');assert.equal(next.answers.personality_setup,null);
+ assert.equal(next.answers.score_usefulness,null);assert.equal(next.answers.personality_customized,null);
  assert.ok(!next.waitingAnswered.includes('personality_setup'));assert.ok(next.draftRevision>20);
  const restored=restoreServerDraft(next,{version:'diana-v4',revision:next.draftRevision+100,answers:old.answers,waiting_answered:old.waitingAnswered});
  assert.equal(restored.answers.personality_setup,null);assert.equal(restored.draftRevision,next.draftRevision+101);

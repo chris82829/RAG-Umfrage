@@ -1143,3 +1143,7 @@ kontrollierte Testvektoren bzw. simulierte OpenAI-Antworten. Die separat genannt
 GPT-5.4-Prüfungen verwenden echte API-Aufrufe mit dem synthetischen Beispielprofil.
 Dies prüft die technische Integration; eine Aussage zur Matching-Qualität oder
 Reproduktion der Masterarbeit lässt sich daraus nicht ableiten.
+
+## Randomisierter Vergleich B/C
+
+Gezielte Prüfungen für stabile serverseitige Zufallszuordnung, parallele Anfragen, Einwilligung/Widerruf, Schutz vor manipulierten Gruppenangaben, B-Neutralität bei Onboarding/Chat/Reranking/neuer Suche, C-Personalisierung, frühere Suchsitzungen, Autosave, Export und Gruppenfilter. SSR-Prüfung beider Einrichtungsabläufe und der gemeinsamen Ergebnisfragen. Es wurden keine echten Studienantworten oder kostenpflichtigen Modellaufrufe zu Testzwecken erzeugt.

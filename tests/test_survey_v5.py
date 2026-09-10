@@ -4,7 +4,7 @@ import io
 
 import pytest
 from pydantic import ValidationError
-from survey_store import SURVEY_FIELDS, SurveySubmissionV5
+from survey_store import V5_SURVEY_FIELDS as SURVEY_FIELDS, SurveySubmissionV5
 from test_survey import survey_app
 from test_admin import admin_app, login
 from test_survey_v4 import v4_payload

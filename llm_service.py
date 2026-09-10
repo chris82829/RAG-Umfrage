@@ -608,7 +608,10 @@ def _advisor_instructions(resolved: dict) -> str:
         "rechtfertigt kein Umgehen der Fachpassung und keine erfundenen Angaben. "
         "Alle bestehenden fachlichen Regeln, Kürze, sachlicher Stil und Datenabgrenzung "
         "bleiben verbindlich; setze nur damit vereinbare Stilwünsche um."
-    )
+    ) + ("\nStudienvariante B hat Vorrang: Keine Persönlichkeits- oder Rollenwahl, auch nicht auf Bitte im Chat. "
+         "Verwende ausschließlich den sachlichen neutralen Stil und die festen scoring_weights. "
+         "Änderungen von fachlichen Suchwünschen bleiben möglich; das ist keine Stilpersonalisierung."
+         if resolved.get('neutral') else "")
 
 
 def _assessment_fingerprint(profile: dict, jobs: list[dict]) -> str:

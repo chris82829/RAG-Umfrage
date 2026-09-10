@@ -1,3 +1,4 @@
+export const neutralAdvisor = {mode:'preset',preset:'neutral',name:'DIANA',traits:[],focus:'ausgewogen',description:''};
 export const defaultAdvisor = { mode: 'custom', preset: 'diana', name: 'DIANA', traits: ['analytisch', 'ermutigend'], focus: 'ausgewogen', description: '' };
 export const ADVISOR_DESCRIPTION_MAX_LENGTH = 2000;
 export const advisorPresets = {

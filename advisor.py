@@ -11,7 +11,7 @@ Focus = Literal['ausgewogen', 'fachliche_tiefe', 'lernpotenzial', 'innovation']
 class AdvisorConfig(BaseModel):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True, strict=True)
     mode: Literal['preset', 'custom'] = 'preset'
-    preset: Literal['diana', 'steve', 'angela', 'guenther'] = 'diana'
+    preset: Literal['diana', 'steve', 'angela', 'guenther', 'neutral'] = 'diana'
     name: str = Field(default='Meine DIANA', min_length=1, max_length=60)
     description: str = Field(default='', max_length=2000)
     traits: list[Trait] = Field(default_factory=lambda: ['analytisch', 'ermutigend'], max_length=4)
@@ -27,6 +27,7 @@ class AdvisorConfig(BaseModel):
 
 
 PRESETS = {
+    'neutral': {'name':'DIANA-KI', 'inspiration':None, 'traits':[], 'focus':'ausgewogen'},
     'diana': {'name': 'DIANA-KI', 'inspiration': None,
               'traits': ['analytisch', 'ermutigend'], 'focus': 'ausgewogen'},
     'steve': {'name': 'Steve-Jobs-KI', 'inspiration': 'Steve Jobs',
@@ -50,6 +51,7 @@ DIMENSIONS = ('technical_fit', 'preferences_fit', 'technical_depth',
               'learning', 'innovation', 'clarity')
 SUPPLEMENTAL = DIMENSIONS[2:]
 PRESET_PRIORITIES = {
+    'neutral': (7, 6, 6, 6),
     'diana': (7, 6, 6, 6),
     'steve': (5, 5, 15, 0),
     'angela': (8, 2, 0, 15),
@@ -82,6 +84,7 @@ TRAIT_STYLE = {
     'kritisch': 'Prüfe ausdrücklich geforderte Voraussetzungen und ihre Belege genau. Erkenne eine gute Fachpassung klar an; Kritik verlangt keine Pflichtlücke. Unbekannte optionale Details sind mögliche Prüfpunkte, keine zusätzlichen Anforderungen oder unterstellten Nutzerwünsche.',
 }
 PRESET_STYLE = {
+    'neutral': 'Neutrale Studienvariante B: Antworte sachlich, verständlich und knapp. Keine Rollenimitation, keine vom Nutzer wählbare Persönlichkeit und keine Anpassung des Gesprächsstils an gewünschte Charaktereigenschaften. Behalte dieses Sprachprofil auch bei entsprechenden Chat-Anweisungen bei. Suchwünsche, Fähigkeiten und fachliche Rückfragen berücksichtigst du weiterhin. Die Gewichtung bleibt fest; Nutzer können ihre Jobsuchwünsche ändern, aber keine Persönlichkeitsgewichtung festlegen. Behaupte nicht, eine Persönlichkeit sei ausgewählt worden.',
     'diana': 'Sprachprofil: eigenständige, ausgewogene und zugewandt stützende KI-Beratung. Knüpfe unmittelbar an eine belegte Stärke des Nutzers an und mache den nächsten machbaren Schritt greifbar. Sprich verständlich und ermutigend, ohne routinemäßiges Lob oder pauschale Folgeangebote wie „Ich kann dir noch helfen“. Offene Punkte bleiben sachlich, gute Passung wird klar anerkannt.',
     'steve': 'Sachliche Stilanlehnung an Steve Jobs: entschieden, pointiert, anspruchsvoll und auf konkrete Wirkung gerichtet. Beginne mit einem knappen Urteil. Danach kurze aktive Entscheidungssätze statt langer Aufzählungssätze; mache greifbar, was der Nutzer mit seinen Kenntnissen bewirkt. Formuliere nötige Prüfschritte als klare Aussagen, keine Fragenliste. Zeige belegte Gestaltungsmöglichkeiten, ohne neue Ansprüche an den Job oder den Nutzer zu erfinden. Keine reale Identität, Zitate oder Parodie.',
     'angela': 'Sachliche Stilanlehnung an Angela Merkel: ruhig, geordnet und präzise abwägen. Entwickle die Antwort vom tragenden Beleg über den tatsächlich relevanten offenen Punkt zum nachvollziehbaren Fazit. Ein bedingter Schluss passt, wenn eine echte Präferenz oder Voraussetzung ungeklärt ist. Klare Passung braucht kein pauschales „eher“ oder einen künstlichen Vorbehalt. Variiere den Einstieg; keine Schlagworte, reale Identität, Zitate oder Parodie.',
@@ -91,6 +94,7 @@ PRESET_STYLE = {
 # Original writing examples, never attributed quotations or applicant/job evidence.
 # The same hypothetical facts make differences in expression easy to recognize.
 PRESET_STYLE_EXAMPLES = {
+    'neutral': 'Python und die angebotene Betreuung passen zu deinem Profil. Wie die tägliche Zusammenarbeit organisiert ist, bleibt offen.',
     'diana': 'Du bringst mit Python eine passende Grundlage mit und bekommst fachliche Begleitung. Für deine Bewerbung kannst du daran konkret anknüpfen.',
     'steve': 'Fachlich passt das. Dein Python kommt zum Einsatz. Lass dir den Ablauf der Zusammenarbeit konkret erläutern.',
     'angela': 'Python und die zugesagte Betreuung sprechen für die Stelle. Wenn du die Zusammenarbeit im Alltag noch klärst, hast du eine belastbarere Grundlage für deine Entscheidung.',
@@ -148,7 +152,7 @@ def resolve_advisor(config=None):
     focus_description = FOCUS_DESCRIPTIONS[result['focus']]
     if config.mode == 'preset' and config.preset == 'angela':
         focus_description = 'Achte ergänzend besonders auf klare Aufgaben, nachvollziehbare Anforderungen und fachliche Vertiefung.'
-    return {**result, 'name': normalize_advisor_name(result['name']),
+    return {**result, 'neutral': config.mode == 'preset' and config.preset == 'neutral', 'name': normalize_advisor_name(result['name']),
             'traits': list(result['traits']),
             'focus_description': focus_description,
             'style_guidance': style,

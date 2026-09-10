@@ -85,18 +85,20 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
             return error(str(failure), 409)
     def filters():
         query=request.args.get('q','').strip();version=request.args.get('version','')
-        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5'):raise ValueError()
+        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6'):raise ValueError()
         status=request.args.get('status','')
         if status not in ('','completed','in_progress'):raise ValueError()
-        return query,version,status
+        arm=request.args.get('arm','')
+        if arm not in ('','B','C'):raise ValueError()
+        return query,version,status,arm
     @bp.get('/responses')
     @protected
     def responses():
         try:
-            query,version,status=filters();page=int(request.args.get('page','1'))
+            query,version,status,arm=filters();page=int(request.args.get('page','1'))
             if not 1<=page<=100000:raise ValueError()
         except ValueError:return error('Ungültiger Filter.',400)
-        rows=data.filtered(query,version,status);start=(page-1)*25
+        rows=data.filtered(query,version,status,arm);start=(page-1)*25
         return jsonify(total=len(rows),page=page,page_size=25,items=[{k:v for k,v in row.items() if k!='answers'} for row in rows[start:start+25]],
                        definition=SURVEY_DEFINITION,current_release=releases.manifest)
     @bp.get('/responses/<response_id>')
@@ -114,9 +116,9 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
     @bp.get('/export')
     @protected
     def export():
-        try:query,version,status=filters()
+        try:query,version,status,arm=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        rows=data.filtered(query,version,status);kind=request.args.get('format','csv')
+        rows=data.filtered(query,version,status,arm);kind=request.args.get('format','csv')
         if kind=='csv':content=data.csv_data(rows);filename='diana_numiqo.csv';mime='text/csv; charset=utf-8'
         elif kind=='zip':content=data.package(rows);filename='diana_auswertung.zip';mime='application/zip'
         else:return error('Unbekanntes Exportformat.',400)
