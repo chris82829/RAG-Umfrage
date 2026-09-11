@@ -4,6 +4,7 @@
 .app-shell { height:var(--diana-view-height,var(--diana-viewport-height,100dvh)); }
 .survey-page.is-system, .survey-page .survey-system-view { height:var(--diana-view-height,var(--diana-viewport-height,100dvh)); }
 @media(max-width:850px) {
+  .workspace.is-welcome[data-journey-step="1"] > .assistant-panel { outline:none; }
   .mobile-view-switch { display:flex; flex:none; gap:8px; padding:6px 12px; background:white; border-bottom:1px solid var(--line); }
   .mobile-view-switch button { flex:1; min-width:0; min-height:44px; padding:8px; display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid #dce4f2; border-radius:9px; background:white; color:#506482; font-size:14px; line-height:1.3; }
   .mobile-view-switch button[aria-pressed=true] { color:#244ddb; background:#edf2ff; border-color:#b7c9fc; font-weight:650; }
