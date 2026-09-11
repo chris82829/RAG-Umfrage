@@ -1277,3 +1277,10 @@ Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V
 - Schrittleiste im mobilen Header ausgeblendet; feste untere Navigation mit „Stellen ansehen“ und „Chat öffnen“. Chat öffnen beendet auch eine offene Editoransicht. Profil und Persönlichkeit bleiben mobil über das Aktionsmenü erreichbar.
 - Stellenkarten erhalten mobil einen breiten blauen „Diese Stelle besprechen“-Button. Chatnachrichten 13px statt 14px; Eingabefeld weiterhin 16px zur Vermeidung von automatischem Fokuszoom. Desktopdarstellung bleibt über Media Queries erhalten.
 - 139 Frontendtests und Produktionsbuild erfolgreich; Browserprüfung auf isoliertem Testserver bei 390/320 CSS-Pixel Breite: Kartenaktion, vorbereitete Frage, Chatantwort, untere Navigation und Profilzugang. Keine echten API-Aufrufe oder produktiven Testteilnahmen.
+
+## Berufliche Beratungsrollen · 11. September 2026
+
+- Neue sichtbare Auswahl: Top-Berufsberater (für neue personalisierte UI-Suchen vorausgewählt), Fachexperte und Selbst personalisieren. Drei native Radiokarten ersetzen das Vorlagendropdown; eigene Felder erscheinen bei Selbstpersonalisierung. Fachgebiet wird als Beratungspräferenz aus dem Suchprofil abgeleitet.
+- Beide Vorlagen werden mit vollständigem Namen, Eigenschaften, Schwerpunkt und Beratungsanweisungen als Custom-Konfiguration an das bestehende Backend übertragen. Bestehende gespeicherte Persönlichkeiten und die neutrale Variante A bleiben kompatibel; keine nachträgliche Umschreibung von Teilnahmen.
+- Backend-Roundtrip der tatsächlich exportierten Frontendkonfigurationen geprüft: Fachpassung 60%, Nutzerwünsche 15% bei beiden. Berufsberater: Tiefe/Lernen/Innovation/Klarheit 2/16/2/5%; Fachexperte 13/2/1/9%. Anweisungen bleiben vollständig erhalten.
+- 139 Frontendtests erfolgreich, Produktionsbuild erfolgreich. Browserprüfung bei 390 CSS-Pixel Breite mit fiktiven Daten/FakeLLM: Standardauswahl, Selbstpersonalisierung mit Namensfeld, Wechsel zum Fachexperten, erfolgreiche Suche und Fachexperte-Score auf Ergebnis-Karten. Kein echter LLM-Stilvergleich durchgeführt.

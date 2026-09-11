@@ -21,7 +21,7 @@ export default function PersonalityIntroDialog({ open, onboarding = false, onCon
   return <dialog ref={dialog} className="personality-intro-dialog" aria-labelledby={`${id}-title`} aria-describedby={`${id}-description`} onCancel={event => { event.preventDefault(); closeThen(onClose); }}>
     <button type="button" className="personality-intro-close" aria-label="Erklärung schließen" onClick={() => closeThen(onClose)}><X size={19} aria-hidden="true" /></button>
     <h2 ref={heading} id={`${id}-title`} tabIndex={-1}>KI-Suchpersönlichkeit</h2>
-    <p id={`${id}-description`} className="personality-intro-description">Dein Profil beschreibt, was zu dir passt. Deine KI-Persönlichkeit ergänzt den Blick auf die Stellen und gestaltet euer Gespräch. Die fachliche Passung zählt weiterhin am stärksten. Du kannst alles selbst gestalten oder eine von drei Vorlagen anpassen.</p>
+    <p id={`${id}-description`} className="personality-intro-description">Dein Profil beschreibt, was zu dir passt. Deine KI-Persönlichkeit ergänzt den Blick auf die Stellen und gestaltet euer Gespräch. Die fachliche Passung zählt weiterhin am stärksten. Wähle den Top-Berufsberater, einen Experten für dein Fachgebiet oder gestalte deine KI selbst.</p>
     <div className="personality-flow">
       <div className="personality-flow-source"><Compass size={22} aria-hidden="true" /><span>KI-Suchpersönlichkeit</span></div>
       <div className="personality-flow-branches" aria-hidden="true"><ArrowDown size={19} /><ArrowDown size={19} /></div>

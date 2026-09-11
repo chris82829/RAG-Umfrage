@@ -66,7 +66,7 @@ test('custom advisor requires a name and traits; comparison ignores JSON key ord
 });
 
 test('custom description survives validation, detects edits and treats legacy absence as empty', () => {
-  const custom = { ...defaultAdvisor, mode: 'custom', name: 'Alex' };
+  const custom = { ...defaultAdvisor, mode: 'custom', name: 'Alex', description: '' };
   const configured = validateAdvisor({ ...custom, description: '  Erkläre ruhig.\nStelle kritische Rückfragen.  ' });
   assert.equal(configured.description, 'Erkläre ruhig.\nStelle kritische Rückfragen.');
   assert.ok(!sameAdvisor(configured, { ...configured, description: 'Sei direkt.' }));
@@ -83,7 +83,7 @@ test('custom description survives validation, detects edits and treats legacy ab
 });
 
 test('AI names follow saved personalities and normalize custom names without duplicate suffixes', () => {
-  assert.equal(advisorAiLabel(undefined), 'DIANA-KI');
+  assert.equal(advisorAiLabel(undefined), 'Top-Berufsberater-KI');
   assert.equal(advisorAiLabel({}), 'DIANA-KI');
   for (const [preset, expected] of Object.entries({ diana: 'DIANA-KI', steve: 'Steve-Jobs-KI', angela: 'Angela-Merkel-KI', guenther: 'Günther-Jauch-KI' })) {
     assert.equal(advisorAiLabel({ ...defaultAdvisor, mode: 'preset', preset }), expected);
@@ -96,7 +96,7 @@ test('AI names follow saved personalities and normalize custom names without dup
 });
 
 test('score labels follow the selected personality, including old sessions and custom names', () => {
-  assert.equal(advisorScoreLabel(undefined), 'DIANA-Score');
+  assert.equal(advisorScoreLabel(undefined), 'Top-Berufsberater-Score');
   for (const [preset, expected] of Object.entries({ diana: 'DIANA-Score', steve: 'Steve-Jobs-Score', angela: 'Angela-Merkel-Score', guenther: 'Günther-Jauch-Score' })) {
     assert.equal(advisorScoreLabel({ ...defaultAdvisor, mode: 'preset', preset }), expected);
   }

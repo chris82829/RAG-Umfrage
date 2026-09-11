@@ -2,10 +2,12 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { defaultAdvisor, advisorTemplates, advisorFromTemplate, editableAdvisor, sameAdvisor, validateAdvisor, advisorAiLabel } from './advisor.js';
 
-test('new users start with an editable, valid custom personality and exactly three optional templates', () => {
+test('new users start with the career advisor and two professional templates', () => {
   assert.equal(defaultAdvisor.mode, 'custom');
   assert.equal(validateAdvisor(editableAdvisor()).mode, 'custom');
-  assert.deepEqual(Object.keys(advisorTemplates), ['steve', 'angela', 'guenther']);
+  assert.ok(sameAdvisor(defaultAdvisor, advisorFromTemplate('career')));
+  assert.equal(defaultAdvisor.name, 'Top-Berufsberater');
+  assert.deepEqual(Object.keys(advisorTemplates), ['career', 'expert']);
   assert.throws(() => advisorFromTemplate('diana'));
   assert.throws(() => advisorFromTemplate('missing'));
   assert.throws(() => advisorFromTemplate('__proto__'));
@@ -13,11 +15,12 @@ test('new users start with an editable, valid custom personality and exactly thr
 
 test('no template restores an independent neutral draft without celebrity instructions', () => {
   const value = advisorFromTemplate('');
-  assert.deepEqual(value, editableAdvisor());
-  assert.equal(validateAdvisor(value).mode, 'custom');
+  assert.equal(value.name, '');
+  assert.throws(() => validateAdvisor(value));
+  assert.equal(validateAdvisor({...value,name:'Meine KI'}).mode, 'custom');
   assert.equal(value.description, '');
   value.traits.push('direkt');
-  assert.deepEqual(advisorFromTemplate('').traits, defaultAdvisor.traits);
+  assert.deepEqual(advisorFromTemplate('').traits, ['analytisch', 'ermutigend']);
 });
 
 test('templates fill all editable fields and never submit the hidden fixed preset mode', () => {
@@ -35,7 +38,7 @@ test('templates fill all editable fields and never submit the hidden fixed prese
 });
 
 test('editing a template preserves every user change through submission and reopening', () => {
-  const template = advisorFromTemplate('steve');
+  const template = advisorFromTemplate('career');
   const edited = { ...template, name: ' Meine Begleitung ', focus: 'lernpotenzial', traits: ['empathisch', 'strukturiert'], description: '  Bitte erkläre ruhig und nenne konkrete nächste Schritte.  ' };
   const submitted = validateAdvisor(editableAdvisor(edited));
   const reopened = editableAdvisor(submitted);
@@ -50,15 +53,15 @@ test('editing a template preserves every user change through submission and reop
 });
 
 test('switching templates fills a fresh draft without mutating templates or previous selections', () => {
-  const first = advisorFromTemplate('angela');
+  const first = advisorFromTemplate('career');
   const saved = structuredClone(first);
-  const second = advisorFromTemplate('guenther');
+  const second = advisorFromTemplate('expert');
   second.traits.pop();
   assert.deepEqual(first, saved);
-  assert.deepEqual(advisorFromTemplate('guenther').traits, ['neugierig', 'strukturiert', 'empathisch']);
+  assert.deepEqual(advisorFromTemplate('expert').traits, ['analytisch', 'kritisch', 'strukturiert']);
   const initial = editableAdvisor();
   initial.traits.push('direkt');
-  assert.deepEqual(defaultAdvisor.traits, ['analytisch', 'ermutigend']);
+  assert.deepEqual(defaultAdvisor.traits, ['empathisch', 'strukturiert', 'ermutigend']);
 });
 
 test('legacy preset sessions become editable drafts without modifying saved settings or labels', () => {
@@ -68,7 +71,8 @@ test('legacy preset sessions become editable drafts without modifying saved sett
     assert.equal(saved.mode, 'preset');
     assert.equal(draft.mode, 'custom');
     assert.equal(advisorAiLabel(draft), advisorAiLabel(saved));
-    assert.ok(sameAdvisor(draft, advisorFromTemplate(preset)));
+    assert.ok(draft.description.includes(saved.preset === 'steve' ? 'Steve Jobs' : saved.preset === 'angela' ? 'Angela Merkel' : 'Günther Jauch'));
+    assert.throws(() => advisorFromTemplate(preset));
   }
   const legacyCustom = { mode: 'custom', name: 'Alex', traits: ['direkt'], focus: 'innovation' };
   const draft = editableAdvisor(legacyCustom);
