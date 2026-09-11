@@ -260,22 +260,7 @@
 .workspace[data-journey-step="1"] .assistant-panel,
 .workspace[data-journey-step="2"] .assistant-panel,
 .workspace[data-journey-step="4"] .assistant-panel { outline: 2px solid var(--journey-accent, #315ab5); outline-offset: -2px; }
-/* Keep the result frame outside the scrolling cards and above their content. */
 .workspace { position: relative; isolation: isolate; }
-.workspace[data-journey-step="3"]::after {
-  content: '';
-  box-sizing: border-box;
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: calc(100% - var(--chat-width, 460px) - 12px);
-  border: 2px solid var(--journey-accent, #267e72);
-  z-index: 10;
-  pointer-events: none;
-}
-@media (max-width: 850px) {
-  .workspace[data-journey-step="3"]::after { width: 100%; }
-  .workspace[data-journey-step="3"].view-chat::after { display: none; }
-}
 .journey-progress-bar { max-height: 32dvh; overflow-y: auto; scrollbar-width: thin; }
 
 .journey-next-button {
