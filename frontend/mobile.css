@@ -1,13 +1,27 @@
 /* Shared mobile ergonomics; desktop split view keeps its existing layout. */
-.mobile-view-switch, .survey-continue-short { display: none; }
+.mobile-view-switch, .survey-continue-short, .job-chat-label-mobile { display: none; }
+.assistant-actions > .mobile-edit-action { display:none; }
 .privacy-app-shell { height: var(--diana-viewport-height,100dvh); --diana-view-height:calc(var(--diana-viewport-height,100dvh) - 36px); }
 .app-shell { height:var(--diana-view-height,var(--diana-viewport-height,100dvh)); }
 .survey-page.is-system, .survey-page .survey-system-view { height:var(--diana-view-height,var(--diana-viewport-height,100dvh)); }
 @media(max-width:850px) {
   .workspace.is-welcome[data-journey-step="1"] > .assistant-panel { outline:none; }
-  .mobile-view-switch { display:flex; flex:none; gap:8px; padding:6px 12px; background:white; border-bottom:1px solid var(--line); }
-  .mobile-view-switch button { flex:1; min-width:0; min-height:44px; padding:8px; display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid #dce4f2; border-radius:9px; background:white; color:#506482; font-size:14px; line-height:1.3; }
-  .mobile-view-switch button[aria-pressed=true] { color:#244ddb; background:#edf2ff; border-color:#b7c9fc; font-weight:650; }
+  .assistant-actions > .mobile-edit-action { display:flex; }
+  .topbar .topbar-inner .topbar-journey { display:none; }
+  .topbar.topbar--with-journey .topbar-inner { grid-template-columns:minmax(0,1fr) auto; }
+  .topbar .topbar-inner .brand-name { width:auto; max-width:none; white-space:nowrap; }
+  .topbar .topbar-inner .brand { font-size:18px; }
+  .mobile-view-switch { display:flex; flex:none; gap:8px; padding:8px 12px; background:white; border-bottom:1px solid var(--line); }
+  .mobile-view-switch--results { order:3; border-bottom:0; border-top:1px solid #dce4f2; padding-bottom:max(8px,env(safe-area-inset-bottom)); box-shadow:0 -3px 12px #20365a0a; }
+  .mobile-view-switch button { flex:1; min-width:0; min-height:52px; padding:8px; display:flex; align-items:center; justify-content:center; gap:7px; border:1px solid #bdcdf4; border-radius:12px; background:#f0f4ff; color:#244dcc; font-size:14px; font-weight:650; line-height:1.3; }
+  .mobile-view-switch button[aria-pressed=true] { color:white; background:#244ddb; border-color:#244ddb; box-shadow:0 2px 5px #244ddb25; }
+  .job-card-actions { flex-wrap:wrap; gap:0; padding-bottom:14px; }
+  .job-card-actions > .job-action-chat { flex:0 0 100%; justify-content:center; min-height:48px; padding:11px 12px; margin:0; color:white; background:#244ddb; border-radius:10px; font-size:14px; font-weight:650; }
+  .job-card-actions > .job-action-chat:hover:not(:disabled) { background:#193ebf; color:white; }
+  .job-action-chat .job-chat-label-full, .job-action-chat .job-chat-label-compact { display:none; }
+  .job-action-chat .job-chat-label-mobile, .job-action-chat > svg { display:inline; }
+  .job-action-chat .inline-compass { color:inherit; }
+  .chat-message .message-text { font-size:13px; line-height:1.65; }
   .profile-form :is(input:not([type=checkbox]),textarea,select), .chat-composer textarea,
   .admin-page :is(input,select,textarea) { font-size:16px; }
   .profile-form .choice { min-height:44px; padding:9px 11px; font-size:13px; }

@@ -1271,3 +1271,9 @@ Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V
 - Keine echten Modellaufrufe und keine produktiven Testteilnahmen. Nicht alle Fragebogenkategorien bis zum endgültigen Absenden manuell durchgeklickt. Kein physisches iOS-/Android-Gerät: native Bildschirmtastatur und Safe-Area-Verhalten sind vorbereitet und teilweise automatisiert geprüft, aber noch auf echten Geräten zu bestätigen.
 - Desktop-Gegenprobe bei 1280 CSS-Pixel Breite: Stellen und Chat gleichzeitig verfügbar, verstellbarer Trenner vorhanden und mobile Umschaltung ausgeblendet (Accessibility-Tree geprüft).
 - Serverdeployment: bisherige Frontenddateien unter `backups/pre-mobile-20260911.tar.gz` gesichert; Container neu gebaut. Startseite, Umfrage, Suche, Verwaltung und ausgelieferte Assets liefern HTTP 200 und entsprechen bytegenau dem lokalen Build. Protokoll: `evaluation/mobile-20260911/deployment-check.json`.
+
+## Mobile Navigation überarbeitet · 11. September 2026
+
+- Schrittleiste im mobilen Header ausgeblendet; feste untere Navigation mit „Stellen ansehen“ und „Chat öffnen“. Chat öffnen beendet auch eine offene Editoransicht. Profil und Persönlichkeit bleiben mobil über das Aktionsmenü erreichbar.
+- Stellenkarten erhalten mobil einen breiten blauen „Diese Stelle besprechen“-Button. Chatnachrichten 13px statt 14px; Eingabefeld weiterhin 16px zur Vermeidung von automatischem Fokuszoom. Desktopdarstellung bleibt über Media Queries erhalten.
+- 139 Frontendtests und Produktionsbuild erfolgreich; Browserprüfung auf isoliertem Testserver bei 390/320 CSS-Pixel Breite: Kartenaktion, vorbereitete Frage, Chatantwort, untere Navigation und Profilzugang. Keine echten API-Aufrufe oder produktiven Testteilnahmen.

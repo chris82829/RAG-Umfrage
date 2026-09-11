@@ -117,7 +117,7 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
           <span className="job-details-label-full" aria-hidden="true">Stellendetails</span><span className="job-details-label-compact" aria-hidden="true">Details</span><ChevronDown size={16} aria-hidden="true" />
         </button>
         {ranked && <button type="button" className="job-action-chat" disabled={busy} aria-label={`Mit ${assistantName} besprechen`} title={`Mit ${assistantName} besprechen`} onClick={() => onAsk(job)}>
-          <CompassAvatar className="inline-compass" /><span className="job-chat-label-full" aria-hidden="true">Mit {assistantName} besprechen</span><span className="job-chat-label-compact" aria-hidden="true">Besprechen</span><ArrowRight size={15} aria-hidden="true" />
+          <CompassAvatar className="inline-compass" /><span className="job-chat-label-full" aria-hidden="true">Mit {assistantName} besprechen</span><span className="job-chat-label-compact" aria-hidden="true">Besprechen</span><span className="job-chat-label-mobile" aria-hidden="true">Diese Stelle besprechen</span><ArrowRight size={15} aria-hidden="true" />
         </button>}
       </div>
       <div className="detail-content" id={detailsId} hidden={!detailsExpanded}>
@@ -518,7 +518,10 @@ export function App({studyArm = 'B'}) {
         <div className="local-status"><i aria-hidden="true" />{allDemo ? `${total} fiktive Beispielstellen` : `${total.toLocaleString('de-DE')} Stellenanzeigen`}</div>
       </div>
     </header>
-    {(session || onboardingStarted) && <nav className="mobile-view-switch" aria-label="Ansicht wechseln"><button type="button" aria-pressed={mobileView === 'jobs'} onClick={() => setMobileView('jobs')}><Search size={17}/>{session ? 'Stellen' : 'Anleitung'}</button><button type="button" aria-pressed={mobileView === 'chat'} onClick={() => setMobileView('chat')}><MessageCircle size={17}/>{session ? 'Chat & Profil' : onboardingStep === 1 ? 'Profil' : 'Persönlichkeit'}</button></nav>}
+    {(session || onboardingStarted) && <nav className={`mobile-view-switch${session ? ' mobile-view-switch--results' : ''}`} aria-label="Stellen und Chat">
+      <button type="button" aria-pressed={mobileView === 'jobs'} disabled={busy || booting} onClick={() => { setMobileView('jobs'); if (session) { setEditor(null); setActivity('results'); } }}><Search size={21} aria-hidden="true"/><span>{session ? 'Stellen ansehen' : 'Anleitung'}</span></button>
+      <button type="button" aria-pressed={mobileView === 'chat'} disabled={busy || booting} onClick={() => session ? showChat() : setMobileView('chat')}><MessageCircle size={21} aria-hidden="true"/><span>{session ? 'Chat öffnen' : onboardingStep === 1 ? 'Profil' : 'Persönlichkeit'}</span></button>
+    </nav>}
     <main ref={workspace} data-journey-step={activeStep} className={`workspace view-${mobileView} ${!session ? 'is-onboarding' : ''} ${showWelcome ? 'is-welcome' : ''} ${chatLayout.dragging ? 'is-resizing' : ''}`} style={{ '--chat-width': `${chatLayout.width}px` }}>
       <section className="jobs-panel" aria-label={session ? 'Stellenangebote' : 'So funktioniert DIANA'} onPointerDownCapture={() => { if (session && !editor && !busy && !booting) setActivity('results'); }} onFocusCapture={() => { if (session && !editor && !busy && !booting) setActivity('results'); }}>
         <div className="jobs-heading"><div><span className="eyebrow">DEINE JOBSUCHE</span><h1 id="diana-results-heading" tabIndex={-1}>{session ? 'Deine Empfehlungen' : 'So funktioniert DIANA'}</h1></div>{session && <ProfileSummaryPopover key={session.session_id} summary={profileInfo} disabled={busy || booting || page !== 'search'} context={`${page}-${mobileView}-${editor}`} onEdit={() => selectAssistantView('profile')} />}</div>
@@ -538,6 +541,8 @@ export function App({studyArm = 'B'}) {
         {showWelcome ? <div className="onboarding-welcome"><button id="start-onboarding" type="button" className="primary-button diana-action-motion" onClick={beginOnboarding} disabled={booting || busy}><span className="onboarding-start-copy"><strong>Jetzt Profil erstellen</strong><span>Hier klicken und loslegen</span></span><span className="onboarding-start-arrow diana-action-arrow" aria-hidden="true"><ArrowRight size={22} /></span></button></div> : <>
         {session && <AssistantActionArea key={session.session_id} feedback={!busy ? feedback : ''}>
           <div className="assistant-actions" role="group" aria-label="Aktionen für deine Jobsuche">
+            <button type="button" className="rerank-button mobile-edit-action" onClick={() => selectAssistantView('profile')} disabled={busy || booting}><SlidersHorizontal size={16} aria-hidden="true"/><span>Suchprofil bearbeiten</span></button>
+            {!neutral && <button type="button" className="rerank-button mobile-edit-action" onClick={() => selectAssistantView('advisor')} disabled={busy || booting}><Compass size={16} aria-hidden="true"/><span>Persönlichkeit ändern</span></button>}
             <button type="button" className="rerank-button" onClick={rerankJobs} disabled={busy || booting || !!editor || !pool.canRerank}><RotateCcw size={16} aria-hidden="true" /><span>{pool.count} Jobs neu sortieren</span></button>
             <button type="button" className="rerank-button" onClick={reset} disabled={busy || booting} title="Neue Suche mit deinem Profil"><RotateCcw size={14} aria-hidden="true" /><span>Neu starten</span></button>
           </div>
