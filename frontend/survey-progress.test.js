@@ -185,3 +185,13 @@ test('current search stage is replayed safely when returning from waiting questi
   event.data.searching=false;
   assert.equal(readSurveySearchContext(event,frame,origin,runId).searchProgress,undefined);
 });
+
+test('waiting popup receives selected career, expert and custom persona names',()=>{
+  for (const assistantName of ['Top-Berufsberater-KI','Fachexperte-KI','Meine-Beratung-KI']) {
+    const host=embeddedWindow();
+    const frame={};
+    reportSurveyProgress(host,false,{searching:true,searchGoal:'Python',assistantName});
+    const event={data:host.posted[0].data,source:frame,origin};
+    assert.equal(readSurveySearchContext(event,frame,origin,runId).assistantName,assistantName);
+  }
+});

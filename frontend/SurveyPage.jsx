@@ -133,7 +133,7 @@ export default function SurveyPage({ initial, participationId }) {
   const [searching, setSearching] = useState(false);
   const [searchProgress, setSearchProgress] = useState(null);
   const [resultsVisible, setResultsVisible] = useState(false);
-  const [searchAssistant,setSearchAssistant]=useState('DIANA-KI');
+  const [searchAssistant,setSearchAssistant]=useState('Dein KI-Assistent');
   const [waitingOpen, setWaitingOpen] = useState(false);
   const [chatRequired, setChatRequired] = useState(false);
   const [saveStatus,setSaveStatus]=useState('idle');

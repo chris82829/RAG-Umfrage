@@ -497,7 +497,7 @@ export function App({studyArm = 'B'}) {
   // The label belongs to the displayed results, not to an unsaved personality edit.
   const scoreLabel = advisorScoreLabel(session?.advisor);
   const assistantName = advisorAiLabel(session?.advisor);
-  const pendingAssistantName = operation?.assistantName || assistantName;
+  const pendingAssistantName = operation?.assistantName || advisorAiLabel(session?.advisor || advisor);
 
   function toggleLowScoreResults() {
     if (busy || booting) return;

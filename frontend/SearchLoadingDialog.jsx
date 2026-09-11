@@ -1,41 +1,36 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
-import { ArrowRight, GraduationCap, BriefcaseBusiness, Lightbulb, Search, Check, RotateCcw, Database, UserRound, ListFilter, PanelsTopLeft } from 'lucide-react';
-import { createMemory, flipMemory } from './search-memory.js';
+import React, { useEffect, useId, useRef } from 'react';
+import { ArrowRight, BriefcaseBusiness, Search, Check, UserRound, ListChecks } from 'lucide-react';
 import { searchStatus } from './search-progress.js';
 import './search-loading.css';
 
-const memoryIcons = {study:GraduationCap, work:BriefcaseBusiness, idea:Lightbulb};
-const phaseIcons = [Database, UserRound, Search, ListFilter, PanelsTopLeft];
-const phaseNames = ['Stellendaten geladen', 'Suchprofil vorbereiten', 'Stellen durchsuchen', 'Vorauswahl abgleichen', 'Ergebnisse bereitstellen'];
-const memoryNames = {study:'Studium', work:'Beruf', idea:'Idee'};
-
-export function SearchLoadingArt() {
-  const [game, setGame] = useState(createMemory);
-  useEffect(() => {
-    if (game.open.length !== 2) return;
-    const timer = setTimeout(() => setGame(previous => ({...previous, open:[]})), 1000);
-    return () => clearTimeout(timer);
-  }, [game.open]);
-  return <section className="search-memory" aria-label="Optionales Mini-Memory">
-    <div className="search-memory-heading"><strong>Mini-Memory</strong><span aria-live="polite">{game.matched.length / 2}/3 Paare</span><button type="button" className="search-memory-again" aria-label="Memory neu starten" title="Neue Runde" onClick={() => setGame(createMemory())}><RotateCcw size={17} aria-hidden="true"/></button></div>
-    <span className="sr-only">Finde die gleichen Symbole. Das Spiel hat keinen Einfluss auf deine Suche.</span>
-    <div className="search-memory-cards">
-      {game.cards.map((kind, index) => {
-        const matched = game.matched.includes(index);
-        const shown = matched || game.open.includes(index);
-        const Icon = shown ? memoryIcons[kind] : Search;
-        return <button key={index} type="button" className={`search-memory-card${shown ? ' is-open' : ''}${matched ? ' is-matched' : ''}`}
-          aria-label={`Karte ${index + 1}: ${shown ? memoryNames[kind] + (matched ? ', Paar gefunden' : '') : 'aufdecken'}`}
-          aria-disabled={matched || shown || game.open.length === 2}
-          onClick={() => setGame(previous => flipMemory(previous, index))}>
-          <Icon size={25} aria-hidden="true" />{matched && <Check className="memory-check" size={13} aria-hidden="true" />}
-        </button>;
-      })}
-    </div>
-  </section>;
+export function SearchLoadingArt({stage}) {
+  const id = useId();
+  const Icon = stage === 'ranking' ? ListChecks : stage === 'finalizing' ? Check : Search;
+  return <div className="search-matching-art" aria-hidden="true">
+    <svg viewBox="0 0 320 140" fill="none">
+      <defs><linearGradient id={`${id}-scan`} x1="0" y1="0" x2="1" y2="0"><stop stopColor="#c2d8ff" stopOpacity="0"/><stop offset=".5" stopColor="#8bb5ff"/><stop offset="1" stopColor="#c2d8ff" stopOpacity="0"/></linearGradient></defs>
+      <ellipse cx="160" cy="67" rx="147" ry="60" fill="#f2f6ff"/>
+      <path d="M98 68h124" stroke="#c9d8f4" strokeWidth="2" strokeDasharray="4 6" className="matching-flow"/>
+      <g className="matching-profile"><rect x="30" y="24" width="72" height="88" rx="12" fill="white" stroke="#cbd9f1"/>
+        <UserRound x="54" y="36" width="24" height="24" color="#5778bc"/>
+        <path d="M46 75h40M46 84h30M46 93h35" stroke="#d1def2" strokeWidth="4" strokeLinecap="round"/>
+      </g>
+      <g className="matching-jobs"><rect x="224" y="20" width="64" height="83" rx="11" fill="#e0eafb" transform="rotate(8 256 61)"/>
+        <rect x="215" y="25" width="65" height="84" rx="11" fill="white" stroke="#cbd9f1"/>
+        <BriefcaseBusiness x="236" y="37" width="24" height="24" color="#5778bc"/>
+        <path d="M230 75h35M230 84h26M230 93h31" stroke="#d1def2" strokeWidth="4" strokeLinecap="round"/>
+        <rect className="matching-scan" x="221" y="35" width="53" height="5" rx="2.5" fill={`url(#${id}-scan)`}/>
+      </g>
+      <circle cx="159" cy="68" r="28" fill="white" stroke="#dbe5fa"/>
+      <circle className="matching-orbit" cx="159" cy="68" r="28" stroke="#7597ef" strokeWidth="2" strokeDasharray="45 131"/>
+      <Icon x="147" y="56" width="24" height="24" color="#3159d3"/>
+      <text x="66" y="133" textAnchor="middle" fill="#61728d" fontSize="11">Dein Profil</text>
+      <text x="248" y="133" textAnchor="middle" fill="#61728d" fontSize="11">Stellenanzeigen</text>
+    </svg>
+  </div>;
 }
 
-export default function SearchLoadingDialog({ open, assistantName = 'DIANA-KI', onQuestions, progress }) {
+export default function SearchLoadingDialog({ open, assistantName = 'Dein KI-Assistent', onQuestions, progress }) {
   const dialog = useRef(null);
   const heading = useRef(null);
   const id = useId();
@@ -54,19 +49,19 @@ export default function SearchLoadingDialog({ open, assistantName = 'DIANA-KI', 
   }, [open]);
 
   return <dialog ref={dialog} className="search-loading-dialog" aria-labelledby={`${id}-title`} aria-describedby={`${id}-description`} onCancel={event => event.preventDefault()}>
-    <h2 ref={heading} id={`${id}-title`} tabIndex={-1}>{assistantName} sucht passende Stellen</h2>
+    <h2 ref={heading} id={`${id}-title`} tabIndex={-1}><span className="search-loading-persona">{assistantName}</span>{' '}<span>sucht passende Stellen</span></h2>
+    <SearchLoadingArt stage={progress?.stage}/>
     <span id={`${id}-description`} className="sr-only" role="status" aria-live="polite" aria-atomic="true">{status.title}. {status.description}</span>
-    <div className="search-phase-progress"><ol className="search-phase-steps" aria-label="Suchfortschritt">
-      {phaseNames.map((label, index) => {
-        const Icon = phaseIcons[index];
-        const state = index < status.index ? 'abgeschlossen' : index === status.index ? 'aktuell' : 'ausstehend';
-        return <li key={label} className={index < status.index ? 'is-done' : index === status.index ? 'is-active' : ''} aria-current={index === status.index ? 'step' : undefined} title={`${label} · ${state}`}>
-          <Icon size={22} aria-hidden="true"/>{index < status.index && <Check className="search-phase-check" size={12} aria-hidden="true"/>}
-          <span className="sr-only">{label}: {state}</span>
+    <ol className="search-phase-summary" aria-label="Suchfortschritt">
+      {['Profil', 'Stellensuche', 'KI-Abgleich'].map((label, index) => {
+        const current = status.index < 2 ? 0 : status.index === 2 ? 1 : 2;
+        const done = index < current || progress?.stage === 'finalizing';
+        return <li key={label} className={done ? 'is-done' : index === current ? 'is-active' : ''} aria-current={!done && index === current ? 'step' : undefined}>
+          {done ? <Check size={13} aria-hidden="true"/> : <i aria-hidden="true"/>}{label}
         </li>;
       })}
-    </ol><div className="search-loading-track" aria-hidden="true"><i /></div></div>
-    {open && <SearchLoadingArt />}
-    {onQuestions && <button className="survey-primary diana-action-motion search-loading-questions" type="button" onClick={onQuestions}>Fragen in der Zwischenzeit beantworten<ArrowRight className="diana-action-arrow" size={18}/></button>}
+    </ol>
+    <p className="search-loading-time">Die Suche dauert etwa 1–2 Minuten.</p>
+    {onQuestions && <button className="survey-primary diana-action-motion search-loading-questions" type="button" onClick={onQuestions}><span>Wartezeit für Fragen nutzen</span><ArrowRight className="diana-action-arrow" size={18}/></button>}
   </dialog>;
 }

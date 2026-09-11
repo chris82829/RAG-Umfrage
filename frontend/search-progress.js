@@ -13,14 +13,13 @@ export function readSearchProgress(value) {
 export function searchStatus(value) {
   const progress = readSearchProgress(value);
   const jobs = progress?.job_count?.toLocaleString('de-DE');
-  const candidates = progress?.candidate_count?.toLocaleString('de-DE');
   const messages = {
-    loaded: ['Stellendaten sind geladen', `${jobs ? `${jobs} Anzeigen stehen bereit.` : 'Die Anzeigen stehen bereit.'} Der digitale Papierstapel sitzt.`],
-    profiling: ['Dein Suchprofil wird vorbereitet', `${jobs ? `${jobs} Anzeigen sind geladen. ` : ''}Deine Fähigkeiten und Wünsche werden aufbereitet. Kaffee ist dafür keiner nötig.`],
-    retrieval: ['Stellen werden durchsucht', `${jobs ? `${jobs} Anzeigen werden` : 'Die Anzeigen werden'} mit Stichwörtern und inhaltlich verglichen. Auch zwischen den Zeilen.`],
-    ranking: ['Vorauswahl gefunden · KI prüft', `${candidates ? `${candidates} Stellen sind` : 'Die Stellen sind'} in der Vorauswahl. Jetzt läuft der genaue Abgleich mit deinem Profil – inklusive Kleingedrucktem.`],
-    finalizing: ['Ergebnisse werden vorbereitet', 'Der Abgleich ist fertig. Die Stellenkarten sind zusammengestellt und werden für die Anzeige bereitgestellt. Gleich darfst du stöbern.'],
+    loaded: ['Stellenanzeigen sind geladen', `${jobs ? `${jobs} Anzeigen stehen` : 'Die Anzeigen stehen'} für deine Suche bereit.`],
+    profiling: ['Dein Suchprofil wird vorbereitet', 'Die KI bereitet deine Fähigkeiten und Wünsche für die Suche auf.'],
+    retrieval: [`${jobs ? `${jobs} Stellen werden` : 'Stellen werden'} durchsucht`, 'Das System vergleicht Stichwörter und Inhalte mit deinem Suchprofil.'],
+    ranking: [jobs ? `${jobs} Stellen durchsucht` : 'Stellensuche abgeschlossen', 'Die KI gleicht passende Treffer mit deinem Profil ab.'],
+    finalizing: ['Deine Ergebnisse werden vorbereitet', 'Der Abgleich ist fertig. Gleich erscheinen die Stellenkarten.'],
   };
-  const [title, description] = messages[progress?.stage] || ['Suche ist gestartet', 'Das System bereitet deine Anfrage vor. Gleich geht’s an die Stellen.'];
+  const [title, description] = messages[progress?.stage] || ['Deine Suche startet', 'Das System bereitet deine Anfrage vor.'];
   return {title, description, index:SEARCH_STAGES.indexOf(progress?.stage)};
 }

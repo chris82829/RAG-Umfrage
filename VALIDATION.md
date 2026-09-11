@@ -1300,7 +1300,9 @@ Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V
 - Auf Nutzerkorrektur: sichtbare Beschreibung mit Zeitangabe sowie Status-Textblock entfernt; Fortschritt nur durch fünf Icons mit Häkchen und pulsierender aktueller Phase. Beschriftung bleibt für Screenreader und als Hover-Hinweis zugänglich.
 - Produktionsbuild und 143 Frontendtests erfolgreich. 178 Backendtests erfolgreich; bestehende Streamtests um Phasen erweitert, neuer Test prüft Ereignisse vor/nach tatsächlichen Modell-/Retrievalaufrufen und echte Zählwerte. Ein veralteter Begrüßungstest wurde an den bereits bestehenden neutralen Gruß angepasst (keine Verhaltensänderung).
 - Browserprüfung mit lokalem isoliertem Flask-Testserver/FakeLLM: echte Profilphase im eingebetteten Umfrage-Popup. Komponentenprüfung bei 320 CSS-Pixel Breite: Status-Icons, Aufdecken, Fehlpaar-Rücksetzen, gefundene Paare und Fragebogen-Button. Keine produktiven Testteilnahmen und keine echten LLM-Aufrufe. Native Smartphone-Hardware nicht getestet.
-- Weitere Textkürzung auf Wunsch: Memory zeigt nur „Mini-Memory“ und den Paarzähler; Anleitung nur für Screenreader.
-- Wiederholen ausschließlich als Icon oben rechts im Memory; jederzeit nutzbar, 44px Bedienfläche und zugängliche Beschriftung.
-- Bewegter Balken direkt unter der Icon-Reihe; nur das aktuelle Phasen-Icon erhält eine zyklische Füllanimation (keine Prozentanzeige). Abschließende mobile Browserprüfung einschließlich Neustart-Icon.
-- Aktives Phasen-Icon abschließend mit rotierender Lichtspur, sanfter Wellenfüllung und leichter Atembewegung; Memory dabei unverändert.
+
+## Suchanimation nach gestalterischer Überarbeitung · 11. September 2026
+
+- Memory auf Nutzerwunsch wieder entfernt. Stattdessen eigene SVG-Animation mit Profil, Stellenkarten, Scanbewegung und wechselndem zentralen Symbol. Beide Überschriftenteile verwenden dieselbe Schrift, Größe und Gewichtung; Name stammt aus der laufenden Suchpersönlichkeit. Kurzer Zeithinweis 1–2 Minuten und breiter Button „Wartezeit für Fragen nutzen“.
+- Auf letzte Nutzerkorrektur sichtbaren Status-Textblock entfernt; kompakte Schrittübersicht „Profil / Stellensuche / KI-Abgleich“ auf abschließenden Wunsch beibehalten. Tatsächliche Backendphasen bleiben für die Animation und Screenreader verfügbar. Keine erfundene Behauptung, das LLM bewerte alle Anzeigen: Anzahl durchsuchter Stellen wird ausschließlich aus Servermetadaten übernommen.
+- Letzter Produktionsbuild und 143 Frontendtests bestanden. Backend unverändert seit den 178 erfolgreichen Tests. Vorheriger Spielzustand bleibt im Git-Commit 88abb23 nachvollziehbar.
