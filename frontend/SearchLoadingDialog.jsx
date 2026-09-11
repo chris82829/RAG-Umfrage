@@ -49,7 +49,7 @@ export default function SearchLoadingDialog({ open, assistantName = 'Dein KI-Ass
   }, [open]);
 
   return <dialog ref={dialog} className="search-loading-dialog" aria-labelledby={`${id}-title`} aria-describedby={`${id}-description`} onCancel={event => event.preventDefault()}>
-    <h2 ref={heading} id={`${id}-title`} tabIndex={-1}><span className="search-loading-persona">{assistantName}</span>{' '}<span>sucht passende Stellen</span></h2>
+    <h2 ref={heading} id={`${id}-title`} tabIndex={-1}><span className="search-loading-persona">{assistantName}</span>{' '}<span>sucht …</span></h2>
     <SearchLoadingArt stage={progress?.stage}/>
     <span id={`${id}-description`} className="sr-only" role="status" aria-live="polite" aria-atomic="true">{status.title}. {status.description}</span>
     <ol className="search-phase-summary" aria-label="Suchfortschritt">
