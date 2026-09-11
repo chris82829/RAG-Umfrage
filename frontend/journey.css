@@ -258,8 +258,7 @@
 /* Match the working area to the active step's color. */
 .search-intro { margin-top: 24px; }
 .workspace[data-journey-step="1"] .assistant-panel,
-.workspace[data-journey-step="2"] .assistant-panel,
-.workspace[data-journey-step="4"] .assistant-panel { outline: 2px solid var(--journey-accent, #315ab5); outline-offset: -2px; }
+.workspace[data-journey-step="2"] .assistant-panel { outline: 2px solid var(--journey-accent, #315ab5); outline-offset: -2px; }
 .workspace { position: relative; isolation: isolate; }
 .journey-progress-bar { max-height: 32dvh; overflow-y: auto; scrollbar-width: thin; }
 
