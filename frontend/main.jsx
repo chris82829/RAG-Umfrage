@@ -518,7 +518,7 @@ export function App({studyArm = 'B'}) {
     <header className={`topbar${showHeaderJourney ? ' topbar--with-journey' : ''}`}>
       <div className="topbar-inner">
         {isEmbeddedSurvey ? <div className="brand"><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></div> : <a href="/" className="brand" aria-label="DIANA Startseite" onClick={event => navigate('about', event)}><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></a>}
-        {showHeaderJourney && <div className="topbar-journey"><JourneyGuide neutral={neutral} iconOnly activeStep={activeStep} completedSteps={completedSteps} busy={busy || booting} hasSession={!!session} onSelect={visitJourneyStep} /></div>}
+        {showHeaderJourney && <div className="topbar-journey"><JourneyGuide neutral={neutral} iconOnly activeStep={activeStep} completedSteps={completedSteps} busy={busy || booting} hasSession={!!session} /></div>}
         <div className="local-status"><i aria-hidden="true" />{allDemo ? `${total} fiktive Beispielstellen` : `${total.toLocaleString('de-DE')} Stellenanzeigen`}</div>
       </div>
     </header>

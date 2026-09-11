@@ -1306,3 +1306,8 @@ Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V
 - Memory auf Nutzerwunsch wieder entfernt. Stattdessen eigene SVG-Animation mit Profil, Stellenkarten, Scanbewegung und wechselndem zentralen Symbol. Beide Überschriftenteile verwenden dieselbe Schrift, Größe und Gewichtung; Name stammt aus der laufenden Suchpersönlichkeit. Kurzer Zeithinweis 1–2 Minuten und breiter Button „Wartezeit für Fragen nutzen“.
 - Auf letzte Nutzerkorrektur sichtbaren Status-Textblock entfernt; kompakte Schrittübersicht „Profil / Stellensuche / KI-Abgleich“ auf abschließenden Wunsch beibehalten. Tatsächliche Backendphasen bleiben für die Animation und Screenreader verfügbar. Keine erfundene Behauptung, das LLM bewerte alle Anzeigen: Anzahl durchsuchter Stellen wird ausschließlich aus Servermetadaten übernommen.
 - Letzter Produktionsbuild und 143 Frontendtests bestanden. Backend unverändert seit den 178 erfolgreichen Tests. Vorheriger Spielzustand bleibt im Git-Commit 88abb23 nachvollziehbar.
+
+## Schrittanzeige am PC ohne Navigation · 11. September 2026
+
+- Icon-Schrittleiste im Header als reine Statusanzeige umgesetzt: keine Buttons, Klickhandler oder Tabstopps; kein Hoverzustand, der eine Aktion suggeriert. Beschriftung, aktueller Schritt und Erledigt-Häkchen bleiben verfügbar. Mobile Headerleiste bleibt ausgeblendet; die eigentliche Anleitung weiterhin bedienbar.
+- Produktionsbuild erfolgreich. Im Browser Klick auf ein erledigtes Header-Icon ohne Zustandsänderung und Tab direkt zum nächsten echten Button geprüft. Interaktive Anleitung als Gegenprobe erfolgreich zu Schritt 1 gewechselt.

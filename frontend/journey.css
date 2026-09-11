@@ -168,12 +168,12 @@
 }
 
 @media (hover: hover) {
-  .journey-guide .journey-step:hover:not(:disabled) {
+  .journey-guide button.journey-step:hover:not(:disabled) {
     border-color: var(--journey-accent, #315ab5);
     background: var(--journey-card-background);
     box-shadow: 0 4px 12px #2536500c;
   }
-  .journey-guide .journey-step.is-current:hover:not(:disabled) {
+  .journey-guide button.journey-step.is-current:hover:not(:disabled) {
     border-color: var(--journey-accent, #315ab5);
     background: var(--journey-card-background);
     box-shadow: 0 4px 12px #25365012;

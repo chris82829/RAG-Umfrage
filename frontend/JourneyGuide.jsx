@@ -12,16 +12,18 @@ const steps = [
 ];
 
 export default function JourneyGuide({ neutral = false, activeStep = 1, completedSteps = [], compact = false, iconOnly = false, busy = false, hasSession = false, onSelect }) {
-  return <nav className={`journey-guide ${iconOnly ? 'journey-guide--icons' : compact ? 'journey-guide--compact' : 'journey-guide--expanded'}`} aria-label="Schritte deiner Jobsuche" aria-busy={busy}>
+  const Container = iconOnly ? 'section' : 'nav';
+  const Step = iconOnly ? 'div' : 'button';
+  return <Container className={`journey-guide ${iconOnly ? 'journey-guide--icons' : compact ? 'journey-guide--compact' : 'journey-guide--expanded'}`} aria-label="Schritte deiner Jobsuche" aria-busy={busy}>
     <ol className="journey-list" role="list">
       {steps.filter(step=>!neutral || step.number!==2).map(({ number, title, shortTitle, Icon, description },index) => {
         const displayNumber=index+1;
         const active = activeStep === number;
         const complete = completedSteps.includes(number);
         const locked = !canVisitJourneyStep(number, { hasSession, activeStep });
-        const accessibleLabel = `Schritt ${displayNumber}: ${title}${active ? ', aktuell' : ''}${complete ? ', bereits erledigt' : ''}${locked ? ', zuerst den aktuellen Schritt fortsetzen' : ''}`;
+        const accessibleLabel = `Schritt ${displayNumber}: ${title}${active ? ', aktuell' : ''}${complete ? ', bereits erledigt' : ''}${!iconOnly && locked ? ', zuerst den aktuellen Schritt fortsetzen' : ''}`;
         return <li className="journey-item" key={number}>
-          <button type="button" className={`journey-step journey-step--${number}${active ? ' is-current' : ''}${complete ? ' is-complete' : ''}`} aria-label={accessibleLabel} title={iconOnly ? accessibleLabel : undefined} aria-current={active ? 'step' : undefined} disabled={busy || locked} onClick={() => onSelect?.(number)}>
+          <Step type={iconOnly ? undefined : "button"} role={iconOnly ? "img" : undefined} className={`journey-step journey-step--${number}${active ? ' is-current' : ''}${complete ? ' is-complete' : ''}`} aria-label={accessibleLabel} title={iconOnly ? accessibleLabel : undefined} aria-current={active ? 'step' : undefined} disabled={iconOnly ? undefined : busy || locked} onClick={iconOnly ? undefined : () => onSelect?.(number)}>
             <span className="journey-step-heading">
               <span className="journey-step-number"><span className="journey-sr-only">Schritt </span>{displayNumber}</span>
               <Icon className="journey-step-icon" size={23} strokeWidth={1.6} aria-hidden="true" />
@@ -33,9 +35,9 @@ export default function JourneyGuide({ neutral = false, activeStep = 1, complete
             {!iconOnly && <><strong className="journey-step-title"><span className="journey-full-title">{title}</span>{compact && <span className="journey-short-title">{shortTitle}</span>}</strong>
               {!compact && <span className="journey-step-description">{description}</span>}
             </>}
-          </button>
+          </Step>
         </li>;
       })}
     </ol>
-  </nav>;
+  </Container>;
 }
