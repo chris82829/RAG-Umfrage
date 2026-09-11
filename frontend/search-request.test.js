@@ -238,3 +238,23 @@ test('long general-assistant answers stream past 1800 characters and finish acro
     assert.deepEqual(texts,previews);
   }
 });
+
+test('real progress is incremental, ignores unknown metadata and never commits results', async () => {
+  let controller;
+  const response = new Response(new ReadableStream({start(c) {controller=c;}}), {headers:{'Content-Type':'application/x-ndjson'}});
+  const progress=[];
+  let observed;
+  const phaseReady=new Promise(resolve=>{observed=resolve;});
+  const reading=readOperationResponse(response,undefined,undefined,value=>{progress.push(value);observed();});
+  controller.enqueue(encoder.encode([
+    {type:'search_progress',stage:'ranking',candidate_count:999},
+    {type:'phase',phase:'search'},
+    {type:'search_progress',stage:'made-up'},
+    {type:'search_progress',stage:'ranking',candidate_count:20,job_count:8537,secret:'ignored'},
+  ].map(line).join('')));
+  await phaseReady;
+  assert.deepEqual(progress,[{stage:'ranking',job_count:8537,candidate_count:20}]);
+  controller.enqueue(encoder.encode(line({type:'result',data:{jobs:[]}})));
+  controller.close();
+  assert.deepEqual(await reading,{jobs:[]});
+});

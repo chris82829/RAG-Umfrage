@@ -508,6 +508,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         # This event is reached only after the server committed to a real full
         # search, not while chat intent is still unknown or a cached pool reranks.
         yield {'type': 'phase', 'phase': 'search'}
+        yield {'type': 'search_progress', 'stage': 'loaded', 'job_count': len(jobs)}
+        yield {'type': 'search_progress', 'stage': 'profiling', 'job_count': len(jobs)}
         current_fingerprint = persona_fingerprint(profile)
         cache_hit = reusable_persona(persona, saved_persona_fingerprint, current_fingerprint)
         with timed_phase('persona', cache_hit=cache_hit):
@@ -518,10 +520,15 @@ def create_app(config=None, *, retriever=None, llm=None):
         # 512-token limit. BM25 still receives the complete text.
         query = '\n'.join(x for x in [' '.join(profile['skills']),
                                       persona['retrieval_query'], profile['query']] if x)
+        yield {'type': 'search_progress', 'stage': 'retrieval', 'job_count': len(jobs)}
         with timed_phase('retrieval'):
             candidates = engine.search(jobs, query, top_k=20)
+        yield {'type': 'search_progress', 'stage': 'ranking',
+               'job_count': len(jobs), 'candidate_count': len(candidates)}
         ranked = yield from rank_candidate_steps(profile, persona, candidates, len(jobs), advisor,
                                    chat_message, {**(chat_context or {}), 'scope': 'new_search'})
+        yield {'type': 'search_progress', 'stage': 'finalizing',
+               'job_count': len(jobs), 'candidate_count': len(candidates)}
         return {**ranked,
                 '_persona_fingerprint': current_fingerprint,
                 'chat_action': 'search'}

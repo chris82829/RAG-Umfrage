@@ -190,6 +190,7 @@ export function App({studyArm = 'B'}) {
   const [pending, setPending] = useState('');
   const [error, setError] = useState('');
   const [searchActive, setSearchActive] = useState(false);
+  const [searchProgress, setSearchProgress] = useState(null);
   const [surveySearchProfile, setSurveySearchProfile] = useState(null);
   const [streamingText, setStreamingText] = useState('');
   const [indexState, setIndexState] = useState(null);
@@ -213,10 +214,10 @@ export function App({studyArm = 'B'}) {
   const surveyGoal = searchGoalSuggestion(surveyResultsReady ? session?.profile : surveySearchProfile);
   const surveyChatCompleted = hasChatMessage(session);
   const surveyAssistantName=operation?.assistantName || advisorAiLabel(session?.advisor || advisor);
-  useEffect(() => reportSurveyProgress(window, surveyResultsReady, { resultsVisible: surveyResultsVisible, searching: surveySearching, searchGoal: surveyGoal, chatCompleted: surveyChatCompleted, assistantName:surveyAssistantName }, () => {
+  useEffect(() => reportSurveyProgress(window, surveyResultsReady, { resultsVisible: surveyResultsVisible, searching: surveySearching, searchGoal: surveyGoal, chatCompleted: surveyChatCompleted, assistantName:surveyAssistantName, searchProgress }, () => {
     setEditor(null); setMobileView('chat'); setActivity('chat');
     requestAnimationFrame(() => document.getElementById('chat-input')?.focus());
-  }), [surveyResultsReady, surveyResultsVisible, surveySearching, surveyGoal, surveyChatCompleted, surveyAssistantName]);
+  }), [surveyResultsReady, surveyResultsVisible, surveySearching, surveyGoal, surveyChatCompleted, surveyAssistantName, searchProgress]);
 
   useEffect(() => {
     const onPopState = () => setPage(currentPage());
@@ -286,6 +287,7 @@ export function App({studyArm = 'B'}) {
   async function run(body, endpoint, kind = 'chat') {
     if (sending.current) return;
     setSurveySearchProfile(body.profile || session?.profile || null);
+    setSearchProgress(null);
     sending.current = true; setBusy(true); setError(''); setSearchActive(false); setStreamingText('');
     let operationMode = kind === 'profile' ? profileChangeAction(session?.profile, body.profile) : body.mode || 'auto';
     if (kind === 'profile' && operationMode === 'rerank' && candidatePool(session).refreshRequired) operationMode = 'search';
@@ -320,6 +322,8 @@ export function App({studyArm = 'B'}) {
         setOperation(previous => previous ? { ...previous, mode: 'search' } : previous);
       }, text => {
         if (generation.current === turn) setStreamingText(text);
+      }, progress => {
+        if (generation.current === turn) setSearchProgress(progress);
       });
       if (generation.current !== turn) return;
       accept(result);
@@ -562,7 +566,7 @@ export function App({studyArm = 'B'}) {
       </aside>
     </main>
 
-  </div>{page === 'about' && <AboutPage />}<PersonalityIntroDialog open={!neutral && personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={!isEmbeddedSurvey && busy && searchActive && page === 'search'} assistantName={pendingAssistantName} /></>;
+  </div>{page === 'about' && <AboutPage />}<PersonalityIntroDialog open={!neutral && personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={!isEmbeddedSurvey && busy && searchActive && page === 'search'} assistantName={pendingAssistantName} progress={searchProgress} /></>;
 }
 
 export function AssignedSearch() {

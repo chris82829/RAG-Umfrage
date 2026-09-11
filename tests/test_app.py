@@ -1413,8 +1413,9 @@ def test_streamed_onboarding_emits_phase_before_models_and_commits_before_result
         remaining = [json.loads(line) for line in iterator]
     finally:
         response.close()
-    assert [event['type'] for event in remaining] == ['result']
-    result = remaining[0]['data']
+    assert [event['stage'] for event in remaining[:-1]] == ['loaded', 'profiling', 'retrieval', 'ranking', 'finalizing']
+    assert remaining[-1]['type'] == 'result'
+    result = remaining[-1]['data']
     assert result['chat_action'] == 'search'
     assert llm.calls == ['persona', 'rerank'] and len(retriever.calls) == 1
     assert '_candidates' not in result and '_assessment_cache' not in result
@@ -1444,11 +1445,12 @@ def test_auto_chat_search_phase_follows_final_dispatch_but_precedes_matching(set
         remaining = [json.loads(line) for line in iterator]
     finally:
         response.close()
-    assert [event['type'] for event in remaining] == ['result']
-    assert remaining[0]['data']['chat_action'] == 'search'
+    assert [event['stage'] for event in remaining[:-1]] == ['loaded', 'profiling', 'retrieval', 'ranking', 'finalizing']
+    assert remaining[-1]['type'] == 'result'
+    assert remaining[-1]['data']['chat_action'] == 'search'
     assert llm.calls == (['plan', 'persona', 'rerank'] if patch else ['plan', 'rerank'])
     assert len(retriever.calls) == 1
-    assert client.get(f"/api/sessions/{initial['session_id']}").json == remaining[0]['data']
+    assert client.get(f"/api/sessions/{initial['session_id']}").json == remaining[-1]['data']
 
 
 @pytest.mark.parametrize('mode,classification,patch,expected_action', [
@@ -1489,9 +1491,9 @@ def test_streamed_legacy_migration_signals_search_only_after_refusal_checks(setu
     refreshed = stream_events(client.post('/api/chat', json={'session_id': initial['session_id'],
                                                             'advisor': {'preset': 'angela'}},
                                           headers=STREAM_HEADERS))
-    assert [event['type'] for event in refreshed] == ['phase', 'result']
+    assert [event['type'] for event in refreshed] == ['phase'] + ['search_progress'] * 5 + ['result']
     assert refreshed[0]['phase'] == 'search'
-    assert refreshed[1]['data']['candidate_pool']['refresh_required'] is False
+    assert refreshed[-1]['data']['candidate_pool']['refresh_required'] is False
     assert llm.calls == ['persona', 'rerank'] and len(retriever.calls) == 1
 
 
@@ -1513,10 +1515,12 @@ def test_errors_after_search_phase_are_terminal_safe_events_without_partial_sess
     response = client.post('/api/onboard', json=payload(), headers=STREAM_HEADERS)
     events = stream_events(response)
     assert response.status_code == 200  # Stream headers precede downstream failure.
-    assert [event['type'] for event in events] == ['phase', 'error']
+    assert events[-1]['type'] == 'error'
+    expected_stages = ['loaded', 'profiling', 'retrieval'] if failure == 'embedding' else ['loaded', 'profiling']
+    assert [event['stage'] for event in events[1:-1]] == expected_stages
     assert events[0] == {'type': 'phase', 'phase': 'search'}
-    assert events[1]['status'] == (500 if failure == 'unexpected' else 503)
-    assert isinstance(events[1]['error']['message'], str)
+    assert events[-1]['status'] == (500 if failure == 'unexpected' else 503)
+    assert isinstance(events[-1]['error']['message'], str)
     assert 'PRIVATE_BACKEND_SENTINEL' not in response.get_data(as_text=True)
     with app.extensions['chat_store'].connect() as db:
         assert db.execute('SELECT COUNT(*) FROM chat_sessions').fetchone()[0] == 0
@@ -1555,9 +1559,9 @@ def test_streaming_preserves_real_optimistic_lock_conflict_after_search_phase(se
         remaining = [json.loads(line) for line in iterator]
     finally:
         response.close()
-    assert [event['type'] for event in remaining] == ['error']
-    assert remaining[0]['status'] == 409
-    assert remaining[0]['error']['code'] == 'session_conflict'
+    assert [event['type'] for event in remaining] == ['search_progress'] * 5 + ['error']
+    assert remaining[-1]['status'] == 409
+    assert remaining[-1]['error']['code'] == 'session_conflict'
     assert sessions.get(initial['session_id']) == (concurrent, version + 1)
 
 
@@ -1806,7 +1810,32 @@ def test_neutral_public_cards_and_greeting_have_no_assessment_without_changing_p
     public = public_state(state)
     assert public['jobs'] == [{'id': 'low', 'title': 'Python'}, {'id': 'high', 'title': 'SQL'}]
     greeting = welcome_message(state)
-    assert '2 Stellen gefunden' in greeting and 'alle links' in greeting
+    assert greeting == 'Hallo ich bin dein KI Assistent'
     assert state['assistant_message'] not in greeting
     assert all(word not in greeting for word in ['Score', 'Punkte', 'Bewertung'])
     assert state == before
+
+
+def test_progress_counts_and_phases_follow_actual_work(setup):
+    app, client, retriever, llm = setup
+    response = client.post('/api/onboard', json=payload(), headers=STREAM_HEADERS, buffered=False)
+    iterator = iter(response.response)
+    try:
+        assert json.loads(next(iterator))['type'] == 'phase'
+        loaded = json.loads(next(iterator))
+        assert loaded['stage'] == 'loaded' and loaded['job_count'] > 0
+        assert json.loads(next(iterator))['stage'] == 'profiling'
+        assert llm.calls == []
+        assert json.loads(next(iterator))['stage'] == 'retrieval'
+        assert llm.calls == ['persona'] and retriever.calls == []
+        ranking = json.loads(next(iterator))
+        assert ranking['stage'] == 'ranking'
+        assert ranking['candidate_count'] == min(loaded['job_count'], 20)
+        assert len(retriever.calls) == 1 and llm.calls == ['persona']
+        assert json.loads(next(iterator))['stage'] == 'finalizing'
+        assert llm.calls == ['persona', 'rerank']
+        result = json.loads(next(iterator))
+        assert result['type'] == 'result'
+        assert result['data']['retrieval']['candidate_count'] == ranking['candidate_count']
+    finally:
+        response.close()

@@ -131,6 +131,7 @@ export default function SurveyPage({ initial, participationId }) {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [searching, setSearching] = useState(false);
+  const [searchProgress, setSearchProgress] = useState(null);
   const [resultsVisible, setResultsVisible] = useState(false);
   const [searchAssistant,setSearchAssistant]=useState('DIANA-KI');
   const [waitingOpen, setWaitingOpen] = useState(false);
@@ -199,6 +200,7 @@ export default function SurveyPage({ initial, participationId }) {
       const context = readSurveySearchContext(event, frame.current?.contentWindow, window.location.origin, state.runId);
       if (context) {
         setSearching(context.searching);
+        setSearchProgress(context.searchProgress || null);
         setResultsVisible(context.resultsVisible);
         if(context.assistantName)setSearchAssistant(context.assistantName);
         setState(previous => { const next=suggestSearchGoal(previous,context.searchGoal); return next.answers!==previous.answers ? reviseSurvey(next,{}) : next; });
@@ -307,7 +309,7 @@ export default function SurveyPage({ initial, participationId }) {
       </main>
     </div>
     {chatRequired && systemActive && <ChatRequiredDialog onClose={openChat} />}
-    <SearchLoadingDialog assistantName={searchAssistant} open={systemActive && searching && !waitingOpen} onQuestions={waitingAvailable?()=>setWaitingOpen(true):undefined} />
+    <SearchLoadingDialog progress={searchProgress} assistantName={searchAssistant} open={systemActive && searching && !waitingOpen} onQuestions={waitingAvailable?()=>setWaitingOpen(true):undefined} />
     {waitingOpen && systemActive && <SurveyWaitingDialog open searching={searching} completed={state.systemCompleted} state={state} suggestion={state.searchGoalSuggestion} onChange={(name,value)=>change(name,value,true)} onCommit={field=>commitWaiting([field])} onNext={commitWaiting} onClose={closeWaiting} saveStatus={saveStatus} onRetry={retrySave} />}
   </div>;
 }

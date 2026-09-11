@@ -30,58 +30,55 @@
 
 .search-loading-dialog h2:focus { outline: none; }
 
-.search-loading-dialog .search-loading-description {
-  margin: 12px 0 0;
-  color: #65738a;
-  font-size: 14px;
-  line-height: 1.65;
+/* Continuous motion indicates activity, never a measured percentage. */
+.search-loading-track { height:4px; margin-top:16px; border-radius:10px; background:#eaf0fb; overflow:hidden; }
+.search-loading-track > i { display:block; position:relative; width:45%; height:100%; border-radius:inherit; background:linear-gradient(90deg,transparent,#9fbcff 28%,#486af0 70%,#a7d9ff); box-shadow:0 0 9px #749bff88; animation:search-loading-sweep 2.6s cubic-bezier(.45,0,.55,1) infinite; }
+@keyframes search-loading-sweep { 0% { transform:translateX(-110%); } 100% { transform:translateX(325%); } }
+
+.search-phase-progress { margin:22px 0; }
+.search-phase-steps { display:flex; justify-content:space-between; padding:0; margin:0; list-style:none; gap:10px; }
+.search-phase-steps li { position:relative; display:grid; place-items:center; height:44px; flex:1; max-width:58px; border-radius:12px; color:#94a2b8; background:#f0f3f8; }
+.search-phase-steps .is-done { color:#288269; background:#e6f5ed; }
+.search-phase-check { position:absolute; right:-2px; top:-3px; padding:1px; box-sizing:content-box; background:#fff; border-radius:50%; }
+.search-phase-steps .is-active { color:#3154c8; background:#eef3ff; overflow:hidden; box-shadow:0 3px 12px #5977cf16; }
+.search-phase-steps .is-active > svg { position:relative; z-index:2; animation:search-icon-breathe 3.6s ease-in-out infinite; }
+.search-phase-steps .is-active::before { content:''; position:absolute; width:180%; height:180%; left:-40%; top:50%; background:linear-gradient(135deg,#91b7ff44,#bcd5ff77); border-radius:43%; animation:search-phase-wave 7s linear infinite; }
+.search-phase-steps .is-active::after { content:''; position:absolute; width:34px; height:34px; left:calc(50% - 17px); top:calc(50% - 17px); border-radius:50%; background:conic-gradient(from 0deg,transparent 12%,#aac5ff22 45%,#658cf0aa 84%,#365eef 96%,transparent 99%); mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.5px)); animation:search-phase-orbit 2.4s linear infinite; }
+@keyframes search-phase-wave { 0% { transform:translateY(8%) rotate(0deg); } 50% { transform:translateY(-15%) rotate(180deg); } 100% { transform:translateY(8%) rotate(360deg); } }
+@keyframes search-phase-orbit { to { transform:rotate(360deg); } }
+@keyframes search-icon-breathe { 0%,100% { transform:scale(.94); } 50% { transform:scale(1.04); } }
+.search-memory { padding:14px; border:1px solid #e1e7f5; border-radius:14px; background:linear-gradient(140deg,#f5f7ff,#f2faf9); margin:0 0 20px; }
+.search-memory-heading { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; }
+.search-memory-heading span { margin-left:auto; color:#397665; font-size:11px; }
+.search-memory-cards { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:7px; margin-top:12px; }
+.search-memory-card { position:relative; display:grid; place-items:center; min-width:0; height:50px; padding:0; border:1px solid #cedbf7; border-radius:10px; background:#fff; color:#5374c6; cursor:pointer; touch-action:manipulation; transition:transform .2s,background .2s; overflow:hidden; }
+.search-memory-card::before { content:''; position:absolute; inset:0; background:linear-gradient(110deg,transparent 20%,#e9efffa6 48%,transparent 76%); transform:translateX(-150%); animation:memory-shimmer 4s ease-in-out infinite; pointer-events:none; }
+.search-memory-card:nth-child(2n)::before { animation-delay:.2s; }
+.search-memory-card:nth-child(3n)::before { animation-delay:.4s; }
+.search-memory-card:hover { transform:translateY(-2px); }
+.search-memory-card:focus-visible,.search-memory-again:focus-visible { outline:3px solid #779cf4; outline-offset:2px; }
+.search-memory-card.is-open { background:#e5edff; color:#3054b9; }
+.search-memory-card.is-open::before { display:none; }
+.search-memory-card.is-matched { background:#def3e9; color:#247d62; border-color:#a9d9c6; }
+.memory-check { position:absolute; right:2px; top:2px; }
+.search-memory-again { display:grid; place-items:center; flex-shrink:0; width:44px; height:44px; padding:0; margin:-10px -8px -10px 0; background:transparent; color:#5374a8; border:0; border-radius:9px; cursor:pointer; }
+.search-memory-again:hover { background:#e6edfa; }
+@keyframes memory-shimmer { 0%,35% { transform:translateX(-150%); } 70%,100% { transform:translateX(150%); } }
+@media (max-width: 420px) {
+  .search-memory-cards { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .search-memory-card { height:44px; }
 }
-
-/* An indeterminate sweep shows ongoing work without inventing a percentage. */
-.search-loading-track { height: 4px; margin-top: 24px; border-radius: 10px; background: #edf2fb; overflow: hidden; }
-.search-loading-track > i { display: block; width: 40%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #91afff, #315be0, #91afff); animation: search-loading-sweep 1.8s ease-in-out infinite; }
-@keyframes search-loading-sweep { from { transform: translateX(-110%); } to { transform: translateX(360%); } }
-
-.search-loading-art {
-  position:relative; display:block; width:100%; height:134px; margin:-5px 0 23px;
-  padding:0; border:0; border-radius:16px; background:transparent; overflow:hidden;
-}
-.search-flight { cursor:pointer; touch-action:manipulation; }
-.search-flight:focus-visible { outline:3px solid #90b6f2; outline-offset:3px; }
-.search-flight-scene { display:block; width:100%; height:134px; }
-.flight-parallax { transform:translate(var(--flight-x,0px),var(--flight-y,0px)); transition:transform .3s ease-out; }
-.flight-pilot { transform-origin:150px 65px; animation:flight-hover 3.6s ease-in-out infinite; }
-.flight-flame { transform-origin:105px 75px; animation:flight-flame .6s ease-in-out infinite alternate; }
-.flight-cloud { animation:flight-cloud 7s ease-in-out infinite; }
-.flight-cloud--two { animation-delay:-3.5s; }
-.flight-job-cards { animation:flight-cloud 5.5s ease-in-out infinite reverse; }
-.flight-streaks { animation:flight-streaks 2.8s linear infinite; }
-.flight-stars { animation:flight-stars 3.6s ease-in-out infinite; }
-.search-flight-hint { position:absolute; bottom:0; right:8px; border-radius:10px; padding:3px 8px; color:#537695; background:#f0f8fc; font-size:10px; line-height:1.4; pointer-events:none; }
-.is-boosting .flight-pilot { animation:flight-boost 1.1s ease-in-out; }
-.is-boosting .flight-flame { animation-duration:.15s; }
-.is-boosting .flight-streaks { animation-duration:.45s; }
-@keyframes flight-hover { 0%,100% { transform:translate(-3px,3px) rotate(-2deg); } 50% { transform:translate(3px,-4px) rotate(2deg); } }
-@keyframes flight-flame { from { transform:scale(.82); opacity:.7; } to { transform:scale(1.08); opacity:1; } }
-@keyframes flight-cloud { 0%,100% { transform:translateX(8px); opacity:.65; } 50% { transform:translateX(-10px); opacity:1; } }
-@keyframes flight-streaks { from { transform:translateX(12px); opacity:.1; } 40% { opacity:.8; } to { transform:translateX(-20px); opacity:0; } }
-@keyframes flight-stars { 0%,100% { opacity:.3; } 50% { opacity:.9; } }
-@keyframes flight-boost { 0%,100% { transform:translate(0,0) rotate(0); } 35% { transform:translate(13px,-9px) rotate(-5deg); } 65% { transform:translate(5px,-4px) rotate(-2deg); } }
-
 @media (max-width: 380px) {
-  .search-loading-dialog { padding: 23px 20px; border-radius: 16px; }
-  .search-loading-dialog h2 { font-size: 22px; }
+  .search-loading-dialog { padding:20px 18px; border-radius:16px; }
+  .search-loading-dialog h2 { font-size:21px; }
 }
-
 @media (max-height: 540px) {
-  .search-loading-dialog { padding: 20px; }
-  .search-loading-art { display: none; }
-  .search-loading-dialog h2 { font-size: 22px; }
+  .search-loading-dialog { padding:20px; }
+  .search-loading-dialog h2 { font-size:22px; }
 }
-
 @media (prefers-reduced-motion: reduce) {
-  .search-loading-track > i,
-  .search-loading-art * { animation: none !important; transition:none; }
-  .search-loading-art .flight-parallax { transform:none; }
-  .search-loading-track > i { width: 100%; opacity: .55; }
+  .search-loading-track > i,.search-phase-steps .is-active::before,.search-phase-steps .is-active::after,.search-phase-steps .is-active > svg,.search-memory-card::before { animation:none; }
+  .search-memory-card { transition:none; }
+  .search-memory-card:hover { transform:none; }
+  .search-loading-track > i { width:100%; opacity:.55; }
 }

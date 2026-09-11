@@ -1,3 +1,4 @@
+import {readSearchProgress} from './search-progress.js';
 import {consentHeaders} from './privacy.js';
 function responseError(data, status) {
   const error = new Error(data?.error?.message || 'Die Anfrage konnte nicht verarbeitet werden.');
@@ -6,7 +7,7 @@ function responseError(data, status) {
 }
 
 /** Read actual server phases without guessing the intent of a chat message. */
-export async function readOperationResponse(response, onPhase = () => {}, onText = () => {}) {
+export async function readOperationResponse(response, onPhase = () => {}, onText = () => {}, onProgress = () => {}) {
   if (!response.ok || !response.headers.get('content-type')?.includes('application/x-ndjson')) {
     let data;
     try { data = await response.json(); }
@@ -40,6 +41,10 @@ export async function readOperationResponse(response, onPhase = () => {}, onText
       searchReported = true;
       onPhase('search');
     }
+    if (event.type === 'search_progress' && searchReported) {
+      const progress = readSearchProgress(event);
+      if (progress) onProgress(progress);
+    }
     if (event.type === 'result') {
       if (!event.data || typeof event.data !== 'object' || Array.isArray(event.data)) {
         throw new Error('Die Serverantwort enthält kein gültiges Ergebnis.');
@@ -72,11 +77,11 @@ export async function readOperationResponse(response, onPhase = () => {}, onText
   }
 }
 
-export async function requestOperation(path, body, onPhase = () => {}, onText = () => {}) {
+export async function requestOperation(path, body, onPhase = () => {}, onText = () => {}, onProgress = () => {}) {
   const response = await fetch(`/api${path}`, {
     method: 'POST',
     headers: { ...consentHeaders(), 'Content-Type': 'application/json', Accept: 'application/x-ndjson' },
     body: JSON.stringify(body),
   });
-  return readOperationResponse(response, onPhase, onText);
+  return readOperationResponse(response, onPhase, onText, onProgress);
 }

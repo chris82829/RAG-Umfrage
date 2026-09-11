@@ -1,3 +1,4 @@
+import { readSearchProgress } from './search-progress.js';
 import { surveyRun } from './app-session.js';
 import { labels, remoteLabels } from './profile.js';
 
@@ -43,6 +44,7 @@ export function reportSurveyProgress(host, ready, context, onOpenChat) {
   const announce = () => {
     if (context) host.parent.postMessage({ type: CONTEXT, runId,
       resultsVisible: context.resultsVisible === true,
+      ...(context.searching && readSearchProgress(context.searchProgress) ? {searchProgress:readSearchProgress(context.searchProgress)} : {}),
       ...(typeof context.assistantName==='string'?{assistantName:context.assistantName.slice(0,100)}:{}),
       searching: context.searching === true, searchGoal: typeof context.searchGoal === 'string' ? context.searchGoal.slice(0, 1000) : '' }, host.location.origin);
     if (ready) host.parent.postMessage({ type: COMPLETION, runId, completedStep: 3 }, host.location.origin);
@@ -63,7 +65,7 @@ export function readSurveySearchContext(event, frameWindow, origin, runId) {
   if (!frameWindow || event.source !== frameWindow || event.origin !== origin
       || data?.type !== CONTEXT || data.runId !== runId || typeof data.searching !== 'boolean'
       || typeof data.searchGoal !== 'string' || data.searchGoal.length > 1000) return null;
-  return { searching: data.searching, resultsVisible: data.resultsVisible === true, searchGoal: data.searchGoal.trim(), ...(typeof data.assistantName==='string' && data.assistantName.length<=100?{assistantName:data.assistantName}:{}) };
+  return { ...(data.searching && readSearchProgress(data.searchProgress) ? {searchProgress:readSearchProgress(data.searchProgress)} : {}), searching: data.searching, resultsVisible: data.resultsVisible === true, searchGoal: data.searchGoal.trim(), ...(typeof data.assistantName==='string' && data.assistantName.length<=100?{assistantName:data.assistantName}:{}) };
 }
 
 export function requestSurveyProgress(frameWindow, origin, runId) {

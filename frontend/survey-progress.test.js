@@ -172,3 +172,16 @@ test('open-chat request is scoped to the parent and current run', async () => {
   assert.equal(opened,1);
   cleanup();host.receive(data);assert.equal(opened,1);
 });
+
+test('current search stage is replayed safely when returning from waiting questions',()=>{
+  const host=embeddedWindow();
+  const frame={};
+  reportSurveyProgress(host,false,{searching:true,searchGoal:'Python',searchProgress:{stage:'ranking',candidate_count:7,private:'not shared'}});
+  host.posted.length=0;
+  host.receive({type:'diana:survey-progress-request',runId});
+  const event={data:host.posted[0].data,source:frame,origin};
+  assert.deepEqual(readSurveySearchContext(event,frame,origin,runId).searchProgress,{stage:'ranking',candidate_count:7});
+  assert.equal(isSurveyCompletion(event,frame,origin,runId),false);
+  event.data.searching=false;
+  assert.equal(readSurveySearchContext(event,frame,origin,runId).searchProgress,undefined);
+});
