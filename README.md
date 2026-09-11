@@ -4,10 +4,44 @@ Flask-Prototyp mit Anzeigen aus dem bereitgestellten Export,
 SQLite-Vorfilter, paralleler BM25-/E5-Suche,
 Reciprocal Rank Fusion und GPT-5.4-Reranking mit begründeten Ergebnissen.
 Die React-Webseite enthält ein Suchprofil, Jobkarten links und einen persistenten
-Chat rechts. Aus GPT-5.4-Teilbewertungen entsteht pro Empfehlung ein nach der
-Persönlichkeit gewichteter Score von **1 bis 100**, ergänzt um **zwei bis drei
-kurze Begründungs-Stichpunkte**. Die lokale Konfiguration
+Chat rechts. Die personalisierte Variante zeigt pro Empfehlung einen nach der
+Persönlichkeit gewichteten Score von **1 bis 100**, ergänzt um **zwei bis drei
+kurze Begründungs-Stichpunkte**. Die neutrale Vergleichsvariante zeigt diese
+Scores und automatischen Begründungsboxen nicht. Die lokale Konfiguration
 verwendet jetzt alle **8.537 Anzeigen** aus deiner Datei.
+
+## Aktueller Studienvergleich: A/B, Fragebogen V7
+
+Nach der Einwilligung wird die Teilnahme serverseitig mit gleicher Wahrscheinlichkeit
+einer Variante zugewiesen. Die Zuordnung bleibt beim Neuladen erhalten:
+
+- **A:** neutrales profilbasiertes Suchsystem mit Chat, ohne angezeigte Scores und
+  automatische Begründungsboxen an den Stellenkarten. Alle bis zu 20 zurückgegebenen
+  Stellen werden angezeigt.
+- **B:** dasselbe Suchsystem mit gestaltbarer KI-Suchpersönlichkeit, angezeigten Scores
+  und automatischen Begründungsboxen. Zunächst erscheinen Stellen ab 70 Punkten;
+  weitere bewertete Stellen können eingeblendet werden.
+
+Die Basisvariante A bleibt hilfreich und fachlich korrekt; ihre Antworten werden nicht
+absichtlich verschlechtert. Beide Varianten verwenden dieselbe Modell- und Suchbasis.
+Untersucht wird der zusätzliche Nutzen des **Gesamtpakets**. Der Versuch trennt die
+Wirkung von Persönlichkeit, Scores, Begründungen und anfänglicher Ergebnissichtbarkeit
+nicht voneinander und ist kein
+direkter Vergleich mit einer reinen Stichwortsuche ohne Chat.
+
+Die folgenden Beschreibungen von Persönlichkeitseinstellung, sichtbaren Scores und
+Begründungsboxen gelten für Variante B und die eigenständige personalisierte Jobsuche.
+Die interne Bewertungspipeline bleibt auch in A verfügbar; die API überträgt deren
+private Bewertungen jedoch nicht an die neutrale Oberfläche. Fachliche Rückfragen an
+den neutralen Chat sind weiterhin möglich. Die neutralen Jobkarten zeigen die
+Stelleninformationen und den Zugang zum Chat.
+
+Der aktuelle Fragebogen heißt **`diana-v7`**, neue Zuordnungen verwenden
+**`diana-ab-v1`**. Die ältere Vergleichserhebung V6 ist separat archiviert: Ihre
+Originalgruppen B/C bleiben unverändert gespeichert und erscheinen nur in der
+Verwaltung einheitlich als A/B. V6 zeigte Scores und Begründungen in beiden Gruppen.
+**V6 und V7 deshalb getrennt auswerten**, auch wenn die Anzeige dieselben Buchstaben
+verwendet. Details zu Originalcodes und Exporten stehen in [ADMIN.md](ADMIN.md).
 
 ## Datenschutz-Stand
 
@@ -30,34 +64,39 @@ Der Ablauf ist:
 1. **DIANA nutzen:** Die Jobsuche öffnet sich direkt nach „Umfrage starten“.
    Während einer vollständigen Suche erscheint **„Wartezeit nutzen · Fragen beantworten“**.
    In einem Dialog können Altersgruppe, Geschlecht, Studien-/Ausbildungsstand und
-   optionale Fachrichtung sowie Fragen zur Einrichtung der Persönlichkeit beantwortet
+   optionale Fachrichtung sowie in B Fragen zur Einrichtung der Persönlichkeit beantwortet
    werden. Die Suche läuft im eingebetteten Fenster weiter. Sobald sie fertig ist,
    zeigt der Dialog „Ergebnisse ansehen“; bereits eingegebene Antworten bleiben erhalten.
 2. **Angaben prüfen oder nachholen:** Erst nach Abschluss der ersten Suche
-   (DIANA-Schritt 3) erscheint **„Weitere Fragen für die Umfrage beantworten“**.
+   erscheint **„Weitere Fragen für die Umfrage beantworten“**.
    Der Button führt erst weiter, nachdem mindestens eine eigene Nachricht im Chat
    erfolgreich gesendet wurde. Sonst erscheint ein Hinweis mit „Zum Chat“, der den
    Chat auch auf dem Handy öffnet. Die automatische Begrüßung zählt nicht.
    Während der Wartezeit bereits beantwortete Fragen werden übersprungen; fehlende demografische Angaben können dort ergänzt werden. Persönliche Auswahlfelder
    bieten „Keine Angabe“; die Fachrichtung darf leer bleiben.
-3. **Rückmeldung:** fünf aufeinanderfolgende Seiten nach Kategorien:
-   **Suchvorhaben**, **KI-Suchpersönlichkeit**, **Suchen im Gespräch**,
-   **Was war nützlich?** und **Gesamterfahrung**. Das Suchvorhaben wird aus dem abgeschickten DIANA-Suchprofil
+3. **Rückmeldung:** aufeinanderfolgende Seiten nach Kategorien:
+   **Suchvorhaben**, **Deine Erfahrung mit der Suche**, **Suchen im Gespräch** und
+   **Feedback**; in B zusätzlich **Score und Begründungen** sowie
+   **Deine KI-Suchpersönlichkeit**. Die gemeinsamen Ergebnisfragen stehen vor den
+   funktionsbezogenen Zusatzfragen. Das Suchvorhaben wird aus dem abgeschickten DIANA-Suchprofil
    als bearbeitbarer Vorschlag übernommen. Eigene Änderungen, auch ein bewusst
    geleertes Feld, werden bei weiteren Suchen nicht überschrieben. Fragen zur
    Gesprächserfahrung und zu den Begründungen folgen erst nach dem Systemtest.
 
-Die Fragebogenversion **diana-v4** verwendet passende Antwortformate:
-- **Ja/Nein:** Eigenschaften selbst angepasst, Chat selbst genutzt, Suchwünsche im Chat verändert.
-- **Fünf beschriftete Abstufungen:** Einrichtung, Verständlichkeit, erkennbare Eigenschaften,
-  Bedienbarkeit, zusätzlicher Nutzen und Wiederverwendungsabsicht.
-- **1–10:** Nützlichkeit von Score, Begründungen, personalisiertem Chat und personalisierter
-  Suche sowie die Hilfe des Chats beim Konkretisieren der Suchwünsche.
+Die Fragebogenversion **diana-v7** verwendet folgende Antwortformate:
+
+- **Ja/Nein:** Suchwünsche im Chat verändert; in B außerdem Eigenschaften selbst angepasst.
+- **1–10:** Bedienbarkeit, Mitteilung und Anpassung der Suchwünsche, Suchaufwand,
+  Nützlichkeit des Systems, zukünftige Nutzungsabsicht und Hilfe des Chats.
+- **Nur B, 1–10:** Einrichtung und Wirkung der Persönlichkeit sowie Nützlichkeit von
+  Score, Begründungen, personalisiertem Chat und personalisierter Suche.
 - **Freitext:** Suchvorhaben; Fachrichtung und Verbesserungsvorschläge optional.
 
 „Nicht genutzt“ bzw. „Kann ich nicht beurteilen“ ermöglichen ehrliche fehlende Bewertungen.
-Wer den Chat nicht selbst genutzt hat, überspringt Chat-Hilfe, Suchverfeinerung und
-Chat-Nützlichkeit. Ein Wechsel auf „Nein“ löscht vorherige Antworten auf diese Folgefragen.
+Die frühere Selbstauskunft, ob eine Chatnachricht geschrieben wurde, entfällt.
+Mindestens eine erfolgreich gesendete eigene Nachricht ist bereits Voraussetzung,
+um zu den Ergebnisfragen zu gelangen. In A werden die neun Fragen zu Persönlichkeit,
+Scores und Begründungen übersprungen; sie bleiben im Export leer mit Status `skipped`.
 Verständlichkeit der Wirkung auf Ranking und Gespräch wird getrennt abgefragt.
 Bewertet wird der Suchprozess mit einer einstellbaren Persönlichkeit, nicht die Qualität
 oder Passung der gefundenen Stellen. Während der Suche werden nur Demografie,
@@ -92,7 +131,7 @@ Fußleiste genügend Abstand zum Rand. Bei reduzierter Bewegung entfällt die An
 
 `POST /api/survey-responses` validiert und speichert die Antworten in der Tabelle
 `survey_responses` der konfigurierten SQLite-Datenbank. Gespeichert werden eine
-zufällige Teilnahme-ID, der UTC-Zeitpunkt, die Fragebogenversion `diana-v4` sowie
+zufällige Teilnahme-ID, der UTC-Zeitpunkt, die Fragebogenversion `diana-v7` sowie
 die demografischen Angaben, das Suchvorhaben, Nutzungsangaben, Bewertungen und optionales Feedback. Die Antworten
 werden nach jeder Eingabe automatisch als Entwurf an den Server gesendet (kurze Bündelung bei Texteingaben). Beim Abschluss werden sie vollständig validiert und als abgeschlossene Teilnahme gespeichert.
 Die Tabelle enthält keine Suchprofile, Chatverläufe oder
@@ -121,9 +160,12 @@ UTF-8 mit BOM, geeignet für Excel). Bereits vorhandene Dateien werden nicht
 überschrieben; für spätere Exporte einen neuen Dateinamen wählen. Freitext wird
 gegen die Interpretation als Tabellenformel abgesichert. Umfrageantworten und
 Exporte unter `instance/` bleiben außerhalb von Git und Quellcode-ZIP.
-Bereits gespeicherte Antworten und noch geöffnete Fragebögen der Versionen v1–v3
-bleiben unterstützt. V4 erhält eigene `v4_`-Variablen im Numiqo-Export und `V4:`-Spalten
-im lesbaren Export. Die bisherigen Spalten bleiben erhalten und werden nicht umcodiert.
+Bereits gespeicherte Antworten der Versionen v1–v6 bleiben erhalten und lesbar.
+V4 bis V7 erhalten jeweils eigene `v4_`-, `v5_`-, `v6_`- beziehungsweise `v7_`-Variablen
+im Numiqo-Export und entsprechend getrennte Spalten im lesbaren Export. Die bisherigen
+Antwortspalten bleiben erhalten und werden nicht umcodiert. `study_arm` zeigt A/B;
+bei historischen V6-Antworten wird originales B als A und originales C als B angezeigt.
+Die Originalcodes bleiben im Codebuch und in den versionsbezogenen Spalten dokumentiert.
 Begleitende `_status`-Spalten unterscheiden beantwortet, nicht genutzt, nicht beurteilbar,
 keine Angabe, übersprungen, optional leer und andere Fragebogenversionen. Ja=1 und Nein=0
 sind gültige Antworten; fehlende Zahlen bleiben leer. Der neutrale Wert „Unentschieden“
@@ -135,7 +177,10 @@ alte Ratings werden niemals zu Ja/Nein umgedeutet. Bereits bestätigte Teilnahme
 bleiben abgeschlossen. Wurde eine alte Teilnahme gespeichert, aber die Bestätigung ging
 verloren, verhindert die beibehaltene ID ein zweites Speichern mit geänderten Antworten
 (409-Konflikt); die ursprüngliche Antwort bleibt in der Verwaltung erhalten.
-Der eingefrorene V3-Fragebogen liegt in `survey_definition_v3.json`.
+Die eingefrorenen Fragebögen liegen in `survey_definition_v3.json` bis
+`survey_definition_v6.json`. Bei der Übernahme eines unvollständigen V6-Entwurfs in
+V7 bleiben Angaben zur Person und zum Suchvorhaben erhalten; geänderte Bewertungsteile
+werden neu erhoben. Abgeschlossene historische Antworten werden nicht umgeschrieben.
 
 ### Frisch von GitHub starten
 
@@ -253,8 +298,9 @@ nicht. Es gibt keine zusätzliche KI-Anfrage und keine künstliche Mindestwartez
 
 Die erste Chatnachricht begrüßt den Nutzer, nennt die tatsächliche Anzahl der
 bewerteten Ergebnisse und verweist auf die Ergebnisübersicht links sowie mögliche
-Rückfragen. Sie unterscheidet dabei zwischen gefundenen und zunächst sichtbaren
+Rückfragen. In B unterscheidet sie zwischen gefundenen und zunächst sichtbaren
 Stellen ab 70 Punkten; bei ausgeblendeten Treffern nennt sie die Einblendoption.
+In A verweist sie auf alle zurückgegebenen Stellen ohne Score oder Schwellenhinweis.
 Die Zahlen werden aus den fertigen Karten berechnet. Die persönliche KI-Erklärung
 bleibt darunter erhalten. Die Begrüßung wird einmal mit der neuen Sitzung gespeichert,
 ohne zusätzliche KI-Anfrage; spätere Antworten und bestehende Verläufe bleiben erhalten.
@@ -361,9 +407,10 @@ Jede Nachricht wird im Modus `auto` verarbeitet; eine Modus-Auswahl gibt es nich
   einen GPT-Aufruf, ohne neue Suchpersona, BM25, E5 oder Reranking.
 - **Neu bewerten:** Neue Wünsche zu Ort, Arbeitsmodell oder Stunden, ein geänderter
   Lebenslauf, andere weiche Prioritäten oder eine andere Persönlichkeit
-  bewerten die gespeicherten bis zu 20 Kandidaten erneut. Alle erhalten Scores
-  und Begründungen; sämtliche Stellen ab 70 Punkten werden direkt angezeigt,
-  ohne die Datenbank neu zu durchsuchen. Schwächere Stellen sind einblendbar.
+  bewerten die gespeicherten bis zu 20 Kandidaten erneut, ohne die Datenbank neu
+  zu durchsuchen. B zeigt Scores und Begründungen und zunächst Stellen ab 70 Punkten;
+  schwächere Stellen sind einblendbar. A zeigt alle zurückgegebenen Stellen ohne
+  Scores und automatische Begründungsboxen.
 - **Neue Suche:** Tatsächlich geänderte Suchaufgaben, angegebene Skills oder die
   Stellenart durchsuchen die gesamte dazu passende Datenbank erneut. Eine ausdrücklich
   gewünschte neue Suche funktioniert auch ohne Profiländerung.
@@ -415,14 +462,14 @@ In der eingebetteten Umfrageansicht ist das Logo nicht verlinkt, damit es keine
 weitere Umfrage innerhalb der Jobsuche öffnet. Die Testsuche und ihre Entwürfe
 bleiben beim Wechsel zwischen System und Fragebogen erhalten.
 
-Die Bewertung heißt je nach gespeicherter Persönlichkeit **DIANA-Score**,
+In B heißt die Bewertung je nach gespeicherter Persönlichkeit **DIANA-Score**,
 **Steve-Jobs-Score**, **Angela-Merkel-Score**, **Günther-Jauch-Score** oder
 **Eigener-Name-Score**. Eigene Persönlichkeiten benötigen einen Namen; eine
 Vorschau zeigt die spätere Beschriftung. Beim Bearbeiten bleibt die Beschriftung
 der angezeigten Ergebnisse unverändert, bis die neue Bewertung erfolgreich ist.
 Die Skala bleibt 1–100.
 
-Alle bewerteten Stellen mit **70 Punkten oder mehr** werden direkt angezeigt –
+In B werden alle bewerteten Stellen mit **70 Punkten oder mehr** direkt angezeigt –
 auch alle 20, wenn sämtliche Scores die Grenze erreichen. Es gibt keine zusätzliche
 Begrenzung auf fünf Karten. Die zusätzliche Anzahl-/Filterzeile unter „Deine
 Empfehlungen“ ist entfernt. Stellen unter 70 Punkten werden zunächst ausgeblendet.
@@ -436,7 +483,9 @@ anschließend wieder ausblenden. Nach einer neuen Suche oder Neubewertung gilt
 die Grenze erneut; reine Chatantworten erhalten die aktuelle Anzeigeentscheidung.
 Die Grenze ist eine Darstellungsregel (`frontend/score-visibility.js`), keine
 empirisch kalibrierte Qualitätsgarantie. Scores und alle 20 Kandidaten bleiben
-unverändert gespeichert. Auch ausgeblendete Karten können im Chat besprochen werden.
+unverändert in der laufenden Sitzung gespeichert. Auch ausgeblendete Karten können
+im Chat besprochen werden. In A entfällt diese Ausblendung: Dort werden alle bis zu
+20 zurückgegebenen Stellen ohne sichtbare Bewertung dargestellt.
 
 Inhalt und Originalfoto der Vorstellung stammen aus der bereitgestellten
 Präsentation „Vorstellung Promotionsthema.pptx“, Folien 1, 11 und 12; das Foto
@@ -466,7 +515,8 @@ Längere gespeicherte Chatnachrichten erscheinen zunächst als Vorschau; „Mehr
 Während der einmaligen Indexierung zeigt die Seite den tatsächlichen Fortschritt.
 Die Suche über den kompletten Datensatz wird erst nach erfolgreichem Abschluss
 freigegeben. Es werden für die Suche alle Anzeigen berücksichtigt, anschließend
-bis zu 20 Kandidaten durch GPT bewertet und alle Empfehlungen ab 70 Punkten angezeigt.
+bis zu 20 Kandidaten durch GPT bewertet. A zeigt alle zurückgegebenen Stellen;
+B zeigt zunächst Empfehlungen ab 70 Punkten und bietet das Einblenden weiterer Stellen an.
 
 ## Start
 

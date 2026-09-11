@@ -10,6 +10,7 @@ from werkzeug.security import check_password_hash
 
 from admin_store import AdminSurveyData
 from survey_store import SURVEY_DEFINITION
+from survey_analytics import analytics
 
 
 def register_admin(app, surveys, privacy, releases, sessions, notice):
@@ -85,11 +86,11 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
             return error(str(failure), 409)
     def filters():
         query=request.args.get('q','').strip();version=request.args.get('version','')
-        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6'):raise ValueError()
+        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7'):raise ValueError()
         status=request.args.get('status','')
         if status not in ('','completed','in_progress'):raise ValueError()
         arm=request.args.get('arm','')
-        if arm not in ('','B','C'):raise ValueError()
+        if arm not in ('','A','B'):raise ValueError()
         return query,version,status,arm
     @bp.get('/responses')
     @protected
@@ -106,6 +107,26 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
     def detail(response_id):
         row=data.detail(response_id)
         return jsonify(row) if row else error('Antwort nicht gefunden.',404)
+    @bp.get('/analytics')
+    @protected
+    def analysis():
+        try:query,version,status,arm=filters()
+        except ValueError:return error('Ungültiger Filter.',400)
+        return jsonify(analytics(data.filtered(query,version,status,arm),version))
+    @bp.get('/deletion-preview')
+    @protected
+    def deletion_preview():
+        return jsonify(data.deletion_preview())
+    @bp.delete('/responses')
+    @protected
+    def delete_all():
+        body=request.get_json(silent=True)
+        if (not isinstance(body,dict) or set(body)!={'confirmation','fingerprint'}
+            or body['confirmation']!='ALLE TEILNAHMEN LÖSCHEN' or not isinstance(body['fingerprint'],str)):
+            return error('Bitte die vollständige Löschbestätigung eingeben.',400)
+        try: result=data.delete_all(body['fingerprint'])
+        except ValueError as failure:return error(str(failure),409)
+        return jsonify(deleted=True,counts=result)
     @bp.delete('/responses/<response_id>')
     @protected
     def delete(response_id):

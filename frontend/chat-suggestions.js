@@ -28,7 +28,7 @@ function jobReference(job) {
   return `„${short(job.title || 'Stellenangebot', 180)}“ bei ${short(job.company || 'diesem Unternehmen', 100)} (Job-ID ${job.id})`;
 }
 
-export function buildChatSuggestions(session, visibleJobs = []) {
+export function buildChatSuggestions(session, visibleJobs = [], { showScores = true } = {}) {
   if (!session?.profile) return [];
   visibleJobs = (Array.isArray(visibleJobs) ? visibleJobs : []).filter(job => job && typeof job === 'object');
   const profile = session.profile;
@@ -56,7 +56,7 @@ export function buildChatSuggestions(session, visibleJobs = []) {
   }
 
   if (!visibleJobs.length) {
-    add('scores:explain', 'Warum sind die Scores niedrig?', 'Warum erreichen die bewerteten Stellen den Mindestscore nicht? Welche Anforderungen oder Profilangaben sind dafür ausschlaggebend?');
+    if (showScores) add('scores:explain', 'Warum sind die Scores niedrig?', 'Warum erreichen die bewerteten Stellen den Mindestscore nicht? Welche Anforderungen oder Profilangaben sind dafür ausschlaggebend?');
     addProfileQuestions();
     return candidates.slice(0, 3);
   }
@@ -73,8 +73,9 @@ export function buildChatSuggestions(session, visibleJobs = []) {
   }
 
   // Only employment type excludes jobs. Other suggestions change wishes used
-  // in assessment; they never discard jobs. Only good visible matches support them.
-  const goodJobs = visibleJobs.filter(job => Number.isInteger(job.match?.score) && job.match.score >= MIN_MATCH_SCORE && job.match.score <= 100);
+  // in assessment; they never discard jobs. The basic variant has no public scores,
+  // so its suggestions describe available options without asserting a good match.
+  const goodJobs = showScores ? visibleJobs.filter(job => Number.isInteger(job.match?.score) && job.match.score >= MIN_MATCH_SCORE && job.match.score <= 100) : visibleJobs;
   if (goodJobs.length) {
     const refinements = [];
     const propose = (...args) => refinements.push(args);
@@ -101,7 +102,7 @@ export function buildChatSuggestions(session, visibleJobs = []) {
   }
 
   for (const job of jobs) {
-    for (const skill of unique(job.match?.missing_skills).filter(value => typeof value === 'string' && value.trim())) {
+    for (const skill of unique(showScores ? job.match?.missing_skills : []).filter(value => typeof value === 'string' && value.trim())) {
       if ((profile.skills || []).some(known => normalize(known) === normalize(skill))) continue;
       add(`skill:${job.id}:${normalize(skill)}`, `Wie wichtig ist ${short(skill, 38)}?`,
         `Welche Rolle spielt ${short(skill, 200)} bei der Stelle ${jobReference(job)}, und wie könnte ich entsprechende Kenntnisse nachweisen?`,

@@ -1754,12 +1754,12 @@ def test_rerank_text_streams_without_search_popup_or_candidate_changes(setup):
 
 
 @pytest.mark.parametrize('scores,expected', [
-    ([95, 85, 70], ['3 Stellen gefunden und bewertet', 'links in der Ergebnisübersicht ansehen']),
-    ([80, 70, 69], ['3 Stellen gefunden und bewertet', 'Links siehst du 2 passende Stellen', 'übrigen']),
-    ([70, 69, 35], ['3 Stellen gefunden und bewertet', 'Links siehst du 1 passende Stelle', 'übrigen']),
+    ([95, 85, 70], ['3 Stellen gefunden und bewertet', 'links in der Ergebnisübersicht']),
+    ([80, 70, 69], ['3 Stellen gefunden und bewertet', 'Links siehst du 2;', 'übrigen']),
+    ([70, 69, 35], ['3 Stellen gefunden und bewertet', 'Links siehst du 1;', 'übrigen']),
     ([69, 40, 1], ['3 Stellen gefunden und bewertet', 'keine 70 Punkte', 'trotzdem einblenden']),
-    ([70], ['eine Stelle gefunden und bewertet', 'links in der Ergebnisübersicht ansehen']),
-    ([69], ['eine Stelle gefunden und bewertet', 'trotzdem einblenden']),
+    ([70], ['Eine Stelle gefunden und bewertet', 'links in der Ergebnisübersicht']),
+    ([69], ['Eine Stelle gefunden und bewertet', 'trotzdem einblenden']),
     ([], ['keine Stellen zur gewählten Stellenart', 'Suche gemeinsam anpassen']),
 ])
 def test_welcome_counts_actual_cards_and_respects_hidden_results(scores, expected):
@@ -1772,7 +1772,8 @@ def test_welcome_counts_actual_cards_and_respects_hidden_results(scores, expecte
     assert message.startswith('Hallo! ')
     assert 'Rückfragen' in message
     assert all(fragment in message for fragment in expected)
-    assert message.endswith(explanation)
+    assert message.split('\n\n')[1] == explanation
+    assert len(message.split('\n\n')[0].split()) <= 25
     assert result == before
 
 
@@ -1793,3 +1794,19 @@ def test_welcome_is_saved_once_at_onboarding_and_followup_keeps_normal_answer(se
     assert reply['assistant_message'] == llm.answer
     assert reply['messages'][0]['content'] == greeting
     assert not retriever.calls
+
+
+def test_neutral_public_cards_and_greeting_have_no_assessment_without_changing_private_state():
+    from app import public_state, welcome_message
+    state = {'advisor': {'preset': 'neutral'}, 'jobs': [
+        {'id': 'low', 'title': 'Python', 'match': {'score': 30, 'reasons': ['Bewertung']}, 'retrieval': {'rrf_score': .02}},
+        {'id': 'high', 'title': 'SQL', 'match': {'score': 90, 'reasons': ['Bewertung']}}],
+        'assistant_message': 'Nicht für die neutrale Suchansprache bestimmt.'}
+    before = deepcopy(state)
+    public = public_state(state)
+    assert public['jobs'] == [{'id': 'low', 'title': 'Python'}, {'id': 'high', 'title': 'SQL'}]
+    greeting = welcome_message(state)
+    assert '2 Stellen gefunden' in greeting and 'alle links' in greeting
+    assert state['assistant_message'] not in greeting
+    assert all(word not in greeting for word in ['Score', 'Punkte', 'Bewertung'])
+    assert state == before

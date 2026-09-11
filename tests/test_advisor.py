@@ -213,10 +213,29 @@ def test_preset_style_and_original_examples_come_only_from_the_selected_allowlis
 def test_custom_style_composes_only_selected_traits_and_keeps_free_text_separate():
     config = {**custom(['direkt', 'kreativ']), 'description': 'Stelle die Wirkung in den Vordergrund.'}
     result = resolve_advisor(config)
-    assert result['style_guidance'] == [TRAIT_STYLE['direkt'], TRAIT_STYLE['kreativ']]
+    assert result['style_guidance'][:2] == [TRAIT_STYLE['direkt'], TRAIT_STYLE['kreativ']]
+    assert 'Antwortgestaltung für die selbst gestaltete Persönlichkeit' in result['style_guidance'][-1]
     assert result['description'] == config['description']
     assert all(config['description'] not in rule for rule in result['style_guidance'])
     assert all(example not in '\n'.join(result['style_guidance']) for example in PRESET_STYLE_EXAMPLES.values())
+
+
+def test_editable_template_styles_differ_and_follow_edits_not_the_old_template_name():
+    # The current UI sends custom configurations, even after choosing a template.
+    templates = [
+        custom(['kreativ', 'direkt', 'neugierig'], 'innovation', 'Steve Jobs'),
+        custom(['analytisch', 'strukturiert', 'kritisch'], name='Angela Merkel'),
+        custom(['neugierig', 'strukturiert', 'empathisch'], 'lernpotenzial', 'Günther Jauch'),
+    ]
+    styles = [resolve_advisor(config)['style_guidance'] for config in templates]
+    assert len({style[-1] for style in styles}) == 3
+    edited = {**templates[0], 'traits': templates[1]['traits'], 'focus': templates[1]['focus']}
+    assert resolve_advisor(edited)['style_guidance'] == styles[1]
+    neutral = resolve_advisor({'preset': 'neutral'})
+    assert all('Antwortgestaltung für die selbst gestaltete Persönlichkeit' not in rule
+               for rule in neutral['style_guidance'])
+    # A different way of explaining evidence must never inflate equivalent scores.
+    assert {score_from_components(ratings(), config) for config in templates + [edited]} == {80}
 
 
 @pytest.mark.parametrize('field', ['style_guidance', 'style_examples'])
@@ -229,7 +248,8 @@ def test_callers_cannot_inject_their_own_authoritative_style_rules(field):
 def test_a_famous_custom_label_does_not_select_an_authoritative_preset_style(name):
     config = {**custom(['direkt', 'kritisch'], name=name), 'preset': 'steve'}
     resolved = resolve_advisor(config)
-    assert resolved['style_guidance'] == [TRAIT_STYLE['direkt'], TRAIT_STYLE['kritisch']]
+    assert resolved['style_guidance'][:2] == [TRAIT_STYLE['direkt'], TRAIT_STYLE['kritisch']]
+    assert resolved['style_guidance'] == resolve_advisor(custom(['direkt', 'kritisch']))['style_guidance']
     assert name not in '\n'.join(resolved['style_guidance'])
     assert resolved['inspiration'] is None
     assert resolved['scoring_weights'] == resolve_advisor(custom(['direkt', 'kritisch']))['scoring_weights']

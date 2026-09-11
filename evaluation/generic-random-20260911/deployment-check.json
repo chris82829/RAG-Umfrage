@@ -1,0 +1,8 @@
+{
+  "health_status": 200,
+  "html_matches_build": true,
+  "js_matches_build": true,
+  "analytics_status": 200,
+  "cohort_presentation_available": true,
+  "csv_presentation_column": true
+}

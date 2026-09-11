@@ -87,10 +87,10 @@ function AssistantActionArea({ feedback, children }) {
   </div>;
 }
 
-function JobCard({ job, index, ranked, scoreLabel, assistantName, onAsk, busy }) {
+export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, assistantName, onAsk, busy }) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const detailsId = useId();
-  const match = job.match;
+  const match = showInsights ? job.match : null;
   const reasons = (match?.reasons?.length ? match.reasons : [match?.reason]).filter(reason => typeof reason === 'string' && reason.trim());
   const matchedSkills = match?.matched_skills || [];
   const demo = demoIds.has(job.id);
@@ -119,7 +119,7 @@ function JobCard({ job, index, ranked, scoreLabel, assistantName, onAsk, busy })
       </div>
       <div className="detail-content" id={detailsId} hidden={!detailsExpanded}>
       {[['Deine Aufgaben', job.tasks], ['Das bringst du mit', job.requirements], ['Das wird geboten', job.benefits]].map(([title, text]) => text && <section key={title}><h4>{title}</h4><p>{text}</p></section>)}
-      {match?.missing_skills.length > 0 && <section><h4>Im Profil noch nicht belegt</h4><p>{match.missing_skills.join(' · ')}</p></section>}
+      {match?.missing_skills?.length > 0 && <section><h4>Im Profil noch nicht belegt</h4><p>{match.missing_skills.join(' · ')}</p></section>}
       {job.application_url && !demo && /^https?:\/\//.test(job.application_url) && <a className="application-link" href={job.application_url} target="_blank" rel="noopener noreferrer">Zur Stellenanzeige <ArrowUpRight size={16} /></a>}
       {demo && <p className="demo-caption">Fiktive Anzeige zum Ausprobieren.</p>}
       </div>
@@ -166,8 +166,8 @@ export function ProfileForm({ neutral = false, form, setForm, onSubmit, busy, re
   </form>;
 }
 
-export function App({studyArm = 'C'}) {
-  const neutral=studyArm==='B';
+export function App({studyArm = 'B'}) {
+  const neutral=studyArm==='A';
   const [page, setPage] = useState(currentPage);
   const [catalog, setCatalog] = useState([]);
   const [total, setTotal] = useState(0);
@@ -474,8 +474,8 @@ export function App({studyArm = 'C'}) {
   const jobs = session?.jobs || [];
   const visibilityKey = resultVisibilityKey(session);
   const showLowScores = visibilityKey !== null && revealedResults === visibilityKey;
-  const { visibleJobs, lowCount } = scoreVisibility(jobs, showLowScores);
-  const chatSuggestions = buildChatSuggestions(session, visibleJobs);
+  const { visibleJobs, lowCount } = neutral ? { visibleJobs: jobs, lowCount: 0 } : scoreVisibility(jobs, showLowScores);
+  const chatSuggestions = buildChatSuggestions(session, visibleJobs, { showScores: !neutral });
   const allDemo = catalog.length > 0 && catalog.every(j => demoIds.has(j.id));
   const profileInfo = profileSummary(session?.profile);
   const indexReady = indexState?.status === 'ready';
@@ -521,7 +521,7 @@ export function App({studyArm = 'C'}) {
         {error && (showWelcome || mobileView === 'jobs') && <div className={`error-banner${showWelcome ? '' : ' journey-mobile-error'}`} role="alert">{error}</div>}
         {booting ? <div className="empty-state" role="status"><span className="spinner" /><p>Deine Jobsuche wird geladen …</p></div> : session ? <>
           <div id="ranked-jobs" className="jobs-list" aria-busy={busy}>
-            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} />)}
+            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={!neutral} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} />)}
             {!jobs.length && <div className="empty-state"><Search size={34} strokeWidth={1.3} /><h2>Hier ist noch Platz für deinen Match.</h2><p>{profileInfo.hardFilters.length && !pool.refreshRequired ? 'Aktuell gibt es keine Stellen zur gewählten Stellenart. Du kannst im Suchprofil oder Chat weitere Stellenarten einbeziehen.' : 'Aktuell liegen keine Stellenempfehlungen vor. Prüfe dein Suchprofil oder starte eine neue Suche.'}</p><button className="text-button" disabled={busy} onClick={() => { setDraft(profileInfo.hardFilters.length ? 'Welche Stellenarten sind aktuell ausgewählt und welche weiteren kommen für mich infrage?' : 'Welche Angaben sind aktuell in meinem Suchprofil gespeichert?'); showChat(); }}>Suchprofil im Chat besprechen <ArrowRight size={15} /></button></div>}
           </div>
           {lowCount > 0 && <ScoreNotice lowCount={lowCount} total={jobs.length} showLowScores={showLowScores} scoreLabel={scoreLabel} busy={busy} onToggle={toggleLowScoreResults} />}
@@ -555,19 +555,17 @@ export function App({studyArm = 'C'}) {
   </div>{page === 'about' && <AboutPage />}<PersonalityIntroDialog open={!neutral && personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={!isEmbeddedSurvey && busy && searchActive && page === 'search'} assistantName={pendingAssistantName} /></>;
 }
 
-function AssignedSearch() {
+export function AssignedSearch() {
   const [assignment,setAssignment]=useState(null),[error,setError]=useState(''),[attempt,setAttempt]=useState(0);
   useEffect(()=>{
-    if(!isEmbeddedSurvey)return;
     let active=true;const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);
     fetch('/api/study-assignment',{method:'POST',headers:consentHeaders(),signal:controller.signal}).then(async response=>{
       if(!response.ok)throw new Error('Der Systemtest konnte nicht vorbereitet werden.');
-      const value=await response.json();if(!['B','C'].includes(value.arm))throw new Error('Studienzuordnung fehlt.');
+      const value=await response.json();if(!['A','B'].includes(value.arm))throw new Error('Studienzuordnung fehlt.');
       if(active){setAssignment(value);setError('');}
     }).catch(()=>{if(active)setError('Der Systemtest konnte nicht vorbereitet werden. Bitte versuche es erneut.');}).finally(()=>clearTimeout(timeout));
     return()=>{active=false;clearTimeout(timeout);controller.abort();};
   },[attempt]);
-  if(!isEmbeddedSurvey)return <App />;
   if(!assignment)return <div className="empty-state" role="status"><p>{error || 'Dein Systemtest wird vorbereitet …'}</p>{error && <button className="primary-button" onClick={()=>setAttempt(value=>value+1)}>Erneut versuchen</button>}</div>;
   return <App studyArm={assignment.arm} />;
 }

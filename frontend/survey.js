@@ -122,8 +122,8 @@ export function newSurveyState(cryptoSource = globalThis.crypto) {
 
 export function loadSurveyState(storage, fresh = newSurveyState) {
   try {
-    const state = JSON.parse(storage.getItem(SURVEY_STORAGE_KEY) ?? storage.getItem('diana-survey:diana-v5') ?? storage.getItem('diana-survey:diana-v4') ?? storage.getItem('diana-survey:diana-v3') ?? storage.getItem('diana-survey:diana-v2'));
-    if ([SURVEY_VERSION, 'diana-v5', 'diana-v4', 'diana-v3', 'diana-v2'].includes(state?.version) && /^[a-f0-9]{32}$/.test(state.submissionId)
+    const state = JSON.parse(storage.getItem(SURVEY_STORAGE_KEY) ?? storage.getItem('diana-survey:diana-v6') ?? storage.getItem('diana-survey:diana-v5') ?? storage.getItem('diana-survey:diana-v4') ?? storage.getItem('diana-survey:diana-v3') ?? storage.getItem('diana-survey:diana-v2'));
+    if ([SURVEY_VERSION, 'diana-v6', 'diana-v5', 'diana-v4', 'diana-v3', 'diana-v2'].includes(state?.version) && /^[a-f0-9]{32}$/.test(state.submissionId)
         && /^[a-f0-9]{32}$/.test(state.runId) && surveyStages.includes(state.stage)
         && typeof state.submitted === 'boolean' && typeof state.systemOpened === 'boolean') {
       // Completed old questionnaires must never be resubmitted under a new version.
@@ -181,7 +181,7 @@ export function restoreServerDraft(previous,draft) {
     if(draft.revision<=(previous.draftRevision || 0))return previous;
     return {...previous,answers:Object.fromEntries(surveyFields.map(field=>[field.name,draft.answers[field.name]??emptyAnswers()[field.name]])),draftRevision:draft.revision,waitingAnswered:draft.waiting_answered || [],searchGoalEdited:true};
   }
-  if(['diana-v4','diana-v5'].includes(draft.version)) {
+  if(['diana-v4','diana-v5','diana-v6'].includes(draft.version)) {
     const answers={...previous.answers};
     for(const name of transferableFields)if(answers[name]==='' || answers[name]===null)answers[name]=draft.answers[name]??answers[name];
     return {...previous,answers,draftRevision:Math.max(previous.draftRevision || 0,draft.revision+1),
@@ -190,7 +190,7 @@ export function restoreServerDraft(previous,draft) {
   return previous;
 }
 export function applyStudyAssignment(state,assignment) {
-  if(!['B','C'].includes(assignment?.arm))throw new Error('Studienzuordnung konnte nicht geladen werden.');
+  if(!['A','B'].includes(assignment?.arm))throw new Error('Studienzuordnung konnte nicht geladen werden.');
   const answers=changeSurveyAnswer(state.answers,'study_arm',assignment.arm);
   return reviseSurvey(state,{answers,assignment});
 }

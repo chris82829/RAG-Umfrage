@@ -19,7 +19,7 @@ class StudyReleases:
     def __init__(self, path, root, jobs):
         self.path = path
         files = ['llm_service.py', 'advisor.py', 'retrieval.py', 'schemas.py', 'app.py',
-                 'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
+                 'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}
@@ -27,6 +27,8 @@ class StudyReleases:
             try: packages[name] = importlib.metadata.version(name)
             except importlib.metadata.PackageNotFoundError: packages[name] = None
         manifest = dict(format_version=1, openai_model=MODEL, reasoning_effort=REASONING_EFFORT,
+                        neutral_presentation='random-order-generic-chat-v2',
+                        neutral_chat_max_output_tokens=None, neutral_chat_max_characters=None,
                         response_store=False, max_output_tokens=MAX_OUTPUT_TOKENS,
                         rerank_output_tokens=RERANK_OUTPUT_TOKENS, embedding_model=MODEL_ID,
                         embedding_revision=MODEL_REVISION, embedding_preprocessing=CACHE_VERSION,

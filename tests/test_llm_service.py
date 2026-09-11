@@ -276,12 +276,12 @@ def test_empty_candidates_never_call_openai(profile, persona):
 
 def test_chat_answer_limit_does_not_reduce_the_twenty_job_results(profile, persona):
     service, _ = service_with_output({'rankings': [ranking(str(i)) for i in range(20)],
-                                      'assistant_message': 'a' * 900})
+                                      'assistant_message': 'a' * 600})
     candidates = [candidate(str(i)) for i in range(20)]
     result = service.rerank(persona, profile, candidates)
     assert len(result['rankings']) == 20
     service, _ = service_with_output({'rankings': [ranking(str(i)) for i in range(20)],
-                                      'assistant_message': 'a' * 901})
+                                      'assistant_message': 'a' * 601})
     with pytest.raises(LLMUnavailable):
         service.rerank(persona, profile, candidates)
 
@@ -413,7 +413,7 @@ def test_chat_planning_returns_validated_actions_and_explicit_patches_for_server
     {'action': None},
     {'assistant_message': ''},
     {'assistant_message': '   '},
-    {'assistant_message': 'a' * 901},
+    {'assistant_message': 'a' * 601},
     {'assistant_message': 123},
     {'profile_patch': None},
     {'jobs': []},
@@ -426,11 +426,11 @@ def test_chat_planning_rejects_invalid_decision_fields_and_long_answers(profile,
         service.plan_chat(profile, [], 'Erkläre bitte.', jobs=[])
 
 
-def test_chat_planning_accepts_exact_900_char_limit_and_keeps_empty_context(profile):
+def test_chat_planning_accepts_exact_600_char_limit_and_keeps_empty_context(profile):
     output = chat_decision()
-    output['assistant_message'] = 'a' * 900
+    output['assistant_message'] = 'a' * 600
     service, client = service_with_output(output)
-    assert len(service.plan_chat(profile, [], 'Hallo', jobs=[])['assistant_message']) == 900
+    assert len(service.plan_chat(profile, [], 'Hallo', jobs=[])['assistant_message']) == 600
     data = json.loads(client.responses.parse.call_args.kwargs['input'][1]['content'])
     assert data['visible_jobs'] == []
     assert data['conversation_history'] == []
@@ -1422,3 +1422,16 @@ def test_custom_name_cannot_promote_a_famous_identity_into_system_style(profile)
     assert data['assistant_preferences']['name'] == 'Steve-Jobs-KI'
     assert data['assistant_preferences']['inspiration'] is None
     assert data['current_profile'] == _profile_data(profile)
+
+
+def test_neutral_chat_uses_job_facts_without_hidden_score_or_precomputed_reasons(profile):
+    job = {**candidate('a')['job'], 'match': {**ranking('a'), 'score': 82}}
+    service, client = service_with_output(chat_decision())
+    service.plan_chat(profile, [], 'Welche Aufgaben hat die Stelle?', jobs=[job], advisor={'preset': 'neutral'})
+    system, user = client.responses.parse.call_args.kwargs['input']
+    shown = json.loads(user['content'])['context_entries'][0]
+    assert shown['id'] == 'a'
+    assert shown['title'] == job['title']
+    assert not any(key.startswith('previous_') for key in shown)
+    assert 'allgemeiner Assistent' in system['content']
+    assert 'Jobsuche' not in system['content']

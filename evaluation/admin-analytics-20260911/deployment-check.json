@@ -1,0 +1,46 @@
+{
+  "/verwaltung": 200,
+  "/api/health": 200,
+  "/api/admin/analytics?version=diana-v7": 401,
+  "/api/admin/deletion-preview": 401,
+  "html_matches_local": true,
+  "javascript_matches_local": true,
+  "login": 200,
+  "diana-v1": {
+    "status": 200,
+    "records": 0,
+    "cohorts": 1
+  },
+  "diana-v2": {
+    "status": 200,
+    "records": 0,
+    "cohorts": 1
+  },
+  "diana-v3": {
+    "status": 200,
+    "records": 2,
+    "cohorts": 1
+  },
+  "diana-v4": {
+    "status": 200,
+    "records": 2,
+    "cohorts": 1
+  },
+  "diana-v5": {
+    "status": 200,
+    "records": 1,
+    "cohorts": 1
+  },
+  "diana-v6": {
+    "status": 200,
+    "records": 7,
+    "cohorts": 1
+  },
+  "diana-v7": {
+    "status": 200,
+    "records": 3,
+    "cohorts": 1
+  },
+  "details_ok": true,
+  "deletion_preview_status": 200
+}

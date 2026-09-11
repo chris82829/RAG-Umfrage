@@ -1,5 +1,5 @@
 {
-  "version": "diana-v6",
+  "version": "diana-v7",
   "scale": {
     "min": 1,
     "max": 10,
@@ -18,17 +18,17 @@
         "systemProvided": true,
         "options": [
           [
-            "B",
-            "Chatbot ohne wählbare Persönlichkeit"
+            "A",
+            "A – Neutrales Suchsystem ohne Scores und Begründungen"
           ],
           [
-            "C",
-            "Personalisierter Chat- und Suchbot"
+            "B",
+            "B – KI-Suchpersönlichkeit mit Scores und Begründungen"
           ]
         ],
         "codes": {
-          "B": 0,
-          "C": 1
+          "A": 0,
+          "B": 1
         }
       },
       {
@@ -316,7 +316,11 @@
               "not_assessable",
               "Kann ich nicht beurteilen"
             ]
-          ]
+          ],
+          "visibleIf": {
+            "field": "study_arm",
+            "equals": "B"
+          }
         },
         {
           "name": "match_reasons_usefulness",
@@ -336,7 +340,11 @@
               "not_assessable",
               "Kann ich nicht beurteilen"
             ]
-          ]
+          ],
+          "visibleIf": {
+            "field": "study_arm",
+            "equals": "B"
+          }
         }
       ]
     },
@@ -367,7 +375,7 @@
           },
           "visibleIf": {
             "field": "study_arm",
-            "equals": "C"
+            "equals": "B"
           }
         },
         {
@@ -387,7 +395,7 @@
           ],
           "visibleIf": {
             "field": "study_arm",
-            "equals": "C"
+            "equals": "B"
           }
         },
         {
@@ -407,7 +415,7 @@
           ],
           "visibleIf": {
             "field": "study_arm",
-            "equals": "C"
+            "equals": "B"
           }
         },
         {
@@ -427,7 +435,7 @@
           ],
           "visibleIf": {
             "field": "study_arm",
-            "equals": "C"
+            "equals": "B"
           }
         },
         {
@@ -447,7 +455,7 @@
           ],
           "visibleIf": {
             "field": "study_arm",
-            "equals": "C"
+            "equals": "B"
           }
         },
         {
@@ -471,7 +479,7 @@
           ],
           "visibleIf": {
             "field": "study_arm",
-            "equals": "C"
+            "equals": "B"
           }
         },
         {
@@ -480,8 +488,8 @@
           "kind": "scale",
           "title": "Wie hilfreich war die Möglichkeit, über deine KI-Suchpersönlichkeit Schwerpunkte für die Bewertung der Stellen festzulegen?",
           "scale": {
-            "low": "Gar nicht nützlich",
-            "high": "Sehr nützlich"
+            "low": "Gar nicht hilfreich",
+            "high": "Sehr hilfreich"
           },
           "nonresponse": [
             [
@@ -495,7 +503,7 @@
           ],
           "visibleIf": {
             "field": "study_arm",
-            "equals": "C"
+            "equals": "B"
           }
         }
       ]

@@ -1,0 +1,15 @@
+{
+  "url": "http://ifaiforschung.informatik.fh-nuernberg.de:5051",
+  "current_build": true,
+  "asset_identical": true,
+  "health": {
+    "embedding_model": "intfloat/multilingual-e5-large-instruct",
+    "jobs": 8537,
+    "openai_configured": true,
+    "openai_model": "gpt-5.4-2026-03-05",
+    "openai_reasoning_effort": "none",
+    "readiness": "Modelle werden erst bei Suche oder warmup geladen.",
+    "status": "ok"
+  },
+  "verification": "Read-only HTTP and source-hash verification; no participant data or model call."
+}

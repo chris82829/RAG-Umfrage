@@ -1,0 +1,83 @@
+{
+  "fixture_version": "synthetic-personality-v1",
+  "notice": "Alle Personen, Firmen und Stellen in dieser Datei sind erfunden. Keine realen Bewerberdaten.",
+  "profile": {
+    "query": "Ich suche eine Werkstudentenstelle für Python und Datenanalyse.",
+    "skills": ["Python", "SQL", "Pandas", "Git"],
+    "preferences": ["praktische Datenanalyse"],
+    "cv_text": "Fiktives Profil: Bachelorstudium Informatik, viertes Semester. Studienprojekt zur Auswertung öffentlicher Messdaten mit Python, Pandas und SQL; Versionsverwaltung mit Git. Noch keine Berufserfahrung.",
+    "filters": {
+      "employment_types": ["werkstudent"],
+      "locations": ["Nürnberg"],
+      "remote": ["hybrid"],
+      "max_hours": 20
+    }
+  },
+  "persona": {
+    "persona_prompt": "Fiktive studierende Person mit belegten Python-, SQL-, Pandas- und Git-Grundlagen sucht praktische Datenanalyse als Werkstudent. Nürnberg, hybrid und höchstens 20 Wochenstunden sind Wünsche. Berufserfahrung ist nicht belegt.",
+    "retrieval_query": "Werkstudent Python SQL Pandas Datenanalyse Nürnberg",
+    "opening_message": "Das fiktive Profil berücksichtigt Python und Datenanalyse."
+  },
+  "chat_question": "Würdest du mir die Stelle Werkstudent Datenprodukt beim Fiktiven Datenatelier empfehlen? Was spricht dafür und was sollte ich vor einer Bewerbung klären?",
+  "free_advisor": {
+    "mode": "custom",
+    "preset": "diana",
+    "name": "Klar und zugewandt",
+    "traits": ["direkt", "empathisch"],
+    "focus": "lernpotenzial",
+    "description": "Sprich mich direkt und respektvoll an. Gib zuerst eine klare Einschätzung, dann einen konkreten nächsten Schritt. Erkläre offene Punkte verständlich, ohne mir Unsicherheit oder Gefühle zu unterstellen."
+  },
+  "candidates": [
+    {
+      "job": {
+        "id": "synthetic-product",
+        "title": "Werkstudent Datenprodukt",
+        "company": "Fiktives Datenatelier",
+        "location": "Nürnberg",
+        "employment_types": ["werkstudent"],
+        "remote": "hybrid",
+        "hours_min": 16,
+        "hours_max": 20,
+        "requirements": "Informatikstudium, Python-, Pandas- und SQL-Grundkenntnisse erforderlich. Git ist hilfreich. Berufserfahrung ist nicht erforderlich.",
+        "tasks": "Nutzungsdaten mit Python und SQL auswerten, kleine Prototypen im Produktteam entwickeln und eigene Verbesserungsvorschläge mit dem Team erproben.",
+        "benefits": "Eine feste Fachbetreuung unterstützt die Einarbeitung. Zwei Tage pro Woche sind im Homeoffice möglich.",
+        "description": "Fiktive Anzeige. Umfang eigener Produktentscheidungen und Ablauf der Teamabstimmung sind nicht beschrieben."
+      },
+      "rrf_score": 0.033
+    },
+    {
+      "job": {
+        "id": "synthetic-learning",
+        "title": "Werkstudent Datenanalyse mit Mentoring",
+        "company": "Fiktives Lernwerk",
+        "location": "Nürnberg",
+        "employment_types": ["werkstudent"],
+        "remote": "hybrid",
+        "hours_min": 16,
+        "hours_max": 20,
+        "requirements": "Studium mit IT-Bezug und Python-, Pandas- sowie SQL-Grundkenntnisse erforderlich. Git ist hilfreich. Keine Berufserfahrung erforderlich.",
+        "tasks": "Bestehende Python-Auswertungen betreuen, Daten prüfen und wiederkehrende SQL-Berichte erstellen.",
+        "benefits": "Persönlicher Mentor, wöchentliche fachliche Feedbacktermine und eine interne Python-Weiterbildung während der Arbeitszeit. Zwei Homeofficetage pro Woche.",
+        "description": "Fiktive Anzeige. Die wiederkehrenden Auswertungen folgen vorhandenen Vorlagen. Eigene Produktentwicklung ist nicht beschrieben."
+      },
+      "rrf_score": 0.032
+    },
+    {
+      "job": {
+        "id": "synthetic-depth",
+        "title": "Werkstudent Datenqualität und SQL",
+        "company": "Fiktive Klardaten",
+        "location": "Nürnberg",
+        "employment_types": ["werkstudent"],
+        "remote": "hybrid",
+        "hours_min": 16,
+        "hours_max": 20,
+        "requirements": "Informatikstudium, Python-, Pandas- und SQL-Grundkenntnisse sowie Git-Grundlagen erforderlich. Keine Berufserfahrung erforderlich.",
+        "tasks": "Datenvalidierungsregeln implementieren, SQL-Abfragen nach dokumentierten Kriterien optimieren und automatisierte Tests für Python-Datenpipelines schreiben. Konkrete Aufgaben werden wöchentlich mit Akzeptanzkriterien festgelegt.",
+        "benefits": "Zwei Tage pro Woche Homeoffice möglich.",
+        "description": "Fiktive Anzeige. Fachlich vertiefende Aufgaben und die wöchentliche Aufgabenplanung sind konkret beschrieben. Betreuung, Weiterbildung und eigener Produktspielraum sind nicht beschrieben."
+      },
+      "rrf_score": 0.031
+    }
+  ]
+}

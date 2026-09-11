@@ -5,6 +5,8 @@ import hashlib
 import json
 import logging
 import os
+import random
+import secrets
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -33,6 +35,24 @@ BASE_DIR = Path(__file__).resolve().parent
 MATCHING_POLICY_VERSION = 'employment-only-v1'
 # Bump when persona instructions or its output contract change incompatibly.
 PERSONA_CACHE_VERSION = 'search-persona-v1'
+NEUTRAL_PRESENTATION_VERSION = 'random-order-generic-chat-v2'
+
+
+def neutral_card_order(cards, seed=None):
+    """A random permutation of retrieved cards, stable for a retained search pool.
+
+    Canonical input order prevents LLM scores/order from influencing the shuffle.
+    The seed remains private in the session, never supplied by the participant.
+    """
+    seed = seed or secrets.token_hex(16)
+    ordered = sorted(cards, key=lambda card: str(card['id']))
+    random.Random(seed).shuffle(ordered)
+    return ordered, seed
+
+
+def outdated_neutral_presentation(state):
+    return (bool(state.get('jobs')) and resolve_advisor(state.get('advisor'))['neutral']
+            and state.get('_presentation_version') != NEUTRAL_PRESENTATION_VERSION)
 
 
 def persona_fingerprint(profile):
@@ -113,37 +133,43 @@ def restricted_legacy_pool(state):
 
 def public_state(state):
     """Expose evaluated job cards while keeping retrieval pools and caches private."""
-    return {**{key: value for key, value in state.items() if not key.startswith('_')},
+    public = {**{key: value for key, value in state.items() if not key.startswith('_')},
             'candidate_pool': {'available': '_candidates' in state,
                                'count': len(state.get('_candidates', [])),
                                'refresh_required': restricted_legacy_pool(state)}}
+    if resolve_advisor(state.get('advisor'))['neutral']:
+        # The baseline has plain job cards. Keep assessment evidence only inside
+        # the session for the identical retrieval/reranking pipeline, never in API cards.
+        public['jobs'] = [{key: value for key, value in job.items()
+                           if key not in ('match', 'retrieval')} for job in state.get('jobs', [])]
+    return public
 
 
 def welcome_message(result):
     """Use final card counts, not model guesses or the whole prefiltered corpus."""
     jobs = result['jobs']
     total = len(jobs)
+    if resolve_advisor(result.get('advisor'))['neutral']:
+        return 'Hallo ich bin dein KI Assistent'
     # Match the initial visibility policy in frontend/score-visibility.js.
     visible = sum(type(job.get('match', {}).get('score')) is int
                   and 70 <= job['match']['score'] <= 100 for job in jobs)
     if not total:
         overview = 'Ich habe aktuell keine Stellen zur gewählten Stellenart gefunden.'
-        invitation = 'Stell mir gern Rückfragen oder lass uns deine Suche gemeinsam anpassen.'
+        invitation = 'Hier kannst du Rückfragen stellen und deine Suche gemeinsam anpassen.'
     else:
-        found = 'eine Stelle' if total == 1 else f'{total} Stellen'
-        overview = f'Ich habe {found} gefunden und bewertet.'
+        found = 'Eine Stelle' if total == 1 else f'{total} Stellen'
+        overview = f'{found} gefunden und bewertet.'
         if visible == total:
-            overview += ' Du kannst sie links in der Ergebnisübersicht ansehen.'
+            overview += ' Du findest alle links in der Ergebnisübersicht.'
         elif visible:
-            overview += (f' Links siehst du {visible} '
-                         f"{'passende Stelle' if visible == 1 else 'passende Stellen'}; "
-                         'die übrigen kannst du dort einblenden.')
+            overview += f' Links siehst du {visible}; die übrigen kannst du einblenden.'
         else:
             overview += (' Aktuell erreicht keine 70 Punkte. '
                          'Du kannst die Stellen links trotzdem einblenden.')
-        invitation = 'Stell mir gern Rückfragen zu den Stellen oder lass uns die Suche verfeinern.'
-    # Retain the personality's factual explanation as a separate short paragraph.
-    return f"Hallo! {overview} {invitation}\n\n{result['assistant_message']}"
+        invitation = 'Hier kannst du Rückfragen stellen und deine Suche verfeinern.'
+    # Counts stay authoritative; the actual advice leads before the short UI hint.
+    return f"Hallo! {overview}\n\n{result['assistant_message']}\n\n{invitation}"
 
 
 def create_app(config=None, *, retriever=None, llm=None):
@@ -419,7 +445,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         return getattr(language_model, method)(*args, **kwargs)
 
     def rank_candidate_steps(profile, persona, candidates, filtered_count, advisor,
-                        chat_message=None, chat_context=None, assessment_cache=None):
+                        chat_message=None, chat_context=None, assessment_cache=None, ordering_seed=None):
         with timed_phase('rerank'):
             steps = model_steps('rerank', persona or {}, profile, candidates,
                                 advisor=advisor, chat_message=chat_message,
@@ -431,7 +457,8 @@ def create_app(config=None, *, retriever=None, llm=None):
                     except StopIteration as completed:
                         reranked = completed.value
                         break
-                    yield {'type': 'assistant_text', 'text': event['data']['assistant_message']}
+                    if not resolve_advisor(advisor)['neutral']:
+                        yield {'type': 'assistant_text', 'text': event['data']['assistant_message']}
             finally:
                 steps.close()
         lookup = {item['job']['id']: item for item in candidates}
@@ -450,6 +477,10 @@ def create_app(config=None, *, retriever=None, llm=None):
                   '_matching_policy_version': MATCHING_POLICY_VERSION,
                   '_candidates': pool, 'assistant_message': reranked['assistant_message'],
                   'retrieval': {'filtered_count': filtered_count, 'candidate_count': len(pool)}}
+        if resolve_advisor(advisor)['neutral']:
+            result['jobs'], result['_ordering_seed'] = neutral_card_order(cards, ordering_seed)
+            result['_presentation_version'] = NEUTRAL_PRESENTATION_VERSION
+            result['assistant_message'] = 'Die Stellenliste ist aktualisiert. Die Reihenfolge ist zufällig und sagt nichts über die Passung aus.'
         if isinstance(reranked.get('assessment_cache'), dict):
             result['_assessment_cache'] = reranked['assessment_cache']
         return result
@@ -519,7 +550,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         if error:
             return error
         assigned = assignments.get(consent_token())
-        search_advisor = dict(NEUTRAL_ADVISOR) if assigned and assigned['arm']=='B' else body.advisor.model_dump()
+        search_advisor = dict(NEUTRAL_ADVISOR) if assigned and assigned['arm']=='A' else body.advisor.model_dump()
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)
@@ -538,6 +569,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         assigned = assignments.get(consent_token())
         if assigned and saved[0].get('_study_arm') != assigned['arm']:
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
+        if outdated_neutral_presentation(saved[0]):
+            return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
         return jsonify(session_id=session_id, **public_state({**saved[0],
                        'advisor': saved[0].get('advisor', AdvisorConfig().model_dump())}))
 
@@ -558,6 +591,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         if not saved:
             return error_response({'code': 'not_found', 'message': 'Chat nicht gefunden.'}, 404)
         state, version = saved
+        if outdated_neutral_presentation(state):
+            return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
         assigned = assignments.get(consent_token())
         if assigned and state.get('_study_arm') != assigned['arm']:
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
@@ -566,7 +601,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         def operation():
             advisor = selected_advisor
             profile = body.profile.model_dump() if body.profile is not None else state['profile']
-            context = {'messages': state['messages'][-12:], 'jobs': state['jobs'][:20]}
+            context = {'messages': state['messages'][-12:], 'jobs': public_state({**state, 'advisor': advisor})['jobs'][:20]}
             action = 'answer'
             answer = 'Dein Suchprofil ist unverändert. Die bisherigen Empfehlungen bleiben erhalten.'
             if body.message:
@@ -651,7 +686,8 @@ def create_app(config=None, *, retriever=None, llm=None):
                                          state['retrieval']['filtered_count'], advisor,
                                          body.message or 'Bewerte die vorhandene Auswahl neu und erkläre sie kurz.',
                                          {**context, 'scope': 'existing_candidates'},
-                                         assessment_cache=state.get('_assessment_cache'))
+                                         assessment_cache=state.get('_assessment_cache'),
+                                         ordering_seed=state.get('_ordering_seed'))
                 # The retained persona was generated for its original profile.
                 # Never label it with the profile just used for soft reranking.
                 if '_persona_fingerprint' in state:

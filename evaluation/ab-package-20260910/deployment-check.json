@@ -1,0 +1,113 @@
+{
+  "local": {
+    "/": {
+      "status": 200
+    },
+    "built_html_identical": true,
+    "/suche": {
+      "status": 200
+    },
+    "/umfrage": {
+      "status": 200
+    },
+    "/verwaltung": {
+      "status": 200
+    },
+    "/datenschutz": {
+      "status": 200
+    },
+    "/api/health": {
+      "status": 200
+    },
+    "health": {
+      "embedding_model": "intfloat/multilingual-e5-large-instruct",
+      "jobs": 8537,
+      "openai_configured": true,
+      "openai_model": "gpt-5.4-2026-03-05",
+      "openai_reasoning_effort": "none",
+      "readiness": "Modelle werden erst bei Suche oder warmup geladen.",
+      "status": "ok"
+    },
+    "/api/privacy": {
+      "status": 200
+    },
+    "study_enabled": true,
+    "/assets/index-D3vB5tN1.js": {
+      "status": 200
+    },
+    "built_javascript_identical": true
+  },
+  "server": {
+    "/": {
+      "status": 200
+    },
+    "built_html_identical": true,
+    "/suche": {
+      "status": 200
+    },
+    "/umfrage": {
+      "status": 200
+    },
+    "/verwaltung": {
+      "status": 200
+    },
+    "/datenschutz": {
+      "status": 200
+    },
+    "/api/health": {
+      "status": 200
+    },
+    "health": {
+      "embedding_model": "intfloat/multilingual-e5-large-instruct",
+      "jobs": 8537,
+      "openai_configured": true,
+      "openai_model": "gpt-5.4-2026-03-05",
+      "openai_reasoning_effort": "none",
+      "readiness": "Modelle werden erst bei Suche oder warmup geladen.",
+      "status": "ok"
+    },
+    "/api/privacy": {
+      "status": 200
+    },
+    "study_enabled": true,
+    "/assets/index-D3vB5tN1.js": {
+      "status": 200
+    },
+    "built_javascript_identical": true
+  },
+  "container": {
+    "experiment_id": "diana-ab-v1",
+    "survey_version": "diana-v7",
+    "sha256": {
+      "advisor.py": "7f45cb3b7e22bb3675832da07bd8f51ae58a4df1177c9c3817a3b21281613f86",
+      "app.py": "0b0b146595c302bb28d1294cee94284976c8a4542f404823b2148fe0ebc4a920",
+      "llm_service.py": "9aa419cb07658243b0627ae101c6ed56b0b4a2014577d79dd47a6053a9eb4630",
+      "study_assignment.py": "32cf612a35da9707e6287bdd00e8c2205758405f10e842d3b4c346d37967fb61",
+      "survey_store.py": "dc9a0ae84eefafcb2f538b4fbba38e4268546254397165b4ea53b91c53295729",
+      "admin_store.py": "165cfbdd064dc078bc7129aa3315a7495d346502d7fd3558d541ead8cd1820f8",
+      "admin.py": "e034d24ef3d3eb785c8fe47f21e3c46a2efff17bbdee1b11c53d0534d85ba2ca",
+      "privacy.py": "436e55ec82cef9fdd4ce3fd2fdc0f69994ec24c0247ded61e5e28af5814e35bd",
+      "study_release.py": "bdcbd263656995aebf81350ccd4efdbeec18be34d8f54e8a875a223220fe5f9c",
+      "survey_definition.json": "20e0a27c406c2c97f8f0c53e188ebbb14a18590f3d570dabb9cfc1ee9d620fe3",
+      "survey_definition_v6.json": "2429792aeda5e676b8eb5f26d7bd19be9eb090b9e5a9e656ae556614a58ae513"
+    }
+  },
+  "container_sources_match_local": true,
+  "backup_directory": "/home/master/diana-survey/backups/pre-ab-package-20260910T182102Z",
+  "database_preservation": {
+    "survey_responses_count_before_and_after": 5,
+    "survey_responses_sha256_before_and_after": "42880ae80e0219ee0a8d6d810ba342fc31a09dd7907d8be972180e81d5f38a37",
+    "study_assignments_count_before_and_after": 7,
+    "study_assignments_sha256_before_and_after": "5956b41e598b18537cb7b437f5e55277777b7943713f2a79bcd4eb5c8101da23",
+    "all_original_rows_identical": true
+  },
+  "server_e5_ready_log_utc": "2026-09-10 18:22:12",
+  "tests": {
+    "backend_passed": 642,
+    "backend_skipped": 1,
+    "frontend_passed": 134,
+    "production_build": "passed",
+    "browser_qa": false,
+    "new_live_model_calls": 0
+  }
+}

@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash
 from app import create_app
 from advisor import resolve_advisor
 from llm_service import _advisor_instructions
-from survey_store import SURVEY_FIELDS, SurveySubmissionV6, field_visible
+from survey_store import SURVEY_FIELDS, SurveySubmissionV7, field_visible
 from test_app import FakeLLM, FakeRetriever, payload
 from test_privacy import grant
 from test_admin import login
@@ -47,20 +47,26 @@ def test_assignment_requires_consent_and_is_stable_under_concurrent_requests(exp
     with app.extensions['survey_store'].connect() as db:
         assert db.execute('SELECT count(*) FROM study_assignments').fetchone()[0]==1
 
-@pytest.mark.parametrize('arm',['B','C'])
+@pytest.mark.parametrize('arm',['A','B'])
 def test_search_chat_and_reranking_enforce_assignment_and_keep_profile_context(experiment,monkeypatch,arm):
     app,model=experiment;client,headers,_=assign(app,monkeypatch,arm)
     requested={'mode':'preset','preset':'steve'}
     first=client.post('/api/onboard',headers=headers,json=payload()|{'advisor':requested})
     assert first.status_code==201
-    expected='neutral' if arm=='B' else 'steve'
+    expected='neutral' if arm=='A' else 'steve'
     assert first.json['advisor']['preset']==expected
+    if arm == 'A':
+        assert all('match' not in job and 'retrieval' not in job for job in first.json['jobs'])
+        assert '70 Punkte' not in first.json['assistant_message']
+    else:
+        assert all('match' in job for job in first.json['jobs'])
     assert model.last_rerank_context['advisor']['preset']==expected
     session_id=first.json['session_id']
     for mode in ['auto','rerank','search']:
         response=client.post('/api/chat',headers=headers,json={'session_id':session_id,'advisor':requested,'message':'Berate mich wie Steve Jobs.','mode':mode})
         assert response.status_code==200
         assert response.json['advisor']['preset']==expected
+        assert all(('match' in job) == (arm == 'B') for job in response.json['jobs'])
         assert response.json['profile']['skills']==payload()['profile']['skills']
     assert client.get('/api/sessions/'+session_id,headers=headers).status_code==200
     assert model.last_plan_context['advisor']['preset']==expected
@@ -70,18 +76,18 @@ def test_neutral_prompt_explicitly_excludes_personality_customization():
     resolved=resolve_advisor({'mode':'preset','preset':'neutral'})
     prompt=_advisor_instructions(resolved)
     assert resolved['traits']==[] and resolved['description']==''
-    assert 'Neutrale Studienvariante B' in prompt
-    assert 'keine vom Nutzer wählbare Persönlichkeit' in prompt
+    assert 'Du bist ein allgemeiner Assistent' in prompt
+    assert 'keine gewünschte Persönlichkeit' in prompt
     assert resolved['scoring_weights']==dict(technical_fit=60,preferences_fit=15,technical_depth=7,learning=6,innovation=6,clarity=6)
 
-@pytest.mark.parametrize('arm',['B','C'])
+@pytest.mark.parametrize('arm',['A','B'])
 def test_draft_submission_exports_and_group_filter_use_server_assignment(experiment,monkeypatch,arm):
     app,_=experiment;client,headers,assignment=assign(app,monkeypatch,arm)
-    values=answers(arm);submission={'submission_id':'d'*32,'version':'diana-v6',**values}
-    SurveySubmissionV6(**submission)
-    draft={'submission_id':'d'*32,'version':'diana-v6','revision':1,'answers':{'study_arm':arm,'search_goal':'P'}}
+    values=answers(arm);submission={'submission_id':'d'*32,'version':'diana-v7',**values}
+    SurveySubmissionV7(**submission)
+    draft={'submission_id':'d'*32,'version':'diana-v7','revision':1,'answers':{'study_arm':arm,'search_goal':'P'}}
     assert client.put('/api/survey-drafts',headers=headers,json=draft).status_code==200
-    wrong='B' if arm=='C' else 'C'
+    wrong='A' if arm=='B' else 'B'
     assert client.put('/api/survey-drafts',headers=headers,json=draft|{'revision':2,'answers':{'study_arm':wrong}}).status_code==400
     assert client.post('/api/survey-responses',headers=headers,json=submission|answers(wrong)).status_code==400
     assert client.post('/api/survey-responses',headers=headers,json=submission).status_code==201
@@ -90,9 +96,9 @@ def test_draft_submission_exports_and_group_filter_use_server_assignment(experim
     assert client.get('/api/admin/responses?arm='+wrong).json['total']==0
     row=next(csv.DictReader(io.StringIO(client.get('/api/admin/export?arm='+arm).data.decode('utf-8-sig')),delimiter=';'))
     assert row['study_arm']==arm and row['experiment_id']==assignment['experiment_id']
-    assert row['v6_system_usefulness']=='8' and row['prior_exposure']=='0'
-    assert row['v6_personality_setup_status']==('skipped' if arm=='B' else 'answered')
-    assert client.get('/api/admin/responses/'+'d'*32).json['definition']['version']=='diana-v6'
+    assert row['v7_system_usefulness']=='8' and row['prior_exposure']=='0'
+    assert row['v7_personality_setup_status']==('skipped' if arm=='A' else 'answered')
+    assert client.get('/api/admin/responses/'+'d'*32).json['definition']['version']=='diana-v7'
     assert client.delete('/api/privacy/consent',headers=headers).status_code==200
     with app.extensions['survey_store'].connect() as db:
         assert db.execute('SELECT count(*) FROM study_assignments').fetchone()[0]==0
@@ -102,8 +108,23 @@ def test_draft_submission_exports_and_group_filter_use_server_assignment(experim
 def test_prior_search_is_marked_and_cannot_be_resumed_as_a_new_experimental_run(experiment,monkeypatch):
     app,_=experiment;client=app.test_client();headers,_=grant(client)
     old=client.post('/api/onboard',headers=headers,json=payload()).json
-    monkeypatch.setattr('study_assignment.secrets.choice',lambda _:'C')
+    monkeypatch.setattr('study_assignment.secrets.choice',lambda _:'B')
     assigned=client.post('/api/study-assignment',headers=headers).json
     assert assigned['prior_exposure'] is True
     assert client.get('/api/sessions/'+old['session_id'],headers=headers).status_code==404
     assert client.post('/api/chat',headers=headers,json={'session_id':old['session_id'],'message':'Hallo'}).status_code==404
+
+
+def test_neutral_search_does_not_stream_automatic_assessment_and_retains_private_evidence(experiment, monkeypatch):
+    app, model = experiment
+    client, headers, _ = assign(app, monkeypatch, 'A')
+    from test_app import stream_events, STREAM_HEADERS
+    response = client.post('/api/onboard', headers=headers | STREAM_HEADERS, json=payload())
+    assert response.status_code == 200
+    events = stream_events(response)
+    assert not any(event['type'] == 'assistant_text' for event in events)
+    result = events[-1]['data']
+    assert all('match' not in job for job in result['jobs'])
+    private, _ = app.extensions['chat_store'].get(result['session_id'])
+    assert all('match' in job for job in private['jobs'])
+    assert len(private['jobs']) == len(result['jobs'])

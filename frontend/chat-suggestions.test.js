@@ -234,3 +234,16 @@ test('multiple active alternatives may be narrowed to a supported visible-job fi
   assert.equal(filters.length, 1);
   assert.equal(filters[0].id, 'filter:employment:werkstudent');
 });
+
+
+test('basic variant retains contextual search refinements without scores or invented skill gaps',()=>{
+ const basic=job({match:undefined});
+ const suggestions=buildChatSuggestions(session([basic]),[basic],{showScores:false});
+ assertBounded(suggestions);
+ assert.ok(suggestions.some(item=>item.id==='filter:employment:werkstudent'));
+ assert.ok(suggestions.some(item=>item.id.startsWith('fit:')));
+ assert.ok(suggestions.every(item=>!item.id.startsWith('scores:')&&!item.id.startsWith('skill:')));
+ assert.ok(suggestions.every(item=>!/(score|punktzahl)/i.test(item.message)));
+ const emptyVisible=buildChatSuggestions(session([basic]),[],{showScores:false});
+ assert.ok(emptyVisible.every(item=>!item.id.startsWith('scores:')));
+});

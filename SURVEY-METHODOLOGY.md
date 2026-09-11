@@ -1,4 +1,100 @@
-# Randomisierter B/C-Vergleich · diana-v6 · 10. September 2026
+## Aktueller Promptstand · 11. September 2026
+
+`random-order-generic-chat-v2`: Der A-Chat erhält ausschließlich den Systemtext
+„Du bist ein allgemeiner KI-Assistent.“ Keine weiteren Systemanweisungen, keine
+zusätzliche Antwortlängengrenze. Kontextdaten und strukturiertes Ausgabeformat
+bleiben erhalten. Zufallsreihenfolge unverändert. Frühere Promptstände bleiben
+über die erfassten Systemstände getrennt auswertbar; unten steht die Historie.
+
+# Änderungsstand 11. September 2026: allgemeiner Chat und Zufallsreihenfolge in A
+
+Neue Zuordnungen verwenden `diana-ab-v2`, die Fragen bleiben V7. A erhält jetzt
+im Chat einen allgemeinen Assistentenprompt ohne Jobsuche- oder Beratungsrolle.
+Die domainspezifischen Systemanweisungen, Beraterkonfiguration und vorab berechneten
+Bewertungen werden diesem Chat nicht übergeben. Nutzerprofil, aktuelle Einträge
+und bisheriges Gespräch bleiben User-Kontext; daraus kann das Modell den Gegenstand
+der Anfrage erkennen. Eine Unkenntnis des Themengebiets wird nicht behauptet.
+
+A hat keine selbst gesetzte Satz-, Wort- oder Zeichengrenze im Chat. Das separate
+`GenericChatDecision`-Schema setzt kein maxLength für assistant_message; der API-
+Parameter max_output_tokens wird für A-Chat ausgelassen. Modell-/Providergrenzen
+bestehen weiterhin. B behält seine bisherigen Vorgaben. Die Ausgabe bleibt
+strukturiert, um ausdrücklich gewünschte Änderungen und Suchaktionen zu verarbeiten.
+
+Die bis zu 20 durch BM25/E5 ermittelten Kandidaten werden bei A mit einem frischen
+Zufallsseed gemischt, unabhängig von LLM-Gesamtscores und dessen Eingangsreihenfolge.
+Die fachliche Retrieval- und interne Bewertungspipeline bleibt erhalten. Der Seed
+bleibt im flüchtigen Suchzustand; erneutes Anzeigen, Antworten und Neubewertung
+desselben Pools verändern die Reihenfolge nicht. Eine neue Vollsuche mischt neu.
+Es wird keine absichtlich schlechteste oder invertierte Reihenfolge gewählt.
+B bleibt nach Passung sortiert. Alte A-Sitzungen mit bewertungsbasierter Reihenfolge
+müssen eine neue Suche starten, bevor der neue Chat verwendet wird.
+
+Diese Studie vergleicht nun ein Gesamtpaket mit einer bewusst einfachen
+Zufallsbasis. Unterschiede können von Reihenfolge, Anleitung, Gesprächsstil,
+Antwortlänge, Einrichtung oder Ergebnisdarstellung stammen. Sie belegen nicht
+isoliert den Nutzen der Persönlichkeit oder eine Überlegenheit gegenüber üblichen
+relevanzsortierten Jobbörsen. A kann trotz dieser Gestaltung hilfreiche Antworten
+geben; ein bestimmter Effekt wird nicht vorweggenommen.
+
+Historische Antworten und Zuordnungen werden nicht geändert. Bestehende Kennungen
+behalten ihre ursprüngliche experiment_id; erneute Nutzung wird durch die
+Systemstände erkennbar. `presentation_versions` enthält die während der Teilnahme
+dokumentierten Darstellungsstände (historisch `undocumented`). Dashboard-Kohorten
+trennen Version, Experiment und Kombination der Darstellungsstände; gemischte
+Teilnahmen werden nicht mit reinen neuen Teilnahmen zusammengefasst. CSV und
+Systemmanifest enthalten diese Angaben ebenfalls. Vor einer Hauptauswertung
+Erhebungszeitraum und zulässige Stände festlegen; bisherige Tests nicht ungeprüft
+zu einer neuen Hauptstudie addieren.
+
+---
+
+# Aktueller Gesamtpaketvergleich A/B · diana-v7 · 10. September 2026
+
+Die aktuelle Forschungsfrage lautet: Bietet die Kombination aus gestaltbarer
+KI-Suchpersönlichkeit, Scores und Begründungen einen Mehrwert gegenüber einer
+neutralen KI-Jobsuche mit einfachen Stellenkarten? Neue Zuteilungen erfolgen
+serverseitig mit Wahrscheinlichkeit 0,5 für A beziehungsweise B (`diana-ab-v1`).
+
+- **A:** sachliche, fachlich hilfreiche Beratung ohne Persönlichkeitskonfiguration,
+  angezeigte Scores oder automatische Begründungsboxen. Alle bis zu 20 Ergebnisse
+  werden angezeigt. Fragen zu Stellen können weiterhin korrekt beantwortet werden.
+- **B:** gestaltbare Persönlichkeit mit beeinflussten ergänzenden Bewertungsgewichten,
+  Gesprächsstil, Scores und Begründungen. Ergebnisse unter 70 werden zunächst
+  ausgeblendet und können eingeblendet werden.
+- Modell-Snapshot, Denkaufwand, Retrieval, Stellenbestand und fachliche
+  Bewertungsbasis bleiben gleich. Die internen Bewertungen aus A werden nicht
+  mit den öffentlichen Stellenkarten übertragen.
+
+Dies ist ein randomisierter Vergleich des **Gesamtpakets**. Er isoliert weder die
+Persönlichkeit noch Score, Begründungen oder Ergebnisdarstellung. Eine absichtlich
+falsche oder unzuverlässige Kontrollberatung ist nicht Teil des Designs. Die frühere
+Befragung zur Stichwortsuche bleibt eine gesonderte historische Erhebung.
+Die methodische Einordnung und Planung mit 200 auswertbaren Teilnahmen stehen in
+[STUDY-PLAN-200.md](STUDY-PLAN-200.md). Diese Designentscheidung ist eine Ableitung
+aus der Forschungsfrage, keine ausdrückliche Prüfung durch das Buch von Döring.
+
+Die sechs gemeinsamen Haupt-/Ergebnisfragen bleiben gleich. Score- und
+Begründungsnützlichkeit sowie sieben Persönlichkeitsfragen erhält nur B.
+A hat damit 14, B 23 Fragen (vor zusätzlichen nutzungsabhängigen Ausblendungen).
+`system_usefulness` ist als einzige primäre Zielgröße vorgeschlagen; die übrigen
+Items sind sekundär beziehungsweise explorativ. Keine ungeprüfte Gesamtskala bilden.
+
+V6 ist vollständig archiviert. Alte Antworten, Gruppencodes und Zuteilungszeitpunkte
+werden nicht umgeschrieben. Die Verwaltung zeigt historische B/C-Zuordnungen als
+A/B an, der Export dokumentiert die ursprünglichen Codes und trennt v6-/v7-Spalten.
+Eine frühere Zuteilung bleibt stabil (altes B → A, altes C → B); sie bekommt kein
+neues Auslosungsdatum. Ihre ursprüngliche Experimentkennung bleibt nachvollziehbar.
+Bei offenen v6-Entwürfen werden nur Demografie und Suchvorhaben übernommen;
+Systemtest und Ergebnisfragen beginnen im neuen Stand erneut. Geänderte
+Studienhinweise verlangen eine erneute Einwilligung. Historische und neue
+Behandlungsstände nicht ungeprüft gemeinsam auswerten.
+
+## Archivierter Vergleich B/C · diana-v6
+
+Die folgenden Abschnitte dokumentieren den früheren Stand, nicht die aktuelle
+Variante A/B. Git-Branch-Namen und archivierte Modelltests behalten ihre historischen
+Bezeichnungen, damit der frühere Versuchsaufbau rekonstruierbar bleibt.
 
 Experiment: `diana-bc-v1`. Die Zuordnung erfolgt serverseitig bei Beginn des Systemtests nach Einwilligung, unabhängig mit Wahrscheinlichkeit 0,5 für B bzw. C. Das garantiert keine exakt gleichen Gruppengrößen. Pro Einwilligungskennung bleibt die Zuordnung unverändert, auch bei Neuladen oder parallelen Anfragen. Es gibt keine Auswahl der Gruppe im Frontend.
 
@@ -13,6 +109,26 @@ Der Vergleich C gegen B untersucht den zusätzlichen Effekt des gesamten Persona
 Beide Gruppen beantworten zuerst sechs gemeinsame Ergebnisfragen (Bedienbarkeit, Suchwünsche ausdrücken, Suchwünsche anpassen, Aufwand, Systemnützlichkeit, Wiederverwendungsabsicht), dann Fragen zu Chat, Score und Begründungen. Nur C erhält sieben Persönlichkeitsfragen. B: 16 sichtbare Fragen; C: 23. Die Studienvariante ist ein vom Server bestimmtes Metadatum, keine Teilnehmerfrage. Bewertungen 1–10; search_effort ist gegenläufig (10 = sehr aufwendig). Fehlende Beurteilbarkeit bleibt separat.
 
 Während der Wartezeit werden nur Demografie, Suchvorhaben und in C Angaben zur Einrichtung angeboten. Gemeinsame Ergebnisfragen werden erst nach Suche und eigener Chatnachricht freigegeben. Bereits in der Wartezeit beantwortete Fragen werden später übersprungen. Vor Haupterhebung primäre Zielgröße, Stichprobenumfang, Auswertung und Umgang mit Abbrüchen festlegen; nicht alle Items zu einem Gesamtwert addieren.
+
+## Konkretisierte Planung und Sprachprofil-Update
+
+Der Studienleiter plant nun mit **200 auswertbaren Teilnahmen**, etwa 100 je Gruppe.
+Die Sensitivitätsanalyse und der vorgeschlagene Analyseplan stehen in
+[STUDY-PLAN-200.md](STUDY-PLAN-200.md). Die Hauptzielgröße und Auswertungsregeln
+sind dort als Vorschläge zur Abstimmung gekennzeichnet, nicht als rückwirkende
+Präregistrierung. Fragenanzahl und Fragebogenversion bleiben unverändert.
+
+Das Sprachprofil-Update vom 10.09.2026 berücksichtigt jetzt ausdrücklich die
+editierbaren Vorlagen: Diese werden technisch als eigene Persönlichkeit gesendet.
+Der aus den aktuellen Eigenschaften abgeleitete Ausdrucksplan gilt für Chat,
+Suchansprache und Kartenbegründungen. Der Anzeigename wählt keine versteckten
+Stilregeln aus; Änderungen der Eigenschaften bleiben wirksam. Der einheitliche
+Begrüßungsblock ist gekürzt, die tatsächliche Bewertung bleibt unverändert.
+Beide Gruppen erhalten dieselbe neue Begrenzung auf 600 Zeichen für generierte
+Chat-/Suchtexte; der serverseitige Hinweis zu Anzahl und Bedienung kommt hinzu.
+Modell-Snapshot, Denkaufwand, Scoring-Komponenten, Gewichte und Retrieval bleiben
+unverändert. Promptänderungen erzeugen über die vorhandenen Quellhashes eine
+neue technische Release-ID. Frühere Ergebnisse nicht ungeprüft damit vermischen.
 
 ## Nachvollziehbarkeit und bestehende Daten
 

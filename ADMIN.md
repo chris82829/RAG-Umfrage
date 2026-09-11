@@ -41,7 +41,8 @@ sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenba
 ## In Numiqo auswerten
 
 1. In der Verwaltung **CSV für Numiqo** oder **Auswertungspaket** wählen.
-   Beide berücksichtigen den aktuellen ID- und Versionsfilter, über alle Seiten hinweg.
+   Beide berücksichtigen den aktuellen ID-, Versions-, Status- und Variantenfilter,
+   über alle Seiten hinweg.
 2. Das Paket entpacken und in Numiqo über **Import/Export** die Datei
    `diana_numiqo.csv` auswählen: UTF-8, Semikolon als Trennzeichen, erste Zeile als
    Variablennamen. Numiqo unterstützt CSV-Dateien laut
@@ -49,17 +50,25 @@ sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenba
 3. Die Variablentypen und Wertelabels anhand von `codebook.csv` oder
    `codebook.json` einstellen. Das Codebuch wird nicht automatisch in Numiqo geladen.
 
-Eine Zeile entspricht einer abgegebenen Teilnahme. V4 verwendet eigene `v4_`-Spalten:
+Eine Zeile entspricht einer Teilnahme; `response_status` unterscheidet abgeschlossene
+Antworten und automatisch gespeicherte Entwürfe. Der aktuelle A/B-Vergleich verwendet
+Fragebogen V7 und eigene `v7_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1 und
+Nein=0. Die sieben Persönlichkeitsfragen sowie die beiden Fragen zu Score und
+Begründungen werden nur Variante B gestellt. Bei A bleiben ihre Werte leer und
+der Antwortstatus lautet `skipped`.
+
+Historischer Fragebogen V4 verwendet eigene `v4_`-Spalten:
 Ja=1, Nein=0 (nominal); fünf beschriftete Kategorien (ordinal); Nützlichkeit und Chat-Hilfe
 1–10 (ordinal). Demografische Auswahlwerte sind im Codebuch codiert; Freitext bleibt Text.
 ID, Modell und Version sind nominal. „Unentschieden“ bei Wiederverwendung ist der gültige
 Wert 3. Fehlende Bewertungen sind leer, nicht 0. Die jeweilige `_status`-Spalte erklärt:
 `answered`, `not_used`, `not_assessable`, `not_specified`, `skipped`, `no_answer`, `not_asked`.
-Bei `chat_used=no` bleiben die drei Folgefragen leer (`skipped`).
+In V4 bleiben bei `chat_used=no` die drei Folgefragen leer (`skipped`). Diese Frage
+entfällt in den neueren Versionen.
 
 Historische V2/V3-Antworten bleiben in den bisherigen Spalten, V1 bleibt in `v1_`-Spalten.
 Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
-Versionsfilter, Detailansicht und Codebuch berücksichtigen V4; die Detailansicht zeigt
+Versionsfilter, Detailansicht und Codebuch berücksichtigen V1 bis V7; die Detailansicht zeigt
 für alte Antworten weiterhin deren ursprüngliche Frageformulierungen.
 Formelähnlicher Freitext erhält ein vorangestelltes Apostroph zum Schutz beim
 Öffnen in Tabellenprogrammen; dies bei qualitativer Textauswertung berücksichtigen.
@@ -126,6 +135,81 @@ zweite Teilnahme anzulegen. Löschung über dieselbe Teilnahme-ID entfernt auch 
 
 Alle subjektiven Bewertungen verwenden 1–10. Neue Antworten stehen in `v5_`-Spalten, historische V4-Werte unverändert in `v4_`-Spalten. Die Frage nach einer eigenen Chatnachricht entfällt in V5. Filter und Codebuch unterscheiden beide Versionen; Werte verschiedener Skalen nicht ungeprüft zusammenfassen.
 
-## B/C-Vergleich (V6)
+## A/B-Gesamtpaketvergleich (V7)
 
-In der Verwaltung lassen sich B und C separat filtern; die Tabelle zeigt die Variante. CSV/Numiqo-ZIP enthalten `study_arm`, `experiment_id`, `assigned_at_utc`, `prior_exposure` sowie die v6_-Antwortspalten. Nur V6-Teilnahmen erhalten diese Experimentmetadaten. Persönlichkeitsfragen sind bei B als `skipped` gekennzeichnet. Abbrüche können unter `Unvollständig` betrachtet werden.
+Der aktuelle Vergleich untersucht das gesamte Funktionspaket:
+
+- **A:** neutrales profilbasiertes Suchsystem mit Chat, ohne angezeigte Scores und
+  ohne automatische Begründungsboxen an den Stellenkarten. Alle bis zu 20
+  zurückgegebenen Stellen werden angezeigt.
+- **B:** Suchsystem mit gestaltbarer KI-Suchpersönlichkeit, angezeigten Scores und
+  automatischen Begründungsboxen. Zunächst erscheinen Stellen ab 70 Punkten;
+  weitere bewertete Stellen lassen sich einblenden.
+
+A bleibt ein funktionierendes, hilfreiches Suchsystem; es erhält keine absichtlich
+falschen oder verschlechterten Antworten. Gemessen wird der zusätzliche Nutzen des
+Pakets, nicht der isolierte Effekt der Persönlichkeit, der Scores oder der
+Begründungen. Auch die anfängliche Sichtbarkeit der Ergebnisliste gehört zum
+verglichenen Paket. Gemeinsame Ergebnisfragen erlauben den Gruppenvergleich;
+funktionsbezogene Zusatzfragen werden nur B gestellt.
+
+Die Verwaltung zeigt und filtert einheitlich **A** und **B**. CSV/Numiqo-ZIP enthalten
+`study_arm`, `experiment_id`, `assigned_at_utc`, `prior_exposure` und getrennte
+`v7_`-Antwortspalten. Neue Zuordnungen verwenden `experiment_id=diana-ab-v1`.
+Vorhandene Zuordnungen bleiben erhalten; eine fortgesetzte Teilnahme kann deshalb
+V7-Antworten mit einer älteren Experiment-ID enthalten. `prior_exposure` beschreibt
+die Situation vor der ursprünglichen Zuordnung und ist kein vollständiger Nachweis
+aller früheren Systemnutzungen. Abbrüche stehen unter **Unvollständig**.
+
+## Historische Vergleichserhebung (V6)
+
+Gespeicherte V6-Antworten und die Definition in `survey_definition_v6.json` bleiben
+unverändert. Damals hatten **beide** Gruppen Scores und Begründungen. Die historischen
+Originalcodes **B** (neutral) und **C** (personalisiert) erscheinen in der Verwaltung
+als **A** beziehungsweise **B**; die Speicherung wird dafür nicht umgeschrieben.
+
+Die Metadatenspalte `study_arm` verwendet die einheitliche Anzeige A/B. Die eigene
+Spalte `v6_study_arm` bewahrt die ursprüngliche Codierung numerisch: **0 = originales B**,
+**1 = originales C**. Bei V7 bedeutet `v7_study_arm` dagegen **0 = A**, **1 = B**.
+`original_codes` im Codebuch dokumentiert diese Zuordnung. Die historische
+Experiment-ID bleibt `diana-bc-v1`; historische Antworten erhalten keine nachträglich
+erfundene aktuelle Zuordnung.
+
+**V6 und V7 getrennt auswerten.** Gleiche angezeigte Gruppenbuchstaben bedeuten nicht,
+dass die getesteten Funktionspakete gleich waren. Fragebogenversion, Experiment-ID
+und erfasste Systemstände gemeinsam prüfen; Ergebnisse nicht ungeprüft zusammenfassen.
+
+## Diagramme und Einzelantworten
+
+Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
+bei 1–10-Bewertungen außerdem Mittelwert, Median und gültige Fallzahl. A/B werden
+farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V7/abgeschlossen;
+ältere Antworten lassen sich mit dem Fragebogenfilter auswählen.
+Fragebogenversionen und Experimentkennungen werden nicht zusammengefasst.
+Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene
+Antworten werden gesondert gezählt und nicht als Null in Mittelwerte gerechnet.
+Die Aufwandsfrage bleibt in ihrer ursprünglichen Richtung (hoch = mehr Aufwand).
+Dies sind deskriptive Statistiken, keine Signifikanzprüfung. Freitexte lassen sich
+aufklappen (bis zu 50 je Frage), sämtliche Texte bleiben im Export verfügbar.
+**Ansehen** öffnet die Einzelantwort als fokussierten Dialog mit Schließen-Button.
+
+**Alle Teilnahmen löschen** betrifft unabhängig von Filtern alle gespeicherten
+Antworten, Entwürfe, Gruppenzuordnungen und verknüpften Suchsitzungen. Ein Dialog
+zeigt die Zahlen und verlangt `ALLE TEILNAHMEN LÖSCHEN`. Ändern sich die Daten
+zwischen Vorschau und Bestätigung, wird die Löschung abgelehnt und eine neue
+Vorschau verlangt. Die Datenbanklöschung erfolgt in einer Transaktion. Bisherige
+Einwilligungen werden widerrufen und als gesperrte Kennungen erhalten, damit alte
+Sitzungen keine Antworten nachliefern. Die Studie wird dadurch nicht geschlossen;
+neue Teilnahmen sind entsprechend dem Freigabestatus möglich. Exporte und Backups
+werden nicht automatisch gelöscht.
+
+## Allgemeiner Chat und zufällige Reihenfolge in A
+
+Seit 11. September 2026 verwenden neue Zuordnungen `diana-ab-v2`. A hat einen
+allgemeinen Chat ohne fachliche Beratungsrolle und ohne zusätzliche Antwortlängen-
+grenze. Die bis zu 20 Retrieval-Kandidaten werden zufällig angeordnet; derselbe
+Pool bleibt bei Antworten und Neubewertung stabil. `presentation_versions` in
+CSV und Diagrammkohorten trennt `random-order-generic-chat-v1` von älteren oder
+undokumentierten Ständen. Mehrere während einer Teilnahme genutzte Stände bleiben
+gesondert erkennbar. Ursprüngliche Gruppenzuordnungen werden nicht verändert.

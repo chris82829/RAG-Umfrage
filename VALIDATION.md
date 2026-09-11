@@ -1,3 +1,64 @@
+# A/B-Gesamtpaketvergleich · diana-v7 · 10.09.2026
+
+642 Backendtests bestanden, 1 übersprungen; 134 Frontendtests einschließlich
+SSR bestanden. Produktionsbuild und `git diff --check` erfolgreich. Keine
+Browserprüfung und keine neuen Modellaufrufe für diese Paketumstellung.
+
+A liefert Stellenkarten ohne `match`/`retrieval`, zeigt alle bis zu 20 Ergebnisse
+und unterdrückt automatische Bewertungsnachrichten. Chatfragen bleiben verfügbar.
+B behält Persönlichkeit, Scores, Begründungen und die Einblendoption unter 70.
+V7 stellt die neun zusätzlichen Persönlichkeits-/Bewertungsfragen nur B.
+Die archivierte V6-Definition ist bytegleich mit der ursprünglichen Git-Version.
+
+Zusätzliche Integration: Beide historischen Zuordnungen (B→A und C→B) mit neuem
+V7-Fragebogen, Onboarding und Abgabe geprüft. Originalcodes, Experimentkennung
+und Zeitstempel bleiben erhalten. Gleichzeitige Migration/Zuteilung und Rollback
+sind abgedeckt. Der Offline-Modellvergleich verwendet jetzt A/B und trennt
+interne Bewertungen von tatsächlich dargestellten Karten; alte Berichte unverändert.
+
+Lokal neu gestartet und auf dem bestehenden Server-Port 5051 ausgerollt.
+Startseite, Suche, Umfrage, Verwaltung, Datenschutz und API antworten mit HTTP 200.
+HTML und JavaScript sowie elf zentrale Backend-/Definitionsdateien stimmen mit
+dem geprüften lokalen Stand überein. Modell weiterhin `gpt-5.4-2026-03-05`,
+Denkaufwand `none`; 8.537 Stellen. Technischer Nachweis:
+`evaluation/ab-package-20260910/deployment-check.json`.
+
+Vor der Migration vollständiges SQLite-Backup und Anwendung gesichert unter
+`backups/pre-ab-package-20260910T182102Z/`. Die fünf abgeschlossenen Antworten
+und sieben bestehenden Zuteilungen sind nach dem Update per SHA-256 unverändert.
+Keine echten Antworten gelöscht oder für Tests angelegt. Die bisherigen
+Einwilligungen müssen wegen der geänderten Studienhinweise erneuert werden.
+
+Die Planung mit 200 auswertbaren Teilnahmen bleibt bestehen. Der Vergleich
+untersucht das Gesamtpaket und darf nicht als isolierter Persönlichkeitseffekt
+ausgelegt werden; V6 und V7 nicht ungeprüft zusammenlegen.
+
+# Historisch: Persönlichkeitskontrast und Planung mit 200 · 10.09.2026
+
+Die tatsächlichen editierbaren Vorlagen erhalten nun einen konkreten Ausdrucksplan
+auf Basis ihrer gewählten Eigenschaften. Gemeinsame Begrüßung verkürzt; alle
+neuen generierten Chat- und Suchantworten in B/C auf 600 Zeichen begrenzt.
+Keine Änderung an Modell, Denkaufwand, Scores, Gewichten oder Fragebogen.
+
+622 Backend-Tests bestanden (1 übersprungen); nach abschließender sprachlicher
+Nachschärfung erneut 418 betroffene Backend-Tests bestanden. 129 Frontend-Tests
+und Produktionsbuild bestanden. Drei vollständige synthetische Modellvergleiche
+mit je elf logischen Aufrufen archiviert unter `evaluation/personality-20260910/`;
+letzte Runde alle mechanischen Checks bestanden. Grenzen der qualitativen
+Sichtung sind im Bericht dokumentiert. Kein Browser-QA und keine Testantworten
+in der produktiven Umfrage angelegt.
+
+Lokal neu gestartet und auf Port 5051 ausgerollt. Die drei geänderten Python-Dateien
+im Container stimmen per SHA-256 mit dem geprüften lokalen Stand überein;
+HTML/JavaScript entsprechen dem gebauten Frontend. E5 ist vorgeladen, Health OK.
+Die fünf zuvor abgeschlossenen Antworten sind vor/nach Update bytegleich
+(Hashvergleich); Runtime und Zugangsdaten wurden nicht ersetzt. Alte Anwendung
+auf dem Server unter `backups/pre-personality-20260910/` gesichert.
+
+Studienplan `STUDY-PLAN-200.md` mit reproduzierbarer Sensitivitätsanalyse:
+200 auswertbare Hauptantworten, d≈0,398 bei 80 % Power, 250 Starts bei angenommener
+20-%-Verlustquote. Kein automatischer Teilnahmestopp eingerichtet.
+
 # Validierung am 10.09.2026
 
 Laufzeit: Python 3.12.14, lokale isolierte `.venv` auf macOS ARM64.
@@ -1147,3 +1208,46 @@ Reproduktion der Masterarbeit lässt sich daraus nicht ableiten.
 ## Randomisierter Vergleich B/C
 
 Gezielte Prüfungen für stabile serverseitige Zufallszuordnung, parallele Anfragen, Einwilligung/Widerruf, Schutz vor manipulierten Gruppenangaben, B-Neutralität bei Onboarding/Chat/Reranking/neuer Suche, C-Personalisierung, frühere Suchsitzungen, Autosave, Export und Gruppenfilter. SSR-Prüfung beider Einrichtungsabläufe und der gemeinsamen Ergebnisfragen. Es wurden keine echten Studienantworten oder kostenpflichtigen Modellaufrufe zu Testzwecken erzeugt.
+
+## Verwaltung mit Diagrammen · 11. September 2026
+
+24 gezielte Backendtests bestanden (Verwaltung, A/B-Fragebogen, Aggregation,
+Versions-/Experimenttrennung, fehlende Werte, Legacy-Skalen, Zugriffsschutz,
+Einzel- und Sammellöschung einschließlich veralteter Bestätigung und Widerruf).
+135 Frontendtests bestanden; nach der Legacy-Skalenbeschriftung wurde der
+Verwaltungs-Renderingtest erneut erfolgreich ausgeführt. Produktionsbuild erfolgreich.
+Die Backendtests liefen wegen dataloser iCloud-Dateien in der Projekt-venv in
+`/tmp/diana-admin-py312` mit den produktiven Versionen der benötigten Bibliotheken.
+
+Server bereitgestellt und per HTTP geprüft: neues HTML/JS identisch zum Build;
+Analytics für V1–V7 erfolgreich; sämtliche vorhandenen Einzelantworten abrufbar;
+Analytics und Löschvorschau ohne Anmeldung gesperrt. Die fünf vor dem Deployment
+abgeschlossenen Antworten sind anhand ihrer Inhaltsprüfsummen unverändert.
+Keine tatsächliche Sammellöschung, keine neuen Modellanfragen und keine Browser-QA.
+Prüfergebnis: `evaluation/admin-analytics-20260911/deployment-check.json`.
+
+## Allgemeiner Chat A und Zufallsreihenfolge · 11. September 2026
+
+Neue Zuordnungen: diana-ab-v2. Tests prüfen scoreunabhängige, reproduzierbare
+Permutation ohne verlorene oder doppelte Karten; unveränderte Reihenfolge bei
+Sessionabruf, Antworten und Neubewertung; neue Seeds bei Vollsuchen; unveränderte
+personalisierte Sortierung; Neustart alter A-Sitzungen; tatsächliche allgemeine
+Systemnachricht ohne fachliche Rollenregeln; keine Scores im Chatkontext; Antworten
+über 600 Zeichen ohne maxLength und ohne max_output_tokens im API-Aufruf.
+203 fokussierte Tests bestanden nach der letzten Änderung (LLM, Zufallsreihenfolge,
+Verwaltung und Aggregation); die übrigen App-/Advisor-/Zuordnungstests des vorherigen
+breiteren Laufs bestanden ebenfalls. 135 Frontendtests und Produktionsbuild bestanden.
+Keine neuen echten Modellaufrufe durch die Prüfungen und keine Browser-QA.
+
+Serverprüfung: allgemeiner Prompt SHA-256
+`130eacc25cf219ef09e04a40d2512e104a25efe3300e123654d8f0377e6b3136`;
+Antwortschema ohne maxLength; Experiment diana-ab-v2; HTML/JS identisch zum Build;
+Analytics und CSV mit presentation_versions erfolgreich. Die fünf vor der
+Bereitstellung abgeschlossenen Antworten sind unverändert erhalten geblieben.
+Prüfprotokoll: `evaluation/generic-random-20260911/deployment-check.json`.
+
+Ein-Satz-Prompt A (11. September 2026): sieben gezielte Tests bestanden. Die
+vollständige Systemnachricht ist exakt `Du bist ein allgemeiner KI-Assistent.`;
+kein zusätzlicher Systemtext und keine Antwortlängenbegrenzung. Produktionsbuild
+und Serverimport bestätigt; Health 200, ausgeliefertes HTML identisch zum Build.
+Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V1.
