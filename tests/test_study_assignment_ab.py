@@ -134,6 +134,29 @@ def test_failed_schema_migration_rolls_back_without_losing_legacy_data(database,
     assert StudyAssignments(database, Consent(), {}).get('b' * 64)['arm'] == 'A'
 
 
+def test_many_participants_retries_and_independent_workers_keep_one_assignment(database, monkeypatch):
+    calls=[]
+    def draw(options):
+        assert options==('A','B')
+        calls.append(1)
+        return options[len(calls)%2]
+    monkeypatch.setattr('study_assignment.secrets.choice',draw)
+    workers=[StudyAssignments(database,Consent(),{}) for _ in range(6)]
+    tokens=[f'{i:064x}' for i in range(100)]
+    requests=[(workers[i%6],token) for i,token in enumerate(tokens*4)]
+    with ThreadPoolExecutor(max_workers=12) as pool:
+        results=list(pool.map(lambda item:(item[1],item[0].assign(item[1])),requests))
+    assert len(calls)==100
+    stable={}
+    for token,row in results:
+        assert stable.setdefault(token,row)==row
+    restarted=StudyAssignments(database,Consent(),{})
+    monkeypatch.setattr('study_assignment.secrets.choice',lambda _:pytest.fail('No new draw after restart'))
+    for token,row in stable.items():assert restarted.assign(token)==row
+    with database.connect() as db:
+        assert db.execute('SELECT count(*) FROM study_assignments').fetchone()[0]==100
+
+
 @pytest.mark.parametrize('legacy_arm,current_arm', [('B', 'A'), ('C', 'B')])
 def test_old_participant_accepts_each_questionnaire_own_code(database, legacy_arm, current_arm):
     legacy_database(database)

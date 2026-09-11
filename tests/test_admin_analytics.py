@@ -42,6 +42,32 @@ def test_versions_experiments_and_historical_branching_stay_separate():
     assert question(analytics([],'diana-v7'),'system_usefulness')['overall']['mean'] is None
 
 
+def test_status_selection_matches_charts_csv_and_zip_with_partial_answers(admin_app):
+    import csv
+    import io
+    import zipfile
+    from survey_store import SurveyDraftV7
+    store=admin_app.extensions['survey_store']
+    store.save(SurveySubmissionV7(**versioned_payload()))
+    for sid,value in [('b',2),('c',None)]:
+        store.save_draft(SurveyDraftV7(submission_id=sid*32,version='diana-v7',revision=1,
+            answers={'study_arm':'A','system_usefulness':value}))
+    client=admin_app.test_client();login(client)
+    for status,count,mean,valid in [('completed',1,8,1),('',3,5,2),('in_progress',2,2,1)]:
+        query='version=diana-v7&status='+status
+        data=client.get('/api/admin/analytics?'+query).json
+        assert data['total']==count
+        summary=question(data,'system_usefulness')['overall']
+        assert summary['mean']==mean and summary['n']==valid
+        raw=client.get('/api/admin/export?format=csv&'+query).data
+        rows=list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig')),delimiter=';'))
+        assert len(rows)==count
+        assert sum(row['v7_system_usefulness']!='' for row in rows)==valid
+        if status:assert all(row['response_status']==status for row in rows)
+        package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?format=zip&'+query).data))
+        assert package.read('diana_numiqo.csv')==raw
+
+
 def test_freetext_limited_and_zero_choice_is_not_missing():
     rows=[record(sid=str(i)) for i in range(60)]
     for row in rows:

@@ -3,6 +3,7 @@ import secrets
 from datetime import datetime, timezone
 
 from privacy import token_hash
+from advisor import AdvisorConfig
 
 EXPERIMENT_ID = 'diana-ab-v2'
 LEGACY_EXPERIMENT_ID = 'diana-bc-v1'
@@ -68,7 +69,14 @@ class StudyAssignments:
 
     def advisor(self, token, requested):
         assigned = self.get(token)
-        return dict(NEUTRAL_ADVISOR) if assigned and assigned['arm']=='A' else requested
+        if assigned and assigned['arm'] == 'A':
+            return dict(NEUTRAL_ADVISOR)
+        if (assigned and assigned['arm'] == 'B'
+                and requested.get('mode', 'preset') == 'preset'
+                and requested.get('preset') == 'neutral'):
+            # A stale or modified client must never turn a B participant into A.
+            return AdvisorConfig().model_dump()
+        return requested
 
     def validate_answers(self, token, version, answers):
         if version not in ('diana-v6', 'diana-v7'):

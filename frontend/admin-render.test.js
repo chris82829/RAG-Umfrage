@@ -8,7 +8,13 @@ test('admin charts expose numeric values, escape freetext, and detail dialogs re
  const vite=await createServer({server:{middlewareMode:true},appType:'custom'});
  try{
   const {QuestionChart}=await vite.ssrLoadModule('/AdminAnalytics.jsx');
-  const {AdminAnswerDetail,AdminModal,AdminBulkDeleteDialog}=await vite.ssrLoadModule('/AdminPage.jsx');
+  const {AdminAnswerDetail,AdminModal,AdminBulkDeleteDialog,AdminResponseScope}=await vite.ssrLoadModule('/AdminPage.jsx');
+  for (const value of ['completed','','in_progress']) {
+   const scope=renderToStaticMarkup(React.createElement(AdminResponseScope,{value,onChange:()=>{}}));
+   assert.ok(scope.includes('Abgeschlossene und unvollständige Umfragen'));
+   assert.ok(scope.includes('Gilt sofort für Diagramme, Einzelantworten und Downloads'));
+   assert.ok(scope.includes(`value="${value}" selected=""`));
+  }
   const stat={n:1,total:1,mean:8,median:8,statuses:{answered:1},distribution:[{value:8,label:'8',count:1,percent:100}],texts:[],remaining_texts:0};
   const chart=renderToStaticMarkup(React.createElement(QuestionChart,{question:{name:'test',title:'Hilfreich?',kind:'scale',scale:{low:'Gar nicht',high:'Sehr'},overall:stat,groups:{A:stat,B:stat}},onSelect:()=>{}}));
   for(const expected of ['Variante A','Variante B','Mittelwert','Median 8','n = 1','1 (100 %)','width:100%'])assert.ok(chart.includes(expected),expected);

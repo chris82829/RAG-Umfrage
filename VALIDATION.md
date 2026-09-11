@@ -1251,3 +1251,12 @@ vollständige Systemnachricht ist exakt `Du bist ein allgemeiner KI-Assistent.`;
 kein zusätzlicher Systemtext und keine Antwortlängenbegrenzung. Produktionsbuild
 und Serverimport bestätigt; Health 200, ausgeliefertes HTML identisch zum Build.
 Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V1.
+
+## Zuverlässigkeit der A/B-Zuteilung · 11. September 2026
+
+- 34 gezielte Tests für Zuteilung, alte B/C-Zuordnungen, Suche/Chat, Fragebogen und Export erfolgreich.
+- 400 parallele Anfragen für 100 fiktive Teilnahmen über sechs unabhängige Dienstinstanzen: genau 100 Auslosungen, keine wechselnden Varianten; Zuordnungen bleiben nach erneutem Initialisieren erhalten.
+- A wird serverseitig neutral gehalten. B kann über eine veraltete oder manipulierte neutrale Beraterkonfiguration nicht mehr in die A-Funktionalität wechseln; Suche, Onboarding und Chat verwenden dieselbe Absicherung.
+- Bestehende Zuteilungen, Zeitstempel und experiment_id werden nicht verändert.
+- Die Identität ist die pseudonyme Teilnahme mit Einwilligungskennung. Gelöschter Browserspeicher oder eine neue Teilnahme kann nicht derselben natürlichen Person zugeordnet werden.
+- Unabhängige 50:50-Auslosung garantiert keine exakt gleich großen Gruppen oder gleich viele Abschlüsse. Keine nachträgliche Umverteilung zum Ausgleich von Abbrüchen.

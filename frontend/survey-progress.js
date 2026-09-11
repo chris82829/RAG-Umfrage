@@ -32,11 +32,17 @@ export function hasChatMessage(session) {
     && session.messages.some(message => message.role === 'user' && typeof message.content === 'string' && message.content.trim());
 }
 
+export function isSurveyResultsView({ session, page, booting, busy, editor, personalityIntro }) {
+  return hasSearchResults(session) && page === 'search' && !booting && !busy
+    && !editor && !personalityIntro;
+}
+
 export function reportSurveyProgress(host, ready, context, onOpenChat) {
   const runId = surveyRun(host.location.search);
   if (!runId || host.parent === host) return () => {};
   const announce = () => {
     if (context) host.parent.postMessage({ type: CONTEXT, runId,
+      resultsVisible: context.resultsVisible === true,
       ...(typeof context.assistantName==='string'?{assistantName:context.assistantName.slice(0,100)}:{}),
       searching: context.searching === true, searchGoal: typeof context.searchGoal === 'string' ? context.searchGoal.slice(0, 1000) : '' }, host.location.origin);
     if (ready) host.parent.postMessage({ type: COMPLETION, runId, completedStep: 3 }, host.location.origin);
@@ -57,7 +63,7 @@ export function readSurveySearchContext(event, frameWindow, origin, runId) {
   if (!frameWindow || event.source !== frameWindow || event.origin !== origin
       || data?.type !== CONTEXT || data.runId !== runId || typeof data.searching !== 'boolean'
       || typeof data.searchGoal !== 'string' || data.searchGoal.length > 1000) return null;
-  return { searching: data.searching, searchGoal: data.searchGoal.trim(), ...(typeof data.assistantName==='string' && data.assistantName.length<=100?{assistantName:data.assistantName}:{}) };
+  return { searching: data.searching, resultsVisible: data.resultsVisible === true, searchGoal: data.searchGoal.trim(), ...(typeof data.assistantName==='string' && data.assistantName.length<=100?{assistantName:data.assistantName}:{}) };
 }
 
 export function requestSurveyProgress(frameWindow, origin, runId) {

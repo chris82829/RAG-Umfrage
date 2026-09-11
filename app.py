@@ -25,7 +25,7 @@ from schemas import ChatInput, Profile, SearchInput
 from session_store import SessionConflict, SessionStore, EphemeralSessionStore
 from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
-from study_assignment import NEUTRAL_ADVISOR, StudyAssignments
+from study_assignment import StudyAssignments
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice
 from study_release import StudyReleases
@@ -550,7 +550,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         if error:
             return error
         assigned = assignments.get(consent_token())
-        search_advisor = dict(NEUTRAL_ADVISOR) if assigned and assigned['arm']=='A' else body.advisor.model_dump()
+        search_advisor = assignments.advisor(consent_token(), body.advisor.model_dump())
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)

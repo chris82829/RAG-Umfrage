@@ -29,10 +29,11 @@ export async function readOperationResponse(response, onPhase = () => {}, onText
     if (!event || typeof event !== 'object') throw new Error('Die Serverantwort ist unvollständig.');
     if (event.type === 'error') throw responseError(event, event.status || 500);
     if (event.type === 'assistant_text') {
-      if (typeof event.text !== 'string' || event.text.length > 1800) {
+      if (typeof event.text !== 'string') {
         throw new Error('Der Antworttext konnte nicht gelesen werden.');
       }
-      // Snapshots replace the preview; only the final result commits a message.
+      // Generic chat has no answer-length cap. The transport buffer limit below
+      // still applies. Only the final result commits a message.
       onText(event.text);
     }
     if (event.type === 'phase' && event.phase === 'search' && !searchReported) {

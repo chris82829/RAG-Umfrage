@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { hasSearchResults, isSurveyCompletion, reportSurveyProgress, requestSurveyProgress, searchGoalSuggestion, readSurveySearchContext } from './survey-progress.js';
+import { hasSearchResults, isSurveyResultsView, isSurveyCompletion, reportSurveyProgress, requestSurveyProgress, searchGoalSuggestion, readSurveySearchContext } from './survey-progress.js';
 
 const runId = 'a'.repeat(32);
 const origin = 'http://127.0.0.1:5050';
@@ -20,7 +20,7 @@ test('search context is replayed for the current parent but never counts as comp
   const data = host.posted[0].data;
   const frame = {};
   const event = {data, source: frame, origin};
-  assert.deepEqual(readSurveySearchContext(event, frame, origin, runId), {searching:true, searchGoal:'Python Werkstudent'});
+  assert.deepEqual(readSurveySearchContext(event, frame, origin, runId), {searching:true, resultsVisible:false, searchGoal:'Python Werkstudent'});
   assert.equal(isSurveyCompletion(event, frame, origin, runId), false);
   for (const bad of [{...event,source:{}}, {...event,origin:'http://elsewhere.test'},
     {...event,data:{...data,runId:'b'.repeat(32)}}, {...event,data:{...data,searching:'true'}},
@@ -28,7 +28,25 @@ test('search context is replayed for the current parent but never counts as comp
   host.posted.length=0;
   host.receive({type:'diana:survey-progress-request',runId});
   assert.equal(host.posted.length,1);
-  assert.deepEqual(Object.keys(data).sort(), ['type','runId','searching','searchGoal'].sort());
+  assert.deepEqual(Object.keys(data).sort(), ['type','runId','searching','searchGoal','resultsVisible'].sort());
+});
+
+test('follow-up visibility follows the current view, including waiting and editing after a completed search', () => {
+  const view = {session:{session_id:'s'.repeat(32),jobs:[]},page:'search',booting:false,busy:false,editor:null,personalityIntro:null};
+  assert.equal(isSurveyResultsView(view),true);
+  for (const change of [{session:null},{page:'about'},{booting:true},{busy:true},{editor:'profile'},{editor:'advisor'},{personalityIntro:'help'}]) {
+    assert.equal(isSurveyResultsView({...view,...change}),false);
+  }
+  const host=embeddedWindow();
+  const frame={};
+  for (const resultsVisible of [true,false,true]) {
+    const cleanup=reportSurveyProgress(host,true,{searching:false,searchGoal:'',resultsVisible});
+    host.posted.length=0;
+    host.receive({type:'diana:survey-progress-request',runId});
+    const data=host.posted.find(item=>item.data.type==='diana:survey-search-context').data;
+    assert.equal(readSurveySearchContext({data,source:frame,origin},frame,origin,runId).resultsVisible,resultsVisible);
+    cleanup();
+  }
 });
 function embeddedWindow() {
   const listeners = new Set();

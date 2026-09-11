@@ -212,7 +212,7 @@ test('partial chat text never substitutes for a final result after failure or di
 });
 
 test('invalid text snapshots are rejected and requestOperation forwards valid previews', async t => {
-  for (const text of [null, {}, 'x'.repeat(1801)]) {
+  for (const text of [null, {}, 42]) {
     await assert.rejects(readOperationResponse(streamResponse([line({ type: 'assistant_text', text })])), understandableError);
   }
   const data = { assistant_message: 'Eine Antwort.' };
@@ -222,4 +222,19 @@ test('invalid text snapshots are rejected and requestOperation forwards valid pr
   const texts = [];
   assert.deepEqual(await requestOperation('/chat', { message: 'Warum?' }, undefined, text => texts.push(text)), data);
   assert.deepEqual(texts, ['Eine']);
+});
+
+test('long general-assistant answers stream past 1800 characters and finish across consecutive requests', async () => {
+  for (const length of [1801, 12000]) {
+    const answer = 'Eine ausführliche Antwort mit Umlauten: äöü. '.repeat(300).slice(0, length);
+    const data = {chat_action:'answer', assistant_message:answer, messages:[{role:'assistant',content:answer}]};
+    const previews = [answer.slice(0,1700),answer.slice(0,1801),answer];
+    const texts = [];
+    const response = streamResponse([
+      ...previews.map(text=>line({type:'assistant_text',text})),
+      line({type:'result',data}),
+    ]);
+    assert.deepEqual(await readOperationResponse(response,()=>assert.fail('No new search'),text=>texts.push(text)),data);
+    assert.deepEqual(texts,previews);
+  }
 });

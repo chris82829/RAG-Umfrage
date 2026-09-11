@@ -131,6 +131,7 @@ export default function SurveyPage({ initial, participationId }) {
   const [errors, setErrors] = useState({});
   const [error, setError] = useState('');
   const [searching, setSearching] = useState(false);
+  const [resultsVisible, setResultsVisible] = useState(false);
   const [searchAssistant,setSearchAssistant]=useState('DIANA-KI');
   const [waitingOpen, setWaitingOpen] = useState(false);
   const [chatRequired, setChatRequired] = useState(false);
@@ -198,6 +199,7 @@ export default function SurveyPage({ initial, participationId }) {
       const context = readSurveySearchContext(event, frame.current?.contentWindow, window.location.origin, state.runId);
       if (context) {
         setSearching(context.searching);
+        setResultsVisible(context.resultsVisible);
         if(context.assistantName)setSearchAssistant(context.assistantName);
         setState(previous => { const next=suggestSearchGoal(previous,context.searchGoal); return next.answers!==previous.answers ? reviseSurvey(next,{}) : next; });
       }
@@ -294,8 +296,8 @@ export default function SurveyPage({ initial, participationId }) {
     {/* The live iframe stays mounted across question pages and return visits. */}
     {!state.submitted && !assignmentReady && <div className="empty-state" role="status"><p>{error || 'Dein Systemtest wird vorbereitet …'}</p>{error && <button className="survey-primary" onClick={()=>setAssignmentAttempt(value=>value+1)}>Erneut versuchen</button>}</div>}
     {state.systemOpened && assignmentReady && <section className="survey-system-view" hidden={!systemActive} aria-label="DIANA ausprobieren">
-      <iframe ref={frame} title="DIANA Jobsuche – interaktiv ausprobieren" src={`/suche?embed=survey&run=${state.runId}`} referrerPolicy="same-origin" onLoad={() => requestSurveyProgress(frame.current?.contentWindow, window.location.origin, state.runId)} />
-      {!searching && !waitingOpen && state.systemCompleted && <div className="survey-system-actions"><button className="survey-primary diana-action-motion" type="button" onClick={advance}>Weitere Fragen für die Umfrage beantworten<ArrowRight className="diana-action-arrow" size={18}/></button></div>}
+      <iframe ref={frame} title="DIANA Jobsuche – interaktiv ausprobieren" src={`/suche?embed=survey&run=${state.runId}`} referrerPolicy="same-origin" onLoad={() => { setResultsVisible(false); requestSurveyProgress(frame.current?.contentWindow, window.location.origin, state.runId); }} />
+      {resultsVisible && !searching && !waitingOpen && !chatRequired && state.systemCompleted && <div className="survey-system-actions"><button className="survey-primary diana-action-motion" type="button" onClick={advance}>Weitere Fragen für die Umfrage beantworten<ArrowRight className="diana-action-arrow" size={18}/></button></div>}
     </section>}
     <div className="survey-questionnaire" hidden={systemActive}>
       <header className="survey-header"><a href="/" className="survey-brand" aria-label="Über DIANA und Christoph Scharnagl"><span><Compass size={23} strokeWidth={1.7} /></span><strong>DIANA<small>Umfrage</small></strong></a><span className="survey-header-label">{state.submitted ? 'Abgeschlossen' : 'Deine Erfahrung mit dem Suchsystem'}</span></header>

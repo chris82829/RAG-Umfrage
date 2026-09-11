@@ -80,6 +80,26 @@ def test_neutral_prompt_explicitly_excludes_personality_customization():
     assert 'keine gewünschte Persönlichkeit' in prompt
     assert resolved['scoring_weights']==dict(technical_fit=60,preferences_fit=15,technical_depth=7,learning=6,innovation=6,clarity=6)
 
+
+def test_b_cannot_be_changed_to_a_by_stale_search_or_chat_payload(experiment,monkeypatch):
+    app,model=experiment;client,headers,assigned=assign(app,monkeypatch,'B')
+    wrong={'mode':'preset','preset':'neutral'}
+    first=client.post('/api/onboard',headers=headers,json=payload()|{'advisor':wrong})
+    assert first.status_code==201
+    sid=first.json['session_id']
+    assert not resolve_advisor(first.json['advisor'])['neutral']
+    assert all('match' in job for job in first.json['jobs'])
+    for mode in ['auto','rerank','search']:
+        result=client.post('/api/chat',headers=headers,json={'session_id':sid,'advisor':wrong,'message':'Warum passt die Stelle?','mode':mode})
+        assert result.status_code==200
+        assert not resolve_advisor(result.json['advisor'])['neutral']
+        assert all('match' in job for job in result.json['jobs'])
+    result=client.post('/api/search',headers=headers,json=payload()|{'advisor':wrong})
+    assert result.status_code==200 and not resolve_advisor(result.json['advisor'])['neutral']
+    restored=client.get('/api/sessions/'+sid,headers=headers)
+    assert restored.status_code==200 and not resolve_advisor(restored.json['advisor'])['neutral']
+    assert client.post('/api/study-assignment',headers=headers).json==assigned
+
 @pytest.mark.parametrize('arm',['A','B'])
 def test_draft_submission_exports_and_group_filter_use_server_assignment(experiment,monkeypatch,arm):
     app,_=experiment;client,headers,assignment=assign(app,monkeypatch,arm)

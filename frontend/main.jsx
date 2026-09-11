@@ -25,7 +25,7 @@ import AdminPage from './AdminPage.jsx';
 import PrivacyGate from './PrivacyGate.jsx';
 import {consentHeaders} from './privacy.js';
 import { appPath, appSessionStorage, surveyRun } from './app-session.js';
-import { hasChatMessage, hasSearchResults, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
+import { hasChatMessage, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
 import './action-motion.css';
 import { neutralAdvisor, defaultAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
 
@@ -205,14 +205,15 @@ export function App({studyArm = 'B'}) {
   const chatLayout = useChatResize(workspace, !session);
 
   const surveyResultsReady = !booting && !busy && hasSearchResults(session);
+  const surveyResultsVisible = isSurveyResultsView({ session, page, booting, busy, editor, personalityIntro });
   const surveySearching = busy && searchActive;
   const surveyGoal = searchGoalSuggestion(surveyResultsReady ? session?.profile : surveySearchProfile);
   const surveyChatCompleted = hasChatMessage(session);
   const surveyAssistantName=operation?.assistantName || advisorAiLabel(session?.advisor || advisor);
-  useEffect(() => reportSurveyProgress(window, surveyResultsReady, { searching: surveySearching, searchGoal: surveyGoal, chatCompleted: surveyChatCompleted, assistantName:surveyAssistantName }, () => {
+  useEffect(() => reportSurveyProgress(window, surveyResultsReady, { resultsVisible: surveyResultsVisible, searching: surveySearching, searchGoal: surveyGoal, chatCompleted: surveyChatCompleted, assistantName:surveyAssistantName }, () => {
     setEditor(null); setMobileView('chat'); setActivity('chat');
     requestAnimationFrame(() => document.getElementById('chat-input')?.focus());
-  }), [surveyResultsReady, surveySearching, surveyGoal, surveyChatCompleted, surveyAssistantName]);
+  }), [surveyResultsReady, surveyResultsVisible, surveySearching, surveyGoal, surveyChatCompleted, surveyAssistantName]);
 
   useEffect(() => {
     const onPopState = () => setPage(currentPage());
