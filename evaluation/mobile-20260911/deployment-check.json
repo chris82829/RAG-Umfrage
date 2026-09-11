@@ -1,0 +1,37 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "matches_build": true
+  },
+  {
+    "path": "/umfrage",
+    "status": 200,
+    "matches_build": true
+  },
+  {
+    "path": "/suche",
+    "status": 200,
+    "matches_build": true
+  },
+  {
+    "path": "/verwaltung",
+    "status": 200,
+    "matches_build": true
+  },
+  {
+    "path": "/assets/compass-D3poa9cz.svg",
+    "status": 200,
+    "matches_build": true
+  },
+  {
+    "path": "/assets/index-DFhnbVjj.js",
+    "status": 200,
+    "matches_build": true
+  },
+  {
+    "path": "/assets/index-DjVzfZTA.css",
+    "status": 200,
+    "matches_build": true
+  }
+]

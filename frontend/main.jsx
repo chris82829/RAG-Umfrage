@@ -29,6 +29,9 @@ import { hasChatMessage, hasSearchResults, isSurveyResultsView, reportSurveyProg
 import './action-motion.css';
 import { neutralAdvisor, defaultAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
 
+import { installMobileViewport, shouldSendOnEnter } from './mobile-viewport.js';
+import './mobile.css';
+
 const sessionStorageAccess = appSessionStorage();
 const isEmbeddedSurvey = Boolean(surveyRun(window.location.search));
 const currentPage = () => window.location.pathname === '/suche' ? 'search' : 'about';
@@ -515,6 +518,7 @@ export function App({studyArm = 'B'}) {
         <div className="local-status"><i aria-hidden="true" />{allDemo ? `${total} fiktive Beispielstellen` : `${total.toLocaleString('de-DE')} Stellenanzeigen`}</div>
       </div>
     </header>
+    {(session || onboardingStarted) && <nav className="mobile-view-switch" aria-label="Ansicht wechseln"><button type="button" aria-pressed={mobileView === 'jobs'} onClick={() => setMobileView('jobs')}><Search size={17}/>{session ? 'Stellen' : 'Anleitung'}</button><button type="button" aria-pressed={mobileView === 'chat'} onClick={() => setMobileView('chat')}><MessageCircle size={17}/>{session ? 'Chat & Profil' : onboardingStep === 1 ? 'Profil' : 'Persönlichkeit'}</button></nav>}
     <main ref={workspace} data-journey-step={activeStep} className={`workspace view-${mobileView} ${!session ? 'is-onboarding' : ''} ${showWelcome ? 'is-welcome' : ''} ${chatLayout.dragging ? 'is-resizing' : ''}`} style={{ '--chat-width': `${chatLayout.width}px` }}>
       <section className="jobs-panel" aria-label={session ? 'Stellenangebote' : 'So funktioniert DIANA'} onPointerDownCapture={() => { if (session && !editor && !busy && !booting) setActivity('results'); }} onFocusCapture={() => { if (session && !editor && !busy && !booting) setActivity('results'); }}>
         <div className="jobs-heading"><div><span className="eyebrow">DEINE JOBSUCHE</span><h1 id="diana-results-heading" tabIndex={-1}>{session ? 'Deine Empfehlungen' : 'So funktioniert DIANA'}</h1></div>{session && <ProfileSummaryPopover key={session.session_id} summary={profileInfo} disabled={busy || booting || page !== 'search'} context={`${page}-${mobileView}-${editor}`} onEdit={() => selectAssistantView('profile')} />}</div>
@@ -546,13 +550,13 @@ export function App({studyArm = 'B'}) {
           <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite" onScroll={event => { const feed = event.currentTarget; followChat.current = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80; }}>{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><ChatMessageText text={pending} assistant={false} /></div>}{busy && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="message-bubble" aria-busy="true">{streamingText ? <div className="message-text streaming-text">{streamingText}</div> : <div className="chat-typing"><span className="sr-only">{progressLabel}</span><span aria-hidden="true"><i /><i /><i /></span></div>}</div></div>}<div ref={messagesEnd} /></div>
           <div className="chat-bottom">{chatSuggestions.length > 0 && <details className="chat-examples"><summary>Vorschläge für deinen nächsten Schritt</summary><div className="suggestions">{chatSuggestions.map(suggestion => <button key={suggestion.id} disabled={busy} onClick={() => { setDraft(suggestion.message); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><Plus size={13} />{suggestion.label}</button>)}</div></details>}
             {!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum erneuten Bewerten sind gerade keine gespeicherten Jobs verfügbar.'} Du kannst im Chat um eine neue Suche bitten.</p>}
-            <form className="chat-composer" onSubmit={sendMessage}><label className="sr-only" htmlFor="chat-input">Nachricht an {assistantName}</label><textarea id="chat-input" rows={2} maxLength={3000} value={draft} onChange={e => setDraft(e.target.value)} placeholder="Was möchtest du wissen oder ändern?" disabled={busy} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); sendMessage(e); } }} /><button type="submit" aria-label="Nachricht senden" disabled={busy || !canSendChat('auto', draft, session)}><ArrowUp size={20} /></button></form>
+            <form className="chat-composer" onSubmit={sendMessage}><label className="sr-only" htmlFor="chat-input">Nachricht an {assistantName}</label><textarea id="chat-input" rows={2} maxLength={3000} value={draft} onChange={e => setDraft(e.target.value)} placeholder="Was möchtest du wissen oder ändern?" disabled={busy} onKeyDown={e => { if (shouldSendOnEnter({...e, isComposing:e.nativeEvent.isComposing}, window.matchMedia('(pointer: coarse)').matches)) { e.preventDefault(); sendMessage(e); } }} /><button type="submit" aria-label="Nachricht senden" disabled={busy || !canSendChat('auto', draft, session)}><ArrowUp size={20} /></button></form>
           </div>
         </>}
         </>}
       </aside>
     </main>
-    {session && mobileView === 'jobs' && <div className="mobile-assistant-access"><button type="button" className="journey-next-button" disabled={busy || booting} onClick={() => { selectAssistantView('chat'); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><MessageCircle size={17} aria-hidden="true" />Profil & Chat öffnen<ArrowRight size={16} aria-hidden="true" /></button></div>}
+
   </div>{page === 'about' && <AboutPage />}<PersonalityIntroDialog open={!neutral && personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={!isEmbeddedSurvey && busy && searchActive && page === 'search'} assistantName={pendingAssistantName} /></>;
 }
 
@@ -575,4 +579,5 @@ const isSurveyPage = /^\/umfrage\/?$/.test(window.location.pathname);
 const isSearchPage = window.location.pathname === '/suche';
 const isAdminPage = window.location.pathname === '/verwaltung';
 const isPrivacyPage = window.location.pathname === '/datenschutz';
+if (!import.meta.env.SSR) installMobileViewport(window);
 if (!import.meta.env.SSR) createRoot(document.getElementById('root')).render(<React.StrictMode>{isAdminPage ? <AdminPage /> : isPrivacyPage ? <PrivacyGate informationOnly /> : isSurveyPage || isSearchPage ? <PrivacyGate>{isSurveyPage ? <SurveyPage /> : <AssignedSearch />}</PrivacyGate> : <AboutPage />}</React.StrictMode>);

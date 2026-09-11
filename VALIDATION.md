@@ -1260,3 +1260,14 @@ Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V
 - Bestehende Zuteilungen, Zeitstempel und experiment_id werden nicht verändert.
 - Die Identität ist die pseudonyme Teilnahme mit Einwilligungskennung. Gelöschter Browserspeicher oder eine neue Teilnahme kann nicht derselben natürlichen Person zugeordnet werden.
 - Unabhängige 50:50-Auslosung garantiert keine exakt gleich großen Gruppen oder gleich viele Abschlüsse. Keine nachträgliche Umverteilung zum Ausgleich von Abbrüchen.
+
+## Mobile Bedienung · 11. September 2026
+
+- Ausgangsstand vor Änderungen als Commit `e03e35e` auf `stand-diana-ab-2026-09-11` gesichert und zu GitHub übertragen.
+- Beschriftete mobile Umschaltung zwischen Anleitung/Stellen und Profil/Chat; größere Touch-Flächen, kompakter Umfrage-Fortsetzungsbutton und einspaltige Felder auf sehr schmalen Displays.
+- Sichtbare Viewporthöhe berücksichtigt die Bildschirmtastatur; Pinch-Zoom bleibt möglich. Auf Touch-Geräten erzeugt Enter einen Zeilenumbruch, der Senden-Button verschickt die Nachricht. Desktop-Enter und explizite Tastenkürzel bleiben erhalten.
+- 139 Frontendtests erfolgreich, darunter neue Tests für Viewportänderungen, Pinch-Zoom, Aufräumen der Listener und Tastatureingaben. Produktionsbuild erfolgreich, `git diff --check` ohne Befund.
+- Browserprüfung mit lokalem, isoliertem Flask-Testserver, fiktiven Stellen und FakeLLM bei 320 und 390 CSS-Pixel Breite sowie reduzierter Höhe (460 Pixel): Startseite, Einwilligung, Profil, Persönlichkeit und Erklärung, Suche, Wartefragebogen/Schließen, Stellen-/Chatwechsel in A und B, Senden einer Chatnachricht, Demografie, Suchvorhaben und Darstellung der 1–10-Skalen. Verwaltung einschließlich Login, Auswahl unvollständiger Teilnahmen und Diagrammlayout geprüft.
+- Keine echten Modellaufrufe und keine produktiven Testteilnahmen. Nicht alle Fragebogenkategorien bis zum endgültigen Absenden manuell durchgeklickt. Kein physisches iOS-/Android-Gerät: native Bildschirmtastatur und Safe-Area-Verhalten sind vorbereitet und teilweise automatisiert geprüft, aber noch auf echten Geräten zu bestätigen.
+- Desktop-Gegenprobe bei 1280 CSS-Pixel Breite: Stellen und Chat gleichzeitig verfügbar, verstellbarer Trenner vorhanden und mobile Umschaltung ausgeblendet (Accessibility-Tree geprüft).
+- Serverdeployment: bisherige Frontenddateien unter `backups/pre-mobile-20260911.tar.gz` gesichert; Container neu gebaut. Startseite, Umfrage, Suche, Verwaltung und ausgelieferte Assets liefern HTTP 200 und entsprechen bytegenau dem lokalen Build. Protokoll: `evaluation/mobile-20260911/deployment-check.json`.
