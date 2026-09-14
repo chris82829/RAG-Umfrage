@@ -29,7 +29,7 @@ import {consentHeaders} from './privacy.js';
 import { appPath, appSessionStorage, surveyRun } from './app-session.js';
 import { hasChatMessage, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
 import './action-motion.css';
-import { neutralAdvisor, defaultAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
+import { neutralAdvisor, standardAdvisor, defaultAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
 
 import { installMobileViewport, shouldSendOnEnter } from './mobile-viewport.js';
 import './mobile.css';
@@ -171,9 +171,11 @@ export function ProfileForm({ neutral = false, allowCustom = true, form, setForm
   </form>;
 }
 
-export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'generic' : studyArm === 'B' ? 'templates' : 'configurable'}) {
+export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'standard' : studyArm === 'B' ? 'templates' : 'configurable', presentationPolicy = 'ranked_insights'}) {
   const neutral=studyArm==='A';
   const allowCustom=personalityPolicy==='configurable';
+  const showInsights=presentationPolicy==='ranked_insights';
+  const fixedAdvisor=personalityPolicy==='standard' ? standardAdvisor : neutralAdvisor;
   const [page, setPage] = useState(currentPage);
   const [catalog, setCatalog] = useState([]);
   const [total, setTotal] = useState(0);
@@ -184,7 +186,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'gen
   const [onboardingStarted, setOnboardingStarted] = useState(false);
   const [personalityIntro, setPersonalityIntro] = useState(null);
   const personalityIntroSeen = useRef(false);
-  const [advisor, setAdvisor] = useState(neutral ? {...neutralAdvisor} : { ...defaultAdvisor });
+  const [advisor, setAdvisor] = useState(neutral ? {...fixedAdvisor} : { ...defaultAdvisor });
   const [templates, setTemplates] = useState(undefined);
   const [advisorSelection, setAdvisorSelection] = useState(neutral ? null : templateSelection('career'));
   const [editor, setEditor] = useState(null);
@@ -372,7 +374,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'gen
   function startSearch(event) {
     event.preventDefault();
     if (booting || busy || !indexReady) return;
-    try { const body = { profile: makeProfile(form), advisor: neutral ? {...neutralAdvisor} : validateAdvisor(editableAdvisor(advisor)), advisor_selection: neutral ? undefined : selectionForRequest(advisorSelection) }; markSteps(1, 2); void run(body, '/onboard', 'onboard'); } catch (e) { setError(e.message); }
+    try { const body = { profile: makeProfile(form), advisor: neutral ? {...fixedAdvisor} : validateAdvisor(editableAdvisor(advisor)), advisor_selection: neutral ? undefined : selectionForRequest(advisorSelection) }; markSteps(1, 2); void run(body, '/onboard', 'onboard'); } catch (e) { setError(e.message); }
   }
   function sendMessage(event) {
     event.preventDefault();
@@ -388,7 +390,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'gen
   function applyAdvisor(event) {
     event.preventDefault();
     if (!session || busy || !candidatePool(session).canRerank) return;
-    try { void run({ session_id: session.session_id, advisor: neutral ? {...neutralAdvisor} : validateAdvisor(editableAdvisor(advisor)), advisor_selection: neutral ? undefined : selectionForRequest(advisorSelection), mode: 'rerank' }, '/chat', 'advisor'); } catch (e) { setError(e.message); }
+    try { void run({ session_id: session.session_id, advisor: neutral ? {...fixedAdvisor} : validateAdvisor(editableAdvisor(advisor)), advisor_selection: neutral ? undefined : selectionForRequest(advisorSelection), mode: 'rerank' }, '/chat', 'advisor'); } catch (e) { setError(e.message); }
   }
   function cancelEditor() {
     if (busy) return;
@@ -496,8 +498,8 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'gen
   const jobs = session?.jobs || [];
   const visibilityKey = resultVisibilityKey(session);
   const showLowScores = visibilityKey !== null && revealedResults === visibilityKey;
-  const { visibleJobs, lowCount } = neutral ? { visibleJobs: jobs, lowCount: 0 } : scoreVisibility(jobs, showLowScores);
-  const chatSuggestions = buildChatSuggestions(session, visibleJobs, { showScores: !neutral });
+  const { visibleJobs, lowCount } = showInsights ? scoreVisibility(jobs, showLowScores) : { visibleJobs: jobs, lowCount: 0 };
+  const chatSuggestions = buildChatSuggestions(session, visibleJobs, { showScores: showInsights });
   const allDemo = catalog.length > 0 && catalog.every(j => demoIds.has(j.id));
   const profileInfo = profileSummary(session?.profile);
   const indexReady = indexState?.status === 'ready';
@@ -547,7 +549,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'gen
         {error && (showWelcome || mobileView === 'jobs') && <div className={`error-banner${showWelcome ? '' : ' journey-mobile-error'}`} role="alert">{error}</div>}
         {booting ? <div className="empty-state" role="status"><span className="spinner" /><p>Deine Jobsuche wird geladen …</p></div> : session ? <>
           <div id="ranked-jobs" className="jobs-list" aria-busy={busy}>
-            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={!neutral} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} />)}
+            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={showInsights} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} />)}
             {!jobs.length && <div className="empty-state"><Search size={34} strokeWidth={1.3} /><h2>Hier ist noch Platz für deinen Match.</h2><p>{profileInfo.hardFilters.length && !pool.refreshRequired ? 'Aktuell gibt es keine Stellen zur gewählten Stellenart. Du kannst im Suchprofil oder Chat weitere Stellenarten einbeziehen.' : 'Aktuell liegen keine Stellenempfehlungen vor. Prüfe dein Suchprofil oder starte eine neue Suche.'}</p><button className="text-button" disabled={busy} onClick={() => { setDraft(profileInfo.hardFilters.length ? 'Welche Stellenarten sind aktuell ausgewählt und welche weiteren kommen für mich infrage?' : 'Welche Angaben sind aktuell in meinem Suchprofil gespeichert?'); showChat(); }}>Suchprofil im Chat besprechen <ArrowRight size={15} /></button></div>}
           </div>
           {lowCount > 0 && <ScoreNotice lowCount={lowCount} total={jobs.length} showLowScores={showLowScores} scoreLabel={scoreLabel} busy={busy} onToggle={toggleLowScoreResults} />}
@@ -589,13 +591,13 @@ export function AssignedSearch() {
     let active=true;const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);
     fetch('/api/study-assignment',{method:'POST',headers:consentHeaders(),signal:controller.signal}).then(async response=>{
       if(!response.ok)throw new Error('Der Systemtest konnte nicht vorbereitet werden.');
-      const value=await response.json();if(!['A','B','C'].includes(value.arm) || !['generic','templates','configurable'].includes(value.personality_policy))throw new Error('Studienzuordnung fehlt.');
+      const value=await response.json();if(!['A','B','C'].includes(value.arm) || !['generic','standard','templates','configurable'].includes(value.personality_policy) || !['ranked_insights','legacy_neutral'].includes(value.presentation_policy))throw new Error('Studienzuordnung fehlt.');
       if(active){setAssignment(value);setError('');}
     }).catch(()=>{if(active)setError('Der Systemtest konnte nicht vorbereitet werden. Bitte versuche es erneut.');}).finally(()=>clearTimeout(timeout));
     return()=>{active=false;clearTimeout(timeout);controller.abort();};
   },[attempt]);
   if(!assignment)return <div className="empty-state" role="status"><p>{error || 'Dein Systemtest wird vorbereitet …'}</p>{error && <button className="primary-button" onClick={()=>setAttempt(value=>value+1)}>Erneut versuchen</button>}</div>;
-  return <App studyArm={assignment.arm} personalityPolicy={assignment.personality_policy} />;
+  return <App studyArm={assignment.arm} personalityPolicy={assignment.personality_policy} presentationPolicy={assignment.presentation_policy} />;
 }
 
 const isSurveyPage = /^\/umfrage\/?$/.test(window.location.pathname);

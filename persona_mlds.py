@@ -36,7 +36,7 @@ class _Provenance(BaseModel):
 
 class _Template(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True, str_strip_whitespace=True)
-    id: Literal['career', 'expert', 'neutral']
+    id: Literal['career', 'expert', 'neutral', 'standard']
     subtitle: str = Field(min_length=1, max_length=100)
     summary: str = Field(min_length=1, max_length=400)
     selectable: bool
@@ -70,10 +70,10 @@ class _Document(BaseModel):
         if self.provenance.origin == 'builtin':
             if self.template is None:
                 raise ValueError('Eingebaute Persönlichkeiten benötigen Vorlagenmetadaten.')
-            if self.template.selectable != (self.template.id != 'neutral'):
+            if self.template.selectable != (self.template.id not in ('neutral', 'standard')):
                 raise ValueError('Die allgemeine Vergleichsbedingung ist keine Auswahlvorlage.')
-            if self.template.id == 'neutral':
-                if self.personality.mode != 'preset' or self.personality.preset != 'neutral':
+            if self.template.id in ('neutral', 'standard'):
+                if self.personality.mode != 'preset' or self.personality.preset != self.template.id:
                     raise ValueError('Die allgemeine Basis benötigt das neutrale Profil.')
             elif self.personality.mode != 'custom':
                 raise ValueError('Bearbeitbare Vorlagen benötigen eine eigene Konfiguration.')
@@ -191,6 +191,11 @@ def load_neutral_advisor() -> dict:
     return _load_builtin('neutral').personality.model_dump()
 
 
+def load_standard_advisor() -> dict:
+    """Fixed, task-competent control in the conference protocol; not selectable."""
+    return _load_builtin('standard').personality.model_dump()
+
+
 def personality_schema() -> dict:
     """Generate the published JSON Schema/MLDSI from the runtime model.
 
@@ -229,11 +234,14 @@ def personality_schema() -> dict:
     }, {
         'if': {'required': ['template'], 'properties': {'template': {'type': 'object'}}},
         'then': {
-            'if': {'properties': {'template': {'properties': {'id': {'const': 'neutral'}}}}},
+            'if': {'properties': {'template': {'properties': {'id': {'enum': ['neutral', 'standard']}}}}},
             'then': {'properties': {
                 'template': {'properties': {'selectable': {'const': False}}},
-                'personality': {'properties': {'mode': {'const': 'preset'}, 'preset': {'const': 'neutral'}}},
-            }},
+                'personality': {'properties': {'mode': {'const': 'preset'}}},
+            }, 'allOf': [{
+                'if': {'properties': {'template': {'properties': {'id': {'const': key}}}}},
+                'then': {'properties': {'personality': {'properties': {'preset': {'const': key}}}}},
+            } for key in ('neutral', 'standard')]},
             'else': {'properties': {
                 'template': {'properties': {'selectable': {'const': True}}},
                 'personality': {'properties': {'mode': {'const': 'custom'}}},

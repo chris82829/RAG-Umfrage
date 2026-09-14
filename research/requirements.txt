@@ -1,0 +1,3 @@
+# Offline research scripts only; never add these to the application image.
+numpy==2.5.3
+scipy==1.16.2

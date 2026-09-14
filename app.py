@@ -27,7 +27,8 @@ from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
 from persona_mlds import advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_usage import StudyPersonalityUsage, normalize_selection
-from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, advisor_for_policy, PersonalityPolicyError
+from study_metrics import StudyOperationMetrics
+from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
 from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice
@@ -212,6 +213,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     sessions = (SessionStore if app.config['PERSIST_CHAT_SESSIONS'] else EphemeralSessionStore)(db_path)
     privacy = PrivacyStore(db_path)
     personality_usage = StudyPersonalityUsage(db_path)
+    operation_metrics = StudyOperationMetrics(db_path)
     notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
     releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
     surveys = SurveyStore(db_path)
@@ -227,7 +229,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     performance_logger.setLevel(logging.INFO)
     language_model = llm or OpenAIService(api_key=app.config['OPENAI_API_KEY'],
                                         performance_logger=performance_logger)
-    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine, personality_usage=personality_usage,
+    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine, personality_usage=personality_usage, operation_metrics=operation_metrics,
                           llm_service=language_model, survey_store=surveys, privacy_store=privacy, study_releases=releases)
 
     @contextmanager
@@ -260,7 +262,8 @@ def create_app(config=None, *, retriever=None, llm=None):
     def request_assignment():
         arm = test_arm()
         return {'arm': arm, 'test': True, 'experiment_id': EXPERIMENT_ID,
-                'personality_policy': personality_policy(EXPERIMENT_ID, arm)} if arm else assignments.get(consent_token())
+                'personality_policy': personality_policy(EXPERIMENT_ID, arm),
+                'presentation_policy': presentation_policy(EXPERIMENT_ID, arm)} if arm else assignments.get(consent_token())
 
     def request_policy():
         assigned = request_assignment()
@@ -296,7 +299,35 @@ def create_app(config=None, *, retriever=None, llm=None):
             return state.get('_personality_policy') != 'templates'
         return False
 
-    def consent_link(kind, *, selection=None, completed=False):
+    def record_metrics(db, digest, timings, success):
+        now = time.monotonic()
+        for operation, started in (timings or {}).items():
+            operation_metrics.record_operation(digest, operation, success,
+                max(0, round((now - started) * 1000)), db)
+
+    def failed_metrics(timings):
+        if not timings or not app.config['PRIVACY_REQUIRED'] or test_arm():
+            return
+        # Diagnostics must not replace the actual request error or resurrect a
+        # withdrawn participant. No request text is written to logs or metadata.
+        try:
+            with surveys.connect() as db:
+                db.execute('BEGIN IMMEDIATE')
+                digest = privacy.require(consent_token(), request_notice(), db)
+                record_metrics(db, digest, timings, False)
+        except Exception:
+            app.logger.warning('Operation statistics could not be recorded.')
+
+    def measured_operation(operation, timings):
+        try:
+            return (yield from operation)
+        except (Exception, GeneratorExit):
+            failed_metrics(timings)
+            raise
+        finally:
+            operation.close()
+
+    def consent_link(kind, *, selection=None, completed=False, timings=None):
         if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return None
         token = consent_token()
@@ -309,6 +340,7 @@ def create_app(config=None, *, retriever=None, llm=None):
                 return
             if kind == 'chat':
                 releases.mark_run(digest, db)
+                record_metrics(db, digest, timings, True)
                 if selection is not None:
                     personality_usage.mark_applied(digest, selection, db)
             elif not db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (record_id,)).fetchone():
@@ -633,13 +665,19 @@ def create_app(config=None, *, retriever=None, llm=None):
         selection, error = checked_selection(advisor, body.advisor_selection)
         if error:
             return error
-        result = {**match(body.profile.model_dump(), advisor=advisor), 'advisor_selection':selection}
-        if app.config['PRIVACY_REQUIRED'] and not test_arm():
-            with surveys.connect() as db:
-                db.execute('BEGIN IMMEDIATE')
-                digest = privacy.require(consent_token(), request_notice(), db)
-                releases.mark_run(digest, db)
-                personality_usage.mark_applied(digest, selection, db)
+        timings = {'search': time.monotonic()}
+        try:
+            result = {**match(body.profile.model_dump(), advisor=advisor), 'advisor_selection':selection}
+            if app.config['PRIVACY_REQUIRED'] and not test_arm():
+                with surveys.connect() as db:
+                    db.execute('BEGIN IMMEDIATE')
+                    digest = privacy.require(consent_token(), request_notice(), db)
+                    releases.mark_run(digest, db)
+                    personality_usage.mark_applied(digest, selection, db)
+                    record_metrics(db, digest, timings, True)
+        except Exception:
+            failed_metrics(timings)
+            raise
         return jsonify(public_state(result))
 
     @app.post('/api/onboard')
@@ -652,16 +690,17 @@ def create_app(config=None, *, retriever=None, llm=None):
         selection, error = checked_selection(search_advisor, body.advisor_selection)
         if error:
             return error
+        timings = {'search': time.monotonic()}
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)
             state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None,
                      '_experiment_id': assigned.get('experiment_id') if assigned else None, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
-            session_id = sessions.create(state, before_save=consent_link('chat', selection=selection))
+            session_id = sessions.create(state, before_save=consent_link('chat', selection=selection, timings=timings))
             return {'session_id': session_id, **public_state(state)}
 
-        return operation_response(operation(), status=201)
+        return operation_response(measured_operation(operation(), timings), status=201)
 
     @app.get('/api/sessions/<session_id>')
     def get_session(session_id):
@@ -705,6 +744,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             body.advisor_selection if body.advisor is not None else previous_selection)
         if error:
             return error
+        timings = {'chat': time.monotonic()} if body.message else {}
         def operation():
             advisor = selected_advisor
             applied_selection = selected_selection
@@ -789,11 +829,13 @@ def create_app(config=None, *, retriever=None, llm=None):
                 applied_selection = previous_selection
 
             if action == 'search':
+                timings['search'] = time.monotonic()
                 result = yield from match_steps(
                     profile, chat_message=body.message or 'Erkläre kurz die neue Auswahl.',
                     chat_context=context, advisor=advisor, persona=state.get('persona'),
                     saved_persona_fingerprint=state.get('_persona_fingerprint'))
             elif action == 'rerank':
+                timings['rerank'] = time.monotonic()
                 result = yield from rank_candidate_steps(profile, state.get('persona'), state['_candidates'],
                                          state['retrieval']['filtered_count'], advisor,
                                          body.message or 'Bewerte die vorhandene Auswahl neu und erkläre sie kurz.',
@@ -813,10 +855,10 @@ def create_app(config=None, *, retriever=None, llm=None):
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
             new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), '_personality_policy': state.get('_personality_policy'),
                          '_experiment_id': state.get('_experiment_id'), 'messages': messages[-100:]}
-            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection))
+            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection, timings=timings))
             return {'session_id': body.session_id, **public_state(new_state)}
 
-        return operation_response(operation())
+        return operation_response(measured_operation(operation(), timings))
 
     @app.errorhandler(ValidationError)
     def bad_input(error):

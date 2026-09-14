@@ -13,7 +13,8 @@ RUN pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu \
 
 COPY *.py ./
 COPY personas/ ./personas/
-COPY dummy_jobs.json survey_definition.json survey_definition_v3.json survey_definition_v4.json survey_definition_v5.json survey_definition_v6.json privacy_settings.json ./
+COPY dummy_jobs.json survey_definition*.json privacy_settings.json ./
+COPY STUDY-PROTOCOL.md ./
 COPY web-dist/ ./web-dist/
 RUN groupadd --gid 10001 diana && useradd --uid 10001 --gid diana --no-create-home diana
 USER diana

@@ -8,6 +8,13 @@ test('admin charts expose numeric values, escape freetext, and detail dialogs re
  const vite=await createServer({server:{middlewareMode:true,hmr:false,ws:false},appType:'custom'});
  try{
   const {QuestionChart,armLabel}=await vite.ssrLoadModule('/AdminAnalytics.jsx');
+  const {default:Metrics}=await vite.ssrLoadModule('/AdminOperationMetrics.jsx');
+  const unknown=renderToStaticMarkup(React.createElement(Metrics,{}));
+  assert.ok(unknown.includes('keine Laufzeiten'));
+  const metrics={capture_version:1,...Object.fromEntries(['search','rerank','chat'].flatMap(kind=>[[`successful_${kind}_count`,1],[`failed_${kind}_count`,0],[`${kind}_duration_ms`,1000]]))};
+  const metricMarkup=renderToStaticMarkup(React.createElement(Metrics,{metrics}));
+  assert.ok(metricMarkup.includes('1 erfolgreich') && metricMarkup.includes('0 fehlgeschlagen') && metricMarkup.includes('nicht bearbeitbar'));
+  assert.ok(metricMarkup.includes('Die Laufzeiten überlappen'));
   const {AdminAnswerDetail,AdminModal,AdminBulkDeleteDialog,AdminResponseScope}=await vite.ssrLoadModule('/AdminPage.jsx');
   for (const value of ['completed','','in_progress']) {
    const scope=renderToStaticMarkup(React.createElement(AdminResponseScope,{value,onChange:()=>{}}));
@@ -15,6 +22,8 @@ test('admin charts expose numeric values, escape freetext, and detail dialogs re
    assert.ok(scope.includes('Gilt sofort für Diagramme, Einzelantworten und Downloads'));
    assert.ok(scope.includes(`value="${value}" selected=""`));
   }
+  assert.equal(armLabel('A','diana-v9'),'A · Standardberatung');
+  assert.equal(armLabel('B','diana-v9'),'B · Vorlagenauswahl');
   assert.equal(armLabel('B','diana-v8'),'B · Vorlagenauswahl');
   assert.equal(armLabel('C','diana-v8'),'C · Selbst gestaltbar');
   assert.equal(armLabel('B','diana-v7'),'B · Selbst gestaltbar (historisch)');

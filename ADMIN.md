@@ -103,18 +103,19 @@ sein historisches Textformat für Auswahlantworten bleibt erhalten. Für numeris
 Numiqo-Auswertungen den Verwaltungsdownload verwenden.
 
 Eine Zeile entspricht einer Teilnahme. Der aktuelle A/B/C-Vergleich verwendet
-Fragebogen V8 und eigene `v8_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1 und
-Nein=0. A ist die Basisvariante; B erlaubt die Auswahl unveränderter Vorlagen;
-C bietet dieselben Vorlagen und zusätzlich die Selbstgestaltung. Gemeinsame
-Persönlichkeits-, Score- und Begründungsfragen werden B und C gestellt. Nur B
-bewertet die Einfachheit der Vorlagenauswahl (`v8_ki_vorlagenauswahl_einfachheit`),
+Fragebogen V9 und eigene `v9_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1 und
+Nein=0. A ist die sachliche Standardberatung; B erlaubt die Auswahl unveränderter Vorlagen;
+C bietet dieselben Vorlagen und zusätzlich die Selbstgestaltung. Gemeinsame Ergebnis-, Score- und Begründungsfragen werden allen drei Gruppen gestellt. Persönlichkeitsfragen erhalten nur B und C. Nur B
+bewertet die Einfachheit der Vorlagenauswahl (`v9_ki_vorlagenauswahl_einfachheit`),
 nur C bewertet die Einrichtung und beantwortet die Selbstauskunft zur Anpassung.
 Nicht gestellte Fragen bleiben leer mit Status `skipped`.
-`v8_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
-`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v1` kennzeichnet
-diesen Vergleich. Die automatisch beobachtete Vorlagen-/Selbstgestaltungsnutzung
+`v9_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
+`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v2` kennzeichnet
+diesen Vergleich. Ranking, Scores und Begründungen sind in A, B und C gleich implementiert. Die automatisch beobachtete Vorlagen-/Selbstgestaltungsnutzung
 ist keine vierte randomisierte Gruppe und kann von der erlaubten Funktion abweichen:
 Eine Person in C kann ausschließlich eine Vorlage nutzen.
+
+Historische V8-Antworten behalten `v8_`-Spalten und `diana-abc-v1`. A hatte dort einen allgemeinen Chat, Zufallsreihenfolge und keine Scores/Begründungen; diese Daten sind keine Standardberatungs-Baseline aus V9.
 
 Historische V7-Antworten behalten ihre eigenen Spalten und Codes **0=A, 1=B**.
 B war dort frei gestaltbar und darf nicht als neue Vorlagengruppe B behandelt werden.
@@ -131,7 +132,7 @@ entfällt in den neueren Versionen.
 
 Identische historische V2/V3-Fragen stehen in `v2_v3_`-Spalten, die vier zusätzlichen
 V3-Nützlichkeitsfragen in `v3_`-Spalten und V1-Antworten in `v1_`-Spalten.
-Spätere Versionen bleiben separat in `v4_` bis `v8_`.
+Spätere Versionen bleiben separat in `v4_` bis `v9_`.
 Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
 Das Codebuch enthält den vollständigen Originalwortlaut, Antwortcodes und Originalcodes,
 Skalenenden, fehlende Werte, Filterführung und Bewertungsrichtung. Die Aufwandsfrage ist
@@ -139,6 +140,43 @@ explizit als gegenläufig markiert (`reverse_direction=true`); die Zahlen werden
 automatisch umgepolt. Daraus entsteht kein ungeprüfter Gesamtwert.
 Formelähnlicher Freitext erhält ein vorangestelltes Apostroph zum Schutz beim
 Öffnen in Tabellenprogrammen; dies bei qualitativer Textauswertung berücksichtigen.
+
+### Aggregierte Nutzung und Laufzeiten
+
+Seit V9 werden abgeschlossene Serveroperationen als Summen erfasst. Keine Rohtexte,
+IP-Adressen, Gerätekennungen oder einzelnen Ereignisse werden dafür gespeichert.
+
+| Spalten | Bedeutung |
+| --- | --- |
+| `nutzung_erfassungsversion` | 0 = nicht erfasst; 1 = aktuelle Erfassung |
+| `suchen_erfolgreich_anzahl`, `suchen_fehlgeschlagen_anzahl` | Tatsächlich abgeschlossene Suchversuche |
+| `neusortierungen_erfolgreich_anzahl`, `neusortierungen_fehlgeschlagen_anzahl` | Tatsächliche Neubewertungen bestehender Ergebnisse |
+| `chatnachrichten_erfolgreich_anzahl`, `chatnachrichten_fehlgeschlagen_anzahl` | Eigene Nutzeranfragen mit Erfolg oder Fehler |
+| `suchen_dauer_gesamt_ms`, `neusortierungen_dauer_gesamt_ms`, `chatnachrichten_dauer_gesamt_ms` | Je Operationstyp aufsummierte Laufzeit in Millisekunden |
+
+Eine Chatnachricht kann eine Suche oder Neusortierung auslösen. Sie zählt dann in
+beiden Kategorien; die Chatdauer umfasst den gesamten Aufruf einschließlich der
+Aktion. **Zeitspalten deshalb nicht zur Gesamtdauer addieren.** Erfolgreiche und
+fehlgeschlagene Versuche fließen in die Dauer desselben Typs ein. Vor Beginn der
+Operation abgelehnte Eingaben/fehlende Einwilligungen zählen nicht. Ein erneuter
+Versuch ist eine neue Operation. Für historische, nicht erfasste Nutzung bleiben
+Zähler und Dauern leer; 0 gilt nur im erfassten Zeitraum. Abgeschlossene Antworten
+verwenden den eingefrorenen Stand bei Abgabe, Entwürfe den aktuellen Stand. Die
+Einzelansicht zeigt die Metadaten schreibgeschützt. Löschung/Widerruf entfernt auch
+diese Messwerte.
+
+### Teilnahmefluss im Auswertungspaket
+
+`teilnahmefluss.csv` enthält **ungefilterte** aggregierte Fallzahlen des aktuell
+aktiven Studienbestands, unabhängig von den Filtern der Einzelantworten. Je
+Experimentkennung und Gruppe werden zugeteilte Personen, Personen mit gespeicherten
+Antworten, abgeschlossene Personen und Personen mit einem gültigen V9-Primärwert
+gezählt. Jede zugeteilte Einwilligungskennung zählt höchstens einmal; bereits
+beantwortete V9-Primärfragen aus unvollständigen Umfragen zählen als gültiger Wert.
+Antwortversionen und ursprünglicher Gruppenbuchstabe sind dokumentiert. Frühere
+Experimente werden nicht vermischt. Widerrufene oder gelöschte Teilnahmen fehlen;
+die Datei ist deshalb ein aktueller Bestandsbericht und kein vollständiger
+Rekrutierungsverlauf. Die primäre Auswertung verwendet `v9_system_nutzen`.
 
 ### Automatische Herkunft der KI-Persönlichkeit
 
@@ -275,7 +313,7 @@ und erfasste Systemstände gemeinsam prüfen; Ergebnisse nicht ungeprüft zusamm
 Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
 bei 1–10-Bewertungen außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
 farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
-Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V8/abgeschlossen;
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V9/abgeschlossen;
 ältere Antworten lassen sich mit dem Fragebogenfilter auswählen.
 Fragebogenversionen und Experimentkennungen werden nicht zusammengefasst.
 Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene

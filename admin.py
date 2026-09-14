@@ -87,7 +87,7 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
             return error(str(failure), 409)
     def filters():
         query=request.args.get('q','').strip();version=request.args.get('version','')
-        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7','diana-v8'):raise ValueError()
+        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7','diana-v8','diana-v9'):raise ValueError()
         status=request.args.get('status','')
         if status not in ('','completed','in_progress'):raise ValueError()
         arm=request.args.get('arm','')

@@ -47,7 +47,7 @@ def normalize_selection(advisor, selection=None, *, arm=None):
     """
     config = AdvisorConfig.model_validate(
         advisor.model_dump() if isinstance(advisor, AdvisorConfig) else advisor).model_dump()
-    if arm == 'A' or (config['mode'] == 'preset' and config['preset'] == 'neutral'):
+    if arm == 'A' or (config['mode'] == 'preset' and config['preset'] in ('neutral', 'standard')):
         return dict(source='not_applicable', template_id=None)
     if selection is None:
         return dict(source='unknown', template_id=None)

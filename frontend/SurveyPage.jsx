@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCheck, Compass, LoaderCircle, MessageCircle, X } from 'lucide-react';
-import { surveyConfiguration, applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, submitSurvey, surveyErrors, surveyScale, suggestSearchGoal } from './survey.js';
+import { needsSystemPreparation, startPreparedSystem, surveyConfiguration, applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, submitSurvey, surveyErrors, surveyScale, suggestSearchGoal } from './survey.js';
 import './survey.css';
 import SearchLoadingDialog from './SearchLoadingDialog.jsx';
 import {createSurveyAutosave} from './survey-autosave.js';
@@ -73,6 +73,23 @@ export function SurveyForm({ version, group = demographics, answers = emptyAnswe
     <AutosaveStatus status={saveStatus} onRetry={onRetry} />
     {last && <p className="survey-storage-note">Deine Umfrageantworten werden getrennt von Suchprofil und Chatverlauf gespeichert.</p>}
   </form>;
+}
+
+export function SystemPreparation({state, onChange, onStart, busy, errors, error, saveStatus, onRetry}) {
+  const fields=surveyConfiguration(state).beforeSystemFields;
+  return <main className="survey-main survey-preparation">
+    <form className="survey-form" onSubmit={onStart} noValidate>
+      <div className="survey-form-intro"><p className="survey-eyebrow">DIANA AUSPROBIEREN</p><h1>Bevor du loslegst</h1><p>Zwei kurze Angaben zu deiner bisherigen Erfahrung.</p></div>
+      <div className="survey-demographics-grid">{fields.map(field=><SurveyQuestion key={field.name} field={field} value={state.answers[field.name]} onChange={onChange} busy={busy} error={errors[field.name]} />)}</div>
+      <div className="survey-task"><h2>Deine Aufgabe</h2><ol>
+        <li>Erstelle ein Suchprofil für eine Stelle, die du tatsächlich suchen würdest.</li>
+        <li>Sieh dir die vorgeschlagenen Stellen und ihre Begründungen an.</li>
+        <li>Stelle im Chat mindestens eine eigene inhaltliche Frage zu einer Stelle oder deinen Suchwünschen.</li>
+      </ol><p>Du kannst deine Suchwünsche anschließend präzisieren. Nutze die angebotenen Einstellungen so, wie sie für dich sinnvoll sind.</p></div>
+      {error && <p className="survey-error" role="alert">{error}</p>}
+      <div className="survey-form-actions"><AutosaveStatus status={saveStatus} onRetry={onRetry}/><button type="submit" className="survey-primary diana-action-motion" disabled={busy}>{busy?'Wird gespeichert …':'System ausprobieren'}<ArrowRight className="diana-action-arrow" size={18}/></button></div>
+    </form>
+  </main>;
 }
 
 export function AutosaveStatus({status,onRetry}) {
@@ -151,6 +168,7 @@ export default function SurveyPage({ initial, participationId }) {
   const heading = useRef(null);
   const frame = useRef(null);
   const systemActive = state.stage === 'system' && !state.submitted;
+  const preparationRequired=needsSystemPreparation(state);
   const {demographics,surveyCategories,surveyStages,waitingQuestionGroups}=surveyConfiguration(state);
   const group = displaySurveyGroup(state);
   const waitingAvailable=remainingWaitingGroups(state).length>0;
@@ -224,6 +242,7 @@ export default function SurveyPage({ initial, participationId }) {
   }, [state.stage, state.submitted]);
 
   function change(name, value, waiting=false) {
+    if (!assignmentReady || !hydrated) return;
     setState(previous => {
       let next=reviseSurvey(previous,{...(name==='search_goal'?{searchGoalEdited:true}:{}),answers:changeSurveyAnswer(previous.answers,name,value,previous.version)});
       const field=waitingQuestionGroups.flatMap(group=>group.fields).find(field=>field.name===name);
@@ -253,20 +272,34 @@ export default function SurveyPage({ initial, participationId }) {
       requestSurveyChat(frame.current?.contentWindow, window.location.origin, state.runId);
     });
   }
+  async function beginSystem(event) {
+    event.preventDefault();
+    if(busy || !assignmentReady || !hydrated)return;
+    const invalid=surveyErrors(state.answers,surveyConfiguration(state).beforeSystemFields);
+    setErrors(invalid);
+    if(Object.keys(invalid).length)return;
+    const next=startPreparedSystem(state);
+    setBusy(true);setError('');
+    try {
+      autosave.current.enqueue(next);await autosave.current.flush();
+      setState(next);
+    } catch(failure) {setError(failure.message);}
+    finally {setBusy(false);}
+  }
   function advance() {
-    if (sending.current) return;
+    if (sending.current || !assignmentReady || !hydrated) return;
     if (state.stage === 'system' && state.chatCompleted !== true) { setChatRequired(true); return; }
     setErrors({}); setError('');
     setState(previous => nextSurveyState(previous));
   }
   function back() {
-    if (sending.current) return;
+    if (sending.current || !assignmentReady || !hydrated) return;
     setErrors({}); setError('');
     setState(previous => {let index=surveyStages.indexOf(previous.stage)-1;while(index>0 && !displaySurveyGroup(previous,surveyStages[index]).fields.length)index--;return {...previous,stage:reachableStage(previous,surveyStages[index])};});
   }
   async function send(event) {
     event.preventDefault();
-    if (sending.current || state.submitted) return;
+    if (sending.current || state.submitted || !assignmentReady || !hydrated) return;
     const nextErrors = surveyErrors(state.answers, group.fields);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) {
@@ -295,18 +328,19 @@ export default function SurveyPage({ initial, participationId }) {
     }
   }
 
-  return <div className={`survey-page${systemActive ? ' is-system' : ''}`}>
+  return <div className={`survey-page${systemActive && !preparationRequired ? ' is-system' : ''}`}>
     {/* The live iframe stays mounted across question pages and return visits. */}
     {!state.submitted && !assignmentReady && <div className="empty-state" role="status"><p>{error || 'Dein Systemtest wird vorbereitet …'}</p>{error && <button className="survey-primary" onClick={()=>setAssignmentAttempt(value=>value+1)}>Erneut versuchen</button>}</div>}
-    {state.systemOpened && assignmentReady && <section className="survey-system-view" hidden={!systemActive} aria-label="DIANA ausprobieren">
+    {systemActive && assignmentReady && preparationRequired && <SystemPreparation state={state} onChange={change} onStart={beginSystem} busy={busy} errors={errors} error={error} saveStatus={saveStatus} onRetry={retrySave}/> }
+    {state.systemOpened && assignmentReady && !preparationRequired && <section className="survey-system-view" hidden={!systemActive} aria-label="DIANA ausprobieren">
       <iframe ref={frame} title="DIANA Jobsuche – interaktiv ausprobieren" src={`/suche?embed=survey&run=${state.runId}`} referrerPolicy="same-origin" onLoad={() => { setResultsVisible(false); requestSurveyProgress(frame.current?.contentWindow, window.location.origin, state.runId); }} />
       {resultsVisible && !searching && !waitingOpen && !chatRequired && state.systemCompleted && <div className="survey-system-actions"><button className="survey-primary diana-action-motion" type="button" onClick={advance} aria-label="Weitere Fragen für die Umfrage beantworten"><span className="survey-continue-long">Weitere Fragen für die Umfrage beantworten</span><span className="survey-continue-short">Weiter zur Umfrage</span><ArrowRight className="diana-action-arrow" size={18}/></button></div>}
     </section>}
-    <div className="survey-questionnaire" hidden={systemActive}>
+    <div className="survey-questionnaire" hidden={systemActive || (!state.submitted && (!assignmentReady || !hydrated))}>
       <header className="survey-header"><a href="/" className="survey-brand" aria-label="Über DIANA und Christoph Scharnagl"><span><Compass size={23} strokeWidth={1.7} /></span><strong>DIANA<small>Umfrage</small></strong></a><span className="survey-header-label">{state.submitted ? 'Abgeschlossen' : 'Deine Erfahrung mit dem Suchsystem'}</span></header>
       <main className="survey-main">
         {state.submitted ? <div className="survey-thanks"><span className="survey-thanks-icon"><CheckCheck size={32} /></span><h1 ref={heading} tabIndex={-1}>Danke für deine Teilnahme!</h1><p>Deine Antworten wurden gespeichert. Du hilfst uns damit, die KI-gestützte Jobsuche weiterzuentwickeln.</p><ParticipationId value={participationId}/><a className="survey-back" href="/"><ArrowLeft size={17} />Zur Vorstellung</a></div>
-          : group && <SurveyForm version={state.version} group={group} answers={state.answers} onChange={change} onSubmit={send} onBack={back} busy={busy} errors={errors} error={error} formRef={form} headingRef={heading} searchSuggestion={state.searchGoalSuggestion} saveStatus={saveStatus} onRetry={retrySave} />}
+          : assignmentReady && hydrated && group && <SurveyForm version={state.version} group={group} answers={state.answers} onChange={change} onSubmit={send} onBack={back} busy={busy} errors={errors} error={error} formRef={form} headingRef={heading} searchSuggestion={state.searchGoalSuggestion} saveStatus={saveStatus} onRetry={retrySave} />}
       </main>
     </div>
     {chatRequired && systemActive && <ChatRequiredDialog onClose={openChat} />}

@@ -22,7 +22,7 @@ test('suggestions prefill and update automatic text while protecting manually ed
 });
 
 test('waiting questions concern only setup, retain drafts and never unlock final feedback early', () => {
-  assert.deepEqual(waitingQuestionFields.map(field=>field.name),['search_goal','personality_customized','template_selection_ease','personality_setup']);
+  assert.deepEqual(waitingQuestionFields.map(field=>field.name),['search_goal']);
   assert.deepEqual(waitingQuestionGroups[0].fields,demographics.fields);
   const state={...validState(),stage:'system',systemCompleted:false};
   assert.equal(nextSurveyState(state),state);
@@ -173,7 +173,7 @@ test('sending uses only questionnaire fields, never the run or search/chat state
     return new Response(JSON.stringify({ saved: true }), { status: 201 });
   };
   await submitSurvey(state, { request });
-  assert.equal(sent.version, 'diana-v8');
+  assert.equal(sent.version, 'diana-v9');
   assert.equal(sent.search_goal, state.answers.search_goal);
   assert.equal(sent.future_use, 8);
   assert.equal(sent.profile, undefined);
@@ -231,12 +231,12 @@ test('blocked browser storage leaves the embedded session usable in memory', () 
 });
 
 
-test('score and explanations are assessed in both full variants B and C, with meaningful endpoints after system use', () => {
+test('score and explanations are assessed in all variants A B and C, with meaningful endpoints after system use', () => {
   const fields = surveyCategories.find(group => group.id === 'usefulness').fields;
   assert.deepEqual(fields.map(field => field.name), ['score_usefulness', 'match_reasons_usefulness']);
   for (const field of fields) {
     assert.deepEqual(field.scale, {low: 'Gar nicht nützlich', high: 'Sehr nützlich'});
-    assert.deepEqual(field.visibleIf,{field:'study_arm',in:['B','C']});
+    assert.equal(field.visibleIf,undefined);
     assert.ok(!waitingQuestionFields.includes(field));
   }
   const state = validState();
@@ -250,7 +250,7 @@ test('unfinished v2 drafts migrate without inventing new answers; completed v2 p
   const storage = memoryStorage();
   storage.setItem('diana-survey:diana-v2', JSON.stringify(old));
   const migrated = loadSurveyState(storage);
-  assert.equal(migrated.version, 'diana-v8');
+  assert.equal(migrated.version, 'diana-v9');
   assert.equal(migrated.stage, 'system');
   assert.equal(migrated.answers.score_usefulness, null);
   assert.equal(migrated.answers.chat_helpfulness, null);

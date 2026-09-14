@@ -3,173 +3,164 @@
 Flask-Prototyp mit Anzeigen aus dem bereitgestellten Export,
 SQLite-Vorfilter, paralleler BM25-/E5-Suche,
 Reciprocal Rank Fusion und GPT-5.4-Reranking mit begründeten Ergebnissen.
-Die React-Webseite enthält ein Suchprofil, Jobkarten links und einen persistenten
-Chat rechts. Die personalisierte Variante zeigt pro Empfehlung einen nach der
-Persönlichkeit gewichteten Score von **1 bis 100**, ergänzt um **zwei bis drei
-kurze Begründungs-Stichpunkte**. Die neutrale Vergleichsvariante zeigt diese
-Scores und automatischen Begründungsboxen nicht. Die lokale Konfiguration
-verwendet jetzt alle **8.537 Anzeigen** aus deiner Datei.
+Die React-Webseite enthält ein Suchprofil, Jobkarten und einen persistenten Chat.
+Im aktuellen Konferenzstand V9 zeigen **alle drei Varianten A/B/C** Scores von
+**1 bis 100**, kurze Begründungen und eine nach Score sortierte Ergebnisliste.
+Zunächst sind Stellen ab 70 Punkten sichtbar; weitere lassen sich einblenden.
+Die Varianten unterscheiden sich im Beratungsangebot: feste Standardberatung,
+Vorlagenauswahl oder zusätzliche eigene Gestaltung. Die produktive Konfiguration
+verwendet den separat importierten Stellenbestand; dessen Umfang zeigt das System an.
 
-## Aktueller Studienvergleich: A/B/C, Fragebogen V8
+## Aktueller Studienvergleich: A/B/C, Fragebogen V9
 
-Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v1`**, der Fragebogen **`diana-v8`**.
+Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v2`**, der Fragebogen **`diana-v9`**.
 
-- **A:** allgemeiner KI-Assistent ohne wählbare Persönlichkeit; bis zu 20 Stellen in zufälliger Reihenfolge, ohne angezeigte Scores und automatische Begründungsboxen.
+- **A:** feste sachliche Standardberatung zur Jobsuche ohne wählbare Persönlichkeit; dieselbe Bewertung, Sortierung, Scores und Begründungsboxen wie B/C.
 - **B:** Auswahl zwischen **Top-Berufsberater** und **Fachexperte** mit festen Eigenschaften. Persönliche Rangfolge, Scores und Begründungen; zunächst Stellen ab 70 Punkten, weitere per Button.
 - **C:** dieselben Vorlagen und dieselbe Bewertungs-/Darstellungslogik wie B, zusätzlich **Selbst personalisieren** mit Name, Eigenschaften, Bewertungsschwerpunkt und Freitext.
 
-B und C starten mit dem Top-Berufsberater. Einschränkungen in B werden serverseitig geprüft. Der Vergleich B/C untersucht das zusätzliche Angebot freier Gestaltung; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch bei unveränderter Vorlagennutzung. A/B und A/C vergleichen Gesamtpakete, keinen isolierten Persönlichkeitseffekt und keinen Chatbot gegen eine reine Stichwortsuche. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
+B und C starten mit dem Top-Berufsberater. Einschränkungen in B werden serverseitig geprüft. Der Vergleich B/C untersucht das zusätzliche Angebot freier Gestaltung; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch bei unveränderter Vorlagennutzung. B/A vergleicht das Angebot einer Vorlagenauswahl mit der festen Standardberatung. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Die faire Ergebnisdarstellung und das Modell sind in A/B/C gleich. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
 
-Vorherige `diana-ab-*`-Teilnahmen behalten ihr gestaltbares B und ihren historischen Fragebogen. Sie werden nicht in die neue Vorlagen-B-Gruppe umgedeutet. V6 mit ursprünglichen B/C-Codes bleibt ebenfalls separat erhalten. Version und Experimentkennung gemeinsam auswerten; Details: [ADMIN.md](ADMIN.md).
+Der vorherige A/B/C-Stand ist auf Branch `sicherung-abc-vor-konferenz-2026-09-14` gesichert; seine `diana-abc-v1`-Teilnahmen bleiben bei V8 und den damaligen Bedingungen. Vorherige `diana-ab-*`-Teilnahmen behalten ihr gestaltbares B und ihren historischen Fragebogen. Sie werden nicht in die neue Vorlagen-B-Gruppe umgedeutet. V6 mit ursprünglichen B/C-Codes bleibt ebenfalls separat erhalten. Version und Experimentkennung gemeinsam auswerten; Details: [ADMIN.md](ADMIN.md).
 
 ### Varianten unabhängig von der Umfrage testen
 
-- [/test/a](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/a) – allgemeiner Assistent
+- [/test/a](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/a) – feste Standardberatung
 - [/test/b](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/b) – feste Beratungsvorlagen
 - [/test/c](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/c) – Vorlagen und eigene Gestaltung
 
 Diese Zugänge haben getrennte Einwilligungen und Sitzungen. Sie erzeugen keine Umfrageantworten, keine zufällige Studienzuordnung und keine Nutzungsmetadaten für die Studie. Vorlagenauswahl und tatsächlich angewendete eigene Gestaltung werden dagegen bei regulären Studienteilnahmen separat von der Selbstauskunft dokumentiert. Der Export verwendet verständliche deutsche Spalten mit Codebuch und technischer Spaltenzuordnung.
 
-## Datenschutz-Stand
+## Datenschutz und Studienfreigabe
 
-Der neue lokale Stand enthält Einwilligung, Teilnahme-ID und gezielten Widerruf.
-Er ist noch **nicht live freigegeben**: `privacy_settings.json` bleibt gesperrt,
-bis Verantwortlichkeit, OpenAI-Vertrags-/Übermittlungsgrundlage und technische
-Schutzmaßnahmen verbindlich dokumentiert sind. Details und Löschanfragen:
-[PRIVACY.md](PRIVACY.md). Es wurden keine bestehenden Forschungsdaten gelöscht.
+Das System unterstützt Einwilligung, Teilnahme-ID und gezielten Widerruf.
+Der tatsächliche Freigabestatus wird durch die Serverkonfiguration und den
+Schalter zur Studienfreigabe in **`/verwaltung`** bestimmt. Eine lokale
+Beispielkonfiguration sagt nicht aus, ob die Serverinstanz freigegeben ist.
+Verantwortlichkeit, Datenschutzhinweise und Löschabläufe stehen in
+[PRIVACY.md](PRIVACY.md). Die technische Freigabe ist keine rechtliche oder
+institutionelle Bestätigung.
+
 Vollständige Einzelantworten sollen auch nach der Promotion für die beschriebenen
-Forschungszwecke nutzbar bleiben; ihre Erforderlichkeit wird mindestens jährlich geprüft.
+Forschungszwecke nutzbar bleiben; ihre Erforderlichkeit wird mindestens jährlich
+geprüft. Ein Widerruf anhand der Teilnahme-ID umfasst die verknüpften Daten.
+Suchprofil und Chatverlauf werden für neue Sitzungen nur vorübergehend im
+Arbeitsspeicher gehalten. Die Studie speichert zusätzlich die dokumentierten
+Auswahl- und Betriebsmetadaten, ohne daraus Such- oder Chattexte abzulegen.
 
 ## Webseite ausprobieren
 
-Der folgende Ablauf beschreibt die gemeinsame Bedienung. V8 ergänzt die Gruppenführung für B (Vorlagenauswahl) und C (eigene Gestaltung); die danach ausdrücklich als V7 bezeichneten Details dokumentieren den historischen A/B-Fragebogen.
-
-### Umfrage mit eingebetteter Jobsuche
+### Aktueller Ablauf: V9 mit eingebetteter Jobsuche
 
 Der Einstieg ist die **[Vorstellungsseite](http://127.0.0.1:5050/)** mit
 Forschungsprojekt, Foto und Kontaktdaten. **„Umfrage starten“** führt zu `/umfrage`.
-Der Ablauf ist:
+Nach der Einwilligung und serverseitigen Zuordnung läuft die Teilnahme so ab:
 
-1. **DIANA nutzen:** Die Jobsuche öffnet sich direkt nach „Umfrage starten“.
-   Während einer vollständigen Suche erscheint **„Wartezeit nutzen · Fragen beantworten“**.
-   In einem Dialog können Altersgruppe, Geschlecht, Studien-/Ausbildungsstand und
-   optionale Fachrichtung sowie in B Fragen zur Einrichtung der Persönlichkeit beantwortet
-   werden. Die Suche läuft im eingebetteten Fenster weiter. Sobald sie fertig ist,
-   zeigt der Dialog „Ergebnisse ansehen“; bereits eingegebene Antworten bleiben erhalten.
-2. **Angaben prüfen oder nachholen:** Erst nach Abschluss der ersten Suche
-   erscheint **„Weitere Fragen für die Umfrage beantworten“**.
-   Der Button führt erst weiter, nachdem mindestens eine eigene Nachricht im Chat
-   erfolgreich gesendet wurde. Sonst erscheint ein Hinweis mit „Zum Chat“, der den
-   Chat auch auf dem Handy öffnet. Die automatische Begrüßung zählt nicht.
-   Während der Wartezeit bereits beantwortete Fragen werden übersprungen; fehlende demografische Angaben können dort ergänzt werden. Persönliche Auswahlfelder
-   bieten „Keine Angabe“; die Fachrichtung darf leer bleiben.
-3. **Rückmeldung:** aufeinanderfolgende Seiten nach Kategorien:
-   **Suchvorhaben**, **Deine Erfahrung mit der Suche**, **Suchen im Gespräch** und
-   **Feedback**; in B zusätzlich **Score und Begründungen** sowie
-   **Deine KI-Suchpersönlichkeit**. Die gemeinsamen Ergebnisfragen stehen vor den
-   funktionsbezogenen Zusatzfragen. Das Suchvorhaben wird aus dem abgeschickten DIANA-Suchprofil
-   als bearbeitbarer Vorschlag übernommen. Eigene Änderungen, auch ein bewusst
-   geleertes Feld, werden bei weiteren Suchen nicht überschrieben. Fragen zur
-   Gesprächserfahrung und zu den Begründungen folgen erst nach dem Systemtest.
+1. **Kurze Vorbereitung:** Vor dem eingebetteten System werden die Nutzung von
+   Jobportalen und KI-Chats in den letzten sechs Monaten abgefragt. Es gibt
+   abgegrenzte Häufigkeitskategorien und „Keine Angabe“. Alle Gruppen sehen dieselbe
+   Aufgabe: ein realistisches Suchprofil erstellen, Stellen und Begründungen ansehen
+   und mindestens eine eigene inhaltliche Frage im Chat stellen. Die Antworten
+   werden vor **„System ausprobieren“** gespeichert. Eigene Gestaltung in C ist freiwillig.
+2. **DIANA nutzen:** A verwendet die feste Standardberatung. B wählt aus den beiden
+   festen Vorlagen; C kann dieselben Vorlagen nutzen oder zusätzlich selbst gestalten.
+   Während einer Suche können im Wartezeit-Dialog demografische Angaben und das
+   Suchvorhaben beantwortet werden. **Keine Bewertungen der Einrichtung, Suche
+   oder des Chats werden während der Wartezeit erhoben.**
+3. **Ergebnisse besprechen:** Alle Gruppen sehen Scores, Begründungen und dieselbe
+   Anzeigelogik. **„Weitere Fragen für die Umfrage beantworten“** erscheint nur bei
+   sichtbarer Ergebnis-/Chatansicht, nicht während einer Suche oder eines Dialogs.
+   Weitergehen setzt mindestens eine erfolgreich beantwortete eigene Chatnachricht
+   voraus. Die automatische Begrüßung zählt nicht; andernfalls führt ein Hinweis zum Chat.
+4. **Rückmeldung geben:** Gemeinsame Kategorien sind **Suchvorhaben**,
+   **Deine Erfahrung mit der Suche**, **Suchen im Gespräch**, **Score und Begründungen**
+   und **Feedback**. B und C erhalten außerdem passende Fragen zu Auswahl bzw.
+   Gestaltung und Wirkung ihrer KI-Suchpersönlichkeit. Gemeinsame Ergebnisfragen
+   stehen vor bedingungsspezifischen Fragen. Bereits beantwortete Vorabfragen werden
+   übersprungen; fehlende demografische Angaben können nachgeholt werden.
+5. **Abschließen:** Antworten werden nach jeder Eingabe automatisch gespeichert,
+   bei Texteingaben kurz gebündelt. Der Abschluss validiert den vollständigen
+   Fragebogen. Die Teilnahme-ID dient unter anderem späteren Löschanfragen.
 
-Der historische A/B-Fragebogen **diana-v7** verwendet folgende Antwortformate:
+V9 verwendet 1–10 für graduelle Erfahrungen, Ja/Nein für passende Nutzungsfragen
+und Freitext für das Suchvorhaben sowie optionales Feedback. „Nicht genutzt“,
+„Kann ich nicht beurteilen“ und „Keine Angabe“ sind eigenständige fehlende Angaben,
+keine niedrigen Bewertungen. Die Frage nach tatsächlicher Selbstgestaltung erscheint
+nur in C; sie bleibt von der automatisch erfassten Nutzung getrennt.
+Fragetexte, Bedingungen und Antwortwerte stehen in `survey_definition_v9.json`.
 
-- **Ja/Nein:** Suchwünsche im Chat verändert; in B außerdem Eigenschaften selbst angepasst.
-- **1–10:** Bedienbarkeit, Mitteilung und Anpassung der Suchwünsche, Suchaufwand,
-  Nützlichkeit des Systems, zukünftige Nutzungsabsicht und Hilfe des Chats.
-- **Nur B, 1–10:** Einrichtung und Wirkung der Persönlichkeit sowie Nützlichkeit von
-  Score, Begründungen, personalisiertem Chat und personalisierter Suche.
-- **Freitext:** Suchvorhaben; Fachrichtung und Verbesserungsvorschläge optional.
+Das Suchvorhaben wird aus dem abgeschickten DIANA-Suchprofil als bearbeitbarer
+Vorschlag übernommen. Eigene Änderungen, auch ein bewusst geleertes Feld,
+werden nicht durch spätere Suchen überschrieben. Demografische Angaben und
+Vorerfahrung verändern das Matching nicht und werden nicht an das LLM gesendet.
+Bewertet wird der Suchprozess und das Beratungsangebot, nicht die Qualität
+oder Passung der gefundenen Stellen.
 
-„Nicht genutzt“ bzw. „Kann ich nicht beurteilen“ ermöglichen ehrliche fehlende Bewertungen.
-Die frühere Selbstauskunft, ob eine Chatnachricht geschrieben wurde, entfällt.
-Mindestens eine erfolgreich gesendete eigene Nachricht ist bereits Voraussetzung,
-um zu den Ergebnisfragen zu gelangen. In A werden die neun Fragen zu Persönlichkeit,
-Scores und Begründungen übersprungen; sie bleiben im Export leer mit Status `skipped`.
-Verständlichkeit der Wirkung auf Ranking und Gespräch wird getrennt abgefragt.
-Bewertet wird der Suchprozess mit einer einstellbaren Persönlichkeit, nicht die Qualität
-oder Passung der gefundenen Stellen. Während der Suche werden nur Demografie,
-Suchvorhaben und die bereits erfolgte Einrichtung abgefragt.
-Fragetexte, Kategorien, Auswahlwerte und Exportbeschriftungen stammen aus
-`survey_definition.json`. Auf Mobilgeräten erscheinen die zehn Skalenwerte in
-zwei Reihen mit fünf großen Auswahlflächen. Die Systemansicht verwendet die
-dynamische Bildschirmhöhe und berücksichtigt den unteren sicheren Bereich.
+Die eingebettete Jobsuche bleibt beim Wechsel zum Fragebogen erhalten. Ein
+separater Sitzungsschlüssel trennt sie von normalen DIANA- und Test-Sitzungen.
+Der Browserentwurf bleibt im selben Tab über `sessionStorage` beim Neuladen erhalten;
+Serverbestätigungen sichern die gespeicherten Antworten zusätzlich. Auf dem Handy
+werden Skalenwerte in zwei Reihen mit fünf Auswahlflächen dargestellt; die
+Systemansicht berücksichtigt dynamische Bildschirmhöhe und den sicheren unteren Bereich.
 
-Weitergehen erfordert die Angaben der aktuellen Seite. Zurückgehen behält alle
-Antworten. Die eingebettete Jobsuche bleibt beim Wechsel zum Fragebogen und
-während des Wartezeit-Dialogs eingebunden. Die eingebettete
-Jobsuche verwendet einen eigenen Sitzungsschlüssel und übernimmt keine bestehende
-normale DIANA-Sitzung. Formularentwurf und Teilnahmebestätigung bleiben im selben
-Browser-Tab über `sessionStorage` auch nach einem Neuladen erhalten. Bei blockiertem
-Browser-Speicher funktioniert die Teilnahme im laufenden Tab weiterhin; ein
-Neuladen beginnt dann ohne den Entwurf.
+### Speicherung und Auswertung
 
-Die Freigabe für die weiteren Fragen erfolgt erst mit einem vollständigen
-Suchergebnis, auch bei null Treffern oder ausschließlich ausgeblendeten niedrigen
-Scores. Katalogdaten, eine laufende Suche oder gestreamte Textteile reichen nicht.
-Die Jobsuche meldet der Umfrageseite den abgeschlossenen Schritt, den Suchstatus
-und einen auf 1.000 Zeichen begrenzten Vorschlag zum Suchvorhaben mit der Testlauf-ID.
-Lebenslauf und Chatverlauf werden dabei nicht übertragen. Die empfangende Seite
-prüft Herkunft, eingebettetes Fenster, Testlauf und Nachrichtenformat. Die Freigabe bleibt nach einem Neuladen oder Zurückgehen erhalten.
-Ältere unvollständige Entwürfe ohne bestätigten Abschluss kehren zur Systemansicht
-zurück; ihre Antworten bleiben erhalten. „Umfrage starten“, „Jetzt Profil
-erstellen“ und der freigegebene Umfrage-Button verwenden dieselbe auffällige
-Animation mit zwei versetzt auslaufenden blauen Wellen und einem Pfeilimpuls.
-Die Wellen bleiben auch beim Darüberfahren sichtbar; auf dem Handy bietet die
-Fußleiste genügend Abstand zum Rand. Bei reduzierter Bewegung entfällt die Animation.
+`PUT /api/survey-drafts` speichert den Antwortentwurf mit monotoner Revision.
+`POST /api/survey-responses` validiert ihn beim Abschluss und übernimmt ihn in
+`survey_responses`. Neue Teilnahmen verwenden `diana-v9` und `diana-abc-v2`;
+fortgesetzte historische Teilnahmen behalten ihren zugewiesenen Stand.
+Wiederholtes Absenden derselben Antworten erzeugt keinen zusätzlichen Datensatz.
+Die Teilnahme-ID ist keine Identitätsprüfung und verhindert nicht jede
+Mehrfachteilnahme in unterschiedlichen Browsern.
 
-`POST /api/survey-responses` validiert und speichert die Antworten in der Tabelle
-`survey_responses` der konfigurierten SQLite-Datenbank. Gespeichert werden eine
-zufällige Teilnahme-ID, der UTC-Zeitpunkt, die Fragebogenversion `diana-v7` sowie
-die demografischen Angaben, das Suchvorhaben, Nutzungsangaben, Bewertungen und optionales Feedback. Die Antworten
-werden nach jeder Eingabe automatisch als Entwurf an den Server gesendet (kurze Bündelung bei Texteingaben). Beim Abschluss werden sie vollständig validiert und als abgeschlossene Teilnahme gespeichert.
-Die Tabelle enthält keine Suchprofile, Chatverläufe oder
-Chat-Sitzungs-IDs. Neue Suchsitzungen liegen nur noch im Arbeitsspeicher und verfallen nach einer Stunde ohne Such-/Chataktion oder beim Neustart. Ein Widerruf sperrt sie.
-Demografische Angaben verändern das Matching nicht und werden nicht an das LLM gesendet.
-Wiederholtes Absenden derselben Teilnahme mit denselben Antworten erzeugt keinen
-zweiten Eintrag. Die Teilnahme-ID dient der Wiederholungssicherheit, nicht einer
-Identitätsprüfung oder Sperre gegen mehrere Teilnahmen in verschiedenen Tabs.
+Unter **[/verwaltung](http://127.0.0.1:5050/verwaltung)** stehen Einzelantworten,
+Korrekturen mit Änderungsverlauf, Filter, Löschung, Diagramme und der
+**CSV-Export für Numiqo** bereit. Das Auswertungspaket enthält Codebuch,
+Spaltenzuordnung sowie Modell-/Konfigurationsnachweise. Details: [ADMIN.md](ADMIN.md).
 
-Unter **[/verwaltung](http://127.0.0.1:5050/verwaltung)** gibt es eine
-passwortgeschützte Übersicht mit Einzelantworten, ID-Suche, Versionsfilter,
-gezielter Löschung und numerischem **CSV-Export für Numiqo**. Das Auswertungspaket
-enthält zusätzlich Codebuch und Modell-/Konfigurationsnachweise.
-Einrichtung und Import: **[ADMIN.md](ADMIN.md)**. Die Export-Endpunkte sind
-nur nach Anmeldung zugänglich.
+Für die geplante Primäranalyse **abgeschlossene und unvollständige Teilnahmen
+zusammen exportieren**: Alle gültigen V9-Primärantworten der neuen Kohorte zählen
+nach Zuteilung, auch bei unveränderter Vorlagennutzung in C. Der Primärvergleich
+ist C minus B beim Einzelitem `system_usefulness` / `v9_system_nutzen`.
+Protokoll: [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md).
+Offline-Skripte und Aufrufe: [research/README.md](research/README.md).
 
-Der bisherige lesbare Export bleibt zusätzlich über die Serverkonsole verfügbar.
-Im Projektverzeichnis ausführen:
+Der zusätzliche lesbare CLI-Export enthält ausschließlich abgeschlossene Antworten:
 
 ```bash
 .venv/bin/flask --app app:create_app survey-export --output instance/umfrage.csv
 ```
 
-Der Export enthält die deutschen Fragen und Antworttexte als CSV (Semikolon,
-UTF-8 mit BOM, geeignet für Excel). Bereits vorhandene Dateien werden nicht
-überschrieben; für spätere Exporte einen neuen Dateinamen wählen. Freitext wird
-gegen die Interpretation als Tabellenformel abgesichert. Umfrageantworten und
-Exporte unter `instance/` bleiben außerhalb von Git und Quellcode-ZIP.
-Bereits gespeicherte Antworten der Versionen v1–v6 bleiben erhalten und lesbar.
-V4 bis V7 erhalten jeweils eigene `v4_`-, `v5_`-, `v6_`- beziehungsweise `v7_`-Variablen
-im Numiqo-Export und entsprechend getrennte Spalten im lesbaren Export. Die bisherigen
-Antwortspalten bleiben erhalten und werden nicht umcodiert. `study_arm` zeigt A/B;
-bei historischen V6-Antworten wird originales B als A und originales C als B angezeigt.
-Die Originalcodes bleiben im Codebuch und in den versionsbezogenen Spalten dokumentiert.
-Begleitende `_status`-Spalten unterscheiden beantwortet, nicht genutzt, nicht beurteilbar,
-keine Angabe, übersprungen, optional leer und andere Fragebogenversionen. Ja=1 und Nein=0
-sind gültige Antworten; fehlende Zahlen bleiben leer. Der neutrale Wert „Unentschieden“
-bei Wiederverwendung ist 3 und kein fehlender Wert.
+CSV-Dateien verwenden UTF-8 mit BOM und Semikolon. Bestehende Exportdateien werden
+nicht überschrieben. Freitext wird gegen die Interpretation als Tabellenformel
+abgesichert. Forschungsdaten und Exporte unter `instance/` gehören nicht ins Git-Repository.
 
-Beim Neuladen eines unfertigen V2/V3-Browserentwurfs bleiben Suchlauf, Teilnahme-ID,
-Demografie und Suchvorhaben erhalten. Geänderte Fragen müssen neu beantwortet werden;
-alte Ratings werden niemals zu Ja/Nein umgedeutet. Bereits bestätigte Teilnahmen
-bleiben abgeschlossen. Wurde eine alte Teilnahme gespeichert, aber die Bestätigung ging
-verloren, verhindert die beibehaltene ID ein zweites Speichern mit geänderten Antworten
-(409-Konflikt); die ursprüngliche Antwort bleibt in der Verwaltung erhalten.
-Die eingefrorenen Fragebögen liegen in `survey_definition_v3.json` bis
-`survey_definition_v6.json`. Bei der Übernahme eines unvollständigen V6-Entwurfs in
-V7 bleiben Angaben zur Person und zum Suchvorhaben erhalten; geänderte Bewertungsteile
-werden neu erhoben. Abgeschlossene historische Antworten werden nicht umgeschrieben.
+### Historische Fragebögen und Bedingungen
+
+Diese Angaben beschreiben frühere Studienstände, **nicht den aktuellen V9-Ablauf**:
+
+- **V8 / `diana-abc-v1`:** A war die allgemeine Basisvariante ohne angezeigte Scores
+  oder Begründungsboxen und mit zufälliger Ergebnisreihenfolge. B bot feste Vorlagen,
+  C zusätzlich eigene Gestaltung. Scores und Begründungen wurden nur B/C abgefragt;
+  Einrichtungsfragen konnten schon während der Wartezeit beantwortet werden.
+- **V7 / `diana-ab-*`:** A war die allgemeine Basisvariante, B die frei gestaltbare
+  KI-Beratung. Fragen zu Persönlichkeit, Scores und Begründungen wurden in A
+  übersprungen. V7 liegt unverändert in `survey_definition.json`.
+- **V6 / `diana-bc-v1`:** Ursprüngliche Gruppenbezeichnungen B/C bleiben in den
+  Originalantworten und im Codebuch dokumentiert. Die Verwaltung stellt sie für den
+  historischen Vergleich als A/B dar; sie dürfen nicht mit neuem B/C vermischt werden.
+
+Unvollständige V6/V7/V8-Teilnahmen werden mit ihrem historischen Fragebogen und
+ihren Bedingungen fortgesetzt. Auch bereits in V7 fortgesetzte ältere B/C-Teilnahmen
+bleiben bei diesem Stand. Abgeschlossene historische Antworten werden nicht
+umgeschrieben. Sehr alte V2/V3-Entwürfe übertragen lediglich persönliche Fakten und
+Suchvorhaben in einen neuen Durchlauf; Bewertungen werden nicht in neue Antworten umgedeutet.
+
+V4 bis V9 erhalten getrennte versionsbezogene Exportspalten. Experimentkennung
+und Fragebogenversion müssen gemeinsam ausgewertet werden. Begleitende
+`_antwortstatus`-Spalten (technisch `_status`) unterscheiden beantwortet, fehlend,
+übersprungen und nicht gestellte Fragen. Ja=1 und Nein=0 sind gültige Antworten;
+fehlende Zahlen bleiben leer. Historische Fragebogen-Dateien werden unverändert erhalten.
 
 ### Frisch von GitHub starten
 
@@ -202,8 +193,15 @@ Die Startseite ist auch unter `/index.html` erreichbar. Wenn der Server bereits 
 musst du keinen weiteren starten. „Port 5050 is in use“ heißt in diesem Fall, dass
 der vorhandene Server den Port schon belegt.
 
-Die lokale `.venv` ist bereits eingerichtet. Du benötigst auf diesem Mac kein
-globales `python3.12`; verwende bei Bedarf `.venv/bin/python app.py`.
+Wenn die lokale `.venv` eingerichtet ist, starte mit `.venv/bin/python app.py`.
+Andernfalls richte sie mit den oben beschriebenen Schritten ein.
+
+#### Historische Bedienungsnotizen vor dem Konferenzumbau
+
+Die folgenden ausführlichen UI-Notizen dokumentieren frühere Entwicklungsschritte.
+Insbesondere bekannte Personen als Vorlagen, mobile Schrittleisten und Aussagen
+zur eingeschränkten Ergebnisdarstellung in A gelten nicht für V9. Für die aktuelle
+Gruppenführung und Reihenfolge gilt der oben beschriebene V9-Ablauf.
 
 Vor der ersten Suche zeigt die linke Seite vier farbige, nummerierte Karten mit
 Icons: **Profil erstellen**, **Persönlichkeit festlegen**, **Ergebnisse ansehen**
@@ -556,7 +554,7 @@ curl -X POST http://127.0.0.1:5050/api/search \
   -H 'Content-Type: application/json' \
   --data-binary @example_search.json
 
-# Gleiches Profil, zusätzlich mit dauerhaft gespeichertem Chat:
+# Gleiches Profil, zusätzlich mit temporärer Chatsitzung:
 curl -X POST http://127.0.0.1:5050/api/onboard \
   -H 'Content-Type: application/json' \
   --data-binary @example_search.json
@@ -624,7 +622,19 @@ Begründungen, auch für Fragen zu Stellen hinter Rang fünf. Die KI weiß, dass
 Stellen unter 70 zunächst ausgeblendet sein können. Der vollständige Profilzustand
 wird stets übergeben.
 
-## DIANAs Persönlichkeit
+## Persönlichkeiten: aktueller Stand und historische Details
+
+Aktuell startet A mit einer festen sachlichen Standardberatung, B/C mit
+Top-Berufsberater. B kann zur unveränderten Fachexperten-Vorlage wechseln;
+C kann zusätzlich selbst gestalten. Aktuelle Vorlagen stehen als versionierte
+MLDS-Dateien in `personas/`; Beschreibung: [MLDS.md](MLDS.md).
+
+### Historische Presets und frühere Bedienung
+
+Die folgenden Beschreibungen bekannter Personen und ihrer Gewichte betreffen
+historische Presets und frühere Oberflächen. Sie sind keine aktuelle
+Vorlagenauswahl der V9-Studie.
+
 
 Die Oberfläche startet mit einer **eigenen Persönlichkeit** und zeigt alle Felder
 direkt. Es gibt keinen Wechsel mehr zwischen getrennten Vorbild- und Eigenbau-Modi.
@@ -988,7 +998,7 @@ Vorbereitung. `GET /api/index-status` meldet den Fortschritt. Der Build speicher
 Vektoren in kleinen Blöcken, sodass eine Unterbrechung bereits berechnete
 Anzeigen nicht verliert.
 
-### Chat vor der Rückmeldung · 10.09.2026
+### Historische Änderung: Chat vor der Rückmeldung · 10.09.2026
 
 Der eingebettete DIANA-Chat meldet eine bestätigte Nutzernachricht als reines
 Fortschrittssignal, ohne den Nachrichtentext zu übertragen. Quelle, Ursprung und
@@ -1002,7 +1012,7 @@ Im Wartezeit-Dialog steht „Zurück zum System“ links als dezenter Button; di
 Fragegruppe rechts als hervorgehobener Button. „Wartezeit nutzen“ verwendet ebenfalls
 die Wellenanimation. Der Hinweis zur Teilnahme-ID nennt die anklickbare Kontaktadresse.
 
-### Automatisches Speichern und Zwischenfragen · 10.09.2026
+### Historische Änderung: Automatisches Speichern und Zwischenfragen · 10.09.2026
 
 `PUT /api/survey-drafts` sichert den vollständigen aktuellen Antwortentwurf mit einer
 monotonen Revision. Serverbestätigungen, Wiederholungen, Reihenfolge und konkurrierende
@@ -1037,7 +1047,7 @@ Ein bereits widerrufener Zugang bleibt gesperrt.
 
 ## Direkte Tests ohne Umfrage
 
-`/test/a` öffnet die allgemeine Basisvariante, `/test/b` die konfigurierbare KI-Beratung. Beide benötigen eine eigene Einwilligung und speichern Chat und Profil nur in der bestehenden temporären Sitzung. Sie erzeugen weder Studienzuteilungen noch Umfrageantworten oder Einträge in der Studienauswertung. Die Studienfreigabe in der Verwaltung betrifft diese separaten Tests nicht; vollständige Datenschutzeinstellungen sind weiterhin erforderlich. A, B und Umfrage haben getrennte Browser- und Serversitzungen.
+`/test/a` öffnet die feste Standardberatung, `/test/b` die Auswahl aus festen Vorlagen und `/test/c` zusätzlich die eigene Gestaltung. Alle drei zeigen Scores und Begründungen entsprechend dem aktuellen V9-System. Die Zugänge benötigen eigene Einwilligungen und halten Chat und Profil nur in temporären Sitzungen. Sie erzeugen weder Studienzuteilungen noch Umfrageantworten oder Einträge in der Studienauswertung. Die Studienfreigabe in der Verwaltung betrifft diese separaten Tests nicht; vollständige Datenschutzeinstellungen sind weiterhin erforderlich. A, B, C und Umfrage haben getrennte Browser- und Serversitzungen.
 
 Eingebaute Persönlichkeiten liegen als versionierte `.mlds`-Dateien in `personas/`. Das Frontend lädt sie aus `/api/persona-templates`; individuelle Konfigurationen werden in der Sitzung als `advisor_mlds` abgelegt. Siehe [MLDS.md](MLDS.md).
 

@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 from privacy import token_hash
 from advisor import AdvisorConfig
 
-EXPERIMENT_ID = 'diana-abc-v1'
+EXPERIMENT_ID = 'diana-abc-v2'
+PREVIOUS_ABC_EXPERIMENT_ID = 'diana-abc-v1'
 AB_EXPERIMENT_ID = 'diana-ab-v2'
 LEGACY_EXPERIMENT_ID = 'diana-bc-v1'
 LEGACY_TO_CURRENT_ARM = {'B': 'A', 'C': 'B'}
@@ -14,10 +15,14 @@ CURRENT_TO_LEGACY_ARM = {current: legacy for legacy, current in LEGACY_TO_CURREN
 
 def personality_policy(experiment_id, arm):
     if arm == 'A':
-        return 'generic'
+        return 'standard' if experiment_id == EXPERIMENT_ID else 'generic'
     # Historical B participants had the full editor. Never silently change the
     # treatment associated with an existing assignment.
-    return 'templates' if experiment_id == EXPERIMENT_ID and arm == 'B' else 'configurable'
+    return 'templates' if experiment_id in (EXPERIMENT_ID, PREVIOUS_ABC_EXPERIMENT_ID) and arm == 'B' else 'configurable'
+
+
+def presentation_policy(experiment_id, arm):
+    return 'legacy_neutral' if personality_policy(experiment_id, arm) == 'generic' else 'ranked_insights'
 
 
 class PersonalityPolicyError(ValueError):
@@ -25,18 +30,21 @@ class PersonalityPolicyError(ValueError):
 
 
 def advisor_for_policy(requested, policy):
+    if policy == 'standard':
+        from persona_mlds import load_standard_advisor
+        return load_standard_advisor()
     if policy == 'generic':
         return dict(NEUTRAL_ADVISOR)
     if policy == 'templates':
         from persona_mlds import load_templates
         templates = load_templates()
-        if requested == AdvisorConfig().model_dump() or (requested.get('mode', 'preset') == 'preset' and requested.get('preset') == 'neutral'):
+        if requested == AdvisorConfig().model_dump() or (requested.get('mode', 'preset') == 'preset' and requested.get('preset') in ('neutral', 'standard')):
             return dict(templates['career']['advisor'])
         for template in templates.values():
             if requested == template['advisor']:
                 return dict(template['advisor'])
         raise PersonalityPolicyError('In dieser Variante kannst du Top-Berufsberater oder Fachexperte auswählen. Die Vorlagen sind nicht bearbeitbar.')
-    if requested.get('mode', 'preset') == 'preset' and requested.get('preset') == 'neutral':
+    if requested.get('mode', 'preset') == 'preset' and requested.get('preset') in ('neutral', 'standard'):
         return AdvisorConfig().model_dump()
     return requested
 NEUTRAL_ADVISOR = dict(mode='preset', preset='neutral', name='DIANA', traits=[], focus='ausgewogen', description='')
@@ -78,8 +86,10 @@ class StudyAssignments:
         return dict(experiment_id=row['experiment_id'], arm=arm, assigned_at=row['assigned_at'],
                     prior_exposure=bool(row['prior_exposure']),
                     personality_policy=personality_policy(row['experiment_id'], arm),
+                    presentation_policy=presentation_policy(row['experiment_id'], arm),
                     questionnaire_arm=row['arm'] if row['experiment_id'] == LEGACY_EXPERIMENT_ID else arm,
-                    questionnaire_version=('diana-v8' if row['experiment_id'] == EXPERIMENT_ID else
+                    questionnaire_version=('diana-v9' if row['experiment_id'] == EXPERIMENT_ID else
+                                           'diana-v8' if row['experiment_id'] == PREVIOUS_ABC_EXPERIMENT_ID else
                                            'diana-v6' if row['experiment_id'] == LEGACY_EXPERIMENT_ID else 'diana-v7'))
 
     def get(self, token):
@@ -108,11 +118,12 @@ class StudyAssignments:
     def validate_answers(self, token, version, answers):
         assigned = self.get(token)
         if assigned:
-            allowed = ({'diana-v8'} if assigned['experiment_id'] == EXPERIMENT_ID else
+            allowed = ({'diana-v9'} if assigned['experiment_id'] == EXPERIMENT_ID else
+                       {'diana-v8'} if assigned['experiment_id'] == PREVIOUS_ABC_EXPERIMENT_ID else
                        {'diana-v6', 'diana-v7'} if assigned['experiment_id'] == LEGACY_EXPERIMENT_ID else {'diana-v7'})
             if version not in allowed:
                 raise ValueError('Der Fragebogen passt nicht zu deiner Studienzuordnung. Bitte lade die Umfrage neu.')
-        elif version not in ('diana-v6', 'diana-v7', 'diana-v8'):
+        elif version not in ('diana-v6', 'diana-v7', 'diana-v8', 'diana-v9'):
             return
         expected_arm = assigned['arm'] if assigned else None
         if version == 'diana-v6':

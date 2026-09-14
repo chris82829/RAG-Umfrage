@@ -11,7 +11,7 @@ Focus = Literal['ausgewogen', 'fachliche_tiefe', 'lernpotenzial', 'innovation']
 class AdvisorConfig(BaseModel):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True, strict=True)
     mode: Literal['preset', 'custom'] = 'preset'
-    preset: Literal['diana', 'steve', 'angela', 'guenther', 'neutral'] = 'diana'
+    preset: Literal['diana', 'steve', 'angela', 'guenther', 'neutral', 'standard'] = 'diana'
     name: str = Field(default='Meine DIANA', min_length=1, max_length=60)
     description: str = Field(default='', max_length=2000)
     traits: list[Trait] = Field(default_factory=lambda: ['analytisch', 'ermutigend'], max_length=4)
@@ -27,6 +27,7 @@ class AdvisorConfig(BaseModel):
 
 
 PRESETS = {
+    'standard': {'name':'Standardberatung-KI', 'inspiration':None, 'traits':[], 'focus':'ausgewogen'},
     'neutral': {'name':'DIANA-KI', 'inspiration':None, 'traits':[], 'focus':'ausgewogen'},
     'diana': {'name': 'DIANA-KI', 'inspiration': None,
               'traits': ['analytisch', 'ermutigend'], 'focus': 'ausgewogen'},
@@ -51,6 +52,7 @@ DIMENSIONS = ('technical_fit', 'preferences_fit', 'technical_depth',
               'learning', 'innovation', 'clarity')
 SUPPLEMENTAL = DIMENSIONS[2:]
 PRESET_PRIORITIES = {
+    'standard': (7, 6, 6, 6),
     'neutral': (7, 6, 6, 6),
     'diana': (7, 6, 6, 6),
     'steve': (5, 5, 15, 0),
@@ -84,6 +86,7 @@ TRAIT_STYLE = {
     'kritisch': 'Prüfe ausdrücklich geforderte Voraussetzungen und ihre Belege genau. Erkenne eine gute Fachpassung klar an; Kritik verlangt keine Pflichtlücke. Unbekannte optionale Details sind mögliche Prüfpunkte, keine zusätzlichen Anforderungen oder unterstellten Nutzerwünsche.',
 }
 PRESET_STYLE = {
+    'standard': 'Feste Standardberatung zur Jobsuche: Antworte sachlich, verständlich und knapp. Erkläre fachliche Passung, belegte Stärken und offene Anforderungen anhand des Nutzerprofils und der Stellenanzeigen. Hilf bei Rückfragen und beim Präzisieren der Suchwünsche. Verwende keine Rollenimitation oder vom Nutzer gewünschte Persönlichkeit. Das sachliche Sprachprofil und die ausgewogene Bewertungsgewichtung bleiben fest; fachliche Wünsche, Fähigkeiten und Rahmenbedingungen des Nutzers berücksichtigst du weiterhin. Erfinde keine Belege.',
     'neutral': 'Du bist ein allgemeiner Assistent. Beantworte die aktuelle Frage sachlich. Übernimm keine besondere Fachrolle und keine gewünschte Persönlichkeit. Verzichte auf ungefragte Beratung, Vergleiche, Empfehlungen und motivierende Kommentare. Stelle nur eine Rückfrage, wenn sie zur Bearbeitung der aktuellen Anfrage erforderlich ist. Erfinde keine Fakten und benenne fehlende Informationen. Antworte auf Deutsch.',
     'diana': 'Sprachprofil: eigenständige, ausgewogene und zugewandt stützende KI-Beratung. Knüpfe unmittelbar an eine belegte Stärke des Nutzers an und mache den nächsten machbaren Schritt greifbar. Sprich verständlich und ermutigend, ohne routinemäßiges Lob oder pauschale Folgeangebote wie „Ich kann dir noch helfen“. Offene Punkte bleiben sachlich, gute Passung wird klar anerkannt.',
     'steve': 'Sachliche Stilanlehnung an Steve Jobs: entschieden, pointiert, anspruchsvoll und auf konkrete Wirkung gerichtet. Beginne mit einem knappen Urteil. Danach kurze aktive Entscheidungssätze statt langer Aufzählungssätze; mache greifbar, was der Nutzer mit seinen Kenntnissen bewirkt. Formuliere nötige Prüfschritte als klare Aussagen, keine Fragenliste. Zeige belegte Gestaltungsmöglichkeiten, ohne neue Ansprüche an den Job oder den Nutzer zu erfinden. Keine reale Identität, Zitate oder Parodie.',
@@ -94,6 +97,7 @@ PRESET_STYLE = {
 # Original writing examples, never attributed quotations or applicant/job evidence.
 # The same hypothetical facts make differences in expression easy to recognize.
 PRESET_STYLE_EXAMPLES = {
+    'standard': 'Python passt zu deinen angegebenen Kenntnissen. Die zugesagte Betreuung kann den Einstieg unterstützen. Wie die tägliche Zusammenarbeit organisiert ist, bleibt in der Anzeige offen.',
     'neutral': 'Die Anzeige nennt Python und Betreuung. Zur täglichen Zusammenarbeit enthält sie keine Angaben.',
     'diana': 'Du bringst mit Python eine passende Grundlage mit und bekommst fachliche Begleitung. Für deine Bewerbung kannst du daran konkret anknüpfen.',
     'steve': 'Fachlich passt das. Dein Python kommt zum Einsatz. Lass dir den Ablauf der Zusammenarbeit konkret erläutern.',

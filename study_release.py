@@ -7,9 +7,11 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPUT_TOKENS
+from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPUT_TOKENS, ChatDecision
 from retrieval import MODEL_ID, MODEL_REVISION, CACHE_VERSION, RRF_K, LEG_LIMIT
 from study_usage import CAPTURE_VERSION, usage_snapshot
+from study_metrics import METRICS_CAPTURE_VERSION, metrics_snapshot
+from study_assignment import EXPERIMENT_ID
 
 
 def canonical(value):
@@ -22,7 +24,7 @@ class StudyReleases:
         files = ['llm_service.py', 'advisor.py', 'retrieval.py', 'schemas.py', 'app.py',
                  'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
-        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'test_access.py']
+        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'study_metrics.py', 'test_access.py', 'STUDY-PROTOCOL.md']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}
@@ -30,12 +32,16 @@ class StudyReleases:
             try: packages[name] = importlib.metadata.version(name)
             except importlib.metadata.PackageNotFoundError: packages[name] = None
         manifest = dict(format_version=1, openai_model=MODEL, reasoning_effort=REASONING_EFFORT,
-                        experiment_id='diana-abc-v1',
+                        experiment_id=EXPERIMENT_ID,
                         assignment_probabilities={'A':1/3,'B':1/3,'C':1/3},
-                        personality_policies={'A':'generic','B':'templates','C':'configurable'},
-                        neutral_presentation='random-order-generic-chat-v2',
+                        personality_policies={'A':'standard','B':'templates','C':'configurable'},
+                        presentation_policy='ranked_insights',
+                        historical_neutral_presentation='random-order-generic-chat-v2',
+                        operation_metrics_capture_version=METRICS_CAPTURE_VERSION,
                         personality_usage_capture_version=CAPTURE_VERSION,
-                        neutral_chat_max_output_tokens=None, neutral_chat_max_characters=None,
+                        historical_neutral_chat_max_output_tokens=None, historical_neutral_chat_max_characters=None,
+                        chat_max_output_tokens=MAX_OUTPUT_TOKENS,
+                        chat_max_characters=ChatDecision.model_json_schema()['properties']['assistant_message']['maxLength'],
                         response_store=False, max_output_tokens=MAX_OUTPUT_TOKENS,
                         rerank_output_tokens=RERANK_OUTPUT_TOKENS, embedding_model=MODEL_ID,
                         embedding_revision=MODEL_REVISION, embedding_preprocessing=CACHE_VERSION,
@@ -68,7 +74,8 @@ class StudyReleases:
         if previous:
             ids = sorted(set(ids) | set(metadata.get('release_ids', [])))
         metadata.update(release_ids=ids, personality_usage=usage_snapshot(digest, db),
-                        personality_usage_frozen=bool(completed))
+                        personality_usage_frozen=bool(completed),
+                        operation_metrics=metrics_snapshot(digest, db))
         db.execute('INSERT INTO survey_response_metadata VALUES (?, ?) ON CONFLICT(submission_id) DO UPDATE SET metadata_json=excluded.metadata_json', (submission_id, canonical(metadata)))
 
     def all(self):

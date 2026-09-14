@@ -2,31 +2,21 @@
 
 DIANA ist aus meiner Einschätzung ein geeigneter Ausgangspunkt für einen wissenschaftlichen Demo- oder Posterbeitrag. Für ein Full Paper sind ein klar abgegrenzter neuer Beitrag, eine nachvollziehbare Evaluation und die Einordnung gegenüber verwandten Systemen entscheidend. Ein funktionsfähiges System oder eine große Teilnehmerzahl allein garantiert keine Annahme.
 
-## Aktueller Vergleich A/B/C
+## Aktueller Vergleich für die Konferenz
 
-Seit der neuen Experimentversion `diana-abc-v1` werden neue Teilnahmen zufällig mit gleicher Wahrscheinlichkeit einer von drei Bedingungen zugeteilt:
+Die neue Erhebung `diana-abc-v2` / Fragebogen V9 vergleicht faire Bedingungen mit gleicher technischer Such- und Bewertungsgrundlage:
 
-| Gruppe | Verfügbare Beratung | Ergebnisdarstellung |
-| --- | --- | --- |
-| A | Allgemeiner KI-Assistent ohne wählbare Persönlichkeit | Zufällige Anordnung der bis zu 20 Retrieval-Kandidaten, keine angezeigten Scores oder automatischen Begründungsboxen |
-| B | Auswahl zwischen unveränderten Vorlagen Top-Berufsberater und Fachexperte | Persönliche Bewertung und Rangfolge, Scores und Begründungen; zunächst Ergebnisse ab 70 Punkten |
-| C | Dieselben Vorlagen plus selbst gestaltbare Persönlichkeit | Dieselbe Bewertungs- und Darstellungslogik wie B; Eigenschaften können die Bewertung beeinflussen |
+- A: feste, kompetente und sachliche Standardberatung.
+- B: Auswahl zwischen Top-Berufsberater und Fachexperte, Eigenschaften unveränderbar.
+- C: dieselben Vorlagen plus freie Gestaltung.
 
-Modell, Datenquelle, Retrieval, Score-Schwelle und Rankingverfahren sind zwischen B und C gleich. Die durch eigene Eigenschaften beabsichtigte Änderung der Gewichtung ist Teil der Intervention. Beide starten mit dem Top-Berufsberater. B kann Vorlagen wechseln; C kann zusätzlich selbst gestalten. Die freie Gestaltung ist ein Angebot, keine Pflicht.
+Alle zeigen Scores, Begründungen und nach Bewertung sortierte Stellen mit derselben 70er-Anzeigeschwelle. Zufallssortierung und fachfremder Prompt in A entfallen nur für die neue Erhebung. Frühere Bedingungen und Daten bleiben als historische Versionen erhalten.
 
-Für den Vergleich B/C passt die Forschungsfrage:
+Primär wird C gegen B verglichen: Welchen zusätzlichen Nutzen bietet die Möglichkeit der freien Gestaltung? Sekundär B gegen A: Welchen Nutzen bietet das Angebot einer Vorlagenauswahl? Auch in C nicht selbst gestaltende Personen gehören gemäß ihrer Zuteilung zu C. Tatsächliche Nutzungsuntergruppen bleiben explorativ.
 
-> Welchen zusätzlichen wahrgenommenen Nutzen bietet die Möglichkeit, eine KI-Suchpersönlichkeit selbst zu gestalten, gegenüber der Auswahl aus festen Beratungsvorlagen hinsichtlich Suchkontrolle, Unterstützung im Gespräch und Nutzbarkeit?
+Deine frühere Filter-/Stichwortumfrage ist wertvolle Motivation, kein zeitgleicher randomisierter Kontrollarm. Die beiden Foliensätze einschließlich offener Zahlenwidersprüche sind in [PRIOR-STUDIES.md](PRIOR-STUDIES.md) eingeordnet. Die aktuelle Erhebung behauptet deshalb keinen neuen kausalen Vergleich Chat gegen reine Stichwortsuche.
 
-Für den primären Vergleich alle Teilnehmenden gemäß ihrer zufälligen Zuteilung auswerten, auch wenn jemand in C keine Anpassungen vornimmt. Eine Auswertung nur der Personen, die tatsächlich personalisieren, wäre ein selbst selektierter Vergleich. Die erste/letzte verwendete Auswahl und Wechsel ergänzen explorative Nutzungsanalysen. Sie ersetzen nicht die randomisierte Zuteilung.
-
-A/B und A/C vergleichen weiterhin Gesamtpakete. Der Unterschied kann auch durch Sortierung, sichtbare Scores, Begründungen und die Zahl anfangs sichtbarer Stellen entstehen. Die bewusst zufällige Reihenfolge in A ist als Baseline begründungsbedürftig; eine übliche relevanzsortierte Basissuche wäre wissenschaftlich überzeugender. A wurde durch diese Erweiterung nicht verändert. Für den kausalen Mehrwert eines Chatbots gegenüber Filter-/Stichwortsuche wäre weiterhin eine zeitgleiche vergleichbare Filterbedingung nötig; die frühere separate Umfrage ist Kontext, kein gleichwertiger Kontrollarm.
-
-## Historische Daten und ergänzende Messwerte
-
-Die vorherige Experimentversion `diana-ab-v2` hatte nur A/B; das damalige B bot bereits freie Gestaltung. Bestehende Teilnahmen behalten ihre Zuordnung und diesen Funktionsumfang. Historisches B darf deshalb nicht als heutige Vorlagen-Gruppe B ausgewertet werden. Fragebogen V8 und `diana-abc-v1` kennzeichnen die neue Erhebung; V7 und frühere Versionen bleiben getrennt erhalten.
-
-Erfasst werden Quelle, Vorlagentyp, erste und letzte tatsächlich angewendete Auswahl, Auswahlwechsel und Zeitpunkte. Historische fehlende Werte bleiben unbekannt; abgeschlossene Teilnahmen behalten ihren Abschlussstand. Als zusätzliche, noch nicht neu implementierte Messwerte wären Suchdauer, fehlgeschlagene Suchen, erfolgreiche Chatnachrichten und letzter erreichter Schritt sinnvoll. Dafür reichen Zählwerte und Zeitangaben; Gesprächsinhalte sind nicht erforderlich.
+Der vollständige Protokollentwurf mit primärem Endpunkt, Fallzahlannahmen, Ausfällen, Versionsabgrenzung und geplanten Analysen steht in [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md). Er ersetzt weder einen kognitiven Pretest noch eine externe Präregistrierung. Reproduzierbare Analyseprogramme liegen unter `research/`.
 
 ## Vor einer Einreichung
 

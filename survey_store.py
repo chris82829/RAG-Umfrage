@@ -15,7 +15,9 @@ from schemas import APIModel
 
 V7_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition.json').read_text())
 V7_SURVEY_FIELDS = [field for group in [V7_SURVEY_DEFINITION['demographics'], *V7_SURVEY_DEFINITION['categories']] for field in group['fields']]
-SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v8.json').read_text())
+V8_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v8.json').read_text())
+V8_SURVEY_FIELDS = [field for group in [V8_SURVEY_DEFINITION['demographics'], *V8_SURVEY_DEFINITION['categories']] for field in group['fields']]
+SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v9.json').read_text())
 SURVEY_VERSION = SURVEY_DEFINITION['version']
 SURVEY_FIELDS = [field for group in [SURVEY_DEFINITION['demographics'], *SURVEY_DEFINITION['categories']]
                  for field in group['fields']]
@@ -28,7 +30,7 @@ V5_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v5
 V5_SURVEY_FIELDS = [field for group in [V5_SURVEY_DEFINITION['demographics'], *V5_SURVEY_DEFINITION['categories']] for field in group['fields']]
 V6_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v6.json').read_text())
 V6_SURVEY_FIELDS = [field for group in [V6_SURVEY_DEFINITION['demographics'], *V6_SURVEY_DEFINITION['categories']] for field in group['fields']]
-VERSIONED_FIELDS = {'diana-v4': V4_SURVEY_FIELDS, 'diana-v5': V5_SURVEY_FIELDS, 'diana-v6': V6_SURVEY_FIELDS, 'diana-v7': V7_SURVEY_FIELDS, SURVEY_VERSION: SURVEY_FIELDS}
+VERSIONED_FIELDS = {'diana-v4': V4_SURVEY_FIELDS, 'diana-v5': V5_SURVEY_FIELDS, 'diana-v6': V6_SURVEY_FIELDS, 'diana-v7': V7_SURVEY_FIELDS, 'diana-v8': V8_SURVEY_FIELDS, SURVEY_VERSION: SURVEY_FIELDS}
 
 MISSING_CODES = {'not_used', 'not_assessable', 'not_specified'}
 
@@ -146,6 +148,8 @@ SurveySubmissionV7 = create_model('SurveySubmissionV7', __base__=ConditionalSurv
 
 SurveySubmissionV8 = create_model('SurveySubmissionV8', __base__=ConditionalSurvey, **_submission_fields('diana-v8'))
 
+SurveySubmissionV9 = create_model('SurveySubmissionV9', __base__=ConditionalSurvey, **_submission_fields('diana-v9'))
+
 def _draft_fields(version, model):
     fields = {}
     for field in VERSIONED_FIELDS[version]:
@@ -162,7 +166,8 @@ DraftAnswersV5 = create_model('DraftAnswersV5', __base__=APIModel, **_draft_fiel
 DraftAnswersV6 = create_model('DraftAnswersV6', __base__=APIModel, **_draft_fields('diana-v6', SurveySubmissionV6))
 DraftAnswersV7 = create_model('DraftAnswersV7', __base__=APIModel, **_draft_fields('diana-v7', SurveySubmissionV7))
 DraftAnswersV8 = create_model('DraftAnswersV8', __base__=APIModel, **_draft_fields('diana-v8', SurveySubmissionV8))
-WaitingField = Literal['age_group', 'gender', 'education', 'study_field', 'search_goal', 'personality_customized', 'personality_setup', 'template_selection_ease']
+DraftAnswersV9 = create_model('DraftAnswersV9', __base__=APIModel, **_draft_fields('diana-v9', SurveySubmissionV9))
+WaitingField = Literal['age_group', 'gender', 'education', 'study_field', 'search_goal', 'personality_customized', 'personality_setup', 'template_selection_ease', 'job_portal_experience', 'ai_chat_experience']
 
 
 class SurveyDraftV4(APIModel):
@@ -170,7 +175,7 @@ class SurveyDraftV4(APIModel):
     version: Literal['diana-v4']
     revision: int = Field(ge=1, le=9007199254740991)
     answers: DraftAnswers
-    waiting_answered: list[WaitingField] = Field(default_factory=list, max_length=8)
+    waiting_answered: list[WaitingField] = Field(default_factory=list, max_length=10)
 
     @model_validator(mode='after')
     def consistent_draft(self):
@@ -201,7 +206,19 @@ class SurveyDraftV8(SurveyDraftV4):
     answers: DraftAnswersV8
 
 
-class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV8 | SurveyDraftV7 | SurveyDraftV6 | SurveyDraftV5 | SurveyDraftV4, Field(discriminator='version')]]):
+class SurveyDraftV9(SurveyDraftV4):
+    version: Literal['diana-v9']
+    answers: DraftAnswersV9
+
+    @model_validator(mode='after')
+    def waiting_questions_are_factual(self):
+        allowed = {field['name'] for field in SURVEY_DEFINITION['demographics']['fields']} | {'search_goal'}
+        if not set(self.waiting_answered) <= allowed:
+            raise ValueError('Während der Wartezeit sind nur Sachangaben vorgesehen.')
+        return self
+
+
+class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV9 | SurveyDraftV8 | SurveyDraftV7 | SurveyDraftV6 | SurveyDraftV5 | SurveyDraftV4, Field(discriminator='version')]]):
     pass
 
 
@@ -209,7 +226,7 @@ class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV8 | SurveyDraftV7 | Sur
 SurveyDraft = SurveyDraftV4
 
 
-class SurveyRequest(RootModel[Annotated[SurveySubmissionV8 | SurveySubmissionV7 | SurveySubmissionV6 | SurveySubmissionV5 | SurveySubmissionV4 | SurveySubmission | SurveySubmissionV2 | LegacySurveySubmission,
+class SurveyRequest(RootModel[Annotated[SurveySubmissionV9 | SurveySubmissionV8 | SurveySubmissionV7 | SurveySubmissionV6 | SurveySubmissionV5 | SurveySubmissionV4 | SurveySubmission | SurveySubmissionV2 | LegacySurveySubmission,
                                         Field(discriminator='version')]]):
     """Previously opened v1/v2 forms remain valid; missing new ratings stay blank."""
 

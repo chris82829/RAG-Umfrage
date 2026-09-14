@@ -1,5 +1,6 @@
 import {consentHeaders} from './privacy.js';
-import definition from '../survey_definition_v8.json' with { type: 'json' };
+import definition from '../survey_definition_v9.json' with { type: 'json' };
+import definitionV8 from '../survey_definition_v8.json' with { type: 'json' };
 import definitionV7 from '../survey_definition.json' with { type: 'json' };
 import definitionV6 from '../survey_definition_v6.json' with { type: 'json' };
 import definitionV5 from '../survey_definition_v5.json' with { type: 'json' };
@@ -7,14 +8,16 @@ import definitionV4 from '../survey_definition_v4.json' with { type: 'json' };
 
 export const SURVEY_VERSION = definition.version;
 export const SURVEY_STORAGE_KEY = `diana-survey:${SURVEY_VERSION}`;
-const definitions = Object.fromEntries([definition, definitionV7, definitionV6, definitionV5, definitionV4].map(value => [value.version, value]));
+const definitions = Object.fromEntries([definition, definitionV8, definitionV7, definitionV6, definitionV5, definitionV4].map(value => [value.version, value]));
 const waitingNames = ['search_goal', 'personality_customized', 'template_selection_ease', 'personality_setup'];
 const configurations = Object.fromEntries(Object.entries(definitions).map(([version, value]) => {
   const demographics = {...value.demographics, fields:value.demographics.fields.filter(field=>!field.systemProvided)};
   const surveyCategories = value.categories;
   const surveyFields = [value.demographics, ...surveyCategories].flatMap(group=>group.fields);
-  const waitingQuestionFields = waitingNames.map(name=>surveyFields.find(field=>field.name===name)).filter(Boolean);
-  return [version, {demographics, surveyCategories, surveyFields, surveyScale:value.scale,
+  const beforeSystemFields=demographics.fields.filter(field=>field.beforeSystem);
+  const versionWaitingNames=version==='diana-v9'?['search_goal']:waitingNames;
+  const waitingQuestionFields = versionWaitingNames.map(name=>surveyFields.find(field=>field.name===name)).filter(Boolean);
+  return [version, {beforeSystemFields, demographics, surveyCategories, surveyFields, surveyScale:value.scale,
     surveyStages:['system', 'demographics', ...surveyCategories.map(group=>group.id)],
     waitingQuestionFields, waitingQuestionGroups:[demographics, {id:'setup', title:'Weitere Fragen', fields:waitingQuestionFields}]}];
 }));
@@ -132,7 +135,7 @@ export function nextSurveyState(state) {
 
 export function newSurveyState(cryptoSource = globalThis.crypto) {
   const token = () => Array.from(cryptoSource.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join('');
-  return { version: SURVEY_VERSION, submissionId: token(), runId: token(), stage: 'system', systemOpened: true, systemCompleted: false, chatCompleted: false, submitted: false, draftRevision:0, waitingAnswered:[], searchGoalSuggestion: '', searchGoalEdited: false, answers: emptyAnswers() };
+  return { version: SURVEY_VERSION, submissionId: token(), runId: token(), stage: 'system', systemTaskStarted: false, systemOpened: true, systemCompleted: false, chatCompleted: false, submitted: false, draftRevision:0, waitingAnswered:[], searchGoalSuggestion: '', searchGoalEdited: false, answers: emptyAnswers() };
 }
 
 function sanitizeAnswers(source,version) {
@@ -151,7 +154,7 @@ export function loadSurveyState(storage, fresh = newSurveyState) {
     const keys=[SURVEY_STORAGE_KEY,...Object.keys(definitions).filter(version=>version!==SURVEY_VERSION).map(version=>`diana-survey:${version}`),'diana-survey:diana-v3','diana-survey:diana-v2'];
     const raw=keys.map(key=>storage.getItem(key)).find(Boolean);
     const state=JSON.parse(raw || 'null');
-    if (/^diana-v[2-8]$/.test(state?.version || '') && /^[a-f0-9]{32}$/.test(state.submissionId)
+    if (/^diana-v[2-9]$/.test(state?.version || '') && /^[a-f0-9]{32}$/.test(state.submissionId)
         && /^[a-f0-9]{32}$/.test(state.runId) && typeof state.submitted==='boolean' && typeof state.systemOpened==='boolean') {
       if(state.submitted && state.version!==SURVEY_VERSION)return state;
       if(!definitions[state.version]) {
@@ -207,7 +210,7 @@ export function restoreServerDraft(previous,draft) {
 
 export function applyStudyAssignment(state,assignment) {
   if(!['A','B','C'].includes(assignment?.arm))throw new Error('Studienzuordnung konnte nicht geladen werden.');
-  let version=assignment.questionnaire_version || (assignment.experiment_id?.startsWith('diana-ab-')?'diana-v7':SURVEY_VERSION);
+  let version=assignment.questionnaire_version || (assignment.experiment_id==='diana-abc-v1'?'diana-v8':assignment.experiment_id?.startsWith('diana-ab-')?'diana-v7':SURVEY_VERSION);
   // Some historical B/C participants already moved to v7 before the ABC study.
   if(assignment.experiment_id==='diana-bc-v1' && state.version==='diana-v7')version='diana-v7';
   if(!definitions[version])throw new Error('Diese Fragebogenversion ist nicht verfügbar.');
@@ -215,9 +218,21 @@ export function applyStudyAssignment(state,assignment) {
   if(version!==state.version) {
     const answers=emptyAnswers(version);
     for(const name of [...demographics.fields.map(field=>field.name),'search_goal'])if(state.answers[name]!==undefined)answers[name]=state.answers[name];
-    next={...state,version,answers,stage:'system',systemCompleted:false,chatCompleted:false,runId:newSurveyState().runId,waitingAnswered:(state.waitingAnswered || []).filter(name=>[...demographics.fields.map(field=>field.name),'search_goal'].includes(name))};
+    next={...state,version,answers,stage:'system',systemTaskStarted:false,systemCompleted:false,chatCompleted:false,runId:newSurveyState().runId,waitingAnswered:(state.waitingAnswered || []).filter(name=>[...demographics.fields.map(field=>field.name),'search_goal'].includes(name))};
   }
   const arm=version==='diana-v6' && assignment.experiment_id==='diana-bc-v1'?({A:'B',B:'C'}[assignment.arm] || assignment.arm):assignment.arm;
   const answers=changeSurveyAnswer(next.answers,'study_arm',arm,version);
   return reviseSurvey(next,{answers,assignment});
+}
+
+// The same preparation precedes the current conference-study system in every arm.
+export function needsSystemPreparation(state) {
+  const fields=surveyConfiguration(state).beforeSystemFields;
+  const startedOnServer=fields.length>0 && fields.every(field=>waitingFieldDone(state,field));
+  return state.version==='diana-v9' && !state.systemTaskStarted && !startedOnServer && !state.systemCompleted && !state.submitted;
+}
+export function startPreparedSystem(state) {
+  const fields=surveyConfiguration(state).beforeSystemFields;
+  if(Object.keys(surveyErrors(state.answers,fields)).length)return state;
+  return reviseSurvey(markWaitingFields(state,fields),{systemTaskStarted:true});
 }

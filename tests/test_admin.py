@@ -95,7 +95,7 @@ def test_numiqo_export_is_rectangular_numeric_and_keeps_legacy_scale_separate(ad
     assert None not in current
     assert len(list(csv.DictReader(io.StringIO(client.get('/api/admin/export?columns=technical&version=diana-v3').data.decode('utf-8-sig')),delimiter=';')))==1
     package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?columns=technical&format=zip').data))
-    assert set(package.namelist())=={'diana_numiqo.csv','codebook.csv','codebook.json','study_manifest.json','spaltenzuordnung.csv','README.txt'}
+    assert set(package.namelist())=={'diana_numiqo.csv','codebook.csv','codebook.json','study_manifest.json','spaltenzuordnung.csv','teilnahmefluss.csv','README.txt'}
     book=json.loads(package.read('codebook.json'))
     assert next(item for item in book if item['variable']=='score_usefulness')['endpoints']['low']=='Gar nicht nützlich'
     assert '4' not in next(item for item in book if item['variable']=='gender')['codes']

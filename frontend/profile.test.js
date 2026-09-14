@@ -54,7 +54,7 @@ test('preset remains valid after clearing a custom name and switching modes', ()
   assert.equal(a.mode, 'preset');
   assert.equal(a.preset, 'angela');
   assert.ok(a.name.length > 0);
-  assert.deepEqual(Object.keys(advisorPresets), ['diana', 'steve', 'angela', 'guenther']);
+  assert.deepEqual(Object.keys(advisorPresets), ['standard', 'diana', 'steve', 'angela', 'guenther']);
 });
 test('custom advisor requires a name and traits; comparison ignores JSON key order', () => {
   assert.throws(() => validateAdvisor({ ...defaultAdvisor, mode: 'custom', name: ' ' }));
@@ -85,7 +85,7 @@ test('custom description survives validation, detects edits and treats legacy ab
 test('AI names follow saved personalities and normalize custom names without duplicate suffixes', () => {
   assert.equal(advisorAiLabel(undefined), 'Top-Berufsberater-KI');
   assert.equal(advisorAiLabel({}), 'DIANA-KI');
-  for (const [preset, expected] of Object.entries({ diana: 'DIANA-KI', steve: 'Steve-Jobs-KI', angela: 'Angela-Merkel-KI', guenther: 'Günther-Jauch-KI' })) {
+  for (const [preset, expected] of Object.entries({ standard:'Standardberatung-KI', diana: 'DIANA-KI', steve: 'Steve-Jobs-KI', angela: 'Angela-Merkel-KI', guenther: 'Günther-Jauch-KI' })) {
     assert.equal(advisorAiLabel({ ...defaultAdvisor, mode: 'preset', preset }), expected);
   }
   for (const [name, expected] of [['  Alex   Weber  ', 'Alex-Weber-KI'], ['Özlem', 'Özlem-KI'], ['Alex-ki', 'Alex-KI'], ['Alex KI', 'Alex-KI'], ['Alex-KI', 'Alex-KI'], ['Lern\nBegleitung', 'Lern-Begleitung-KI']]) {

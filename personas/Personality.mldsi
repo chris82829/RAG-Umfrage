@@ -18,7 +18,8 @@
             "steve",
             "angela",
             "guenther",
-            "neutral"
+            "neutral",
+            "standard"
           ],
           "title": "Preset",
           "type": "string",
@@ -139,7 +140,8 @@
           "enum": [
             "career",
             "expert",
-            "neutral"
+            "neutral",
+            "standard"
           ],
           "title": "Id",
           "type": "string"
@@ -260,7 +262,10 @@
             "template": {
               "properties": {
                 "id": {
-                  "const": "neutral"
+                  "enum": [
+                    "neutral",
+                    "standard"
+                  ]
                 }
               }
             }
@@ -279,13 +284,60 @@
               "properties": {
                 "mode": {
                   "const": "preset"
-                },
-                "preset": {
-                  "const": "neutral"
                 }
               }
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "template": {
+                    "properties": {
+                      "id": {
+                        "const": "neutral"
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "personality": {
+                    "properties": {
+                      "preset": {
+                        "const": "neutral"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "template": {
+                    "properties": {
+                      "id": {
+                        "const": "standard"
+                      }
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "personality": {
+                    "properties": {
+                      "preset": {
+                        "const": "standard"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
         },
         "else": {
           "properties": {

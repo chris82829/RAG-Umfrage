@@ -49,7 +49,7 @@ def test_fixed_arms_isolate_sessions_and_never_create_study_data(standalone):
     configured = {'mode':'custom','name':'Meine Beratung','traits':['analytisch'],'focus':'innovation'}
     first = client.post('/api/onboard', headers=a, json={**payload(), 'advisor':configured})
     assert first.status_code == 201
-    assert first.json['advisor']['preset'] == 'neutral'
+    assert first.json['advisor']['preset'] == 'standard'
     assert client.post('/api/onboard', headers=b, json={**payload(), 'advisor':configured}).status_code == 400
     second = client.post('/api/onboard', headers=c, json={**payload(), 'advisor':configured})
     assert second.status_code == 201
@@ -63,7 +63,7 @@ def test_fixed_arms_isolate_sessions_and_never_create_study_data(standalone):
     assert client.get('/api/sessions/'+sid, headers={**a,'X-Diana-Test':'B'}).status_code == 428
     llm.action, llm.patch = 'answer', {}
     answer = client.post('/api/chat', headers=a, json={'session_id':sid,'message':'Warum passt Stelle eins?','advisor':configured})
-    assert answer.status_code == 200 and answer.json['advisor']['preset'] == 'neutral'
+    assert answer.status_code == 200 and answer.json['advisor']['preset'] == 'standard'
     assert len(answer.json['messages']) == 3
     assert answer.json['advisor_mlds']['personality'] == answer.json['advisor']
     for headers in (a,b,c):

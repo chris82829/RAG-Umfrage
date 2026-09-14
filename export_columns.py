@@ -31,6 +31,12 @@ META_TITLES = {
     'personality_last_selection_changed_at_utc': ('ki_auswahl_geaendert_am_utc', 'Zeitpunkt des zuletzt erfassten Auswahlwechsels bzw. der ersten Anwendung (UTC)'),
 }
 
+META_TITLES['operations_capture_version'] = ('nutzung_erfassungsversion', 'Version der serverseitigen Erfassung aggregierter Nutzungsoperationen')
+for _kind, _label, _prefix in [('search', 'Suche über den Stellenbestand', 'suchen'), ('rerank', 'Neusortierung bestehender Ergebnisse', 'neusortierungen'), ('chat', 'Nutzer-Chatnachricht', 'chatnachrichten')]:
+    META_TITLES[f'operations_successful_{_kind}_count'] = (f'{_prefix}_erfolgreich_anzahl', f'Anzahl erfolgreich abgeschlossener Operationen: {_label}')
+    META_TITLES[f'operations_failed_{_kind}_count'] = (f'{_prefix}_fehlgeschlagen_anzahl', f'Anzahl fehlgeschlagener Operationen: {_label}')
+    META_TITLES[f'operations_{_kind}_duration_ms'] = (f'{_prefix}_dauer_gesamt_ms', f'Gesamte erfasste Laufzeit in Millisekunden: {_label}')
+
 QUESTION_NAMES = {
     'adapt_search_ease': 'suchwuensche_aendern_einfachheit',
     'age_group': 'altersgruppe',
@@ -49,6 +55,8 @@ QUESTION_NAMES = {
     'personality_consistency': 'ki_eigenschaften_wiedererkannt',
     'personality_customized': 'ki_selbst_angepasst_selbstauskunft',
     'personality_setup': 'ki_einrichten_einfachheit',
+    'job_portal_experience': 'jobportal_vorerfahrung',
+    'ai_chat_experience': 'ki_chat_vorerfahrung',
     'template_selection_ease': 'ki_vorlagenauswahl_einfachheit',
     'personality_value': 'ki_personalisierung_mehrwert',
     'personalized_chat_usefulness': 'chat_personalisierung_nutzen',
@@ -84,7 +92,7 @@ def export_name(technical, columns='readable'):
     if name.endswith('_status'):
         name, suffix = name[:-7], '_antwortstatus'
     # From V6 onward this question specifically concerns clarifying search wishes.
-    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8') else QUESTION_NAMES[name]
+    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8', 'v9') else QUESTION_NAMES[name]
     return f'{prefix}_{base}{suffix}'
 
 

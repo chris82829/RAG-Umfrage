@@ -47,13 +47,13 @@ test('missing confirmation and mismatched revision do not count as a saved answe
 });
 
 test('waiting answers skip demographics and search goal and only leave unasked personality questions',()=>{
- let source=state(1,{age_group:'21_24',gender:'not_specified',education:'master',study_field:'',search_goal:'Werkstudent',personality_customized:'yes',personality_setup:8});
+ let source=state(1,{age_group:'21_24',gender:'not_specified',education:'master',study_field:'',search_goal:'Werkstudent',personality_customized:'yes',personality_setup:8,job_portal_experience:'never',ai_chat_experience:'daily'});
  source={...source,systemCompleted:true,chatCompleted:true};
  source=markWaitingFields(source,waitingQuestionGroups[0].fields);
  source=finishWaitingIfReady(source);
  assert.equal(remainingWaitingGroups(source).length,0);
  const next=nextSurveyState(source);assert.equal(next.stage,'overall');
- assert.deepEqual(displaySurveyGroup(next,'personality').fields.map(f=>f.name),['personality_clarity_search','personality_clarity_chat','personality_consistency','personalized_chat_usefulness','personalized_search_usefulness']);
+ assert.deepEqual(displaySurveyGroup(next,'personality').fields.map(f=>f.name),['personality_customized','personality_setup','personality_clarity_search','personality_clarity_chat','personality_consistency','personalized_chat_usefulness','personalized_search_usefulness']);
  const memory=new Map();const storage={getItem:key=>memory.get(key)||null,setItem:(key,value)=>memory.set(key,value)};
  saveSurveyState(storage,source);assert.deepEqual(loadSurveyState(storage).waitingAnswered,source.waitingAnswered);
  assert.equal(nextSurveyState(loadSurveyState(storage)).stage,'overall');
@@ -62,7 +62,7 @@ test('waiting answers skip demographics and search goal and only leave unasked p
 test('partly answered waiting blocks retain unanswered and optional questions; invalid fields are never skipped',()=>{
  let source=state(1,{age_group:'21_24'});
  source=markWaitingFields(source,waitingQuestionGroups[0].fields.filter(f=>f.name==='age_group'));
- assert.deepEqual(remainingWaitingGroups(source)[0].fields.map(f=>f.name),['gender','education','study_field']);
+ assert.deepEqual(remainingWaitingGroups(source)[0].fields.map(f=>f.name),['gender','education','study_field','job_portal_experience','ai_chat_experience']);
  source=markWaitingFields(source,waitingQuestionGroups[1].fields);
  assert.equal(source.waitingAnswered.includes('search_goal'),false);
  assert.equal(remainingWaitingGroups(source).length,2);
@@ -80,8 +80,8 @@ test('only a new experiment migrates v4 facts without reusing historical ratings
  const storage={getItem:key=>key==='diana-survey:diana-v4'?JSON.stringify(old):null};
  const loaded=loadSurveyState(storage);
  assert.equal(loaded.version,'diana-v4');
- const next=applyStudyAssignment(loaded,{arm:'C',experiment_id:'diana-abc-v1',questionnaire_version:'diana-v8'});
- assert.equal(next.version,'diana-v8');assert.equal(next.answers.personality_setup,null);
+ const next=applyStudyAssignment(loaded,{arm:'C',experiment_id:'diana-abc-v2',questionnaire_version:'diana-v9'});
+ assert.equal(next.version,'diana-v9');assert.equal(next.answers.personality_setup,null);
  assert.equal(next.answers.score_usefulness,null);assert.equal(next.answers.personality_customized,'');
  assert.ok(!next.waitingAnswered.includes('personality_setup'));assert.ok(next.draftRevision>20);
  assert.equal(restoreServerDraft(next,{completed:true}).submitted,true);

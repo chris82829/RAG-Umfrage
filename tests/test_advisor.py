@@ -17,8 +17,9 @@ def custom(traits, focus='ausgewogen', name='Beratung'):
 
 
 def test_presets_keep_professional_fit_and_explicit_wishes_fixed():
-    weights = [resolve_advisor({'preset': key})['scoring_weights'] for key in PRESETS if key != 'neutral']
-    assert len({tuple(item.values()) for item in weights}) == len(PRESETS) - 1
+    weights = [resolve_advisor({'preset': key})['scoring_weights'] for key in PRESETS if key not in ('neutral', 'standard')]
+    assert len({tuple(item.values()) for item in weights}) == len(PRESETS) - 2
+    assert resolve_advisor({'preset':'standard'})['scoring_weights'] == resolve_advisor({'preset':'neutral'})['scoring_weights']
     for item in weights:
         assert set(item) == set(DIMENSIONS)
         assert sum(item.values()) == 100

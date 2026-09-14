@@ -1,5 +1,6 @@
 **
 !Dockerfile
+!STUDY-PROTOCOL.md
 !requirements.txt
 !requirements-server.txt
 !*.py
@@ -21,3 +22,5 @@
 
 !survey_definition_v7.json
 !survey_definition_v8.json
+
+!survey_definition_v9.json
