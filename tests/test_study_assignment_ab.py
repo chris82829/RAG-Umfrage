@@ -86,7 +86,7 @@ def test_new_allocation_stores_current_arm_and_experiment(database, monkeypatch,
         return arm
     monkeypatch.setattr('study_assignment.secrets.choice', choice)
     result = service.assign('a' * 64)
-    assert result['arm'] == arm and result['experiment_id'] == EXPERIMENT_ID == 'diana-abc-v2'
+    assert result['arm'] == arm and result['experiment_id'] == EXPERIMENT_ID == 'diana-abc-v3'
     assert result['prior_exposure'] is False
     with database.connect() as db:
         row = db.execute('SELECT * FROM study_assignments WHERE token_hash=?', (token_hash('a' * 64),)).fetchone()
@@ -180,8 +180,8 @@ def test_new_participant_validation_and_neutral_override(database, monkeypatch, 
     monkeypatch.setattr('study_assignment.secrets.choice', lambda _: arm)
     token = 'a' * 64
     service.assign(token)
-    service.validate_answers(token, 'diana-v9', {'study_arm': arm})
-    for version in ('diana-v6','diana-v7','diana-v8'):
+    service.validate_answers(token, 'diana-v10', {'study_arm': arm})
+    for version in ('diana-v6','diana-v7','diana-v8','diana-v9'):
         with pytest.raises(ValueError, match='Studienzuordnung'):
             service.validate_answers(token, version, {'study_arm': arm})
     requested = load_templates()['career']['advisor']
@@ -189,7 +189,7 @@ def test_new_participant_validation_and_neutral_override(database, monkeypatch, 
     assert actual['preset'] == 'standard' if arm=='A' else actual==requested
     for code in [None, '', *[code for code in ('A','B','C') if code != arm]]:
         with pytest.raises(ValueError, match='Studienzuordnung'):
-            service.validate_answers(token, 'diana-v9', {'study_arm': code})
+            service.validate_answers(token, 'diana-v10', {'study_arm': code})
 
 
 def test_legacy_neutral_mapping_and_missing_assignment(database):

@@ -92,7 +92,7 @@ def export_name(technical, columns='readable'):
     if name.endswith('_status'):
         name, suffix = name[:-7], '_antwortstatus'
     # From V6 onward this question specifically concerns clarifying search wishes.
-    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8', 'v9') else QUESTION_NAMES[name]
+    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8', 'v9', 'v10') else QUESTION_NAMES[name]
     return f'{prefix}_{base}{suffix}'
 
 

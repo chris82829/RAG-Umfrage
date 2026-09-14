@@ -39,13 +39,13 @@ function validState() {
   return { ...newSurveyState(), systemOpened: true, systemCompleted: true, chatCompleted: true, answers: {
     ...emptyAnswers(),
     ...Object.fromEntries(surveyFields.filter(field => field.kind !== 'text').map(field => [field.name, field.kind === 'scale' ? 8 : field.options[0][0]])),
-    study_arm:'C', template_selection_ease:null, age_group: '21_24', gender: 'not_specified', education: 'master', study_field: '', search_goal: 'Werkstudent Softwareentwicklung',
+    study_arm:'C', age_group: '21_24', gender: 'not_specified', education: 'master', study_field: '', search_goal: 'Werkstudent Softwareentwicklung',
   } };
 }
 
-test('sixteen numeric evaluations use 1–10 and start with no answer', () => {
+test('eleven numeric evaluations use 1–10 and start with no answer', () => {
   const fields = surveyFields.filter(field => field.kind === 'scale');
-  assert.equal(fields.length, 16);
+  assert.equal(fields.length, 11);
   assert.equal(surveyCategories.length, 6);
   for (const field of fields) {
     assert.equal(emptyAnswers()[field.name], null);
@@ -106,7 +106,7 @@ test('missing earlier answers and a never-opened system prevent jumping forward'
   const state = validState();
   assert.equal(reachableStage({ ...state, systemOpened: false }, 'overall'), 'system');
   assert.equal(reachableStage({ ...state, systemCompleted: false }, 'overall'), 'system');
-  assert.equal(reachableStage({ ...state, answers: { ...state.answers, personality_setup: null } }, 'feedback'), 'personality');
+  assert.equal(reachableStage({ ...state, answers: { ...state.answers, personality_consistency: null } }, 'feedback'), 'personality');
   assert.equal(reachableStage({ ...state, answers: { ...state.answers, age_group: '' } }, 'dialogue'), 'demographics');
   assert.equal(reachableStage(state, 'invented'), 'system');
 });
@@ -173,7 +173,7 @@ test('sending uses only questionnaire fields, never the run or search/chat state
     return new Response(JSON.stringify({ saved: true }), { status: 201 });
   };
   await submitSurvey(state, { request });
-  assert.equal(sent.version, 'diana-v9');
+  assert.equal(sent.version, 'diana-v10');
   assert.equal(sent.search_goal, state.answers.search_goal);
   assert.equal(sent.future_use, 8);
   assert.equal(sent.profile, undefined);
@@ -250,7 +250,7 @@ test('unfinished v2 drafts migrate without inventing new answers; completed v2 p
   const storage = memoryStorage();
   storage.setItem('diana-survey:diana-v2', JSON.stringify(old));
   const migrated = loadSurveyState(storage);
-  assert.equal(migrated.version, 'diana-v9');
+  assert.equal(migrated.version, 'diana-v10');
   assert.equal(migrated.stage, 'system');
   assert.equal(migrated.answers.score_usefulness, null);
   assert.equal(migrated.answers.chat_helpfulness, null);
@@ -305,7 +305,7 @@ test('v3 migration never turns numeric agreement into usage facts', () => {
   storage.setItem('diana-survey:diana-v3',JSON.stringify(old));
   const restored=loadSurveyState(storage);
   assert.equal(restored.answers.search_refinement,'');
-  assert.equal(restored.answers.personality_setup,null);
+  assert.equal(restored.answers.personality_setup,undefined);
   assert.equal(restored.answers.chat_used,undefined);
   assert.equal(restored.answers.search_goal,old.answers.search_goal);
   assert.equal(restored.submissionId,old.submissionId);

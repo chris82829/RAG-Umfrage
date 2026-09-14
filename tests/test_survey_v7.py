@@ -75,7 +75,7 @@ def seed_record(app, version, arm, identifier):
     token = identifier * 64
     notice = {'ready': True, 'version': 'a' * 64}
     privacy.accept(ConsentInput(token=token, version=notice['version'], accepted=True), notice)
-    experiment = 'diana-abc-v2' if version == 'diana-v9' else 'diana-abc-v1' if version == 'diana-v8' else 'diana-bc-v1' if version == 'diana-v6' else 'diana-ab-v1'
+    experiment = 'diana-abc-v3' if version == 'diana-v10' else 'diana-abc-v2' if version == 'diana-v9' else 'diana-abc-v1' if version == 'diana-v8' else 'diana-bc-v1' if version == 'diana-v6' else 'diana-ab-v1'
     with store.connect() as db:
         db.execute('INSERT INTO study_assignments VALUES (?, ?, ?, ?, ?)',
                    (token_hash(token), experiment, arm, '2026-09-10T12:00:00+00:00', 0))

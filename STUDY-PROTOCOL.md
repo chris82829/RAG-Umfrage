@@ -1,6 +1,6 @@
 # DIANA: Studienprotokoll für den Konferenzbeitrag
 
-Stand: 14. September 2026. Experiment `diana-abc-v2`, Fragebogen `diana-v9`.
+Stand: 14. September 2026. Experiment `diana-abc-v3`, Fragebogen `diana-v10`.
 Dies ist ein vor der neuen Erhebung erstellter, versionierter **Protokollentwurf**. Er ist noch keine extern registrierte Präregistrierung, kein Ethikvotum und keine Bestätigung einer validierten Skala. Vor der Haupterhebung kognitiv vorprüfen und den endgültigen Stand mit Datum festschreiben.
 
 ## Forschungsfrage und Beitrag
@@ -26,15 +26,39 @@ B und C starten mit dem Top-Berufsberater. Freie Gestaltung ist in C freiwillig.
 - Zwischenpersonenvergleich; neue Einwilligungskennungen erhalten serverseitig mit Wahrscheinlichkeit 1/3 A, B oder C. Transaktion und eindeutiger Schlüssel sichern eine stabile Zuteilung auch bei parallelen Anfragen. Das ist einfache Randomisierung, keine garantierte exakte Drittelung.
 - Dieselbe knappe Aufgabe für alle: Suchprofil angeben, Stellen ansehen und mindestens eine eigene inhaltliche Frage im Chat stellen bzw. einen Suchwunsch präzisieren. Keine Pflicht, positive Rückmeldungen zu geben oder in C selbst zu gestalten.
 - Vor Systembeginn: Nutzung von Jobportalen und KI-Chats in den letzten sechs Monaten. Antwortbereiche: nie, seltener als wöchentlich, wöchentlich aber nicht täglich, täglich; zusätzlich keine Angabe.
-- Während einer Suche nur Fakten: demografische Angaben und Suchvorhaben. Bewertungen des Systems, Chats und der Einrichtung werden erst nach der Nutzung gestellt.
+- Während einer Suche nur Fakten: demografische Angaben und Suchvorhaben. Bewertungen des Systems, Chats und der Persönlichkeitswirkung werden erst nach der Nutzung gestellt.
 - Gemeinsame Ergebnisfragen stehen vor bedingungsspezifischen Fragen. Antworten werden fortlaufend gespeichert. Mindestens eine erfolgreich beantwortete eigene Chatnachricht öffnet die nachfolgenden Bewertungsseiten; eine automatische Begrüßung zählt nicht.
 - `/test/a`, `/test/b` und `/test/c` sind getrennte Demonstrationszugänge. Sie liefern keine Studienzuweisungen, Umfrageantworten oder Nutzungsmetriken der Studie.
 
 Vor der Haupterhebung ein kleiner kognitiver Pretest, beispielsweise 6–10 Personen mit unterschiedlichen Fachrichtungen und Endgeräten: Aufgabenverständnis, Bedeutung der Vorlagen und Selbstgestaltung, Skalenanker und Warte-/Fragenführung prüfen. Diese Zahl ist ein Vorschlag für den Pretest, keine statistische Fallzahl für den Gruppenvergleich. Pretestdaten nicht als reguläre Hauptstudiendaten zusammenfassen.
 
+## Fragebogenkürzung und Versionsgrenze
+
+V10 enthält 15/20/21 sichtbare Fragen für A/B/C, einschließlich der beiden
+optionalen Felder Fachrichtung und Feedback. Gegenüber dem vorherigen V9 entfallen
+**ausschließlich** `search_ease`, `express_search_needs`, `adapt_search_ease`,
+`template_selection_ease` und `personality_setup`. Diese Nebenmaße wurden zur
+Verringerung der Befragungslänge entfernt; sie sind nicht als identische Konstrukte
+zu den verbleibenden Fragen zu verstehen.
+
+Das primäre Einzelitem sowie Nutzen von Chat, Score, Begründungen, Gesprächsstil
+und Bewertungsschwerpunkten bleiben unverändert. Suchaufwand, zukünftige
+Nutzungsabsicht, berichtete Suchwunschänderung, Verständnis/Wahrnehmung der
+Persönlichkeit und die Anpassungs-Selbstauskunft in C bleiben ebenfalls erhalten.
+Die Selbstgestaltungsmetadaten ersetzen die Selbstauskunft nicht: `custom` kann
+auch bei vorlagenidentischen Werten erfasst sein. Operationszähler ersetzen
+keine Selbstauskunft darüber, ob Suchwünsche verändert wurden.
+
+Die vorherige faire Kohorte `diana-abc-v2` / `diana-v9` behält Fragebogen und
+Systembedingungen. Neue Teilnahmen erhalten `diana-abc-v3` / `diana-v10`.
+Trotz identischem primären Item werden beide Kohorten wegen unterschiedlicher
+Befragungskontexte nicht automatisch gepoolt. Das Offline-Skript analysiert
+standardmäßig V10; historische V9-Daten müssen ausdrücklich mit `--cohort v9`
+getrennt gewählt werden. Noch ältere Stände bleiben ebenfalls separat.
+
 ## Primärer Endpunkt
 
-Das vorab gewählte **Einzelitem** `system_usefulness` lautet: „Wie hilfreich war das System für die Durchführung deiner Suche?“ Werte 1–10, mit identischen Endpunkten in A/B/C. Lesbarer Export: `v9_system_nutzen`; technische Spalte: `v9_system_usefulness`.
+Das vorab gewählte **Einzelitem** `system_usefulness` lautet: „Wie hilfreich war das System für die Durchführung deiner Suche?“ Werte 1–10, mit identischen Endpunkten in A/B/C. Lesbarer Export: `v10_system_nutzen`; technische Spalte: `v10_system_usefulness`.
 
 Primäre Schätzgröße ist der Mittelwertunterschied **C minus B**. Zweiseitiger Welch-t-Test mit α=0,05 und 95%-Konfidenzintervall für die Differenz. Zusätzlich Gruppengrößen, Mittelwert, Standardabweichung, Median und Verteilung sowie Hedges g berichten. Die Interpretation des ordinalen Einzelitems als quasi-metrisch ist eine Analyseannahme. Keine nachträgliche Zusammenrechnung beliebiger Fragen zu einem angeblich validierten Gesamtwert.
 
@@ -50,7 +74,7 @@ Korrekturen von Einzelantworten nur als belegbare Berichtigungen mit Grund und �
 
 ## Sekundäre und explorative Analysen
 
-B–A ist der geplante sekundäre Vergleich. Bedienbarkeit, Kommunikation und Anpassung von Suchwünschen, Aufwand, Chatnutzen, Wiederverwendungsabsicht sowie Score-/Begründungsnutzen sind sekundäre Maße. Persönlichkeitswahrnehmung und Bedienbarkeit der Auswahl/Gestaltung beschreiben die Intervention. Sekundäre Inferenztests als eigene Familie mit Holm-Korrektur auswerten; unbereinigte Einzel-p-Werte nicht als weitere bestätigte Haupthypothesen präsentieren. C–A und Vorlagen-/Selbstgestaltungs-Untergruppen sind explorativ.
+B–A ist der geplante sekundäre Vergleich. Suchaufwand, Chatnutzen, Wiederverwendungsabsicht sowie Score-/Begründungsnutzen sind sekundäre Maße. Berichtete Suchwunschänderung und die Verständlichkeit bzw. Wahrnehmung der Persönlichkeitswirkung beschreiben die Nutzung und Intervention. Die Einfachheit der Bedienung, Vorlagenauswahl und Selbstgestaltung wird in V10 nicht mehr durch eigene Items bewertet. Sekundäre Inferenztests als eigene Familie mit Holm-Korrektur auswerten; unbereinigte Einzel-p-Werte nicht als weitere bestätigte Haupthypothesen präsentieren. C–A und Vorlagen-/Selbstgestaltungs-Untergruppen sind explorativ.
 
 Die erste tatsächlich angewendete Auswahl und spätere Wechsel werden separat erfasst. Tatsächlich selbst gestaltende Personen bilden keine zusätzliche randomisierte Gruppe. Zusammenhänge zwischen Gestaltung, Laufzeit, Fehlern und Bewertungen explorativ berichten; daraus keine kausale Wirkung der tatsächlichen Nutzung ableiten.
 
@@ -75,6 +99,16 @@ Serverseitig werden aggregierte erfolgreiche und fehlgeschlagene Such-, Neusorti
 Historisch nicht erfasste Werte sind unbekannt. Bei Abschluss werden die zugehörigen Metadaten eingefroren. Entwürfe zeigen die zuletzt erfassten Werte. Widerruf und Löschung umfassen die neuen Metadaten; externe Exporte und Sicherungen sind gesondert zu berücksichtigen.
 
 Archivieren: Commit, Experimentkennung, Fragebogendefinition, Modell-Snapshot, Prompt-/MLDS-Dateien, Dependencyversionen, Datensatzprüfsumme und Auswerteskript. Die vorhandenen Manifestdateien unterstützen dies. Ohne dauerhafte individuelle Such-/Chattexte ist eine einzelne reale Sitzung nicht vollständig reproduzierbar; LLM-Ausgaben sind trotz Snapshot nicht garantiert identisch. Für technische Reproduktion können gesonderte synthetische Beispielprofile verwendet werden.
+
+## Späterer technischer Ranking-Check
+
+Ein ergänzender technischer Test soll prüfen, ob geänderte Prioritäten zu
+inhaltlich nachvollziehbaren Rankingänderungen führen und wie groß die Variation
+bei unveränderten Eingaben ist. Der gezielte Ablauf steht in
+[research/RANKING-EVALUATION-PLAN.md](research/RANKING-EVALUATION-PLAN.md).
+Dieser Check ist nur geplant: nicht ausgeführt, nicht automatisiert und nicht
+terminiert. Seine Ergebnisse würden die Nutzungsstudie ergänzen, nicht die
+subjektive Nützlichkeit oder tatsächliche Bewerbungserfolge ersetzen.
 
 ## Vorarbeiten und geeigneter Konferenzbeitrag
 

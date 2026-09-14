@@ -3,27 +3,27 @@ import assert from 'node:assert/strict';
 import {applyStudyAssignment, surveyConfiguration, newSurveyState, surveyFields, fieldVisible, displaySurveyGroup, surveyErrors, remainingWaitingGroups, markWaitingFields, finishWaitingIfReady, nextSurveyState, loadSurveyState, saveSurveyState, submitSurvey, changeSurveyAnswer} from './survey.js';
 import {draftPayload} from './survey-autosave.js';
 
-function complete(arm='C',version='diana-v9') {
+function complete(arm='C',version='diana-v10') {
  const fields=surveyConfiguration(version).surveyFields;
  const answers=Object.fromEntries(fields.map(field=>[field.name,field.kind==='scale'?8:field.kind==='choice'?field.options[0][0]:field.optional?'':'Softwareentwicklung']));
  answers.study_arm=arm;
  return {...newSurveyState(),version,systemCompleted:true,chatCompleted:true,answers:changeSurveyAnswer(answers,'study_arm',arm,version)};
 }
 
-test('A B C share outcomes and score/reasons while setup matches actual capabilities',()=>{
+test('A B C share outcomes and score/reasons without usability and setup questions',()=>{
  const a=complete('A'),b=complete('B'),c=complete('C');
  for(const state of [a,b,c])assert.deepEqual(surveyErrors(state.answers),{});
  assert.equal(displaySurveyGroup(a,'personality').fields.length,0);
  assert.deepEqual(displaySurveyGroup(a,'usefulness'),displaySurveyGroup(b,'usefulness'));
  assert.deepEqual(displaySurveyGroup(b,'usefulness'),displaySurveyGroup(c,'usefulness'));
- assert.ok(displaySurveyGroup(b,'personality').fields.some(field=>field.name==='template_selection_ease'));
+ assert.ok(!displaySurveyGroup(b,'personality').fields.some(field=>field.name==='template_selection_ease'));
  assert.ok(!displaySurveyGroup(b,'personality').fields.some(field=>field.name==='personality_customized'));
  assert.ok(displaySurveyGroup(c,'personality').fields.some(field=>field.name==='personality_customized'));
  assert.ok(!displaySurveyGroup(c,'personality').fields.some(field=>field.name==='template_selection_ease'));
  assert.equal(draftPayload(a).answers.score_usefulness,8);
- assert.equal(draftPayload(b).answers.personality_setup,null);
- assert.equal(draftPayload(c).answers.template_selection_ease,null);
- for(const name of ['search_ease','system_usefulness','chat_helpfulness','future_use'])assert.ok(!surveyFields.find(field=>field.name===name).visibleIf);
+ assert.equal(draftPayload(b).answers.personality_setup,undefined);
+ assert.equal(draftPayload(c).answers.template_selection_ease,undefined);
+ for(const name of ['search_effort','system_usefulness','chat_helpfulness','future_use'])assert.ok(!surveyFields.find(field=>field.name===name).visibleIf);
 });
 
 test('waiting questions contain only relevant setup and are skipped later for each arm',()=>{
@@ -40,7 +40,7 @@ test('waiting questions contain only relevant setup and are skipped later for ea
 });
 
 test('new ABC assignment persists and cannot manufacture completed chat',()=>{
- const state=applyStudyAssignment({...newSurveyState(),systemCompleted:true},{arm:'C',experiment_id:'diana-abc-v2',questionnaire_version:'diana-v9'});
+ const state=applyStudyAssignment({...newSurveyState(),systemCompleted:true},{arm:'C',experiment_id:'diana-abc-v3',questionnaire_version:'diana-v10'});
  const data=new Map(),storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};
  saveSurveyState(storage,state);const restored=loadSurveyState(storage);
  assert.equal(restored.answers.study_arm,'C');assert.equal(restored.chatCompleted,false);

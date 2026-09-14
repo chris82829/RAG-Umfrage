@@ -151,7 +151,7 @@ def test_server_cli_exports_labels_unicode_newlines_and_no_overwrite(survey_app,
     raw = output.read_bytes()
     assert raw.startswith(b'\xef\xbb\xbf')
     rows = list(csv.reader(io.StringIO(raw.decode('utf-8-sig')), delimiter=';'))
-    assert len(rows) == 2 and len(rows[0]) == 311
+    assert len(rows) == 2 and len(rows[0]) == 355
     assert rows[1][3:8] == ['21–24 Jahre', 'Keine Angabe', 'Masterstudium', 'Informatik', payload()['search_goal']]
     assert rows[1][8:21] == ['8'] * 13
     assert rows[1][21:25] == [''] * 4

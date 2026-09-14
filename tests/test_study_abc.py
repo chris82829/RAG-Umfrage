@@ -29,7 +29,7 @@ def test_fresh_assignment_has_three_equal_candidates_and_stays_stable(experiment
     first = client.post('/api/study-assignment', headers=headers).json
     assert first['experiment_id'] == EXPERIMENT_ID
     assert first['arm'] == arm and first['personality_policy'] == policy
-    assert first['questionnaire_version'] == 'diana-v9'
+    assert first['questionnaire_version'] == 'diana-v10'
     monkeypatch.setattr('study_assignment.secrets.choice', lambda _: pytest.fail('Must not rerandomize'))
     with ThreadPoolExecutor(max_workers=6) as pool:
         repeated = list(pool.map(lambda _: app.extensions['study_assignments'].assign(headers['X-Diana-Consent']), range(15)))
@@ -127,10 +127,10 @@ def test_questionnaire_version_cannot_mix_new_and_historical_assignments(experim
     _, headers, _ = new_assignment(app, monkeypatch, 'C')
     assignments = app.extensions['study_assignments']
     token = headers['X-Diana-Consent']
-    assignments.validate_answers(token, 'diana-v9', {'study_arm':'C'})
-    for version in ('diana-v3','diana-v6','diana-v7','diana-v8'):
+    assignments.validate_answers(token, 'diana-v10', {'study_arm':'C'})
+    for version in ('diana-v3','diana-v6','diana-v7','diana-v8','diana-v9'):
         with pytest.raises(ValueError): assignments.validate_answers(token, version, {'study_arm':'C'})
-    with pytest.raises(ValueError): assignments.validate_answers(token,'diana-v9',{'study_arm':'B'})
+    with pytest.raises(ValueError): assignments.validate_answers(token,'diana-v10',{'study_arm':'B'})
 
 
 def test_c_test_page_isolated_from_b_and_study_data(standalone):

@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 from privacy import token_hash
 from advisor import AdvisorConfig
 
-EXPERIMENT_ID = 'diana-abc-v2'
+EXPERIMENT_ID = 'diana-abc-v3'
+PREVIOUS_FAIR_EXPERIMENT_ID = 'diana-abc-v2'
 PREVIOUS_ABC_EXPERIMENT_ID = 'diana-abc-v1'
 AB_EXPERIMENT_ID = 'diana-ab-v2'
 LEGACY_EXPERIMENT_ID = 'diana-bc-v1'
@@ -15,10 +16,10 @@ CURRENT_TO_LEGACY_ARM = {current: legacy for legacy, current in LEGACY_TO_CURREN
 
 def personality_policy(experiment_id, arm):
     if arm == 'A':
-        return 'standard' if experiment_id == EXPERIMENT_ID else 'generic'
+        return 'standard' if experiment_id in (EXPERIMENT_ID, PREVIOUS_FAIR_EXPERIMENT_ID) else 'generic'
     # Historical B participants had the full editor. Never silently change the
     # treatment associated with an existing assignment.
-    return 'templates' if experiment_id in (EXPERIMENT_ID, PREVIOUS_ABC_EXPERIMENT_ID) and arm == 'B' else 'configurable'
+    return 'templates' if experiment_id in (EXPERIMENT_ID, PREVIOUS_FAIR_EXPERIMENT_ID, PREVIOUS_ABC_EXPERIMENT_ID) and arm == 'B' else 'configurable'
 
 
 def presentation_policy(experiment_id, arm):
@@ -88,7 +89,8 @@ class StudyAssignments:
                     personality_policy=personality_policy(row['experiment_id'], arm),
                     presentation_policy=presentation_policy(row['experiment_id'], arm),
                     questionnaire_arm=row['arm'] if row['experiment_id'] == LEGACY_EXPERIMENT_ID else arm,
-                    questionnaire_version=('diana-v9' if row['experiment_id'] == EXPERIMENT_ID else
+                    questionnaire_version=('diana-v10' if row['experiment_id'] == EXPERIMENT_ID else
+                                           'diana-v9' if row['experiment_id'] == PREVIOUS_FAIR_EXPERIMENT_ID else
                                            'diana-v8' if row['experiment_id'] == PREVIOUS_ABC_EXPERIMENT_ID else
                                            'diana-v6' if row['experiment_id'] == LEGACY_EXPERIMENT_ID else 'diana-v7'))
 
@@ -118,12 +120,13 @@ class StudyAssignments:
     def validate_answers(self, token, version, answers):
         assigned = self.get(token)
         if assigned:
-            allowed = ({'diana-v9'} if assigned['experiment_id'] == EXPERIMENT_ID else
+            allowed = ({'diana-v10'} if assigned['experiment_id'] == EXPERIMENT_ID else
+                       {'diana-v9'} if assigned['experiment_id'] == PREVIOUS_FAIR_EXPERIMENT_ID else
                        {'diana-v8'} if assigned['experiment_id'] == PREVIOUS_ABC_EXPERIMENT_ID else
                        {'diana-v6', 'diana-v7'} if assigned['experiment_id'] == LEGACY_EXPERIMENT_ID else {'diana-v7'})
             if version not in allowed:
                 raise ValueError('Der Fragebogen passt nicht zu deiner Studienzuordnung. Bitte lade die Umfrage neu.')
-        elif version not in ('diana-v6', 'diana-v7', 'diana-v8', 'diana-v9'):
+        elif version not in ('diana-v6', 'diana-v7', 'diana-v8', 'diana-v9', 'diana-v10'):
             return
         expected_arm = assigned['arm'] if assigned else None
         if version == 'diana-v6':

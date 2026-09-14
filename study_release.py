@@ -24,7 +24,7 @@ class StudyReleases:
         files = ['llm_service.py', 'advisor.py', 'retrieval.py', 'schemas.py', 'app.py',
                  'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
-        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'study_metrics.py', 'test_access.py', 'STUDY-PROTOCOL.md']
+        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'study_metrics.py', 'test_access.py', 'STUDY-PROTOCOL.md']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}

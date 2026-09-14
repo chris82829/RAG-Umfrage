@@ -4,16 +4,16 @@ Flask-Prototyp mit Anzeigen aus dem bereitgestellten Export,
 SQLite-Vorfilter, paralleler BM25-/E5-Suche,
 Reciprocal Rank Fusion und GPT-5.4-Reranking mit begründeten Ergebnissen.
 Die React-Webseite enthält ein Suchprofil, Jobkarten und einen persistenten Chat.
-Im aktuellen Konferenzstand V9 zeigen **alle drei Varianten A/B/C** Scores von
+Im aktuellen Konferenzstand V10 zeigen **alle drei Varianten A/B/C** Scores von
 **1 bis 100**, kurze Begründungen und eine nach Score sortierte Ergebnisliste.
 Zunächst sind Stellen ab 70 Punkten sichtbar; weitere lassen sich einblenden.
 Die Varianten unterscheiden sich im Beratungsangebot: feste Standardberatung,
 Vorlagenauswahl oder zusätzliche eigene Gestaltung. Die produktive Konfiguration
 verwendet den separat importierten Stellenbestand; dessen Umfang zeigt das System an.
 
-## Aktueller Studienvergleich: A/B/C, Fragebogen V9
+## Aktueller Studienvergleich: A/B/C, Fragebogen V10
 
-Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v2`**, der Fragebogen **`diana-v9`**.
+Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v3`**, der Fragebogen **`diana-v10`**.
 
 - **A:** feste sachliche Standardberatung zur Jobsuche ohne wählbare Persönlichkeit; dieselbe Bewertung, Sortierung, Scores und Begründungsboxen wie B/C.
 - **B:** Auswahl zwischen **Top-Berufsberater** und **Fachexperte** mit festen Eigenschaften. Persönliche Rangfolge, Scores und Begründungen; zunächst Stellen ab 70 Punkten, weitere per Button.
@@ -21,7 +21,7 @@ Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A,
 
 B und C starten mit dem Top-Berufsberater. Einschränkungen in B werden serverseitig geprüft. Der Vergleich B/C untersucht das zusätzliche Angebot freier Gestaltung; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch bei unveränderter Vorlagennutzung. B/A vergleicht das Angebot einer Vorlagenauswahl mit der festen Standardberatung. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Die faire Ergebnisdarstellung und das Modell sind in A/B/C gleich. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
 
-Der vorherige A/B/C-Stand ist auf Branch `sicherung-abc-vor-konferenz-2026-09-14` gesichert; seine `diana-abc-v1`-Teilnahmen bleiben bei V8 und den damaligen Bedingungen. Vorherige `diana-ab-*`-Teilnahmen behalten ihr gestaltbares B und ihren historischen Fragebogen. Sie werden nicht in die neue Vorlagen-B-Gruppe umgedeutet. V6 mit ursprünglichen B/C-Codes bleibt ebenfalls separat erhalten. Version und Experimentkennung gemeinsam auswerten; Details: [ADMIN.md](ADMIN.md).
+Der frühere A/B/C-Stand vor dem Konferenzumbau ist auf Branch `sicherung-abc-vor-konferenz-2026-09-14` gesichert; seine `diana-abc-v1`-Teilnahmen bleiben bei V8 und den damaligen Bedingungen. Vorherige `diana-ab-*`-Teilnahmen behalten ihr gestaltbares B und ihren historischen Fragebogen. Sie werden nicht in die neue Vorlagen-B-Gruppe umgedeutet. V6 mit ursprünglichen B/C-Codes bleibt ebenfalls separat erhalten. Version und Experimentkennung gemeinsam auswerten; Details: [ADMIN.md](ADMIN.md).
 
 ### Varianten unabhängig von der Umfrage testen
 
@@ -50,7 +50,7 @@ Auswahl- und Betriebsmetadaten, ohne daraus Such- oder Chattexte abzulegen.
 
 ## Webseite ausprobieren
 
-### Aktueller Ablauf: V9 mit eingebetteter Jobsuche
+### Aktueller Ablauf: V10 mit eingebetteter Jobsuche
 
 Der Einstieg ist die **[Vorstellungsseite](http://127.0.0.1:5050/)** mit
 Forschungsprojekt, Foto und Kontaktdaten. **„Umfrage starten“** führt zu `/umfrage`.
@@ -74,20 +74,20 @@ Nach der Einwilligung und serverseitigen Zuordnung läuft die Teilnahme so ab:
    voraus. Die automatische Begrüßung zählt nicht; andernfalls führt ein Hinweis zum Chat.
 4. **Rückmeldung geben:** Gemeinsame Kategorien sind **Suchvorhaben**,
    **Deine Erfahrung mit der Suche**, **Suchen im Gespräch**, **Score und Begründungen**
-   und **Feedback**. B und C erhalten außerdem passende Fragen zu Auswahl bzw.
-   Gestaltung und Wirkung ihrer KI-Suchpersönlichkeit. Gemeinsame Ergebnisfragen
+   und **Feedback**. B und C erhalten außerdem Fragen zur Verständlichkeit und
+   Wirkung ihrer KI-Suchpersönlichkeit, C zusätzlich zur eigenen Anpassung. Gemeinsame Ergebnisfragen
    stehen vor bedingungsspezifischen Fragen. Bereits beantwortete Vorabfragen werden
    übersprungen; fehlende demografische Angaben können nachgeholt werden.
 5. **Abschließen:** Antworten werden nach jeder Eingabe automatisch gespeichert,
    bei Texteingaben kurz gebündelt. Der Abschluss validiert den vollständigen
    Fragebogen. Die Teilnahme-ID dient unter anderem späteren Löschanfragen.
 
-V9 verwendet 1–10 für graduelle Erfahrungen, Ja/Nein für passende Nutzungsfragen
+V10 verwendet 1–10 für graduelle Erfahrungen, Ja/Nein für passende Nutzungsfragen
 und Freitext für das Suchvorhaben sowie optionales Feedback. „Nicht genutzt“,
 „Kann ich nicht beurteilen“ und „Keine Angabe“ sind eigenständige fehlende Angaben,
 keine niedrigen Bewertungen. Die Frage nach tatsächlicher Selbstgestaltung erscheint
 nur in C; sie bleibt von der automatisch erfassten Nutzung getrennt.
-Fragetexte, Bedingungen und Antwortwerte stehen in `survey_definition_v9.json`.
+Fragetexte, Bedingungen und Antwortwerte stehen in `survey_definition_v10.json`.
 
 Das Suchvorhaben wird aus dem abgeschickten DIANA-Suchprofil als bearbeitbarer
 Vorschlag übernommen. Eigene Änderungen, auch ein bewusst geleertes Feld,
@@ -103,11 +103,25 @@ Serverbestätigungen sichern die gespeicherten Antworten zusätzlich. Auf dem Ha
 werden Skalenwerte in zwei Reihen mit fünf Auswahlflächen dargestellt; die
 Systemansicht berücksichtigt dynamische Bildschirmhöhe und den sicheren unteren Bereich.
 
+### Umfang des gekürzten V10-Fragebogens
+
+A sieht **15**, B **20** und C **21** Fragen, jeweils einschließlich der beiden
+optionalen Felder Fachrichtung und Feedback. Nicht mitgezählt ist die automatisch
+zugewiesene Studiengruppe. „Keine Angabe“ bzw. „Kann ich nicht beurteilen“ bleiben
+bei den dafür vorgesehenen Fragen möglich.
+
+Gegenüber V9 entfallen ausschließlich `search_ease`, `express_search_needs`,
+`adapt_search_ease`, `template_selection_ease` und `personality_setup`.
+Die Fragen zum Nutzen von System, Chat, Score, Begründungen, Gesprächsstil und
+Bewertungsschwerpunkten bleiben erhalten. Ebenfalls erhalten bleiben Suchaufwand,
+Wiederverwendungsabsicht, Suchwunschänderung im Chat, Verständnis und Wahrnehmung
+der Persönlichkeit sowie die Anpassungs-Selbstauskunft in C.
+
 ### Speicherung und Auswertung
 
 `PUT /api/survey-drafts` speichert den Antwortentwurf mit monotoner Revision.
 `POST /api/survey-responses` validiert ihn beim Abschluss und übernimmt ihn in
-`survey_responses`. Neue Teilnahmen verwenden `diana-v9` und `diana-abc-v2`;
+`survey_responses`. Neue Teilnahmen verwenden `diana-v10` und `diana-abc-v3`;
 fortgesetzte historische Teilnahmen behalten ihren zugewiesenen Stand.
 Wiederholtes Absenden derselben Antworten erzeugt keinen zusätzlichen Datensatz.
 Die Teilnahme-ID ist keine Identitätsprüfung und verhindert nicht jede
@@ -119,11 +133,13 @@ Korrekturen mit Änderungsverlauf, Filter, Löschung, Diagramme und der
 Spaltenzuordnung sowie Modell-/Konfigurationsnachweise. Details: [ADMIN.md](ADMIN.md).
 
 Für die geplante Primäranalyse **abgeschlossene und unvollständige Teilnahmen
-zusammen exportieren**: Alle gültigen V9-Primärantworten der neuen Kohorte zählen
+zusammen exportieren**: Alle gültigen V10-Primärantworten der neuen Kohorte zählen
 nach Zuteilung, auch bei unveränderter Vorlagennutzung in C. Der Primärvergleich
-ist C minus B beim Einzelitem `system_usefulness` / `v9_system_nutzen`.
+ist C minus B beim Einzelitem `system_usefulness` / `v10_system_nutzen`.
 Protokoll: [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md).
 Offline-Skripte und Aufrufe: [research/README.md](research/README.md).
+Ein späterer technischer Ranking-Check ist als [Plan](research/RANKING-EVALUATION-PLAN.md)
+dokumentiert; er wurde weder ausgeführt noch terminiert.
 
 Der zusätzliche lesbare CLI-Export enthält ausschließlich abgeschlossene Antworten:
 
@@ -137,8 +153,12 @@ abgesichert. Forschungsdaten und Exporte unter `instance/` gehören nicht ins Gi
 
 ### Historische Fragebögen und Bedingungen
 
-Diese Angaben beschreiben frühere Studienstände, **nicht den aktuellen V9-Ablauf**:
+Diese Angaben beschreiben frühere Studienstände, **nicht den aktuellen V10-Ablauf**:
 
+- **V9 / `diana-abc-v2`:** Derselbe faire A/B/C-Systemvergleich wie V10, aber der
+  längere Fragebogen mit 18/24/25 Fragen. Antworten bleiben unter V9 und werden
+  nicht automatisch mit V10 zusammen ausgewertet. V9 liegt unverändert in
+  `survey_definition_v9.json`.
 - **V8 / `diana-abc-v1`:** A war die allgemeine Basisvariante ohne angezeigte Scores
   oder Begründungsboxen und mit zufälliger Ergebnisreihenfolge. B bot feste Vorlagen,
   C zusätzlich eigene Gestaltung. Scores und Begründungen wurden nur B/C abgefragt;
@@ -150,13 +170,13 @@ Diese Angaben beschreiben frühere Studienstände, **nicht den aktuellen V9-Abla
   Originalantworten und im Codebuch dokumentiert. Die Verwaltung stellt sie für den
   historischen Vergleich als A/B dar; sie dürfen nicht mit neuem B/C vermischt werden.
 
-Unvollständige V6/V7/V8-Teilnahmen werden mit ihrem historischen Fragebogen und
+Unvollständige V6/V7/V8/V9-Teilnahmen werden mit ihrem historischen Fragebogen und
 ihren Bedingungen fortgesetzt. Auch bereits in V7 fortgesetzte ältere B/C-Teilnahmen
 bleiben bei diesem Stand. Abgeschlossene historische Antworten werden nicht
 umgeschrieben. Sehr alte V2/V3-Entwürfe übertragen lediglich persönliche Fakten und
 Suchvorhaben in einen neuen Durchlauf; Bewertungen werden nicht in neue Antworten umgedeutet.
 
-V4 bis V9 erhalten getrennte versionsbezogene Exportspalten. Experimentkennung
+V4 bis V10 erhalten getrennte versionsbezogene Exportspalten. Experimentkennung
 und Fragebogenversion müssen gemeinsam ausgewertet werden. Begleitende
 `_antwortstatus`-Spalten (technisch `_status`) unterscheiden beantwortet, fehlend,
 übersprungen und nicht gestellte Fragen. Ja=1 und Nein=0 sind gültige Antworten;
@@ -200,8 +220,8 @@ Andernfalls richte sie mit den oben beschriebenen Schritten ein.
 
 Die folgenden ausführlichen UI-Notizen dokumentieren frühere Entwicklungsschritte.
 Insbesondere bekannte Personen als Vorlagen, mobile Schrittleisten und Aussagen
-zur eingeschränkten Ergebnisdarstellung in A gelten nicht für V9. Für die aktuelle
-Gruppenführung und Reihenfolge gilt der oben beschriebene V9-Ablauf.
+zur eingeschränkten Ergebnisdarstellung in A gelten nicht für V10. Für die aktuelle
+Gruppenführung und Reihenfolge gilt der oben beschriebene V10-Ablauf.
 
 Vor der ersten Suche zeigt die linke Seite vier farbige, nummerierte Karten mit
 Icons: **Profil erstellen**, **Persönlichkeit festlegen**, **Ergebnisse ansehen**
@@ -633,7 +653,7 @@ MLDS-Dateien in `personas/`; Beschreibung: [MLDS.md](MLDS.md).
 
 Die folgenden Beschreibungen bekannter Personen und ihrer Gewichte betreffen
 historische Presets und frühere Oberflächen. Sie sind keine aktuelle
-Vorlagenauswahl der V9-Studie.
+Vorlagenauswahl der V10-Studie.
 
 
 Die Oberfläche startet mit einer **eigenen Persönlichkeit** und zeigt alle Felder
@@ -1047,7 +1067,7 @@ Ein bereits widerrufener Zugang bleibt gesperrt.
 
 ## Direkte Tests ohne Umfrage
 
-`/test/a` öffnet die feste Standardberatung, `/test/b` die Auswahl aus festen Vorlagen und `/test/c` zusätzlich die eigene Gestaltung. Alle drei zeigen Scores und Begründungen entsprechend dem aktuellen V9-System. Die Zugänge benötigen eigene Einwilligungen und halten Chat und Profil nur in temporären Sitzungen. Sie erzeugen weder Studienzuteilungen noch Umfrageantworten oder Einträge in der Studienauswertung. Die Studienfreigabe in der Verwaltung betrifft diese separaten Tests nicht; vollständige Datenschutzeinstellungen sind weiterhin erforderlich. A, B, C und Umfrage haben getrennte Browser- und Serversitzungen.
+`/test/a` öffnet die feste Standardberatung, `/test/b` die Auswahl aus festen Vorlagen und `/test/c` zusätzlich die eigene Gestaltung. Alle drei zeigen Scores und Begründungen entsprechend dem aktuellen V10-System. Die Zugänge benötigen eigene Einwilligungen und halten Chat und Profil nur in temporären Sitzungen. Sie erzeugen weder Studienzuteilungen noch Umfrageantworten oder Einträge in der Studienauswertung. Die Studienfreigabe in der Verwaltung betrifft diese separaten Tests nicht; vollständige Datenschutzeinstellungen sind weiterhin erforderlich. A, B, C und Umfrage haben getrennte Browser- und Serversitzungen.
 
 Eingebaute Persönlichkeiten liegen als versionierte `.mlds`-Dateien in `personas/`. Das Frontend lädt sie aus `/api/persona-templates`; individuelle Konfigurationen werden in der Sitzung als `advisor_mlds` abgelegt. Siehe [MLDS.md](MLDS.md).
 

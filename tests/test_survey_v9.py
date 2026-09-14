@@ -4,7 +4,7 @@ from copy import deepcopy
 import pytest
 from pydantic import ValidationError
 
-from survey_store import (SURVEY_DEFINITION, SURVEY_FIELDS, V8_SURVEY_DEFINITION,
+from survey_store import (V9_SURVEY_DEFINITION as SURVEY_DEFINITION, V9_SURVEY_FIELDS as SURVEY_FIELDS, V8_SURVEY_DEFINITION,
                           SurveyRequest, SurveyDraftRequest, field_visible)
 
 

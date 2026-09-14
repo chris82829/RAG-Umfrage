@@ -21,9 +21,9 @@ except ModuleNotFoundError as failure:
     raise
 
 GERMAN = ['teilnahme_id', 'experiment_id', 'fragebogen_version', 'studiengruppe',
-          'v9_system_nutzen', 'teilnahme_status', 'ki_letzte_verwendung', 'feedback']
+          'v10_system_nutzen', 'teilnahme_status', 'ki_letzte_verwendung', 'feedback']
 TECHNICAL = ['participation_id', 'experiment_id', 'survey_version', 'study_arm',
-             'v9_system_usefulness', 'response_status', 'personality_last_source', 'feedback']
+             'v10_system_usefulness', 'response_status', 'personality_last_source', 'feedback']
 
 
 class AnalysisTests(unittest.TestCase):
@@ -39,7 +39,7 @@ class AnalysisTests(unittest.TestCase):
             writer.writerows(rows)
         return self.path
 
-    def row(self, identifier, arm, value, status='completed', source='template', version='diana-v9', experiment='diana-abc-v2'):
+    def row(self, identifier, arm, value, status='completed', source='template', version='diana-v10', experiment='diana-abc-v3'):
         return [identifier, experiment, version, arm, value, status, source, 'PRIVATE FAKE FREETEXT: never echo me']
 
     def test_cohort_is_exact_and_partial_answers_and_templates_are_included(self):
@@ -68,6 +68,42 @@ class AnalysisTests(unittest.TestCase):
         other = analyze_csv(self.export(rows, TECHNICAL, ','))
         self.assertEqual(other['primary_comparison'], result['primary_comparison'])
         self.assertEqual(other['groups'], result['groups'])
+
+    def test_v9_requires_explicit_cohort_and_is_never_pooled_with_v10(self):
+        headers = GERMAN + ['v9_system_nutzen']
+        rows = [self.row('same-b', 'B', 2) + [''], self.row('new-b', 'B', 4) + [''],
+                self.row('same-c', 'C', 6) + [''], self.row('new-c', 'C', 8) + [''],
+                self.row('same-b', 'B', '', version='diana-v9', experiment='diana-abc-v2') + [7],
+                self.row('old-b', 'B', '', version='diana-v9', experiment='diana-abc-v2') + [9],
+                self.row('same-c', 'C', '', version='diana-v9', experiment='diana-abc-v2') + [1],
+                self.row('old-c', 'C', '', version='diana-v9', experiment='diana-abc-v2') + [3]]
+        path = self.export(rows, headers)
+        latest = analyze_csv(path)
+        historical = analyze_csv(path, 'v9')
+        self.assertEqual(latest['selected_cohort'], 'v10')
+        self.assertEqual(latest['experiment_id'], 'diana-abc-v3')
+        self.assertEqual(latest['questionnaire_version'], 'diana-v10')
+        self.assertEqual(latest['primary_comparison']['mean_difference'], 4)
+        self.assertEqual(historical['selected_cohort'], 'v9')
+        self.assertEqual(historical['experiment_id'], 'diana-abc-v2')
+        self.assertEqual(historical['questionnaire_version'], 'diana-v9')
+        self.assertEqual(historical['primary_comparison']['mean_difference'], -6)
+        for result in (latest, historical):
+            self.assertEqual(result['cohort']['eligible_rows'], 4)
+            self.assertEqual(result['cohort']['excluded_experiment_or_version_rows'], 4)
+        with self.assertRaisesRegex(AnalysisError, 'pooling is not supported'):
+            analyze_csv(path, 'all')
+        with self.assertRaisesRegex(AnalysisError, 'No eligible data'):
+            analyze_csv(self.export(rows[4:], headers))
+
+    def test_historical_technical_csv_uses_only_v9_primary_column(self):
+        headers = [name.replace('v10_', 'v9_') for name in TECHNICAL]
+        rows = [self.row('old-b', 'B', 8, version='diana-v9', experiment='diana-abc-v2'),
+                self.row('old-c', 'C', 9, version='diana-v9', experiment='diana-abc-v2')]
+        result = analyze_csv(self.export(rows, headers), 'v9')
+        self.assertEqual(result['primary_comparison']['mean_difference'], 1)
+        self.assertEqual(result['groups']['B']['primary']['n'], 1)
+        self.assertEqual(result['groups']['C']['primary']['n'], 1)
 
     def test_welch_and_small_sample_corrected_g_match_known_values(self):
         result = compare_groups([3, 4, 5], [1, 2, 3])

@@ -53,7 +53,7 @@ test('waiting answers skip demographics and search goal and only leave unasked p
  source=finishWaitingIfReady(source);
  assert.equal(remainingWaitingGroups(source).length,0);
  const next=nextSurveyState(source);assert.equal(next.stage,'overall');
- assert.deepEqual(displaySurveyGroup(next,'personality').fields.map(f=>f.name),['personality_customized','personality_setup','personality_clarity_search','personality_clarity_chat','personality_consistency','personalized_chat_usefulness','personalized_search_usefulness']);
+ assert.deepEqual(displaySurveyGroup(next,'personality').fields.map(f=>f.name),['personality_customized','personality_clarity_search','personality_clarity_chat','personality_consistency','personalized_chat_usefulness','personalized_search_usefulness']);
  const memory=new Map();const storage={getItem:key=>memory.get(key)||null,setItem:(key,value)=>memory.set(key,value)};
  saveSurveyState(storage,source);assert.deepEqual(loadSurveyState(storage).waitingAnswered,source.waitingAnswered);
  assert.equal(nextSurveyState(loadSurveyState(storage)).stage,'overall');

@@ -75,7 +75,7 @@ def test_completion_snapshot_freezes_and_withdrawal_deletes(experiment,monkeypat
     for field in SURVEY_FIELDS:
         if not field_visible(field,values): values[field['name']]=None
     before=metrics(app,headers)
-    response=client.post('/api/survey-responses',headers=headers,json={'submission_id':'d'*32,'version':'diana-v9',**values})
+    response=client.post('/api/survey-responses',headers=headers,json={'submission_id':'d'*32,'version':'diana-v10',**values})
     assert response.status_code==201, response.json
     model.action,model.patch='answer',{}
     assert client.post('/api/chat',headers=headers,json={'session_id':first['session_id'],'message':'Danke'}).status_code==200

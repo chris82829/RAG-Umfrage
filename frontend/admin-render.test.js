@@ -22,6 +22,9 @@ test('admin charts expose numeric values, escape freetext, and detail dialogs re
    assert.ok(scope.includes('Gilt sofort für Diagramme, Einzelantworten und Downloads'));
    assert.ok(scope.includes(`value="${value}" selected=""`));
   }
+  assert.equal(armLabel('A','diana-v10'),'A · Standardberatung');
+  assert.equal(armLabel('B','diana-v10'),'B · Vorlagenauswahl');
+  assert.equal(armLabel('C','diana-v10'),'C · Selbst gestaltbar');
   assert.equal(armLabel('A','diana-v9'),'A · Standardberatung');
   assert.equal(armLabel('B','diana-v9'),'B · Vorlagenauswahl');
   assert.equal(armLabel('B','diana-v8'),'B · Vorlagenauswahl');

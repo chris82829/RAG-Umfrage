@@ -19,9 +19,21 @@ research/.venv/bin/python research/analyze_primary.py /pfad/zur/diana_numiqo.csv
 ```
 
 Ohne `--output` erscheint JSON im Terminal. Bestehende Ausgabedateien werden nie
-überschrieben. Die Analyse berücksichtigt ausschließlich `diana-abc-v2` /
-`diana-v9` und alle gültigen Primärantworten von 1–10, auch aus Teilantworten.
+überschrieben. Die Analyse berücksichtigt ausschließlich `diana-abc-v3` /
+`diana-v10` und alle gültigen Primärantworten von 1–10, auch aus Teilantworten.
 Die zufällige Zuteilung entscheidet: C bleibt C, auch bei unveränderter Vorlage.
+
+Die frühere faire Kohorte V9 wird nur ausdrücklich und getrennt ausgewertet:
+
+```bash
+research/.venv/bin/python research/analyze_primary.py /pfad/zur/diana_numiqo.csv --cohort v9 --output /pfad/zum/ergebnis_v9.json
+```
+
+`--cohort v10` ist die Voreinstellung für `diana-abc-v3` / `diana-v10`.
+`--cohort v9` wählt ausschließlich `diana-abc-v2` / `diana-v9` und deren
+`v9_system_nutzen`- bzw. `v9_system_usefulness`-Spalte. Ein gemeinsamer Export darf
+beide enthalten; die Analyse mischt sie niemals. Ohne Daten der ausdrücklich
+gewählten Kohorte wird kein Ergebnis geschrieben.
 
 Ausgegeben werden Gruppendeskriptivwerte A/B/C, fehlende und ungültige Primärwerte
 sowie **C minus B** für `system_usefulness`: Welch-Test, 95%-Konfidenzintervall und
@@ -56,3 +68,9 @@ research/.venv/bin/python -m unittest discover -s research -p 'test_analysis.py'
 Die Tests verwenden ausschließlich künstliche Daten. Ohne Forschungsabhängigkeiten
 werden sie übersprungen; die normalen Backendtests benötigen kein SciPy.
 Forschungsdaten und Ergebnisse außerhalb des Git-Repositories aufbewahren.
+
+## Technischer Ranking-Check
+
+Der [gesonderte Plan](RANKING-EVALUATION-PLAN.md) beschreibt einen späteren Test
+mit konstanten Profilen/Stellen, gezielt geänderten Prioritäten, Wiederholungen
+und unabhängiger Inhaltsprüfung. Er wurde nicht ausgeführt oder terminiert.

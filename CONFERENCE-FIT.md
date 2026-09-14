@@ -4,19 +4,19 @@ DIANA ist aus meiner Einschätzung ein geeigneter Ausgangspunkt für einen wisse
 
 ## Aktueller Vergleich für die Konferenz
 
-Die neue Erhebung `diana-abc-v2` / Fragebogen V9 vergleicht faire Bedingungen mit gleicher technischer Such- und Bewertungsgrundlage:
+Die neue Erhebung `diana-abc-v3` / Fragebogen V10 vergleicht faire Bedingungen mit gleicher technischer Such- und Bewertungsgrundlage:
 
 - A: feste, kompetente und sachliche Standardberatung.
 - B: Auswahl zwischen Top-Berufsberater und Fachexperte, Eigenschaften unveränderbar.
 - C: dieselben Vorlagen plus freie Gestaltung.
 
-Alle zeigen Scores, Begründungen und nach Bewertung sortierte Stellen mit derselben 70er-Anzeigeschwelle. Zufallssortierung und fachfremder Prompt in A entfallen nur für die neue Erhebung. Frühere Bedingungen und Daten bleiben als historische Versionen erhalten.
+Alle zeigen Scores, Begründungen und nach Bewertung sortierte Stellen mit derselben 70er-Anzeigeschwelle. Die faire Standardberatung wurde bereits mit V9 eingeführt. V10 behält diese Systembedingungen und verkürzt ausschließlich den Fragebogen. Frühere Bedingungen und Daten bleiben als historische Versionen erhalten; insbesondere V9/`diana-abc-v2` wird nicht still mit V10/`diana-abc-v3` gepoolt.
 
 Primär wird C gegen B verglichen: Welchen zusätzlichen Nutzen bietet die Möglichkeit der freien Gestaltung? Sekundär B gegen A: Welchen Nutzen bietet das Angebot einer Vorlagenauswahl? Auch in C nicht selbst gestaltende Personen gehören gemäß ihrer Zuteilung zu C. Tatsächliche Nutzungsuntergruppen bleiben explorativ.
 
 Deine frühere Filter-/Stichwortumfrage ist wertvolle Motivation, kein zeitgleicher randomisierter Kontrollarm. Die beiden Foliensätze einschließlich offener Zahlenwidersprüche sind in [PRIOR-STUDIES.md](PRIOR-STUDIES.md) eingeordnet. Die aktuelle Erhebung behauptet deshalb keinen neuen kausalen Vergleich Chat gegen reine Stichwortsuche.
 
-Der vollständige Protokollentwurf mit primärem Endpunkt, Fallzahlannahmen, Ausfällen, Versionsabgrenzung und geplanten Analysen steht in [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md). Er ersetzt weder einen kognitiven Pretest noch eine externe Präregistrierung. Reproduzierbare Analyseprogramme liegen unter `research/`.
+Der vollständige Protokollentwurf mit primärem Endpunkt, Fallzahlannahmen, Ausfällen, Versionsabgrenzung und geplanten Analysen steht in [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md). Er ersetzt weder einen kognitiven Pretest noch eine externe Präregistrierung. Reproduzierbare Analyseprogramme liegen unter `research/`. Ein ergänzender [technischer Ranking-Check](research/RANKING-EVALUATION-PLAN.md) ist dokumentiert, aber noch nicht ausgeführt oder terminiert.
 
 ## Vor einer Einreichung
 

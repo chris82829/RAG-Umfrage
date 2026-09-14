@@ -1,5 +1,6 @@
 import {consentHeaders} from './privacy.js';
-import definition from '../survey_definition_v9.json' with { type: 'json' };
+import definition from '../survey_definition_v10.json' with { type: 'json' };
+import definitionV9 from '../survey_definition_v9.json' with { type: 'json' };
 import definitionV8 from '../survey_definition_v8.json' with { type: 'json' };
 import definitionV7 from '../survey_definition.json' with { type: 'json' };
 import definitionV6 from '../survey_definition_v6.json' with { type: 'json' };
@@ -8,14 +9,14 @@ import definitionV4 from '../survey_definition_v4.json' with { type: 'json' };
 
 export const SURVEY_VERSION = definition.version;
 export const SURVEY_STORAGE_KEY = `diana-survey:${SURVEY_VERSION}`;
-const definitions = Object.fromEntries([definition, definitionV8, definitionV7, definitionV6, definitionV5, definitionV4].map(value => [value.version, value]));
+const definitions = Object.fromEntries([definition, definitionV9, definitionV8, definitionV7, definitionV6, definitionV5, definitionV4].map(value => [value.version, value]));
 const waitingNames = ['search_goal', 'personality_customized', 'template_selection_ease', 'personality_setup'];
 const configurations = Object.fromEntries(Object.entries(definitions).map(([version, value]) => {
   const demographics = {...value.demographics, fields:value.demographics.fields.filter(field=>!field.systemProvided)};
   const surveyCategories = value.categories;
   const surveyFields = [value.demographics, ...surveyCategories].flatMap(group=>group.fields);
   const beforeSystemFields=demographics.fields.filter(field=>field.beforeSystem);
-  const versionWaitingNames=version==='diana-v9'?['search_goal']:waitingNames;
+  const versionWaitingNames=['diana-v9','diana-v10'].includes(version)?['search_goal']:waitingNames;
   const waitingQuestionFields = versionWaitingNames.map(name=>surveyFields.find(field=>field.name===name)).filter(Boolean);
   return [version, {beforeSystemFields, demographics, surveyCategories, surveyFields, surveyScale:value.scale,
     surveyStages:['system', 'demographics', ...surveyCategories.map(group=>group.id)],
@@ -154,7 +155,7 @@ export function loadSurveyState(storage, fresh = newSurveyState) {
     const keys=[SURVEY_STORAGE_KEY,...Object.keys(definitions).filter(version=>version!==SURVEY_VERSION).map(version=>`diana-survey:${version}`),'diana-survey:diana-v3','diana-survey:diana-v2'];
     const raw=keys.map(key=>storage.getItem(key)).find(Boolean);
     const state=JSON.parse(raw || 'null');
-    if (/^diana-v[2-9]$/.test(state?.version || '') && /^[a-f0-9]{32}$/.test(state.submissionId)
+    if ((definitions[state?.version] || ['diana-v2','diana-v3'].includes(state?.version)) && /^[a-f0-9]{32}$/.test(state.submissionId)
         && /^[a-f0-9]{32}$/.test(state.runId) && typeof state.submitted==='boolean' && typeof state.systemOpened==='boolean') {
       if(state.submitted && state.version!==SURVEY_VERSION)return state;
       if(!definitions[state.version]) {
@@ -210,7 +211,7 @@ export function restoreServerDraft(previous,draft) {
 
 export function applyStudyAssignment(state,assignment) {
   if(!['A','B','C'].includes(assignment?.arm))throw new Error('Studienzuordnung konnte nicht geladen werden.');
-  let version=assignment.questionnaire_version || (assignment.experiment_id==='diana-abc-v1'?'diana-v8':assignment.experiment_id?.startsWith('diana-ab-')?'diana-v7':SURVEY_VERSION);
+  let version=assignment.questionnaire_version || (assignment.experiment_id==='diana-abc-v2'?'diana-v9':assignment.experiment_id==='diana-abc-v1'?'diana-v8':assignment.experiment_id?.startsWith('diana-ab-')?'diana-v7':SURVEY_VERSION);
   // Some historical B/C participants already moved to v7 before the ABC study.
   if(assignment.experiment_id==='diana-bc-v1' && state.version==='diana-v7')version='diana-v7';
   if(!definitions[version])throw new Error('Diese Fragebogenversion ist nicht verfügbar.');
@@ -229,7 +230,7 @@ export function applyStudyAssignment(state,assignment) {
 export function needsSystemPreparation(state) {
   const fields=surveyConfiguration(state).beforeSystemFields;
   const startedOnServer=fields.length>0 && fields.every(field=>waitingFieldDone(state,field));
-  return state.version==='diana-v9' && !state.systemTaskStarted && !startedOnServer && !state.systemCompleted && !state.submitted;
+  return ['diana-v9','diana-v10'].includes(state.version) && !state.systemTaskStarted && !startedOnServer && !state.systemCompleted && !state.submitted;
 }
 export function startPreparedSystem(state) {
   const fields=surveyConfiguration(state).beforeSystemFields;

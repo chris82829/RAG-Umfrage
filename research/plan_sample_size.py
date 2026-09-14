@@ -72,7 +72,7 @@ def plan():
             'equal_rounded_starts_total_abc': 3*starts_per_arm,
         })
     return {
-        'experiment_id': 'diana-abc-v2', 'questionnaire_version': 'diana-v9',
+        'experiment_id': 'diana-abc-v3', 'questionnaire_version': 'diana-v10',
         'primary_contrast': 'C minus B', 'primary_item': 'system_usefulness',
         'alpha_two_sided': 0.05, 'target_power': 0.8,
         'assumed_loss_fraction': 0.25,

@@ -87,11 +87,11 @@ Beispiele für den Standardexport:
 | `teilnahme_id` | Pseudonyme Teilnahme-ID |
 | `teilnahme_status` | `completed` oder `in_progress` |
 | `studiengruppe` | A, B oder C; Bedeutung zusammen mit Version und Experiment auswerten |
-| `v7_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
-| `v7_score_nutzen` | Nützlichkeit des Scores für den Überblick |
-| `v7_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
-| `v7_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
-| `v7_ki_selbst_angepasst_selbstauskunft` | Antwort des Teilnehmers auf die Anpassungsfrage |
+| `v10_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
+| `v10_score_nutzen` | Nützlichkeit des Scores für den Überblick |
+| `v10_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
+| `v10_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
+| `v10_ki_selbst_angepasst_selbstauskunft` | Antwort des Teilnehmers auf die Anpassungsfrage |
 | `ki_letzte_verwendung` | Automatisch erfasste Herkunft der angewendeten Persönlichkeit |
 
 Spaltennamen sind eindeutig, klein geschrieben und verwenden ausschließlich
@@ -103,19 +103,32 @@ sein historisches Textformat für Auswahlantworten bleibt erhalten. Für numeris
 Numiqo-Auswertungen den Verwaltungsdownload verwenden.
 
 Eine Zeile entspricht einer Teilnahme. Der aktuelle A/B/C-Vergleich verwendet
-Fragebogen V9 und eigene `v9_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1 und
-Nein=0. A ist die sachliche Standardberatung; B erlaubt die Auswahl unveränderter Vorlagen;
-C bietet dieselben Vorlagen und zusätzlich die Selbstgestaltung. Gemeinsame Ergebnis-, Score- und Begründungsfragen werden allen drei Gruppen gestellt. Persönlichkeitsfragen erhalten nur B und C. Nur B
-bewertet die Einfachheit der Vorlagenauswahl (`v9_ki_vorlagenauswahl_einfachheit`),
-nur C bewertet die Einrichtung und beantwortet die Selbstauskunft zur Anpassung.
+Fragebogen V10 und eigene `v10_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1
+und Nein=0. A ist die sachliche Standardberatung; B erlaubt die Auswahl
+unveränderter Vorlagen; C bietet zusätzlich Selbstgestaltung. Gemeinsame Ergebnis-,
+Score- und Begründungsfragen werden allen drei Gruppen gestellt. Die Fragen zur
+Persönlichkeit erhalten B/C; die Selbstauskunft zur eigenen Anpassung nur C.
 Nicht gestellte Fragen bleiben leer mit Status `skipped`.
-`v9_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
-`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v2` kennzeichnet
-diesen Vergleich. Ranking, Scores und Begründungen sind in A, B und C gleich implementiert. Die automatisch beobachtete Vorlagen-/Selbstgestaltungsnutzung
-ist keine vierte randomisierte Gruppe und kann von der erlaubten Funktion abweichen:
-Eine Person in C kann ausschließlich eine Vorlage nutzen.
 
-Historische V8-Antworten behalten `v8_`-Spalten und `diana-abc-v1`. A hatte dort einen allgemeinen Chat, Zufallsreihenfolge und keine Scores/Begründungen; diese Daten sind keine Standardberatungs-Baseline aus V9.
+V10 enthält A: 15, B: 20 und C: 21 sichtbare Fragen, jeweils einschließlich
+Fachrichtung und Feedback als optionale Felder. Gegenüber V9 entfallen nur
+`search_ease`, `express_search_needs`, `adapt_search_ease`,
+`template_selection_ease` und `personality_setup`. Es gibt in V10 keine separate
+Bewertung der Einfachheit der Vorlagenauswahl oder Selbstgestaltung mehr.
+
+`v10_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
+`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v3`
+kennzeichnet diesen Vergleich. Ranking, Scores und Begründungen sind in A/B/C
+vergleichbar implementiert. Tatsächlich beobachtete Vorlagen-/Selbstgestaltungsnutzung
+ist keine vierte randomisierte Gruppe. Eine Person in C kann eine Vorlage
+unverändert nutzen und bleibt in der primären Auswertung dennoch C.
+
+Historische V9-Antworten behalten `v9_`-Spalten und `diana-abc-v2`. Die
+Systembedingungen waren bereits fair, der Fragebogen aber länger. V9 und V10
+werden getrennt ausgewertet. Die alten Einrichtungsbewertungen bleiben in V9
+lesbar; es werden weder Werte gelöscht noch Antworten für V10 ergänzt.
+
+Historische V8-Antworten behalten `v8_`-Spalten und `diana-abc-v1`. A hatte dort einen allgemeinen Chat, Zufallsreihenfolge und keine Scores/Begründungen; diese Daten sind keine Standardberatungs-Baseline aus V10.
 
 Historische V7-Antworten behalten ihre eigenen Spalten und Codes **0=A, 1=B**.
 B war dort frei gestaltbar und darf nicht als neue Vorlagengruppe B behandelt werden.
@@ -132,7 +145,7 @@ entfällt in den neueren Versionen.
 
 Identische historische V2/V3-Fragen stehen in `v2_v3_`-Spalten, die vier zusätzlichen
 V3-Nützlichkeitsfragen in `v3_`-Spalten und V1-Antworten in `v1_`-Spalten.
-Spätere Versionen bleiben separat in `v4_` bis `v9_`.
+Spätere Versionen bleiben separat in `v4_` bis `v10_`.
 Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
 Das Codebuch enthält den vollständigen Originalwortlaut, Antwortcodes und Originalcodes,
 Skalenenden, fehlende Werte, Filterführung und Bewertungsrichtung. Die Aufwandsfrage ist
@@ -164,23 +177,34 @@ Zähler und Dauern leer; 0 gilt nur im erfassten Zeitraum. Abgeschlossene Antwor
 verwenden den eingefrorenen Stand bei Abgabe, Entwürfe den aktuellen Stand. Die
 Einzelansicht zeigt die Metadaten schreibgeschützt. Löschung/Widerruf entfernt auch
 diese Messwerte.
+Die Operationszähler belegen außerdem nicht zuverlässig, ob Suchwünsche im Chat
+verändert wurden. Die entsprechende Ja/Nein-Frage bleibt separat bestehen.
 
 ### Teilnahmefluss im Auswertungspaket
 
 `teilnahmefluss.csv` enthält **ungefilterte** aggregierte Fallzahlen des aktuell
 aktiven Studienbestands, unabhängig von den Filtern der Einzelantworten. Je
 Experimentkennung und Gruppe werden zugeteilte Personen, Personen mit gespeicherten
-Antworten, abgeschlossene Personen und Personen mit einem gültigen V9-Primärwert
-gezählt. Jede zugeteilte Einwilligungskennung zählt höchstens einmal; bereits
-beantwortete V9-Primärfragen aus unvollständigen Umfragen zählen als gültiger Wert.
+Antworten, abgeschlossene Personen und Personen mit einem gültigen Primärwert
+der jeweiligen Kohorte gezählt (aktuell V10/v3, historische V9/v2 getrennt). Jede zugeteilte Einwilligungskennung zählt höchstens einmal; bereits
+beantwortete Primärfragen aus unvollständigen Umfragen zählen als gültiger Wert.
 Antwortversionen und ursprünglicher Gruppenbuchstabe sind dokumentiert. Frühere
 Experimente werden nicht vermischt. Widerrufene oder gelöschte Teilnahmen fehlen;
 die Datei ist deshalb ein aktueller Bestandsbericht und kein vollständiger
-Rekrutierungsverlauf. Die primäre Auswertung verwendet `v9_system_nutzen`.
+Rekrutierungsverlauf. Die aktuelle primäre Auswertung verwendet `v10_system_nutzen`.
+Für sie abgeschlossene und unvollständige Antworten gemeinsam exportieren.
+Das Offline-Skript wählt standardmäßig V10/`diana-abc-v3`; V9/`diana-abc-v2`
+wird nur mit explizitem `--cohort v9` separat ausgewertet.
+Aufrufe: [research/README.md](research/README.md).
 
 ### Automatische Herkunft der KI-Persönlichkeit
 
-Diese Metadaten ergänzen die Selbstauskunft, ohne sie zu überschreiben:
+Diese Metadaten ergänzen die Selbstauskunft, ohne sie zu überschreiben.
+`custom` kennzeichnet den tatsächlich angewendeten Selbstgestaltungsweg auch dann,
+wenn dessen Werte zufällig einer Vorlage entsprechen. Es beweist nicht, dass
+Eigenschaften oder Gewichte inhaltlich verändert wurden. Die weiterhin erhobene
+Ja/Nein-Selbstauskunft zur Anpassung ist daher kein identisches Duplikat dieser Daten:
+
 
 - `ki_erste_verwendung` / `ki_letzte_verwendung`: `template` (unveränderte Vorlage),
   `custom` (selbst gestaltet oder Vorlage angepasst), `unknown` (unbekannt) oder
@@ -313,7 +337,7 @@ und erfasste Systemstände gemeinsam prüfen; Ergebnisse nicht ungeprüft zusamm
 Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
 bei 1–10-Bewertungen außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
 farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
-Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V9/abgeschlossen;
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V10/abgeschlossen;
 ältere Antworten lassen sich mit dem Fragebogenfilter auswählen.
 Fragebogenversionen und Experimentkennungen werden nicht zusammengefasst.
 Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene

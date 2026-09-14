@@ -2,9 +2,10 @@
 """Offline, prespecified C-versus-B analysis of the DIANA conference trial.
 
 Read the admin Numiqo CSV (German or technical headers), select only
-experiment diana-abc-v2 / questionnaire diana-v9, and include every valid
+experiment diana-abc-v3 / questionnaire diana-v10 by default, and include every valid
 integer system_usefulness answer from 1 through 10, including partial responses.
-The assigned arm determines the analysis; actual template/custom use never filters
+The previous fair trial (diana-abc-v2 / diana-v9) requires explicit --cohort v9.
+Versions are never pooled. The assigned arm determines the analysis; actual template/custom use never filters
 participants. The export must include incomplete responses to implement this rule.
 
 The primary estimate is mean(C) - mean(B), with a two-sided Welch t test and
@@ -38,15 +39,17 @@ import numpy
 import scipy
 from scipy import special, stats
 
-EXPERIMENT = 'diana-abc-v2'
-QUESTIONNAIRE = 'diana-v9'
+COHORTS = {
+    'v10': ('diana-abc-v3', 'diana-v10'),
+    'v9': ('diana-abc-v2', 'diana-v9'),
+}
+DEFAULT_COHORT = 'v10'
 PRIMARY_ITEM = 'system_usefulness'
 ALIASES = {
     'participant': ('teilnahme_id', 'participation_id'),
     'experiment': ('experiment_id',),
     'version': ('fragebogen_version', 'survey_version'),
     'arm': ('studiengruppe', 'study_arm'),
-    'primary': ('v9_system_nutzen', 'v9_system_usefulness'),
     'completion': ('teilnahme_status', 'response_status'),
 }
 MISSING = {'', 'not_used', 'not_assessable', 'not_specified'}
@@ -119,7 +122,11 @@ def compare_groups(c_values, b_values):
     return result
 
 
-def analyze_csv(path):
+def analyze_csv(path, cohort=DEFAULT_COHORT):
+    if cohort not in COHORTS:
+        raise AnalysisError('Unknown cohort. Choose v10 (current) or v9 (historical); pooling is not supported.')
+    experiment, questionnaire = COHORTS[cohort]
+    aliases_by_field = {**ALIASES, 'primary': (f'{cohort}_system_nutzen', f'{cohort}_system_usefulness')}
     raw = Path(path).read_bytes()
     try:
         text = raw.decode('utf-8-sig')
@@ -135,7 +142,7 @@ def analyze_csv(path):
     if len(headers) != len(set(headers)):
         raise AnalysisError('The CSV contains duplicate column names.')
     columns = {}
-    for field, aliases in ALIASES.items():
+    for field, aliases in aliases_by_field.items():
         found = [alias for alias in aliases if alias in headers]
         if len(found) != 1:
             raise AnalysisError(f'Exactly one column is required for {field}: ' + ' or '.join(aliases))
@@ -148,7 +155,7 @@ def analyze_csv(path):
             input_rows += 1
             if None in row or any(value is None for value in row.values()):
                 raise AnalysisError(f'CSV row {reader.line_num} does not match its header.')
-            if row[columns['experiment']].strip() != EXPERIMENT or row[columns['version']].strip() != QUESTIONNAIRE:
+            if row[columns['experiment']].strip() != experiment or row[columns['version']].strip() != questionnaire:
                 excluded_rows += 1
                 continue
             identifier = row[columns['participant']].strip()
@@ -172,10 +179,11 @@ def analyze_csv(path):
     except csv.Error as failure:
         raise AnalysisError('CSV parsing failed; check the delimiter and quotation marks.') from failure
     if not seen:
-        raise AnalysisError(f'No eligible data: the file contains no {EXPERIMENT} / {QUESTIONNAIRE} rows.')
+        raise AnalysisError(f'No eligible data: the file contains no {experiment} / {questionnaire} rows.')
     return {
         'analysis': 'DIANA prespecified primary contrast',
-        'experiment_id': EXPERIMENT, 'questionnaire_version': QUESTIONNAIRE,
+        'experiment_id': experiment, 'questionnaire_version': questionnaire,
+        'selected_cohort': cohort,
         'primary_item': PRIMARY_ITEM,
         'generated_at_utc': datetime.now(timezone.utc).isoformat(),
         'input_sha256': hashlib.sha256(raw).hexdigest(),
@@ -196,7 +204,7 @@ def analyze_csv(path):
             'effect_size': 'Hedges g = exact gamma small-sample correction times mean difference / pooled sample SD. This standardized measure assumes a meaningful common variance scale.',
             'assumptions': 'Independent participants; the 1–10 single item is treated as approximately interval scaled. No claim of a validated multi-item scale.',
             'missing': 'Missing and invalid primary values are excluded without imputation and counted separately by assigned arm.',
-            'scope': 'Only rows present in this file are known. Export completed and incomplete responses together. Withdrawn, deleted, or unexported participants cannot be reconstructed from this file.',
+            'scope': 'Exactly one experiment/questionnaire cohort is selected; v9 and v10 are never pooled. Only rows present in this file are known. Export completed and incomplete responses together. Withdrawn, deleted, or unexported participants cannot be reconstructed from this file.',
         },
     }
 
@@ -213,10 +221,11 @@ def write_json(data, output=None):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('csv_path', type=Path, help='Local Numiqo admin CSV, including incomplete responses')
+    parser.add_argument('--cohort', choices=tuple(COHORTS), default=DEFAULT_COHORT, help='v10: current abc-v3/v10 (default); v9: historical abc-v2/v9, analyzed separately')
     parser.add_argument('--output', type=Path, help='New JSON file (existing files are never replaced); default: stdout')
     args = parser.parse_args(argv)
     try:
-        write_json(analyze_csv(args.csv_path), args.output)
+        write_json(analyze_csv(args.csv_path, args.cohort), args.output)
     except (AnalysisError, OSError) as failure:
         parser.exit(2, f'Analysis not written: {failure}\n')
     return 0
