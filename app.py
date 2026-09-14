@@ -25,7 +25,9 @@ from schemas import ChatInput, Profile, SearchInput
 from session_store import SessionConflict, SessionStore, EphemeralSessionStore
 from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
+from persona_mlds import advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_assignment import StudyAssignments
+from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice
 from study_release import StudyReleases
@@ -212,6 +214,8 @@ def create_app(config=None, *, retriever=None, llm=None):
     releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
     surveys = SurveyStore(db_path)
     assignments = StudyAssignments(surveys, privacy, notice)
+    personality_templates = load_templates()
+    neutral_personality = load_neutral_advisor()
     app.extensions['study_assignments'] = assignments
     register_admin(app, surveys, privacy, releases, sessions, notice)
     engine = retriever or HybridRetriever(
@@ -241,13 +245,39 @@ def create_app(config=None, *, retriever=None, llm=None):
     def consent_token():
         return request.headers.get('X-Diana-Consent', '')
 
+    def test_arm():
+        value = request.headers.get('X-Diana-Test', '')
+        if value and value not in TEST_PURPOSES:
+            raise ConsentRequired()
+        return value or None
+
+    def request_notice():
+        arm = test_arm()
+        return test_notice(notice, arm) if arm else notice
+
+    def request_assignment():
+        arm = test_arm()
+        return {'arm': arm, 'test': True} if arm else assignments.get(consent_token())
+
+    def request_advisor(requested):
+        arm = test_arm()
+        if arm == 'A':
+            return dict(neutral_personality)
+        if arm == 'B':
+            return personality_templates['career']['advisor'] if requested.get('preset') == 'neutral' and requested.get('mode', 'preset') == 'preset' else requested
+        return assignments.advisor(consent_token(), requested)
+
     def consent_link(kind):
-        if not app.config['PRIVACY_REQUIRED']:
+        if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return None
         token = consent_token()
+        active_notice = request_notice()
+        testing = bool(test_arm())
         def attach(db, record_id):
-            privacy.attach(token, notice, kind, record_id, db)
-            digest = privacy.require(token, notice, db)
+            privacy.attach(token, active_notice, kind, record_id, db)
+            digest = privacy.require(token, active_notice, db)
+            if testing:
+                return
             if kind == 'chat':
                 releases.mark_run(digest, db)
             elif not db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (record_id,)).fetchone():
@@ -256,10 +286,14 @@ def create_app(config=None, *, retriever=None, llm=None):
 
     @app.before_request
     def require_consent():
-        if request.method == 'OPTIONS' or not app.config['PRIVACY_REQUIRED']:
+        if request.method == 'OPTIONS':
+            return
+        if test_arm() and request.endpoint in {'assign_study', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
+            raise ConsentRequired()
+        if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return
         if request.endpoint in {'search', 'onboard', 'chat', 'get_session', 'delete_session', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
-            privacy.require(consent_token(), notice)
+            privacy.require(consent_token(), request_notice())
             if request.endpoint == 'get_survey_draft' and not privacy.owns(consent_token(), 'survey', request.view_args['submission_id']):
                 return jsonify(draft=None)
             if request.endpoint in {'get_session', 'delete_session'} and not privacy.owns(consent_token(), 'chat', request.view_args['session_id']):
@@ -276,12 +310,13 @@ def create_app(config=None, *, retriever=None, llm=None):
     def privacy_status():
         active = False
         try:
-            privacy.require(consent_token(), notice)
+            privacy.require(consent_token(), request_notice())
             active = True
         except ConsentRequired:
             pass
-        study = privacy.study_status(notice)
-        return jsonify(notice={**notice, 'ready': study['enabled']}, study=study,
+        active_notice = request_notice()
+        study = privacy.study_status(active_notice)
+        return jsonify(notice={**active_notice, 'ready': study['enabled']}, study=study,
                        active=active, receipt=privacy.receipt(consent_token()))
 
     @app.post('/api/privacy/consent')
@@ -289,8 +324,9 @@ def create_app(config=None, *, retriever=None, llm=None):
         body, error = parse_body(ConsentInput)
         if error:
             return error
-        privacy.accept(body, notice)
-        return jsonify(accepted=True, version=notice['version'], receipt=privacy.receipt(body.token))
+        active_notice = request_notice()
+        privacy.accept(body, active_notice)
+        return jsonify(accepted=True, version=active_notice['version'], receipt=privacy.receipt(body.token))
 
     @app.delete('/api/privacy/consent')
     def withdraw_consent():
@@ -301,6 +337,12 @@ def create_app(config=None, *, retriever=None, llm=None):
     @app.get('/')
     @app.get('/index.html')
     @app.get('/suche')
+    @app.get('/test/a')
+    @app.get('/test/a/')
+    @app.get('/test/b')
+    @app.get('/test/b/')
+    @app.get('/test/a/datenschutz')
+    @app.get('/test/b/datenschutz')
     @app.get('/mehr-erfahren')
     @app.get('/umfrage')
     @app.get('/umfrage/')
@@ -356,6 +398,10 @@ def create_app(config=None, *, retriever=None, llm=None):
         jobs = store.filter_jobs({})
         return jsonify(jobs=[{k: v for k, v in job.items() if k not in ('search_text', 'raw')}
                              for job in jobs[:20]], total=len(jobs), ranked=False)
+
+    @app.get('/api/persona-templates')
+    def persona_templates():
+        return jsonify(templates=personality_templates, default='career', format='DIANA-Personality-MLDS', schema_version=1)
 
     @app.get('/api/index-status')
     def index_status():
@@ -549,19 +595,19 @@ def create_app(config=None, *, retriever=None, llm=None):
         body, error = parse_body(SearchInput)
         if error:
             return error
-        return jsonify(public_state(match(body.profile.model_dump(), advisor=assignments.advisor(consent_token(), body.advisor.model_dump()))))
+        return jsonify(public_state(match(body.profile.model_dump(), advisor=request_advisor(body.advisor.model_dump()))))
 
     @app.post('/api/onboard')
     def onboard():
         body, error = parse_body(SearchInput)
         if error:
             return error
-        assigned = assignments.get(consent_token())
-        search_advisor = assignments.advisor(consent_token(), body.advisor.model_dump())
+        assigned = request_assignment()
+        search_advisor = request_advisor(body.advisor.model_dump())
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)
-            state = {**result, '_study_arm': assigned['arm'] if assigned else None, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
+            state = {**result, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
             session_id = sessions.create(state, before_save=consent_link('chat'))
             return {'session_id': session_id, **public_state(state)}
@@ -573,7 +619,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         saved = sessions.get(session_id)
         if not saved:
             return jsonify(error={'code': 'not_found', 'message': 'Chat nicht gefunden.'}), 404
-        assigned = assignments.get(consent_token())
+        assigned = request_assignment()
         if assigned and saved[0].get('_study_arm') != assigned['arm']:
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
         if outdated_neutral_presentation(saved[0]):
@@ -592,7 +638,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         body, error = parse_body(ChatInput)
         if error:
             return error
-        if app.config['PRIVACY_REQUIRED'] and not privacy.owns(consent_token(), 'chat', body.session_id):
+        if (app.config['PRIVACY_REQUIRED'] or test_arm()) and not privacy.owns(consent_token(), 'chat', body.session_id):
             raise ConsentRequired()
         saved = sessions.get(body.session_id)
         if not saved:
@@ -600,11 +646,11 @@ def create_app(config=None, *, retriever=None, llm=None):
         state, version = saved
         if outdated_neutral_presentation(state):
             return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
-        assigned = assignments.get(consent_token())
+        assigned = request_assignment()
         if assigned and state.get('_study_arm') != assigned['arm']:
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
-        previous_advisor = assignments.advisor(consent_token(), AdvisorConfig.model_validate(state.get('advisor', {})).model_dump())
-        selected_advisor = assignments.advisor(consent_token(), body.advisor.model_dump() if body.advisor is not None else previous_advisor)
+        previous_advisor = request_advisor(advisor_from_mlds(state.get('advisor_mlds', state.get('advisor', {}))))
+        selected_advisor = request_advisor(body.advisor.model_dump() if body.advisor is not None else previous_advisor)
         def operation():
             advisor = selected_advisor
             profile = body.profile.model_dump() if body.profile is not None else state['profile']
@@ -706,7 +752,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             messages = state['messages'] + ([{'role': 'user', 'content': body.message}] if body.message else [])
             messages.append({'role': 'assistant', 'content': result['assistant_message'],
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
-            new_state = {**result, '_study_arm': state.get('_study_arm'), 'messages': messages[-100:]}
+            new_state = {**result, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), 'messages': messages[-100:]}
             sessions.update(body.session_id, new_state, version, before_save=consent_link('chat'))
             return {'session_id': body.session_id, **public_state(new_state)}
 

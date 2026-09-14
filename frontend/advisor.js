@@ -28,10 +28,10 @@ export const advisorTemplates = {
 function fromTemplate(template) {
   return { ...defaultAdvisor, name: template.name, traits: [...template.traits], focus: template.focus, description: template.instructions };
 }
-export function advisorFromTemplate(key) {
+export function advisorFromTemplate(key, templates = advisorTemplates) {
   if (key === '') return { mode: 'custom', preset: 'diana', name: '', traits: ['analytisch', 'ermutigend'], focus: 'ausgewogen', description: '' };
-  if (!Object.hasOwn(advisorTemplates, key)) throw new Error('Diese Persönlichkeitsvorlage ist nicht verfügbar.');
-  return fromTemplate(advisorTemplates[key]);
+  if (!Object.hasOwn(templates, key)) throw new Error('Diese Persönlichkeitsvorlage ist nicht verfügbar.');
+  return fromTemplate(templates[key]);
 }
 export function editableAdvisor(advisor) {
   if (advisor?.mode === 'preset') {

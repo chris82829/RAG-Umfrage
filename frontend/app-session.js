@@ -1,3 +1,4 @@
+import {standaloneArm,consentPurpose} from './test-access.js';
 // Embedded survey runs must not resume the user's ordinary DIANA session.
 export function surveyRun(search = '') {
   const params = new URLSearchParams(search);
@@ -7,8 +8,9 @@ export function surveyRun(search = '') {
 
 export function appSessionStorage(host = window) {
   const run = surveyRun(host.location.search);
-  const key = run ? `diana-survey-chat:${run}` : 'jobkompass-session-v1';
-  const storage = () => run ? host.sessionStorage : host.localStorage;
+  const test = standaloneArm(host.location.pathname);
+  const key = test ? `diana-test-chat:${consentPurpose(host)}` : run ? `diana-survey-chat:${run}` : 'jobkompass-session-v1';
+  const storage = () => run || test ? host.sessionStorage : host.localStorage;
   return {
     read() { try { return storage().getItem(key); } catch { return null; } },
     remember(id) {
@@ -17,7 +19,9 @@ export function appSessionStorage(host = window) {
   };
 }
 
-export function appPath(page, search = '') {
+export function appPath(page, search = '', pathname = globalThis.window?.location?.pathname || '') {
+  const test = standaloneArm(pathname);
+  if (test && page !== 'about') return `/test/${test.toLowerCase()}`;
   const path = page === 'about' ? '/' : '/suche';
   const run = surveyRun(search);
   return run ? `${path}?embed=survey&run=${run}` : path;

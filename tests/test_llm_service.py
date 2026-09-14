@@ -1433,5 +1433,5 @@ def test_neutral_chat_uses_job_facts_without_hidden_score_or_precomputed_reasons
     assert shown['id'] == 'a'
     assert shown['title'] == job['title']
     assert not any(key.startswith('previous_') for key in shown)
-    assert 'allgemeiner Assistent' in system['content']
+    assert system['content'] == 'Du bist ein allgemeiner KI-Assistent.'
     assert 'Jobsuche' not in system['content']

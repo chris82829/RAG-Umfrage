@@ -1311,3 +1311,12 @@ Darstellungsstand `random-order-generic-chat-v2` trennt diesen Promptstand von V
 
 - Icon-Schrittleiste im Header als reine Statusanzeige umgesetzt: keine Buttons, Klickhandler oder Tabstopps; kein Hoverzustand, der eine Aktion suggeriert. Beschriftung, aktueller Schritt und Erledigt-Häkchen bleiben verfügbar. Mobile Headerleiste bleibt ausgeblendet; die eigentliche Anleitung weiterhin bedienbar.
 - Produktionsbuild erfolgreich. Im Browser Klick auf ein erledigtes Header-Icon ohne Zustandsänderung und Tab direkt zum nächsten echten Button geprüft. Interaktive Anleitung als Gegenprobe erfolgreich zu Schritt 1 gewechselt.
+
+
+## 2026-09-14 · Testzugänge, Antwortkorrekturen, MLDS
+
+- Backend-Gesamtlauf: 754 bestanden, 1 optionaler privater Datenexport übersprungen. Nach abschließendem Review 55 gezielte Backendtests (inkl. Studienabschluss/Testisolation) bestanden.
+- Frontend: 147 Tests bestanden; anschließende Navigation/Token-Isolation 2 Tests bestanden. Produktionsbuild erfolgreich.
+- Browser mit temporärer SQLite-Datenbank, fiktiven Stellen und FakeLLM: A direkter Einstieg/Ergebnisse auf Desktop, B mit MLDS-Fachexperte und mobiler Ansicht (390 px). Admin-Einzelantwort auf 390 px geöffnet, editiert und explizit gespeichert; Erfolgsmeldung und Änderungsverlauf sichtbar. Keine produktiven Forschungsantworten im Test verändert.
+- Review: Testseiten verlassen den eigenen Einwilligungskontext durch vollständige Navigation. Endgültiger Studienabschluss und Studien-Bulkdelete bewahren unabhängige Testzugänge.
+- MLDS-Persönlichkeiten einschließlich Schema und Vorlagen werden im Docker-Image und den Systemprüfsummen berücksichtigt. Keine zusätzliche LLM-Anfrage oder dauerhafte Speicherung persönlicher Such-/Chattexte.

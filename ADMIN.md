@@ -29,13 +29,36 @@ wiederhergestellt werden.
 - Die Übersicht zeigt Teilnahme-ID, Abgabezeitpunkt und Fragebogenversion.
 - Suche anhand der vom Teilnehmer zugesandten ID oder filtere nach Version.
 - Öffne eine Antwort, um alle Angaben und den zugeordneten Modellstand zu sehen.
+- **Antworten bearbeiten** öffnet die Eingabefelder der ursprünglichen
+  Fragebogenversion. Einen Korrekturgrund angeben und **Korrektur speichern**
+  wählen. Tippen allein speichert nichts; **Änderungen verwerfen** verwirft den
+  lokalen Bearbeitungsstand. Pflichtfelder und Filterfragen werden geprüft.
+- Teilnahme-ID, Studienzuordnung, Einwilligung, Fragebogenversion und ursprünglicher
+  Abschlusszeitpunkt bleiben erhalten. Unvollständige Antworten bleiben Entwürfe.
+  Gleichzeitige Änderungen durch andere Verwaltungsfenster oder Teilnehmer werden
+  mit einer Konfliktmeldung geschützt; dann die Einzelantwort neu öffnen und prüfen.
+- Der **Änderungsverlauf** zeigt Zeitpunkt, Grund sowie vorherige und gespeicherte
+  Werte. Da der Zugang ein gemeinsames Passwort nutzt, lautet die Bearbeiterkennung
+  `admin`; eine persönliche Bearbeiteridentität wird nicht behauptet.
 - Zum Löschen muss die vollständige Teilnahme-ID eingegeben werden. Die angezeigte
   Anzahl umfasst alle Antworten dieser Teilnahme. Die Teilnahme wird zugleich
   widerrufen; weitere Schreibversuche mit ihrem Zugangscode sind gesperrt.
 - Alte Antworten ohne Einwilligungszuordnung können einzeln gelöscht werden.
 - Bereits heruntergeladene Kopien und Backups müssen separat bearbeitet werden.
 
-Die Anwendung verändert vorhandene Antworten nicht. Auf der lokalen Instanz
+Diagramme und Downloads verwenden den explizit gespeicherten Korrekturstand.
+Die CSV dokumentiert `correction_count` und `last_corrected_at_utc`; das
+Auswertungspaket enthält bei korrigierten Teilnahmen zusätzlich
+`answer_corrections.json` mit den vollständigen Vorher-/Nachher-Antwortständen.
+Der erste Vorher-Stand bewahrt die ursprünglichen Antworten vor einer
+Verwaltungskorrektur. Bei Entwürfen können danach reguläre Teilnehmerantworten
+folgen; der Verlauf dokumentiert Verwaltungskorrekturen, nicht jedes Autosave.
+Die Historie folgt den gleichen Löschwegen wie die zugehörigen Antworten,
+einschließlich Widerruf, Aufbewahrungsbereinigung und Verwaltungslöschung.
+
+Die additive Startmigration legt `survey_answer_corrections`, einen Index und
+Löschtrigger an. Vorhandene Antwortzeilen werden dadurch nicht verändert oder
+nachträglich als korrigiert markiert. Auf der lokalen Instanz
 sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenbank.
 
 ## In Numiqo auswerten

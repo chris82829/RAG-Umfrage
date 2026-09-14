@@ -8,8 +8,9 @@ from functools import wraps
 from flask import Blueprint, jsonify, request, make_response
 from werkzeug.security import check_password_hash
 
-from admin_store import AdminSurveyData
-from survey_store import SURVEY_DEFINITION
+from pydantic import ValidationError
+from admin_store import AdminSurveyData, AdminAnswerCorrection
+from survey_store import SURVEY_DEFINITION, SurveyConflict
 from survey_analytics import analytics
 
 
@@ -105,6 +106,22 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
     @bp.get('/responses/<response_id>')
     @protected
     def detail(response_id):
+        row=data.detail(response_id)
+        return jsonify(row) if row else error('Antwort nicht gefunden.',404)
+    @bp.put('/responses/<response_id>')
+    @protected
+    def correct_response(response_id):
+        try:
+            correction=AdminAnswerCorrection.model_validate(request.get_json(silent=True))
+            data.correct(response_id,correction)
+        except ValidationError:
+            return error('Bitte die Antworten und den Korrekturgrund prüfen. Werte und Pflichtfelder müssen zur ursprünglichen Fragebogenversion passen.',400)
+        except SurveyConflict as failure:
+            return error(str(failure),409)
+        except LookupError as failure:
+            return error(str(failure),404)
+        except ValueError as failure:
+            return error(str(failure),400)
         row=data.detail(response_id)
         return jsonify(row) if row else error('Antwort nicht gefunden.',404)
     @bp.get('/analytics')

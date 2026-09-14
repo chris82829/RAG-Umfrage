@@ -1,24 +1,28 @@
+import {standaloneArm, consentPurpose} from './test-access.js';
 export const CONSENT_KEY = 'diana-privacy-consent';
-let memoryToken = '';
+const memoryTokens = new Map();
+const scopeKey = host => consentPurpose(host) === 'study' ? CONSENT_KEY : `${CONSENT_KEY}:${consentPurpose(host)}`;
 export function consentToken(host = globalThis.window) {
-  try { return host?.sessionStorage.getItem(CONSENT_KEY) || memoryToken; } catch { return memoryToken; }
+  try { return host?.sessionStorage.getItem(scopeKey(host)) || memoryTokens.get(scopeKey(host)) || ''; } catch { return memoryTokens.get(scopeKey(host)) || ''; }
 }
 export function rememberConsent(token, host = globalThis.window) {
-  memoryToken = token;
-  try { token ? host?.sessionStorage.setItem(CONSENT_KEY, token) : host?.sessionStorage.removeItem(CONSENT_KEY); } catch { /* Current page still works. */ }
+  memoryTokens.set(scopeKey(host), token);
+  try { token ? host?.sessionStorage.setItem(scopeKey(host), token) : host?.sessionStorage.removeItem(scopeKey(host)); } catch { /* Current page still works. */ }
 }
 export function consentHeaders() {
   const token = consentToken();
-  return token ? {'X-Diana-Consent': token} : {};
+  const arm = standaloneArm();
+  return {...(token ? {'X-Diana-Consent':token} : {}), ...(arm ? {'X-Diana-Test':arm} : {})};
 }
 export function clearParticipation(host = globalThis.window) {
-  memoryToken = '';
+  memoryTokens.delete(scopeKey(host));
+  const purpose = consentPurpose(host);
   try {
     const storage = host.sessionStorage;
     for (const key of Object.keys(storage)) {
-      if (key === CONSENT_KEY || key.startsWith('diana-survey:') || key.startsWith('diana-survey-chat:')) storage.removeItem(key);
+      if (key === scopeKey(host) || (purpose === 'study' ? key.startsWith('diana-survey:') || key.startsWith('diana-survey-chat:') : key === `diana-test-chat:${purpose}`)) storage.removeItem(key);
     }
-    host.localStorage.removeItem('jobkompass-session-v1');
+    if (purpose === 'study') host.localStorage.removeItem('jobkompass-session-v1');
   } catch { /* In-memory state is discarded by the gate too. */ }
 }
 export async function privacyRequest(path = '', options = {}) {

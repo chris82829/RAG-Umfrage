@@ -3,15 +3,15 @@ import { Check, BriefcaseBusiness, GraduationCap, Info, SlidersHorizontal } from
 import { ADVISOR_DESCRIPTION_MAX_LENGTH, advisorFromTemplate, advisorTemplates, editableAdvisor, sameAdvisor, traitLabels, focusLabels, focusDescriptions } from './advisor.js';
 import './advisor-picker.css';
 
-export default function AdvisorPicker({ value, onChange, disabled, headingRef, onExplain }) {
+export default function AdvisorPicker({ value, onChange, disabled, headingRef, onExplain, templates = advisorTemplates }) {
   const draft = editableAdvisor(value);
   const id = useId();
   const [notice, setNotice] = useState('');
-  const selectedTemplate = Object.keys(advisorTemplates).find(key => sameAdvisor(draft, advisorFromTemplate(key))) || '';
+  const selectedTemplate = Object.keys(templates).find(key => sameAdvisor(draft, advisorFromTemplate(key, templates))) || '';
   const update = (key, item) => onChange({ ...draft, [key]: item });
   function useTemplate(key) {
-    onChange(advisorFromTemplate(key));
-    setNotice(key ? `${advisorTemplates[key].name} ausgewählt.` : 'Du kannst deine KI jetzt selbst gestalten.');
+    onChange(advisorFromTemplate(key, templates));
+    setNotice(key ? `${templates[key].name} ausgewählt.` : 'Du kannst deine KI jetzt selbst gestalten.');
   }
   return <section className="advisor-picker advisor-builder" aria-label="Deine Suchpersönlichkeit">
     <div className="advisor-intro profile-intro profile-intro--compact"><span className="step-label">DEINE SUCHPERSÖNLICHKEIT</span><div className="advisor-intro-heading"><div className="advisor-title"><h3 ref={headingRef} tabIndex={-1}>KI-Suchpersönlichkeit</h3><button type="button" className="advisor-help" onClick={onExplain} disabled={disabled} aria-label="Wie beeinflusst das meine Suche?" title="Wie beeinflusst das meine Suche?" aria-haspopup="dialog"><Info size={16} aria-hidden="true" /></button></div>
@@ -19,7 +19,7 @@ export default function AdvisorPicker({ value, onChange, disabled, headingRef, o
     <fieldset className="advisor-role-options" disabled={disabled}>
       <legend>Wie möchtest du beraten werden?</legend>
       <p className="advisor-role-hint">Wähle eine Karte. Deine Auswahl beeinflusst die Stellenbewertung und das Gespräch.</p>
-      {[...Object.entries(advisorTemplates), ['', {name:'Selbst personalisieren', description:'Lege Name, Eigenschaften und Bewertungsschwerpunkt selbst fest.'}]].map(([key, option]) => {
+      {[...Object.entries(templates), ['', {name:'Selbst personalisieren', description:'Lege Name, Eigenschaften und Bewertungsschwerpunkt selbst fest.'}]].map(([key, option]) => {
         const Icon = key === 'career' ? BriefcaseBusiness : key === 'expert' ? GraduationCap : SlidersHorizontal;
         return <label className={`advisor-role-card${selectedTemplate === key ? ' is-selected' : ''}`} key={key || 'custom'}>
           <input type="radio" name={`${id}-role`} value={key} checked={selectedTemplate === key} onChange={() => useTemplate(key)} />

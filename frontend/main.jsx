@@ -23,6 +23,7 @@ import AboutPage from './AboutPage.jsx';
 import SurveyPage from './SurveyPage.jsx';
 import AdminPage from './AdminPage.jsx';
 import PrivacyGate from './PrivacyGate.jsx';
+import {standaloneArm, leavesTestContext} from './test-access.js';
 import {consentHeaders} from './privacy.js';
 import { appPath, appSessionStorage, surveyRun } from './app-session.js';
 import { hasChatMessage, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
@@ -34,7 +35,7 @@ import './mobile.css';
 
 const sessionStorageAccess = appSessionStorage();
 const isEmbeddedSurvey = Boolean(surveyRun(window.location.search));
-const currentPage = () => window.location.pathname === '/suche' ? 'search' : 'about';
+const currentPage = () => (window.location.pathname === '/suche' || standaloneArm()) ? 'search' : 'about';
 function CompassAvatar({ className = '' }) { return <span className={`compass-avatar ${className}`} aria-hidden="true"><Compass strokeWidth={1.7} /></span>; }
 function ChatMessageText({ text, assistant }) {
   const [expanded, setExpanded] = useState(false);
@@ -138,7 +139,7 @@ function ScoreNotice({ lowCount, total, showLowScores, scoreLabel, busy, onToggl
   </div>;
 }
 
-export function ProfileForm({ neutral = false, form, setForm, onSubmit, busy, ready, advisor, setAdvisor, step, onNext, onBack, onExplainAdvisor, editMode = false }) {
+export function ProfileForm({ neutral = false, form, setForm, onSubmit, busy, ready, advisor, setAdvisor, step, onNext, onBack, onExplainAdvisor, templates, editMode = false }) {
   const assistantName = advisorAiLabel(advisor);
   const update = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const heading = useRef(null);
@@ -161,7 +162,7 @@ export function ProfileForm({ neutral = false, form, setForm, onSubmit, busy, re
     </div></details>
     {editMode ? <><div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy}>{busy ? 'Profil wird angewendet …' : 'Profil anwenden'}<ArrowRight size={18} /></button></div><p className="privacy-note">Geänderte Wünsche und Erfahrung fließen in die Neubewertung ein. Suchziel, Fähigkeiten oder Stellenart starten eine neue Suche.</p></> : <button type="submit" className="primary-button diana-action-motion" disabled={busy || (neutral && !ready)}>{neutral ? 'Passende Jobs finden' : 'Weiter zur Persönlichkeit'}<ArrowRight className="diana-action-arrow" size={18} /></button>}
     </> : <>
-    <AdvisorPicker value={advisor} onChange={setAdvisor} disabled={busy} headingRef={heading} onExplain={onExplainAdvisor} />
+    <AdvisorPicker templates={templates} value={advisor} onChange={setAdvisor} disabled={busy} headingRef={heading} onExplain={onExplainAdvisor} />
     <div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Zurück</button>
     <button type="submit" className="primary-button diana-action-motion" disabled={busy || !ready}>{!ready ? 'Suchindex wird vorbereitet …' : busy ? 'Deine Suche wird ausgewertet …' : 'Passende Jobs finden'}{!busy && ready && <ArrowRight className="diana-action-arrow" size={18} />}</button></div>
     <p className="privacy-note">Dein Profil und ausgewählte Stellen werden zur KI-Auswertung an OpenAI übermittelt.</p>
@@ -182,6 +183,7 @@ export function App({studyArm = 'B'}) {
   const [personalityIntro, setPersonalityIntro] = useState(null);
   const personalityIntroSeen = useRef(false);
   const [advisor, setAdvisor] = useState(neutral ? {...neutralAdvisor} : { ...defaultAdvisor });
+  const [templates, setTemplates] = useState(undefined);
   const [editor, setEditor] = useState(null);
   const [operation, setOperation] = useState(null);
   const [booting, setBooting] = useState(true);
@@ -242,9 +244,10 @@ export function App({studyArm = 'B'}) {
     let alive = true;
     (async () => {
       try {
-        const [jobs, index] = await Promise.all([api('/jobs'), api('/index-status')]);
+        const [jobs, index, personas] = await Promise.all([api('/jobs'), api('/index-status'), api('/persona-templates')]);
         if (!alive) return;
-        setCatalog(jobs.jobs); setTotal(jobs.total); setIndexState(index);
+        setCatalog(jobs.jobs); setTotal(jobs.total); setIndexState(index); setTemplates(personas.templates);
+        if (!neutral) setAdvisor(personas.templates[personas.default].advisor);
         let saved;
         saved = sessionStorageAccess.read();
         if (saved && /^[A-Za-z0-9_-]{32,100}$/.test(saved)) {
@@ -476,6 +479,11 @@ export function App({studyArm = 'B'}) {
     if (event && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
     event?.preventDefault();
     if (nextPage === page) return;
+    // Unmount the test consent gate before changing the token namespace.
+    if (leavesTestContext(nextPage, window.location.pathname)) {
+      window.location.assign(appPath(nextPage, window.location.search));
+      return;
+    }
     window.history.pushState(null, '', appPath(nextPage, window.location.search));
     setPage(nextPage);
   }
@@ -555,7 +563,7 @@ export function App({studyArm = 'B'}) {
         </AssistantActionArea>}
         {error && <div className="error-banner" role="alert">{error}</div>}
         {indexState?.required && !indexReady && <p className="index-chat-status" role="status">Suchindex: {indexState.completed.toLocaleString('de-DE')} von {indexState.total.toLocaleString('de-DE')} Anzeigen vorbereitet. {session ? 'Fragen und das Bewerten gespeicherter Jobs bleiben möglich. Neue Suchen sind nach Abschluss verfügbar.' : 'Deine Suche ist nach Abschluss verfügbar.'}</p>}
-        {!session ? <div className="profile-scroll"><ProfileForm neutral={neutral} form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={setAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} onExplainAdvisor={() => setPersonalityIntro('help')} /></div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm neutral={neutral} editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' && !neutral ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker value={advisor} onChange={editAdvisorDraft} disabled={busy} onExplain={() => setPersonalityIntro('help')} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
+        {!session ? <div className="profile-scroll"><ProfileForm templates={templates} neutral={neutral} form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={setAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} onExplainAdvisor={() => setPersonalityIntro('help')} /></div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm neutral={neutral} editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' && !neutral ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker templates={templates} value={advisor} onChange={editAdvisorDraft} disabled={busy} onExplain={() => setPersonalityIntro('help')} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
           <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite" onScroll={event => { const feed = event.currentTarget; followChat.current = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80; }}>{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><ChatMessageText text={pending} assistant={false} /></div>}{busy && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="message-bubble" aria-busy="true">{streamingText ? <div className="message-text streaming-text">{streamingText}</div> : <div className="chat-typing"><span className="sr-only">{progressLabel}</span><span aria-hidden="true"><i /><i /><i /></span></div>}</div></div>}<div ref={messagesEnd} /></div>
           <div className="chat-bottom">{chatSuggestions.length > 0 && <details className="chat-examples"><summary>Vorschläge für deinen nächsten Schritt</summary><div className="suggestions">{chatSuggestions.map(suggestion => <button key={suggestion.id} disabled={busy} onClick={() => { setDraft(suggestion.message); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><Plus size={13} />{suggestion.label}</button>)}</div></details>}
             {!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum erneuten Bewerten sind gerade keine gespeicherten Jobs verfügbar.'} Du kannst im Chat um eine neue Suche bitten.</p>}
@@ -585,8 +593,9 @@ export function AssignedSearch() {
 }
 
 const isSurveyPage = /^\/umfrage\/?$/.test(window.location.pathname);
-const isSearchPage = window.location.pathname === '/suche';
+const testArm = standaloneArm();
+const isSearchPage = window.location.pathname === '/suche' || !!testArm;
 const isAdminPage = window.location.pathname === '/verwaltung';
-const isPrivacyPage = window.location.pathname === '/datenschutz';
+const isPrivacyPage = window.location.pathname === '/datenschutz' || /^\/test\/[ab]\/datenschutz\/?$/.test(window.location.pathname);
 if (!import.meta.env.SSR) installMobileViewport(window);
-if (!import.meta.env.SSR) createRoot(document.getElementById('root')).render(<React.StrictMode>{isAdminPage ? <AdminPage /> : isPrivacyPage ? <PrivacyGate informationOnly /> : isSurveyPage || isSearchPage ? <PrivacyGate>{isSurveyPage ? <SurveyPage /> : <AssignedSearch />}</PrivacyGate> : <AboutPage />}</React.StrictMode>);
+if (!import.meta.env.SSR) createRoot(document.getElementById('root')).render(<React.StrictMode>{isAdminPage ? <AdminPage /> : isPrivacyPage ? <PrivacyGate informationOnly /> : isSurveyPage || isSearchPage ? <PrivacyGate>{isSurveyPage ? <SurveyPage /> : testArm ? <App studyArm={testArm}/> : <AssignedSearch />}</PrivacyGate> : <AboutPage />}</React.StrictMode>);

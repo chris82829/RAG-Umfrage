@@ -1044,3 +1044,12 @@ Die Datenschutzhinweise nennen ausdrücklich das fortlaufende Speichern auch bei
 Abbruch. Eine vorhandene Teilnahme kann den geänderten Hinweis ausdrücklich erneut
 akzeptieren; ihre ID bleibt erhalten, der frühere Einwilligungswortlaut wird archiviert.
 Ein bereits widerrufener Zugang bleibt gesperrt.
+
+
+## Direkte Tests ohne Umfrage
+
+`/test/a` öffnet die allgemeine Basisvariante, `/test/b` die konfigurierbare KI-Beratung. Beide benötigen eine eigene Einwilligung und speichern Chat und Profil nur in der bestehenden temporären Sitzung. Sie erzeugen weder Studienzuteilungen noch Umfrageantworten oder Einträge in der Studienauswertung. Die Studienfreigabe in der Verwaltung betrifft diese separaten Tests nicht; vollständige Datenschutzeinstellungen sind weiterhin erforderlich. A, B und Umfrage haben getrennte Browser- und Serversitzungen.
+
+Eingebaute Persönlichkeiten liegen als versionierte `.mlds`-Dateien in `personas/`. Das Frontend lädt sie aus `/api/persona-templates`; individuelle Konfigurationen werden in der Sitzung als `advisor_mlds` abgelegt. Siehe [MLDS.md](MLDS.md).
+
+Einzelantworten können unter `/verwaltung` über **Einzelantworten → Ansehen → Antworten bearbeiten** mit Korrekturgrund geändert werden. Ursprungswerte und Änderungsverlauf bleiben erhalten. Details zu Exporten und Korrekturen: [ADMIN.md](ADMIN.md).

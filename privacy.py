@@ -6,6 +6,7 @@ import sqlite3
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Literal
 
 from pydantic import Field
 from schemas import APIModel
@@ -15,6 +16,7 @@ class ConsentInput(APIModel):
     token: str = Field(pattern=r'^[a-f0-9]{64}$')
     version: str = Field(pattern=r'^[a-f0-9]{64}$')
     accepted: bool
+    purpose: Literal['study', 'test_a', 'test_b'] = 'study'
 
 
 class ConsentRequired(Exception):
@@ -78,11 +80,16 @@ class PrivacyStore:
             columns = {row[1] for row in db.execute('PRAGMA table_info(privacy_consents)')}
             if 'participation_id' not in columns:
                 db.execute('ALTER TABLE privacy_consents ADD COLUMN participation_id TEXT')
+            if 'purpose' not in columns:
+                db.execute("ALTER TABLE privacy_consents ADD COLUMN purpose TEXT NOT NULL DEFAULT 'study'")
             for (digest,) in db.execute('SELECT token_hash FROM privacy_consents WHERE participation_id IS NULL').fetchall():
                 db.execute('UPDATE privacy_consents SET participation_id=? WHERE token_hash=?', (f'DIANA-{uuid.uuid4()}', digest))
             db.execute('CREATE UNIQUE INDEX IF NOT EXISTS privacy_participation_id ON privacy_consents(participation_id)')
 
     def study_status(self, notice, db=None):
+        if notice.get('purpose') in ('test_a', 'test_b'):
+            configured = notice.get('configuration_complete', False)
+            return dict(enabled=configured, closed=False, can_enable=False, updated_at=None)
         if db is None:
             with sqlite3.connect(self.path) as connection:
                 return self.study_status(notice, connection)
@@ -124,28 +131,28 @@ class PrivacyStore:
                 return self.require(token, notice, connection)
         if not self.study_status(notice, db)['enabled']:
             raise ConsentRequired()
-        row = db.execute('SELECT version, withdrawn_at FROM privacy_consents WHERE token_hash=?', (digest,)).fetchone()
-        if not row or row[0] != notice['version'] or row[1]:
+        row = db.execute('SELECT version, withdrawn_at, purpose FROM privacy_consents WHERE token_hash=?', (digest,)).fetchone()
+        if not row or row[0] != notice['version'] or row[1] or row[2] != notice.get('purpose', 'study'):
             raise ConsentRequired()
         return digest
 
     def accept(self, body, notice):
-        if body.accepted is not True or body.version != notice['version']:
+        if body.accepted is not True or body.version != notice['version'] or body.purpose != notice.get('purpose', 'study'):
             raise ConsentRequired()
         digest = token_hash(body.token)
         with sqlite3.connect(self.path) as db:
             db.execute('BEGIN IMMEDIATE')
             if not self.study_status(notice, db)['enabled']:
                 raise ConsentRequired()
-            previous = db.execute('SELECT version,notice_json,accepted_at,withdrawn_at FROM privacy_consents WHERE token_hash=?', (digest,)).fetchone()
-            if previous and previous[3]:
+            previous = db.execute('SELECT version,notice_json,accepted_at,withdrawn_at,purpose FROM privacy_consents WHERE token_hash=?', (digest,)).fetchone()
+            if previous and (previous[3] or previous[4] != body.purpose):
                 raise ConsentRequired()
             if previous and previous[0] != notice['version']:
                 db.execute('INSERT OR IGNORE INTO privacy_consent_history VALUES (?, ?, ?, ?)', (digest, *previous[:3]))
                 db.execute('UPDATE privacy_consents SET version=?,notice_json=?,accepted_at=? WHERE token_hash=?',
                     (notice['version'],json.dumps({**notice,'ready':True},ensure_ascii=False),datetime.now(timezone.utc).isoformat(),digest))
-            db.execute('INSERT INTO privacy_consents (token_hash, version, notice_json, accepted_at, participation_id) VALUES (?, ?, ?, ?, ?) ON CONFLICT DO NOTHING',
-                       (digest, notice['version'], json.dumps({**notice, 'ready': True}, ensure_ascii=False), datetime.now(timezone.utc).isoformat(), f'DIANA-{uuid.uuid4()}'))
+            db.execute('INSERT INTO privacy_consents (token_hash, version, notice_json, accepted_at, participation_id, purpose) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING',
+                       (digest, notice['version'], json.dumps({**notice, 'ready': True}, ensure_ascii=False), datetime.now(timezone.utc).isoformat(), f'DIANA-{uuid.uuid4()}', body.purpose))
             self.require(body.token, notice, db)
 
     def attach(self, token, notice, kind, record_id, db):
@@ -208,10 +215,14 @@ class PrivacyStore:
     def end_study(self):
         with sqlite3.connect(self.path) as db:
             db.execute('BEGIN IMMEDIATE')
-            chat_ids = [row[0] for row in db.execute("SELECT record_id FROM privacy_links WHERE kind='chat'")]
+            study_tokens = "SELECT token_hash FROM privacy_consents WHERE purpose='study'"
+            chat_ids = [row[0] for row in db.execute(f"SELECT record_id FROM privacy_links WHERE kind='chat' AND token_hash IN ({study_tokens})")]
             db.execute("INSERT OR IGNORE INTO privacy_lifecycle VALUES ('closed', ?)", (datetime.now(timezone.utc).isoformat(),))
-            for table in ('survey_responses', 'survey_drafts', 'privacy_links', 'privacy_consent_history', 'privacy_consents', 'survey_response_metadata', 'study_runs', 'study_assignments'):
+            for table in ('survey_responses', 'survey_drafts', 'survey_response_metadata', 'study_runs', 'study_assignments'):
                 if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",(table,)).fetchone():
                     continue
                 db.execute(f'DELETE FROM {table}')
+            for table in ('privacy_links', 'privacy_consent_history'):
+                db.execute(f'DELETE FROM {table} WHERE token_hash IN ({study_tokens})')
+            db.execute("DELETE FROM privacy_consents WHERE purpose='study'")
         return chat_ids

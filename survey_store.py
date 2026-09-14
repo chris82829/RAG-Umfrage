@@ -222,6 +222,18 @@ class SurveyStore:
             db.execute('''CREATE TABLE IF NOT EXISTS survey_drafts (
                 submission_id TEXT PRIMARY KEY, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
                 revision INTEGER NOT NULL, answers_json TEXT NOT NULL, waiting_json TEXT NOT NULL)''')
+            db.execute('''CREATE TABLE IF NOT EXISTS survey_answer_corrections (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, submission_id TEXT NOT NULL,
+                corrected_at TEXT NOT NULL, reason TEXT NOT NULL, actor TEXT NOT NULL,
+                response_status TEXT NOT NULL, before_json TEXT NOT NULL, after_json TEXT NOT NULL)''')
+            db.execute('CREATE INDEX IF NOT EXISTS survey_corrections_response ON survey_answer_corrections(submission_id, id)')
+            # Follow every deletion path, including withdrawal and retention cleanup.
+            # Promoting a draft retains its history because the completed row exists.
+            for table, other in [('survey_responses', 'survey_drafts'), ('survey_drafts', 'survey_responses')]:
+                db.execute(f'''CREATE TRIGGER IF NOT EXISTS {table}_delete_corrections
+                    AFTER DELETE ON {table}
+                    WHEN NOT EXISTS (SELECT 1 FROM {other} WHERE submission_id=OLD.submission_id)
+                    BEGIN DELETE FROM survey_answer_corrections WHERE submission_id=OLD.submission_id; END''')
 
     @contextmanager
     def connect(self):
