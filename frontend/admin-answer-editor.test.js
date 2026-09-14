@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {createServer} from 'vite';
-import {updateAnswer, changedAnswers} from './admin-answer-editor.js';
+import {updateAnswer, changedAnswers, answerVisible} from './admin-answer-editor.js';
 
 const definition={demographics:{fields:[{name:'study_arm',title:'Gruppe',kind:'choice',options:[['A','Neutral'],['B','Personalisiert']]}]},categories:[{fields:[{name:'chat_used',title:'Chat genutzt?',kind:'choice',options:[['yes','Ja'],['no','Nein']]},{name:'chat_helpfulness',title:'Chat hilfreich?',kind:'scale',visibleIf:{field:'chat_used',equals:'yes'}},{name:'feedback',title:'Feedback',kind:'text',optional:true,maxLength:4000}]}]};
 
@@ -35,4 +35,19 @@ test('editor exposes explicit save, version-specific fields, immutable assignmen
   assert.ok(history.includes('Vorher: original') && history.includes('Gespeichert: corrected'));
   assert.ok(!history.includes('<script>'));
  }finally{await vite.close();}
+});
+
+
+test('v8 shared B/C questions remain visible and C-only settings stay separate',()=>{
+ const shared={name:'score_usefulness',visibleIf:{field:'study_arm',in:['B','C']}};
+ const custom={name:'personality_setup',visibleIf:{field:'study_arm',equals:'C'}};
+ assert.equal(answerVisible(shared,{study_arm:'A'}),false);
+ assert.equal(answerVisible(shared,{study_arm:'B'}),true);
+ assert.equal(answerVisible(shared,{study_arm:'C'}),true);
+ assert.equal(answerVisible(custom,{study_arm:'B'}),false);
+ assert.equal(answerVisible(custom,{study_arm:'C'}),true);
+ const def={demographics:{fields:[]},categories:[{fields:[shared,custom]}]};
+ const edited=updateAnswer({study_arm:'B',score_usefulness:8,personality_setup:null},'score_usefulness',9,def);
+ assert.equal(edited.score_usefulness,9);
+ assert.equal(edited.personality_setup,null);
 });

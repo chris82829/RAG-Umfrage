@@ -81,7 +81,7 @@ def test_usage_tracks_applied_selection_changes_without_logging_every_chat(usage
 
 def test_no_record_created_for_standalone_tests_missing_consent_or_withdrawal(usage_store):
     path, privacy, usage, _surveys, _releases, consent = usage_store
-    for letter, purpose in [('a', 'test_a'), ('b', 'test_b')]:
+    for letter, purpose in [('a', 'test_a'), ('b', 'test_b'), ('e', 'test_c')]:
         digest = consent(letter, purpose)
         assert apply(usage_store, dict(source='custom', template_id=None), digest)[0] is False
     with sqlite3.connect(path) as db:

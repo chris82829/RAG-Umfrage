@@ -3,7 +3,7 @@ import copy
 import hashlib
 import json
 
-TEST_PURPOSES = {'A': 'test_a', 'B': 'test_b'}
+TEST_PURPOSES = {'A': 'test_a', 'B': 'test_b', 'C': 'test_c'}
 
 
 def test_notice(base, arm):
@@ -17,8 +17,8 @@ def test_notice(base, arm):
         'Zweck und Freiwilligkeit': 'Dieser freiwillige Test dient dem Ausprobieren von DIANA außerhalb der wissenschaftlichen Umfrage. '
             'Es erfolgt keine zufällige Studienzuteilung. Der Test erzeugt keine Umfrageantwort und wird nicht in die Studienauswertung aufgenommen. '
             'Rechtsgrundlage für die Verarbeitung ist deine Einwilligung nach Art. 6 Abs. 1 Buchst. a DSGVO.',
-        'Studienvarianten': f'Du testest gezielt Variante {arm}. A ist die allgemeine KI-Jobsuche; B bietet eine einstellbare Suchpersönlichkeit. '
-            'Beide Testseiten und die Umfrage verwenden getrennte Einwilligungen und Suchsitzungen.',
+        'Studienvarianten': f'Du testest gezielt Variante {arm}. A ist die allgemeine KI-Jobsuche. In B wählst du eine unveränderbare Vorlage (Top-Berufsberater oder Fachexperte). In C kannst du dieselben Vorlagen wählen und die Suchpersönlichkeit zusätzlich selbst gestalten. '
+            'Die drei Testseiten und die Umfrage verwenden getrennte Einwilligungen und Suchsitzungen.',
         'Welche Daten werden verarbeitet?': 'Suchprofil, optionaler Lebenslauftext, KI-Persönlichkeit und Chatnachrichten werden nur vorübergehend '
             'im Arbeitsspeicher verarbeitet. Die Sitzung verfällt nach einer Stunde ohne neue Such- oder Chataktion oder beim Serverneustart. '
             'Es werden keine demografischen Angaben oder Umfragebewertungen erhoben. Bitte verwende möglichst das Beispielprofil und keine sensiblen Daten.',

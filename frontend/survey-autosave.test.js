@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSurveyAutosave,draftPayload} from './survey-autosave.js';
-import {newSurveyState,reviseSurvey,markWaitingFields,finishWaitingIfReady,remainingWaitingGroups,waitingQuestionGroups,nextSurveyState,displaySurveyGroup,saveSurveyState,loadSurveyState,restoreServerDraft} from './survey.js';
+import {newSurveyState,reviseSurvey,markWaitingFields,finishWaitingIfReady,remainingWaitingGroups,waitingQuestionGroups,nextSurveyState,displaySurveyGroup,saveSurveyState,loadSurveyState,restoreServerDraft,applyStudyAssignment} from './survey.js';
 const response=revision=>new Response(JSON.stringify({saved:true,completed:false,revision}),{status:200});
-const state=(revision,answers={})=>({...newSurveyState(),draftRevision:revision,answers:{...newSurveyState().answers,study_arm:'B',...answers}});
+const state=(revision,answers={})=>({...newSurveyState(),draftRevision:revision,answers:{...newSurveyState().answers,study_arm:'C',...answers}});
 
 test('autosave sends questionnaire values only, preserving partial text and explicit clearing',()=>{
  const source=state(1,{search_goal:'P',gender:'',chat_used:'no',chat_helpfulness:9,profile:{cv:'PRIVATE'}});
@@ -75,24 +75,27 @@ test('revisions remain monotonic even when the clock does not advance',()=>{
 });
 
 
-test('v4 migration starts a fresh experiment and never reuses historical outcome ratings',()=>{
+test('only a new experiment migrates v4 facts without reusing historical ratings',()=>{
  const old={...state(20,{search_goal:'Data Science',personality_setup:'4',score_usefulness:7,personality_customized:'yes'}),version:'diana-v4',waitingAnswered:['personality_setup','personality_customized']};
  const storage={getItem:key=>key==='diana-survey:diana-v4'?JSON.stringify(old):null};
- const next=loadSurveyState(storage);
- assert.equal(next.version,'diana-v7');assert.equal(next.answers.personality_setup,null);
- assert.equal(next.answers.score_usefulness,null);assert.equal(next.answers.personality_customized,null);
+ const loaded=loadSurveyState(storage);
+ assert.equal(loaded.version,'diana-v4');
+ const next=applyStudyAssignment(loaded,{arm:'C',experiment_id:'diana-abc-v1',questionnaire_version:'diana-v8'});
+ assert.equal(next.version,'diana-v8');assert.equal(next.answers.personality_setup,null);
+ assert.equal(next.answers.score_usefulness,null);assert.equal(next.answers.personality_customized,'');
  assert.ok(!next.waitingAnswered.includes('personality_setup'));assert.ok(next.draftRevision>20);
- const restored=restoreServerDraft(next,{version:'diana-v4',revision:next.draftRevision+100,answers:old.answers,waiting_answered:old.waitingAnswered});
- assert.equal(restored.answers.personality_setup,null);assert.equal(restored.draftRevision,next.draftRevision+101);
- assert.deepEqual(restoreServerDraft(next,{completed:true}).submitted,true);
+ assert.equal(restoreServerDraft(next,{completed:true}).submitted,true);
 });
 
 
-test('server v6 drafts carry facts into v7 without carrying the old group or outcome ratings',()=>{
+test('server v6 drafts preserve their original version, group, outcomes and waiting answers',()=>{
  const current=state(1,{study_arm:'A'});
  const restored=restoreServerDraft(current,{version:'diana-v6',revision:100,answers:{study_arm:'C',age_group:'21_24',search_goal:'Werkstudent',score_usefulness:8,personality_setup:9},waiting_answered:['age_group','personality_setup']});
- assert.equal(restored.version,'diana-v7');assert.equal(restored.answers.study_arm,'A');
+ assert.equal(restored.version,'diana-v6');assert.equal(restored.answers.study_arm,'C');
  assert.equal(restored.answers.age_group,'21_24');assert.equal(restored.answers.search_goal,'Werkstudent');
- assert.equal(restored.answers.score_usefulness,null);assert.equal(restored.answers.personality_setup,null);
- assert.deepEqual(restored.waitingAnswered,['age_group']);assert.equal(restored.draftRevision,101);
+ assert.equal(restored.answers.score_usefulness,8);assert.equal(restored.answers.personality_setup,9);
+ assert.deepEqual(restored.waitingAnswered,['age_group','personality_setup']);assert.equal(restored.draftRevision,100);
+ const resumed=applyStudyAssignment(restored,{arm:'B',experiment_id:'diana-bc-v1',questionnaire_version:'diana-v6'});
+ assert.equal(resumed.version,'diana-v6');assert.equal(resumed.answers.study_arm,'C');
+ assert.equal(draftPayload(resumed).version,'diana-v6');assert.equal(draftPayload(resumed).answers.personality_setup,9);
 });

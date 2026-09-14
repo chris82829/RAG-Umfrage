@@ -27,7 +27,7 @@ from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
 from persona_mlds import advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_usage import StudyPersonalityUsage, normalize_selection
-from study_assignment import StudyAssignments
+from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, advisor_for_policy, PersonalityPolicyError
 from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice
@@ -259,21 +259,42 @@ def create_app(config=None, *, retriever=None, llm=None):
 
     def request_assignment():
         arm = test_arm()
-        return {'arm': arm, 'test': True} if arm else assignments.get(consent_token())
+        return {'arm': arm, 'test': True, 'experiment_id': EXPERIMENT_ID,
+                'personality_policy': personality_policy(EXPERIMENT_ID, arm)} if arm else assignments.get(consent_token())
+
+    def request_policy():
+        assigned = request_assignment()
+        return assigned['personality_policy'] if assigned else None
 
     def request_advisor(requested):
-        arm = test_arm()
-        if arm == 'A':
-            return dict(neutral_personality)
-        if arm == 'B':
-            return personality_templates['career']['advisor'] if requested.get('preset') == 'neutral' and requested.get('mode', 'preset') == 'preset' else requested
-        return assignments.advisor(consent_token(), requested)
+        policy = request_policy()
+        return advisor_for_policy(requested, policy) if policy else requested
 
     def checked_selection(advisor, selection):
         try:
+            if request_policy() == 'templates':
+                marker = selection.model_dump() if hasattr(selection, 'model_dump') else selection
+                if marker is not None and marker.get('source') != 'template':
+                    raise ValueError('In dieser Variante kannst du ausschließlich unveränderte Vorlagen auswählen.')
+                # In immutable B the server knows the only permitted actual source.
+                # Legacy configurable sessions without a marker still stay unknown.
+                if marker is None:
+                    template_id = next(key for key, template in personality_templates.items() if template['advisor'] == advisor)
+                    selection = {'source':'template', 'template_id':template_id}
             return normalize_selection(advisor, selection), None
         except ValueError as failure:
             return None, error_response({'code':'advisor_selection_mismatch','message':str(failure)},400)
+
+    def incompatible_session(state, assigned):
+        if assigned and state.get('_study_arm') != assigned['arm']:
+            return True
+        if assigned and state.get('_experiment_id') not in (None, assigned.get('experiment_id')):
+            return True
+        # Old direct B test sessions had an editable persona. They cannot be
+        # resumed in the new template-only B condition after deployment.
+        if assigned and assigned['personality_policy'] == 'templates':
+            return state.get('_personality_policy') != 'templates'
+        return False
 
     def consent_link(kind, *, selection=None, completed=False):
         if not app.config['PRIVACY_REQUIRED'] and not test_arm():
@@ -351,8 +372,11 @@ def create_app(config=None, *, retriever=None, llm=None):
     @app.get('/test/a/')
     @app.get('/test/b')
     @app.get('/test/b/')
+    @app.get('/test/c')
+    @app.get('/test/c/')
     @app.get('/test/a/datenschutz')
     @app.get('/test/b/datenschutz')
+    @app.get('/test/c/datenschutz')
     @app.get('/mehr-erfahren')
     @app.get('/umfrage')
     @app.get('/umfrage/')
@@ -631,7 +655,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)
-            state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
+            state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None,
+                     '_experiment_id': assigned.get('experiment_id') if assigned else None, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
             session_id = sessions.create(state, before_save=consent_link('chat', selection=selection))
             return {'session_id': session_id, **public_state(state)}
@@ -644,7 +669,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         if not saved:
             return jsonify(error={'code': 'not_found', 'message': 'Chat nicht gefunden.'}), 404
         assigned = request_assignment()
-        if assigned and saved[0].get('_study_arm') != assigned['arm']:
+        if incompatible_session(saved[0], assigned):
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
         if outdated_neutral_presentation(saved[0]):
             return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
@@ -671,7 +696,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         if outdated_neutral_presentation(state):
             return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
         assigned = request_assignment()
-        if assigned and state.get('_study_arm') != assigned['arm']:
+        if incompatible_session(state, assigned):
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
         previous_advisor = request_advisor(advisor_from_mlds(state.get('advisor_mlds', state.get('advisor', {}))))
         selected_advisor = request_advisor(body.advisor.model_dump() if body.advisor is not None else previous_advisor)
@@ -786,7 +811,8 @@ def create_app(config=None, *, retriever=None, llm=None):
             messages = state['messages'] + ([{'role': 'user', 'content': body.message}] if body.message else [])
             messages.append({'role': 'assistant', 'content': result['assistant_message'],
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
-            new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), 'messages': messages[-100:]}
+            new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), '_personality_policy': state.get('_personality_policy'),
+                         '_experiment_id': state.get('_experiment_id'), 'messages': messages[-100:]}
             sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection))
             return {'session_id': body.session_id, **public_state(new_state)}
 
@@ -799,6 +825,10 @@ def create_app(config=None, *, retriever=None, llm=None):
                   for item in error.errors(include_input=False, include_context=False)]
         return error_response({'code': 'validation_error', 'message': 'Eingaben prüfen.',
                                'fields': fields}, 400)
+
+    @app.errorhandler(PersonalityPolicyError)
+    def personality_policy_error(error):
+        return error_response({'code':'personality_policy_violation','message':str(error)},400)
 
     @app.errorhandler(ConsentRequired)
     def consent_error(error):

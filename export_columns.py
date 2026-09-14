@@ -12,7 +12,7 @@ META_TITLES = {
     'reasoning_efforts': ('denkaufwand_stufen', 'Verwendete Einstellungen für den Denkaufwand'),
     'response_status': ('teilnahme_status', 'Abgeschlossen oder noch unvollständig'),
     'last_saved_at_utc': ('zuletzt_gespeichert_am_utc', 'Letzter Speicher- oder Korrekturzeitpunkt (UTC)'),
-    'study_arm': ('studiengruppe', 'Einheitliche Studiengruppe A oder B'),
+    'study_arm': ('studiengruppe', 'Studiengruppe A, B oder C; Bedeutung anhand von Fragebogenversion und Experimentkennung bestimmen'),
     'experiment_id': ('experiment_id', 'Kennung des Experiments; gemeinsam mit Fragebogenversion auswerten'),
     'assigned_at_utc': ('zugeteilt_am_utc', 'Zeitpunkt der ursprünglichen Gruppenzuteilung (UTC)'),
     'prior_exposure': ('vorherige_systemnutzung', 'Suchsitzung bereits vor der ursprünglichen Gruppenzuteilung vorhanden'),
@@ -49,6 +49,7 @@ QUESTION_NAMES = {
     'personality_consistency': 'ki_eigenschaften_wiedererkannt',
     'personality_customized': 'ki_selbst_angepasst_selbstauskunft',
     'personality_setup': 'ki_einrichten_einfachheit',
+    'template_selection_ease': 'ki_vorlagenauswahl_einfachheit',
     'personality_value': 'ki_personalisierung_mehrwert',
     'personalized_chat_usefulness': 'chat_personalisierung_nutzen',
     'personalized_search_usefulness': 'suche_personalisierung_nutzen',
@@ -83,7 +84,7 @@ def export_name(technical, columns='readable'):
     if name.endswith('_status'):
         name, suffix = name[:-7], '_antwortstatus'
     # From V6 onward this question specifically concerns clarifying search wishes.
-    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7') else QUESTION_NAMES[name]
+    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8') else QUESTION_NAMES[name]
     return f'{prefix}_{base}{suffix}'
 
 

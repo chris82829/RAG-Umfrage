@@ -4,7 +4,7 @@ import { ADVISOR_DESCRIPTION_MAX_LENGTH, advisorFromTemplate, advisorTemplates, 
 import './advisor-picker.css';
 import {templateSelection, selectedTemplate as selectionTemplate} from './advisor-selection.js';
 
-export default function AdvisorPicker({ value, onChange, disabled, headingRef, onExplain, templates = advisorTemplates, selection }) {
+export default function AdvisorPicker({ value, onChange, disabled, headingRef, onExplain, templates = advisorTemplates, selection, allowCustom = true }) {
   const draft = editableAdvisor(value);
   const id = useId();
   const [notice, setNotice] = useState('');
@@ -20,7 +20,7 @@ export default function AdvisorPicker({ value, onChange, disabled, headingRef, o
     <fieldset className="advisor-role-options" disabled={disabled}>
       <legend>Wie möchtest du beraten werden?</legend>
       <p className="advisor-role-hint">Wähle eine Karte. Deine Auswahl beeinflusst die Stellenbewertung und das Gespräch.</p>
-      {[...Object.entries(templates), ['', {name:'Selbst personalisieren', description:'Lege Name, Eigenschaften und Bewertungsschwerpunkt selbst fest.'}]].map(([key, option]) => {
+      {[...Object.entries(templates), ...(allowCustom ? [['', {name:'Selbst personalisieren', description:'Lege Name, Eigenschaften und Bewertungsschwerpunkt selbst fest.'}]] : [])].map(([key, option]) => {
         const Icon = key === 'career' ? BriefcaseBusiness : key === 'expert' ? GraduationCap : SlidersHorizontal;
         return <label className={`advisor-role-card${selectedTemplate === key ? ' is-selected' : ''}`} key={key || 'custom'}>
           <input type="radio" name={`${id}-role`} value={key} checked={selectedTemplate === key} onChange={() => useTemplate(key)} />
@@ -30,7 +30,7 @@ export default function AdvisorPicker({ value, onChange, disabled, headingRef, o
       })}
     </fieldset>
     <span className="sr-only" role="status">{notice}</span>
-    {selectedTemplate === '' && <div className="advisor-custom">
+    {allowCustom && selectedTemplate === '' && <div className="advisor-custom">
 
       <label className="advisor-name-field" htmlFor={`${id}-name`}><span>Name deiner KI</span><input id={`${id}-name`} required maxLength={60} value={draft.name} onChange={e => update('name', e.target.value)} disabled={disabled} placeholder="Name eingeben" aria-describedby={`${id}-name-hint`} /><span className="sr-only" id={`${id}-name-hint`}>Dieser Name steht im Chat und an deinem persönlichen Score.</span></label>
       <label htmlFor={`${id}-focus`}><span>Was soll zusätzlich bei Stellen zählen?</span><select id={`${id}-focus`} value={draft.focus} onChange={e => update('focus', e.target.value)} disabled={disabled} aria-describedby={`${id}-focus-hint`}>{Object.entries(focusLabels).map(([key, label]) => <option value={key} key={key}>{label}</option>)}</select><span className="field-hint" id={`${id}-focus-hint`}>{focusDescriptions[draft.focus]}</span></label>

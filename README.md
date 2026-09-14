@@ -10,38 +10,25 @@ kurze Begründungs-Stichpunkte**. Die neutrale Vergleichsvariante zeigt diese
 Scores und automatischen Begründungsboxen nicht. Die lokale Konfiguration
 verwendet jetzt alle **8.537 Anzeigen** aus deiner Datei.
 
-## Aktueller Studienvergleich: A/B, Fragebogen V7
+## Aktueller Studienvergleich: A/B/C, Fragebogen V8
 
-Nach der Einwilligung wird die Teilnahme serverseitig mit gleicher Wahrscheinlichkeit
-einer Variante zugewiesen. Die Zuordnung bleibt beim Neuladen erhalten:
+Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v1`**, der Fragebogen **`diana-v8`**.
 
-- **A:** neutrales profilbasiertes Suchsystem mit Chat, ohne angezeigte Scores und
-  automatische Begründungsboxen an den Stellenkarten. Alle bis zu 20 zurückgegebenen
-  Stellen werden angezeigt.
-- **B:** dasselbe Suchsystem mit gestaltbarer KI-Suchpersönlichkeit, angezeigten Scores
-  und automatischen Begründungsboxen. Zunächst erscheinen Stellen ab 70 Punkten;
-  weitere bewertete Stellen können eingeblendet werden.
+- **A:** allgemeiner KI-Assistent ohne wählbare Persönlichkeit; bis zu 20 Stellen in zufälliger Reihenfolge, ohne angezeigte Scores und automatische Begründungsboxen.
+- **B:** Auswahl zwischen **Top-Berufsberater** und **Fachexperte** mit festen Eigenschaften. Persönliche Rangfolge, Scores und Begründungen; zunächst Stellen ab 70 Punkten, weitere per Button.
+- **C:** dieselben Vorlagen und dieselbe Bewertungs-/Darstellungslogik wie B, zusätzlich **Selbst personalisieren** mit Name, Eigenschaften, Bewertungsschwerpunkt und Freitext.
 
-Die Basisvariante A bleibt hilfreich und fachlich korrekt; ihre Antworten werden nicht
-absichtlich verschlechtert. Beide Varianten verwenden dieselbe Modell- und Suchbasis.
-Untersucht wird der zusätzliche Nutzen des **Gesamtpakets**. Der Versuch trennt die
-Wirkung von Persönlichkeit, Scores, Begründungen und anfänglicher Ergebnissichtbarkeit
-nicht voneinander und ist kein
-direkter Vergleich mit einer reinen Stichwortsuche ohne Chat.
+B und C starten mit dem Top-Berufsberater. Einschränkungen in B werden serverseitig geprüft. Der Vergleich B/C untersucht das zusätzliche Angebot freier Gestaltung; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch bei unveränderter Vorlagennutzung. A/B und A/C vergleichen Gesamtpakete, keinen isolierten Persönlichkeitseffekt und keinen Chatbot gegen eine reine Stichwortsuche. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
 
-Die folgenden Beschreibungen von Persönlichkeitseinstellung, sichtbaren Scores und
-Begründungsboxen gelten für Variante B und die eigenständige personalisierte Jobsuche.
-Die interne Bewertungspipeline bleibt auch in A verfügbar; die API überträgt deren
-private Bewertungen jedoch nicht an die neutrale Oberfläche. Fachliche Rückfragen an
-den neutralen Chat sind weiterhin möglich. Die neutralen Jobkarten zeigen die
-Stelleninformationen und den Zugang zum Chat.
+Vorherige `diana-ab-*`-Teilnahmen behalten ihr gestaltbares B und ihren historischen Fragebogen. Sie werden nicht in die neue Vorlagen-B-Gruppe umgedeutet. V6 mit ursprünglichen B/C-Codes bleibt ebenfalls separat erhalten. Version und Experimentkennung gemeinsam auswerten; Details: [ADMIN.md](ADMIN.md).
 
-Der aktuelle Fragebogen heißt **`diana-v7`**, neue Zuordnungen verwenden
-**`diana-ab-v1`**. Die ältere Vergleichserhebung V6 ist separat archiviert: Ihre
-Originalgruppen B/C bleiben unverändert gespeichert und erscheinen nur in der
-Verwaltung einheitlich als A/B. V6 zeigte Scores und Begründungen in beiden Gruppen.
-**V6 und V7 deshalb getrennt auswerten**, auch wenn die Anzeige dieselben Buchstaben
-verwendet. Details zu Originalcodes und Exporten stehen in [ADMIN.md](ADMIN.md).
+### Varianten unabhängig von der Umfrage testen
+
+- [/test/a](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/a) – allgemeiner Assistent
+- [/test/b](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/b) – feste Beratungsvorlagen
+- [/test/c](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/c) – Vorlagen und eigene Gestaltung
+
+Diese Zugänge haben getrennte Einwilligungen und Sitzungen. Sie erzeugen keine Umfrageantworten, keine zufällige Studienzuordnung und keine Nutzungsmetadaten für die Studie. Vorlagenauswahl und tatsächlich angewendete eigene Gestaltung werden dagegen bei regulären Studienteilnahmen separat von der Selbstauskunft dokumentiert. Der Export verwendet verständliche deutsche Spalten mit Codebuch und technischer Spaltenzuordnung.
 
 ## Datenschutz-Stand
 
@@ -54,6 +41,8 @@ Vollständige Einzelantworten sollen auch nach der Promotion für die beschriebe
 Forschungszwecke nutzbar bleiben; ihre Erforderlichkeit wird mindestens jährlich geprüft.
 
 ## Webseite ausprobieren
+
+Der folgende Ablauf beschreibt die gemeinsame Bedienung. V8 ergänzt die Gruppenführung für B (Vorlagenauswahl) und C (eigene Gestaltung); die danach ausdrücklich als V7 bezeichneten Details dokumentieren den historischen A/B-Fragebogen.
 
 ### Umfrage mit eingebetteter Jobsuche
 
@@ -83,7 +72,7 @@ Der Ablauf ist:
    geleertes Feld, werden bei weiteren Suchen nicht überschrieben. Fragen zur
    Gesprächserfahrung und zu den Begründungen folgen erst nach dem Systemtest.
 
-Die Fragebogenversion **diana-v7** verwendet folgende Antwortformate:
+Der historische A/B-Fragebogen **diana-v7** verwendet folgende Antwortformate:
 
 - **Ja/Nein:** Suchwünsche im Chat verändert; in B außerdem Eigenschaften selbst angepasst.
 - **1–10:** Bedienbarkeit, Mitteilung und Anpassung der Suchwünsche, Suchaufwand,

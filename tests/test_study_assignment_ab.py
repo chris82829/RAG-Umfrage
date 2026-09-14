@@ -1,4 +1,4 @@
-"""A/B allocation and lossless migration of the original B/C experiment."""
+"""A/B/C allocation and lossless migration of the original B/C experiment."""
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -64,6 +64,8 @@ def test_migration_preserves_legacy_rows_and_runs_once_under_concurrent_startup(
             assert service.get(token) == service.assign(token) == {
                 'experiment_id': LEGACY_EXPERIMENT_ID, 'arm': current,
                 'assigned_at': old[3], 'prior_exposure': bool(old[4]),
+                'personality_policy':'generic' if current=='A' else 'configurable',
+                'questionnaire_version':'diana-v6','questionnaire_arm':old[2],
             }
     with database.connect() as db:
         assert [tuple(row) for row in db.execute('SELECT * FROM study_assignments ORDER BY assigned_at')] == original
@@ -72,18 +74,18 @@ def test_migration_preserves_legacy_rows_and_runs_once_under_concurrent_startup(
                    ('new', EXPERIMENT_ID, 'A', '2026-09-10', 0))
 
 
-@pytest.mark.parametrize('arm', ['A', 'B'])
+@pytest.mark.parametrize('arm', ['A', 'B', 'C'])
 @pytest.mark.parametrize('migrate', [False, True])
 def test_new_allocation_stores_current_arm_and_experiment(database, monkeypatch, arm, migrate):
     if migrate:
         legacy_database(database)
     service = StudyAssignments(database, Consent(), {})
     def choice(options):
-        assert options == ('A', 'B')
+        assert options == ('A', 'B', 'C')
         return arm
     monkeypatch.setattr('study_assignment.secrets.choice', choice)
     result = service.assign('a' * 64)
-    assert result['arm'] == arm and result['experiment_id'] == EXPERIMENT_ID == 'diana-ab-v2'
+    assert result['arm'] == arm and result['experiment_id'] == EXPERIMENT_ID == 'diana-abc-v1'
     assert result['prior_exposure'] is False
     with database.connect() as db:
         row = db.execute('SELECT * FROM study_assignments WHERE token_hash=?', (token_hash('a' * 64),)).fetchone()
@@ -101,7 +103,7 @@ def test_concurrent_first_assignment_draws_exactly_once(database, monkeypatch):
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(lambda _: service.assign('a' * 64), range(20)))
     assert results == [results[0]] * 20
-    assert calls == [('A', 'B')]
+    assert calls == [('A', 'B', 'C')]
     with database.connect() as db:
         assert db.execute('SELECT count(*) FROM study_assignments').fetchone()[0] == 1
 
@@ -137,9 +139,9 @@ def test_failed_schema_migration_rolls_back_without_losing_legacy_data(database,
 def test_many_participants_retries_and_independent_workers_keep_one_assignment(database, monkeypatch):
     calls=[]
     def draw(options):
-        assert options==('A','B')
+        assert options==('A','B','C')
         calls.append(1)
-        return options[len(calls)%2]
+        return options[len(calls)%3]
     monkeypatch.setattr('study_assignment.secrets.choice',draw)
     workers=[StudyAssignments(database,Consent(),{}) for _ in range(6)]
     tokens=[f'{i:064x}' for i in range(100)]
@@ -170,19 +172,23 @@ def test_old_participant_accepts_each_questionnaire_own_code(database, legacy_ar
             service.validate_answers(token, version, {'study_arm': wrong})
 
 
-@pytest.mark.parametrize('arm,legacy', [('A', 'B'), ('B', 'C')])
-def test_new_participant_validation_and_neutral_override(database, monkeypatch, arm, legacy):
+@pytest.mark.parametrize('arm', ['A', 'B', 'C'])
+def test_new_participant_validation_and_neutral_override(database, monkeypatch, arm):
+    from persona_mlds import load_templates
     service = StudyAssignments(database, Consent(), {})
     monkeypatch.setattr('study_assignment.secrets.choice', lambda _: arm)
     token = 'a' * 64
     service.assign(token)
-    service.validate_answers(token, 'diana-v7', {'study_arm': arm})
-    service.validate_answers(token, 'diana-v6', {'study_arm': legacy})
-    requested = {'preset': 'steve'}
-    assert service.advisor(token, requested)['preset'] == ('neutral' if arm == 'A' else 'steve')
-    for code in [None, '', 'C', 'B' if arm == 'A' else 'A']:
+    service.validate_answers(token, 'diana-v8', {'study_arm': arm})
+    for version in ('diana-v6','diana-v7'):
         with pytest.raises(ValueError, match='Studienzuordnung'):
-            service.validate_answers(token, 'diana-v7', {'study_arm': code})
+            service.validate_answers(token, version, {'study_arm': arm})
+    requested = load_templates()['career']['advisor']
+    actual = service.advisor(token, requested)
+    assert actual['preset'] == 'neutral' if arm=='A' else actual==requested
+    for code in [None, '', *[code for code in ('A','B','C') if code != arm]]:
+        with pytest.raises(ValueError, match='Studienzuordnung'):
+            service.validate_answers(token, 'diana-v8', {'study_arm': code})
 
 
 def test_legacy_neutral_mapping_and_missing_assignment(database):

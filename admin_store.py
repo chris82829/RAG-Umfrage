@@ -13,18 +13,21 @@ from export_columns import META_TITLES, export_name, export_headers, validate_co
 from study_usage import empty_usage
 from survey_store import SurveyRequest, SurveyDraftRequest, SurveySubmissionV2, SurveyConflict
 
-from survey_store import V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION, VERSIONED_FIELDS, V4_SURVEY_DEFINITION, SURVEY_FIELDS, LEGACY_SURVEY_FIELDS, SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, choice_codes, answer_status, QUESTIONS, spreadsheet_text, ADDED_VALUE_LABELS, PREFERENCE_LABELS
+from survey_store import V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION, VERSIONED_FIELDS, V4_SURVEY_DEFINITION, SURVEY_FIELDS, LEGACY_SURVEY_FIELDS, SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, choice_codes, answer_status, QUESTIONS, spreadsheet_text, ADDED_VALUE_LABELS, PREFERENCE_LABELS
 
 LEGACY_FIELDS = ['chat_helpfulness','added_value','future_preference','feedback']
 META_FIELDS = ['participation_id','submitted_at_utc','survey_version','study_release_ids','openai_models','reasoning_efforts','response_status','last_saved_at_utc','study_arm','experiment_id','assigned_at_utc','prior_exposure','presentation_versions','correction_count','last_corrected_at_utc']
 USAGE_FIELDS = list(empty_usage())
 META_FIELDS += ['personality_' + key for key in USAGE_FIELDS]
-ARM_CODES = {'A': 'Neutrales Suchsystem', 'B': 'Personalisierter Chat- und Suchbot'}
-ARM_VERSION_NOTE = ('study_arm zeigt einheitlich A (neutral) und B (personalisiert). '
-    'In diana-v6 entsprechen die gespeicherten Originalcodes B der Anzeige A und C der Anzeige B. '
-    'In diana-v7 sind Originalcodes und Anzeige A/B identisch. '
-    'V6 zeigte Scores und Begründungen in beiden Gruppen; V7 zeigt sie nur in B. '
-    'Fragebogenversion und experiment_id gemeinsam berücksichtigen; Versionen nicht ungeprüft zusammenfassen.')
+ARM_CODES = {'A': 'Basisvariante', 'B': 'V8: Vorlagenauswahl; V6/V7: selbst gestaltbar',
+             'C': 'V8: Vorlagenauswahl und Selbstgestaltung'}
+ARM_VERSION_NOTE = ('V8 / diana-abc-v1: A ist die Basisvariante, B erlaubt unveränderte Vorlagen, '
+    'C zusätzlich die Selbstgestaltung. In diana-v6 entsprechen die gespeicherten Originalcodes '
+    'B der Anzeige A und C der Anzeige B. V6 zeigte Scores und Begründungen in beiden Gruppen. '
+    'In diana-v7 sind Originalcodes und Anzeige A/B identisch; B war dort selbst gestaltbar. '
+    'V7 zeigte Scores und Begründungen nur in B, V8 in B und C. '
+    'Historisches B wird nicht als neue Vorlagengruppe interpretiert. Fragebogenversion und '
+    'experiment_id gemeinsam berücksichtigen; Versionen nicht ungeprüft zusammenfassen.')
 
 
 def displayed_study_arm(answers):
@@ -32,6 +35,8 @@ def displayed_study_arm(answers):
     if answers.get('version') == 'diana-v6':
         return {'B': 'A', 'C': 'B'}.get(answers.get('study_arm'), '')
     if answers.get('version') == 'diana-v7':
+        return answers.get('study_arm') if answers.get('study_arm') in ('A', 'B') else ''
+    if answers.get('version') == 'diana-v8':
         return answers.get('study_arm') if answers.get('study_arm') in ARM_CODES else ''
     return ''
 
@@ -74,7 +79,7 @@ class AdminSurveyData:
         result=[]
         for row in rows:
             answers=json.loads(row['answers_json'])
-            experiment=answers.get('version') in ('diana-v6', 'diana-v7')
+            experiment=answers.get('version') in ('diana-v6', 'diana-v7', 'diana-v8')
             metadata=json.loads(row['metadata_json']) if row['metadata_json'] else {}
             ids=metadata.get('release_ids',[])
             usage=(json.loads(row['personality_usage_json']) if row['response_status']=='in_progress' and row['personality_usage_json']
@@ -136,7 +141,7 @@ class AdminSurveyData:
             row['deletion_count']=links.get('survey',1) if links is not None else 1
             row['editable']=True
             row['corrections']=self.corrections(response_id,row['correction_count'])
-            row['definition']=SURVEY_DEFINITION if row['survey_version']=='diana-v7' else V6_SURVEY_DEFINITION if row['survey_version']=='diana-v6' else V5_SURVEY_DEFINITION if row['survey_version']=='diana-v5' else V4_SURVEY_DEFINITION if row['survey_version']=='diana-v4' else LEGACY_SURVEY_DEFINITION
+            row['definition']=SURVEY_DEFINITION if row['survey_version']=='diana-v8' else V7_SURVEY_DEFINITION if row['survey_version']=='diana-v7' else V6_SURVEY_DEFINITION if row['survey_version']=='diana-v6' else V5_SURVEY_DEFINITION if row['survey_version']=='diana-v5' else V4_SURVEY_DEFINITION if row['survey_version']=='diana-v4' else LEGACY_SURVEY_DEFINITION
             if row['survey_version']=='diana-v6':
                 # Admin display uses A/B, but answers and archived branching keep
                 # the original B/C codes for reproducible historical exports.
@@ -227,7 +232,7 @@ class AdminSurveyData:
 
     def codebook(self, columns='readable'):
         validate_columns(columns)
-        result=[dict(variable=key,question=META_TITLES[key][1],level='nominal',codes={},missing='empty',versions=['diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7']) for key in META_FIELDS]
+        result=[dict(variable=key,question=META_TITLES[key][1],level='nominal',codes={},missing='empty',versions=['diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7','diana-v8']) for key in META_FIELDS]
         for item in result:
             if item['variable']=='study_arm':
                 item['codes']=dict(ARM_CODES)
@@ -337,5 +342,5 @@ class AdminSurveyData:
                          for row in rows if row.get('correction_count')]
             if corrections:
                 archive.writestr('answer_corrections.json',json.dumps(corrections,ensure_ascii=False,indent=2))
-            archive.writestr('README.txt',('Spaltennamen: '+columns+'. Deutsche Spaltennamen sind der Standard. spaltenzuordnung.csv verbindet jeden Namen eindeutig mit technischem Schlüssel und vollständiger Frage. v2_v3_ kennzeichnet identische historische Fragen aus V2/V3, v3_ die vier zusätzlichen V3-Fragen, v4_ bis v7_ halten spätere Versionen getrennt. _antwortstatus erklärt leere Antworten; im technischen Format heißt diese Spalte _status. Werte und gespeicherte Antworten werden durch die Umbenennung nicht verändert. Der optionale technische Export (?columns=technical) verwendet die bisherigen Schlüssel. Das Codebuch enthält Antwortskalen, fehlende Werte und die Bewertungsrichtung.\n\n')+'Gespeicherte Verwaltungskorrekturen sind in Diagrammen und CSV enthalten. correction_count und last_corrected_at_utc kennzeichnen diese Zeilen. Bei Korrekturen enthält answer_corrections.json die vollständigen Vorher-/Nachher-Stände mit Grund und Zeitpunkt für die gefilterten Teilnahmen. submitted_at_utc bleibt der ursprüngliche Abschlusszeitpunkt.\n\nNeuer Stand diana-ab-v2: A mit allgemeinem Chat ohne zusätzliche Antwortlängengrenze und zufälliger Ergebnisreihenfolge. presentation_versions und study_manifest.json dokumentieren den Stand; gemischte Stände gesondert auswerten. In Numiqo: Import/Export > Datei auswählen > diana_numiqo.csv. UTF-8, Semikolon. Eine Zeile pro Teilnahme. response_status unterscheidet completed (abgeschlossen) und in_progress (unvollständig); für reine Abschlussauswertungen completed filtern. last_saved_at_utc ist der letzte Speicherzeitpunkt, submitted_at_utc bleibt bei Entwürfen leer. Codes im Codebuch. V7 / diana-ab-v1 vergleicht das Gesamtpaket: A neutrales Suchsystem ohne angezeigte Scores und Begründungen, B mit KI-Suchpersönlichkeit, Scores und Begründungen. study_arm dokumentiert einheitlich A oder B; die ursprüngliche serverseitige Zuordnung wird nicht neu ausgelost. Persönlichkeits-, Score- und Begründungsfragen sind in V7/A skipped. V6 / diana-bc-v1 bleibt historisch separat: Originalgruppe B wird als A angezeigt, Originalgruppe C als B; Originalcodes bleiben in v6_study_arm (0=B, 1=C) und im Codebuch erhalten. V6 zeigte Scores und Begründungen in beiden Gruppen. V7 nutzt v7_-Spalten (0=A, 1=B). Fragebogenversion und experiment_id gemeinsam prüfen, insbesondere bei fortgesetzten Teilnahmen aus dem älteren Experiment. prior_exposure=1 kennzeichnet eine bereits vorhandene Suchsitzung vor der ursprünglichen Zuordnung. search_effort ist gegenläufig: hohe Werte bedeuten hohen Aufwand. Keine Zusammenfassung aller Bewertungen zu einem ungeprüften Gesamtwert. V5: Alle Bewertungen ordinal 1–10, Ja=1 und Nein=0; getrennte v5_-Spalten. Die Frage zur Chatnutzung entfällt. V4: Ja=1, Nein=0; beschriftete Abstufungen ordinal 1–5, Nützlichkeit und Chat-Hilfe ordinal 1–10. V4-Variablen beginnen mit v4_, ältere Antworten stehen unverändert in getrennten Spalten. _status unterscheidet Nicht genutzt, Nicht beurteilbar, übersprungen und andere Fragebogenversionen. Die neutrale Wiederverwendungsantwort Unentschieden ist ein gültiger Wert 3. Frageformulierung und Filterführung im Codebuch berücksichtigen; Versionen nicht ungeprüft zusammenfassen. Leere Zellen sind fehlende Werte, nicht Null; auch „Keine Angabe“ wird leer exportiert. ID/Datum/Modellspalten als nominal behandeln. Keine automatische Datenübertragung. CSV-Freitext mit Formelpräfix erhält ein führendes Apostroph als Schutz für Tabellenprogramme. Die Daten sind pseudonymisiert, nicht anonym.\n')
+            archive.writestr('README.txt',('Spaltennamen: '+columns+'. Deutsche Spaltennamen sind der Standard. spaltenzuordnung.csv verbindet jeden Namen eindeutig mit technischem Schlüssel und vollständiger Frage. v2_v3_ kennzeichnet identische historische Fragen aus V2/V3, v3_ die vier zusätzlichen V3-Fragen, v4_ bis v8_ halten spätere Versionen getrennt. _antwortstatus erklärt leere Antworten; im technischen Format heißt diese Spalte _status. Werte und gespeicherte Antworten werden durch die Umbenennung nicht verändert. Der optionale technische Export (?columns=technical) verwendet die bisherigen Schlüssel. Das Codebuch enthält Antwortskalen, fehlende Werte und die Bewertungsrichtung.\n\n')+'V8 / diana-abc-v1: A ist die Basisvariante; B erlaubt die Auswahl unveränderter Vorlagen; C erlaubt dieselben Vorlagen und zusätzlich die Selbstgestaltung. Scores, Begründungen und Rangfolge sind in B und C gleich implementiert. V8 nutzt eigene v8_-Spalten, Gruppen-Codes 0=A, 1=B, 2=C. Historisches B in V6/V7 war selbst gestaltbar und ist keine Beobachtung der neuen Vorlagengruppe. Automatische ki_*-Nutzungsmerkmale sind Beobachtungen, keine zusätzliche randomisierte Gruppe.\n\nGespeicherte Verwaltungskorrekturen sind in Diagrammen und CSV enthalten. correction_count und last_corrected_at_utc kennzeichnen diese Zeilen. Bei Korrekturen enthält answer_corrections.json die vollständigen Vorher-/Nachher-Stände mit Grund und Zeitpunkt für die gefilterten Teilnahmen. submitted_at_utc bleibt der ursprüngliche Abschlusszeitpunkt.\n\nHistorischer Stand diana-ab-v2: A mit allgemeinem Chat ohne zusätzliche Antwortlängengrenze und zufälliger Ergebnisreihenfolge. presentation_versions und study_manifest.json dokumentieren den Stand; gemischte Stände gesondert auswerten. In Numiqo: Import/Export > Datei auswählen > diana_numiqo.csv. UTF-8, Semikolon. Eine Zeile pro Teilnahme. response_status unterscheidet completed (abgeschlossen) und in_progress (unvollständig); für reine Abschlussauswertungen completed filtern. last_saved_at_utc ist der letzte Speicherzeitpunkt, submitted_at_utc bleibt bei Entwürfen leer. Codes im Codebuch. V7 / diana-ab-v1 vergleicht das Gesamtpaket: A neutrales Suchsystem ohne angezeigte Scores und Begründungen, B mit KI-Suchpersönlichkeit, Scores und Begründungen. study_arm dokumentiert in V7 A oder B; die ursprüngliche serverseitige Zuordnung wird nicht neu ausgelost. Persönlichkeits-, Score- und Begründungsfragen sind in V7/A skipped. V6 / diana-bc-v1 bleibt historisch separat: Originalgruppe B wird als A angezeigt, Originalgruppe C als B; Originalcodes bleiben in v6_study_arm (0=B, 1=C) und im Codebuch erhalten. V6 zeigte Scores und Begründungen in beiden Gruppen. V7 nutzt v7_-Spalten (0=A, 1=B). Fragebogenversion und experiment_id gemeinsam prüfen, insbesondere bei fortgesetzten Teilnahmen aus dem älteren Experiment. prior_exposure=1 kennzeichnet eine bereits vorhandene Suchsitzung vor der ursprünglichen Zuordnung. search_effort ist gegenläufig: hohe Werte bedeuten hohen Aufwand. Keine Zusammenfassung aller Bewertungen zu einem ungeprüften Gesamtwert. V5: Alle Bewertungen ordinal 1–10, Ja=1 und Nein=0; getrennte v5_-Spalten. Die Frage zur Chatnutzung entfällt. V4: Ja=1, Nein=0; beschriftete Abstufungen ordinal 1–5, Nützlichkeit und Chat-Hilfe ordinal 1–10. V4-Variablen beginnen mit v4_, ältere Antworten stehen unverändert in getrennten Spalten. _status unterscheidet Nicht genutzt, Nicht beurteilbar, übersprungen und andere Fragebogenversionen. Die neutrale Wiederverwendungsantwort Unentschieden ist ein gültiger Wert 3. Frageformulierung und Filterführung im Codebuch berücksichtigen; Versionen nicht ungeprüft zusammenfassen. Leere Zellen sind fehlende Werte, nicht Null; auch „Keine Angabe“ wird leer exportiert. ID/Datum/Modellspalten als nominal behandeln. Keine automatische Datenübertragung. CSV-Freitext mit Formelpräfix erhält ein führendes Apostroph als Schutz für Tabellenprogramme. Die Daten sind pseudonymisiert, nicht anonym.\n')
         return stream.getvalue()

@@ -2,25 +2,31 @@
 
 DIANA ist aus meiner Einschätzung ein geeigneter Ausgangspunkt für einen wissenschaftlichen Demo- oder Posterbeitrag. Für ein Full Paper sind ein klar abgegrenzter neuer Beitrag, eine nachvollziehbare Evaluation und die Einordnung gegenüber verwandten Systemen entscheidend. Ein funktionsfähiges System oder eine große Teilnehmerzahl allein garantiert keine Annahme.
 
-## Was der derzeitige Vergleich belegen kann
+## Aktueller Vergleich A/B/C
 
-Die aktuelle Implementierung vergleicht zwei Funktionspakete: A hat einen allgemeinen Assistenten, zufällige Anzeigereihenfolge und einfache Stellenkarten. B ergänzt eine konfigurierbare Beratung, persönliche Rangfolge, sichtbare Scores und Begründungen. Beide verwenden intern dieselbe hybride Vorauswahl und LLM-Bewertung; A zeigt die bewerteten Stellen anschließend zufällig an. Auch die Zahl zunächst sichtbarer Karten kann wegen der Score-Schwelle in B abweichen.
+Seit der neuen Experimentversion `diana-abc-v1` werden neue Teilnahmen zufällig mit gleicher Wahrscheinlichkeit einer von drei Bedingungen zugeteilt:
 
-Eine passende Forschungsfrage lautet daher:
+| Gruppe | Verfügbare Beratung | Ergebnisdarstellung |
+| --- | --- | --- |
+| A | Allgemeiner KI-Assistent ohne wählbare Persönlichkeit | Zufällige Anordnung der bis zu 20 Retrieval-Kandidaten, keine angezeigten Scores oder automatischen Begründungsboxen |
+| B | Auswahl zwischen unveränderten Vorlagen Top-Berufsberater und Fachexperte | Persönliche Bewertung und Rangfolge, Scores und Begründungen; zunächst Ergebnisse ab 70 Punkten |
+| C | Dieselben Vorlagen plus selbst gestaltbare Persönlichkeit | Dieselbe Bewertungs- und Darstellungslogik wie B; Eigenschaften können die Bewertung beeinflussen |
 
-> Welchen wahrgenommenen Mehrwert bietet ein konfigurierbares KI-Beratungspaket gegenüber einer allgemeinen KI-Jobsuche hinsichtlich Nutzbarkeit, Suchkontrolle und Unterstützung im Gespräch?
+Modell, Datenquelle, Retrieval, Score-Schwelle und Rankingverfahren sind zwischen B und C gleich. Die durch eigene Eigenschaften beabsichtigte Änderung der Gewichtung ist Teil der Intervention. Beide starten mit dem Top-Berufsberater. B kann Vorlagen wechseln; C kann zusätzlich selbst gestalten. Die freie Gestaltung ist ein Angebot, keine Pflicht.
 
-Der Effekt der Persönlichkeit allein ist damit nicht identifizierbar. Um diesen zu untersuchen, müssten Rangfolge, Scores, Erklärungen, Aufgaben und übrige Bedingungen gleich sein. Für den kausalen Mehrwert eines Chatbots gegenüber Filter-/Stichwortsuche wäre eine gleichzeitige vergleichbare Filterbedingung nötig. Die frühere separate Umfrage ist hilfreicher Kontext, aber kein gleichwertiger randomisierter Kontrollarm.
+Für den Vergleich B/C passt die Forschungsfrage:
 
-Die bewusst zufällige Reihenfolge in A ist als Baseline begründungsbedürftig: Ein Vorteil von B kann bereits aus der Sortierung entstehen. Eine übliche relevanzsortierte Vergleichssuche wäre überzeugender. Diese Bewertung ändert das bestehende Experiment nicht automatisch.
+> Welchen zusätzlichen wahrgenommenen Nutzen bietet die Möglichkeit, eine KI-Suchpersönlichkeit selbst zu gestalten, gegenüber der Auswahl aus festen Beratungsvorlagen hinsichtlich Suchkontrolle, Unterstützung im Gespräch und Nutzbarkeit?
 
-## Vorlage oder eigene Konfiguration ist keine dritte randomisierte Gruppe
+Für den primären Vergleich alle Teilnehmenden gemäß ihrer zufälligen Zuteilung auswerten, auch wenn jemand in C keine Anpassungen vornimmt. Eine Auswertung nur der Personen, die tatsächlich personalisieren, wäre ein selbst selektierter Vergleich. Die erste/letzte verwendete Auswahl und Wechsel ergänzen explorative Nutzungsanalysen. Sie ersetzen nicht die randomisierte Zuteilung.
 
-Die automatische Erfassung der tatsächlichen Persönlichkeitsauswahl ergänzt eine Nutzungsvariable. Die zufällige Zuteilung bleibt A/B. Innerhalb B wählen Teilnehmende selbst zwischen Top-Berufsberater, Fachexperte und eigener Konfiguration; auch unveränderte Vorlagen enthalten bereits eine Persönlichkeit. Diese selbst gewählten Untergruppen können sich etwa in Motivation, Erfahrung oder verfügbarem Zeitbudget unterscheiden. Unterschiede in ihren Antworten sind deshalb explorativ zu interpretieren und kein kausaler Nachweis für freie Konfiguration. Wechsel werden erfasst; die Einordnung sollte vor der Analyse definiert werden, etwa anhand der ersten tatsächlich verwendeten Auswahl, ergänzt um eine Wechselanalyse.
+A/B und A/C vergleichen weiterhin Gesamtpakete. Der Unterschied kann auch durch Sortierung, sichtbare Scores, Begründungen und die Zahl anfangs sichtbarer Stellen entstehen. Die bewusst zufällige Reihenfolge in A ist als Baseline begründungsbedürftig; eine übliche relevanzsortierte Basissuche wäre wissenschaftlich überzeugender. A wurde durch diese Erweiterung nicht verändert. Für den kausalen Mehrwert eines Chatbots gegenüber Filter-/Stichwortsuche wäre weiterhin eine zeitgleiche vergleichbare Filterbedingung nötig; die frühere separate Umfrage ist Kontext, kein gleichwertiger Kontrollarm.
 
-Für die Frage nach dem Mehrwert freier Konfiguration genügt ein neuer, sauber abgegrenzter Vergleich mit zufälliger Zuteilung zu einer festgelegten Beratungsvorlage oder zur konfigurierbaren Beratung. In beiden Bedingungen müssten Modell, Daten, Score-/Begründungsanzeige, Ergebnisfilter und Rankingverfahren gleich sein; die durch die konfigurierte Persönlichkeit beabsichtigte Änderung der Gewichtung ist dann Teil der Intervention. Wer nur den Sprachstil prüfen will, muss auch die resultierende Stellenreihenfolge gleich halten. Ein zusätzliches C im bisherigen Vergleich löst die übrigen Unterschiede zwischen A und B nicht automatisch. Änderungen am Experiment sollten als neue Version vor der Haupterhebung festgelegt werden.
+## Historische Daten und ergänzende Messwerte
 
-Die neue Erfassung protokolliert Quelle, Vorlagentyp, erste und letzte tatsächlich angewendete Auswahl, Auswahlwechsel und deren Zeitpunkte. Historische Werte bleiben unbekannt; abgeschlossene Teilnahmen behalten ihren Abschlussstand. Als zusätzliche, noch nicht neu implementierte Messwerte wären Suchdauer, fehlgeschlagene Suchen, erfolgreiche Chatnachrichten und letzter erreichter Schritt sinnvoll. Dafür reichen Zählwerte und Zeitangaben; Gesprächsinhalte sind nicht erforderlich.
+Die vorherige Experimentversion `diana-ab-v2` hatte nur A/B; das damalige B bot bereits freie Gestaltung. Bestehende Teilnahmen behalten ihre Zuordnung und diesen Funktionsumfang. Historisches B darf deshalb nicht als heutige Vorlagen-Gruppe B ausgewertet werden. Fragebogen V8 und `diana-abc-v1` kennzeichnen die neue Erhebung; V7 und frühere Versionen bleiben getrennt erhalten.
+
+Erfasst werden Quelle, Vorlagentyp, erste und letzte tatsächlich angewendete Auswahl, Auswahlwechsel und Zeitpunkte. Historische fehlende Werte bleiben unbekannt; abgeschlossene Teilnahmen behalten ihren Abschlussstand. Als zusätzliche, noch nicht neu implementierte Messwerte wären Suchdauer, fehlgeschlagene Suchen, erfolgreiche Chatnachrichten und letzter erreichter Schritt sinnvoll. Dafür reichen Zählwerte und Zeitangaben; Gesprächsinhalte sind nicht erforderlich.
 
 ## Vor einer Einreichung
 

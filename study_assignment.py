@@ -1,14 +1,44 @@
-"""Server-assigned A/B experiment, preserving historical B/C allocations."""
+"""Transactional A/B/C allocation, retaining historical experiment conditions."""
 import secrets
 from datetime import datetime, timezone
 
 from privacy import token_hash
 from advisor import AdvisorConfig
 
-EXPERIMENT_ID = 'diana-ab-v2'
+EXPERIMENT_ID = 'diana-abc-v1'
+AB_EXPERIMENT_ID = 'diana-ab-v2'
 LEGACY_EXPERIMENT_ID = 'diana-bc-v1'
 LEGACY_TO_CURRENT_ARM = {'B': 'A', 'C': 'B'}
 CURRENT_TO_LEGACY_ARM = {current: legacy for legacy, current in LEGACY_TO_CURRENT_ARM.items()}
+
+
+def personality_policy(experiment_id, arm):
+    if arm == 'A':
+        return 'generic'
+    # Historical B participants had the full editor. Never silently change the
+    # treatment associated with an existing assignment.
+    return 'templates' if experiment_id == EXPERIMENT_ID and arm == 'B' else 'configurable'
+
+
+class PersonalityPolicyError(ValueError):
+    pass
+
+
+def advisor_for_policy(requested, policy):
+    if policy == 'generic':
+        return dict(NEUTRAL_ADVISOR)
+    if policy == 'templates':
+        from persona_mlds import load_templates
+        templates = load_templates()
+        if requested == AdvisorConfig().model_dump() or (requested.get('mode', 'preset') == 'preset' and requested.get('preset') == 'neutral'):
+            return dict(templates['career']['advisor'])
+        for template in templates.values():
+            if requested == template['advisor']:
+                return dict(template['advisor'])
+        raise PersonalityPolicyError('In dieser Variante kannst du Top-Berufsberater oder Fachexperte auswählen. Die Vorlagen sind nicht bearbeitbar.')
+    if requested.get('mode', 'preset') == 'preset' and requested.get('preset') == 'neutral':
+        return AdvisorConfig().model_dump()
+    return requested
 NEUTRAL_ADVISOR = dict(mode='preset', preset='neutral', name='DIANA', traits=[], focus='ausgewogen', description='')
 
 
@@ -46,7 +76,11 @@ class StudyAssignments:
         if row['experiment_id'] == LEGACY_EXPERIMENT_ID:
             arm = LEGACY_TO_CURRENT_ARM[arm]
         return dict(experiment_id=row['experiment_id'], arm=arm, assigned_at=row['assigned_at'],
-                    prior_exposure=bool(row['prior_exposure']))
+                    prior_exposure=bool(row['prior_exposure']),
+                    personality_policy=personality_policy(row['experiment_id'], arm),
+                    questionnaire_arm=row['arm'] if row['experiment_id'] == LEGACY_EXPERIMENT_ID else arm,
+                    questionnaire_version=('diana-v8' if row['experiment_id'] == EXPERIMENT_ID else
+                                           'diana-v6' if row['experiment_id'] == LEGACY_EXPERIMENT_ID else 'diana-v7'))
 
     def get(self, token):
         if not token:
@@ -64,24 +98,22 @@ class StudyAssignments:
                 return self.public(old)
             prior = bool(db.execute("SELECT 1 FROM privacy_links WHERE token_hash=? AND kind='chat' LIMIT 1", (digest,)).fetchone())
             db.execute('INSERT INTO study_assignments VALUES (?, ?, ?, ?, ?)',
-                       (digest, EXPERIMENT_ID, secrets.choice(('A', 'B')), datetime.now(timezone.utc).isoformat(), int(prior)))
+                       (digest, EXPERIMENT_ID, secrets.choice(('A', 'B', 'C')), datetime.now(timezone.utc).isoformat(), int(prior)))
             return self.public(db.execute('SELECT * FROM study_assignments WHERE token_hash=?', (digest,)).fetchone())
 
     def advisor(self, token, requested):
         assigned = self.get(token)
-        if assigned and assigned['arm'] == 'A':
-            return dict(NEUTRAL_ADVISOR)
-        if (assigned and assigned['arm'] == 'B'
-                and requested.get('mode', 'preset') == 'preset'
-                and requested.get('preset') == 'neutral'):
-            # A stale or modified client must never turn a B participant into A.
-            return AdvisorConfig().model_dump()
-        return requested
+        return advisor_for_policy(requested, assigned['personality_policy']) if assigned else requested
 
     def validate_answers(self, token, version, answers):
-        if version not in ('diana-v6', 'diana-v7'):
-            return
         assigned = self.get(token)
+        if assigned:
+            allowed = ({'diana-v8'} if assigned['experiment_id'] == EXPERIMENT_ID else
+                       {'diana-v6', 'diana-v7'} if assigned['experiment_id'] == LEGACY_EXPERIMENT_ID else {'diana-v7'})
+            if version not in allowed:
+                raise ValueError('Der Fragebogen passt nicht zu deiner Studienzuordnung. Bitte lade die Umfrage neu.')
+        elif version not in ('diana-v6', 'diana-v7', 'diana-v8'):
+            return
         expected_arm = assigned['arm'] if assigned else None
         if version == 'diana-v6':
             expected_arm = CURRENT_TO_LEGACY_ARM.get(expected_arm)

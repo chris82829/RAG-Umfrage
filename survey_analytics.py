@@ -3,11 +3,11 @@ from collections import Counter
 from copy import deepcopy
 from statistics import mean, median
 
-from survey_store import (SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
+from survey_store import (SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
                           V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, answer_status,
                           QUESTIONS, ADDED_VALUE_LABELS, PREFERENCE_LABELS)
 
-DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
+DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
                V5_SURVEY_DEFINITION, V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION)}
 DEFINITIONS['diana-v2'] = deepcopy(LEGACY_SURVEY_DEFINITION)
 for category in [DEFINITIONS['diana-v2']['demographics'], *DEFINITIONS['diana-v2']['categories']]:

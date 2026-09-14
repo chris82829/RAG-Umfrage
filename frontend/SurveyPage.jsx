@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCheck, Compass, LoaderCircle, MessageCircle, X } from 'lucide-react';
-import { applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, stageGroup, submitSurvey, surveyCategories, surveyErrors, surveyScale, surveyStages, suggestSearchGoal, waitingQuestionGroups } from './survey.js';
+import { surveyConfiguration, applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, submitSurvey, surveyErrors, surveyScale, suggestSearchGoal } from './survey.js';
 import './survey.css';
 import SearchLoadingDialog from './SearchLoadingDialog.jsx';
 import {createSurveyAutosave} from './survey-autosave.js';
@@ -52,8 +52,8 @@ export function SurveyQuestion({ field, value, onChange, busy, error, suggestion
   </fieldset>;
 }
 
-export function SurveyForm({ group = demographics, answers = emptyAnswers(), onChange, onSubmit, onBack, saveStatus, onRetry, busy = false, errors = {}, error = '', formRef, headingRef, searchSuggestion }) {
-  const categories=surveyCategories.filter(category=>visibleFields(category.fields,answers).length);
+export function SurveyForm({ version, group = demographics, answers = emptyAnswers(), onChange, onSubmit, onBack, saveStatus, onRetry, busy = false, errors = {}, error = '', formRef, headingRef, searchSuggestion }) {
+  const categories=surveyConfiguration(version).surveyCategories.filter(category=>visibleFields(category.fields,answers).length);
   const categoryIndex = categories.findIndex(category => category.id === group.id);
   const last = categoryIndex === categories.length - 1;
   return <form className="survey-form" ref={formRef} onSubmit={onSubmit} noValidate>
@@ -100,7 +100,7 @@ export function SurveyWaitingDialog({ open, searching, completed, state, suggest
     if(nextGroup){setGroup(nextGroup);requestAnimationFrame(()=>title.current?.focus());}
   }
   if(!group)return null;
-  const last=group.id===waitingQuestionGroups.at(-1).id;
+  const last=group.id===surveyConfiguration(state).waitingQuestionGroups.at(-1).id;
   return <dialog ref={dialog} className="survey-waiting-dialog" aria-labelledby="waiting-survey-title" onCancel={event => { event.preventDefault(); onClose(); }}>
     <div className="survey-waiting-status"><span role="status">{searching ? 'System steht im Hintergrund.' : completed ? 'Deine Ergebnisse sind bereit.' : 'Die Berechnung ist beendet.'}</span><button className="survey-dialog-close" type="button" aria-label="Fragenfenster schließen" onClick={onClose}><X size={22}/></button></div>
     <form onSubmit={next} noValidate><div className="survey-waiting-body"><h2 id="waiting-survey-title" ref={title} tabIndex={-1}>{group.title}</h2><p className="survey-waiting-intro">Beantworte diese Fragen während der Wartezeit. Bereits beantwortete Fragen überspringen wir später.</p>
@@ -120,7 +120,7 @@ export function ChatRequiredDialog({ onClose }) {
   return <dialog ref={dialog} className="survey-chat-required" aria-labelledby="survey-chat-required-title" aria-describedby="survey-chat-required-description" onCancel={event => { event.preventDefault(); onClose(); }}>
     <MessageCircle size={32} aria-hidden="true" />
     <h2 id="survey-chat-required-title" ref={heading} tabIndex={-1}>Probiere zuerst den Chat aus</h2>
-    <p id="survey-chat-required-description">Sende mindestens eine eigene Nachricht an deine KI-Suchpersönlichkeit, bevor du mit der Umfrage fortfährst. Du kannst eine Empfehlung besprechen oder deine Suchwünsche verfeinern.</p>
+    <p id="survey-chat-required-description">Sende mindestens eine eigene Nachricht an den Chatbot, bevor du mit der Umfrage fortfährst. Du kannst eine Empfehlung besprechen oder deine Suchwünsche verfeinern.</p>
     <button className="survey-primary diana-action-motion" type="button" onClick={onClose}>Zum Chat<ArrowRight className="diana-action-arrow" size={18} /></button>
   </dialog>;
 }
@@ -151,6 +151,7 @@ export default function SurveyPage({ initial, participationId }) {
   const heading = useRef(null);
   const frame = useRef(null);
   const systemActive = state.stage === 'system' && !state.submitted;
+  const {demographics,surveyCategories,surveyStages,waitingQuestionGroups}=surveyConfiguration(state);
   const group = displaySurveyGroup(state);
   const waitingAvailable=remainingWaitingGroups(state).length>0;
   useEffect(() => {
@@ -224,7 +225,7 @@ export default function SurveyPage({ initial, participationId }) {
 
   function change(name, value, waiting=false) {
     setState(previous => {
-      let next=reviseSurvey(previous,{...(name==='search_goal'?{searchGoalEdited:true}:{}),answers:changeSurveyAnswer(previous.answers,name,value)});
+      let next=reviseSurvey(previous,{...(name==='search_goal'?{searchGoalEdited:true}:{}),answers:changeSurveyAnswer(previous.answers,name,value,previous.version)});
       const field=waitingQuestionGroups.flatMap(group=>group.fields).find(field=>field.name===name);
       if(waiting && field && field.kind!=='text')next=finishWaitingIfReady(markWaitingFields(next,[field]));
       return next;
@@ -304,8 +305,8 @@ export default function SurveyPage({ initial, participationId }) {
     <div className="survey-questionnaire" hidden={systemActive}>
       <header className="survey-header"><a href="/" className="survey-brand" aria-label="Über DIANA und Christoph Scharnagl"><span><Compass size={23} strokeWidth={1.7} /></span><strong>DIANA<small>Umfrage</small></strong></a><span className="survey-header-label">{state.submitted ? 'Abgeschlossen' : 'Deine Erfahrung mit dem Suchsystem'}</span></header>
       <main className="survey-main">
-        {state.submitted ? <div className="survey-thanks"><span className="survey-thanks-icon"><CheckCheck size={32} /></span><h1 ref={heading} tabIndex={-1}>Danke für deine Teilnahme!</h1><p>Deine Antworten wurden gespeichert. Du hilfst uns damit, das Suchen mit einer KI-Suchpersönlichkeit weiterzuentwickeln.</p><ParticipationId value={participationId}/><a className="survey-back" href="/"><ArrowLeft size={17} />Zur Vorstellung</a></div>
-          : group && <SurveyForm group={group} answers={state.answers} onChange={change} onSubmit={send} onBack={back} busy={busy} errors={errors} error={error} formRef={form} headingRef={heading} searchSuggestion={state.searchGoalSuggestion} saveStatus={saveStatus} onRetry={retrySave} />}
+        {state.submitted ? <div className="survey-thanks"><span className="survey-thanks-icon"><CheckCheck size={32} /></span><h1 ref={heading} tabIndex={-1}>Danke für deine Teilnahme!</h1><p>Deine Antworten wurden gespeichert. Du hilfst uns damit, die KI-gestützte Jobsuche weiterzuentwickeln.</p><ParticipationId value={participationId}/><a className="survey-back" href="/"><ArrowLeft size={17} />Zur Vorstellung</a></div>
+          : group && <SurveyForm version={state.version} group={group} answers={state.answers} onChange={change} onSubmit={send} onBack={back} busy={busy} errors={errors} error={error} formRef={form} headingRef={heading} searchSuggestion={state.searchGoalSuggestion} saveStatus={saveStatus} onRetry={retrySave} />}
       </main>
     </div>
     {chatRequired && systemActive && <ChatRequiredDialog onClose={openChat} />}

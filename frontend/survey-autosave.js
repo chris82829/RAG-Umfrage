@@ -1,8 +1,9 @@
 import {consentHeaders} from './privacy.js';
-import {fieldVisible, surveyFields, SURVEY_VERSION} from './survey.js';
+import {fieldVisible, surveyConfiguration} from './survey.js';
 
 export function draftPayload(state) {
-  return {submission_id:state.submissionId, version:SURVEY_VERSION, revision:state.draftRevision,
+  const {surveyFields}=surveyConfiguration(state);
+  return {submission_id:state.submissionId, version:state.version, revision:state.draftRevision,
     waiting_answered:state.waitingAnswered || [],
     answers:Object.fromEntries(surveyFields.map(field=>{
       const value=state.answers[field.name];

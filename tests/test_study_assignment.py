@@ -8,7 +8,10 @@ from werkzeug.security import generate_password_hash
 from app import create_app
 from advisor import resolve_advisor
 from llm_service import _advisor_instructions
-from survey_store import SURVEY_FIELDS, SurveySubmissionV7, field_visible
+from survey_store import V7_SURVEY_FIELDS, SurveySubmissionV7, field_visible
+from study_assignment import AB_EXPERIMENT_ID, EXPERIMENT_ID
+from privacy import token_hash
+SURVEY_FIELDS = V7_SURVEY_FIELDS
 from test_app import FakeLLM, FakeRetriever, payload
 from test_privacy import grant
 from test_admin import login
@@ -28,17 +31,22 @@ def answers(arm):
         if not field_visible(f,result):result[f['name']]=None
     return result
 
-def assign(app,monkeypatch,arm,token='a'*64):
+def assign(app,monkeypatch,arm,token='a'*64,experiment_id=AB_EXPERIMENT_ID):
+    # These regression scenarios describe the historical editable A/B study.
     client=app.test_client();headers,_=grant(client,token)
     monkeypatch.setattr('study_assignment.secrets.choice',lambda values:arm)
     result=client.post('/api/study-assignment',headers=headers)
     assert result.status_code==200
+    if experiment_id != EXPERIMENT_ID:
+        with app.extensions['survey_store'].connect() as db:
+            db.execute('UPDATE study_assignments SET experiment_id=? WHERE token_hash=?', (experiment_id, token_hash(token)))
+        result=client.post('/api/study-assignment',headers=headers)
     return client,headers,result.json
 
 def test_assignment_requires_consent_and_is_stable_under_concurrent_requests(experiment,monkeypatch):
     app,_=experiment;client=app.test_client()
     assert client.post('/api/study-assignment').status_code==428
-    client,headers,assigned=assign(app,monkeypatch,'B')
+    client,headers,assigned=assign(app,monkeypatch,'B',experiment_id=EXPERIMENT_ID)
     assert assigned['prior_exposure'] is False
     monkeypatch.setattr('study_assignment.secrets.choice',lambda _:pytest.fail('An existing participant must not be rerandomized'))
     with ThreadPoolExecutor(max_workers=6) as pool:

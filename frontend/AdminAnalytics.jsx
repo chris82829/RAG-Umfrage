@@ -1,5 +1,9 @@
 import React,{useState} from 'react';
 
+export function armLabel(arm, version) {
+ return arm === 'A' ? 'A · Basisvariante' : version === 'diana-v8' ? ({B:'B · Vorlagenauswahl', C:'C · Selbst gestaltbar'}[arm] || arm) : arm === 'B' ? 'B · Selbst gestaltbar (historisch)' : arm;
+}
+
 const format=value=>value==null?'–':new Intl.NumberFormat('de-DE',{maximumFractionDigits:2}).format(value);
 const statusLabels={not_used:'Nicht genutzt',not_assessable:'Nicht beurteilbar',not_specified:'Keine Angabe',skipped:'Nicht gestellt',no_answer:'Leer',unanswered:'Noch offen',invalid:'Ungültiger Wert'};
 
@@ -34,7 +38,9 @@ export default function AdminAnalytics({data,loading,error,onSelect}){
  <div className="analysis-summary"><div><strong>{data.total}</strong><span>Gespeicherte Teilnahmen</span></div><div><strong>{data.completed}</strong><span>Abgeschlossen</span></div><div><strong>{data.in_progress}</strong><span>Unvollständig</span></div></div>
  <p className="admin-small">Deskriptive Auswertung, kein Signifikanztest und kein Gesamtscore. Fragebogenversionen und Experimentkennungen werden getrennt dargestellt. Starts ohne gespeicherte Antworten sind hier nicht enthalten.</p>
  {data.message && <p>{data.message}</p>}
- {data.cohorts.map(cohort=><section className="analysis-cohort" key={cohort.experiment_id+JSON.stringify(cohort.presentation_versions)}><h3>{data.version} · {cohort.experiment_id||'Ohne dokumentierte Experimentkennung'}</h3><p className="admin-small">Darstellungsstand: {(cohort.presentation_versions||[]).map(value=>value==='undocumented'?'Älterer / nicht dokumentierter Stand':value==='random-order-generic-chat-v2'?'A: Zufallsreihenfolge, Ein-Satz-Prompt':value==='random-order-generic-chat-v1'?'A: Zufallsreihenfolge und allgemeiner Chat':value).join(' + ')}{cohort.presentation_versions?.length>1?' · Mehrere Stände genutzt; gesondert auswerten.':''}</p><p className="analysis-legend">{Object.entries(cohort.arms).map(([arm,count])=><span key={arm} className={'arm-'+arm}><i/> {arm==='A'?'A · Neutral':'B · Personalisiert'}: {count}</span>)}</p>
+ {data.cohorts.map(cohort=><section className="analysis-cohort" key={cohort.experiment_id+JSON.stringify(cohort.presentation_versions)}><h3>{data.version} · {cohort.experiment_id||'Ohne dokumentierte Experimentkennung'}</h3><p className="admin-small">Darstellungsstand: {(cohort.presentation_versions||[]).map(value=>value==='undocumented'?'Älterer / nicht dokumentierter Stand':value==='random-order-generic-chat-v2'?'A: Zufallsreihenfolge, Ein-Satz-Prompt':value==='random-order-generic-chat-v1'?'A: Zufallsreihenfolge und allgemeiner Chat':value).join(' + ')}{cohort.presentation_versions?.length>1?' · Mehrere Stände genutzt; gesondert auswerten.':''}</p><p className="analysis-legend">{Object.entries(cohort.arms).map(([arm,count])=><span key={arm} className={'arm-'+arm}><i/> {armLabel(arm, data.version)}: {count}</span>)}</p>
+ {data.version==='diana-v8' && <p className="admin-small">B: unveränderte Vorlagen auswählen. C: dieselben Vorlagen zusätzlich selbst gestalten. Die tatsächlich gewählte Nutzung ist keine weitere zufällig zugeteilte Gruppe.</p>}
+ {data.version==='diana-v7' && <p className="admin-small">Historischer Vergleich: B war selbst gestaltbar und entspricht nicht der neuen Vorlagengruppe B in v8.</p>}
  {data.version==='diana-v6' && <p className="admin-small">Historische Codes: B wird als A angezeigt, C als B. Damals zeigten beide Varianten Scores und Begründungen.</p>}
  {cohort.categories.filter(item=>!selected||item.title===selected).map(item=><section key={item.title}><h3 className="analysis-category-title">{item.title}</h3><div className="analysis-grid">{item.questions.map(question=><QuestionChart key={question.name} question={question} onSelect={onSelect}/>)}</div></section>)}
  </section>)}

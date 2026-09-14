@@ -3,7 +3,9 @@ export function answerFields(definition) {
 }
 
 export function answerVisible(field, answers) {
-  return !field.visibleIf || answers[field.visibleIf.field] === field.visibleIf.equals;
+  const condition = field.visibleIf;
+  if (!condition) return true;
+  return Array.isArray(condition.in) ? condition.in.includes(answers[condition.field]) : answers[condition.field] === condition.equals;
 }
 
 export function updateAnswer(answers, field, value, definition) {

@@ -86,7 +86,7 @@ Beispiele für den Standardexport:
 | --- | --- |
 | `teilnahme_id` | Pseudonyme Teilnahme-ID |
 | `teilnahme_status` | `completed` oder `in_progress` |
-| `studiengruppe` | Einheitliche Gruppe A oder B |
+| `studiengruppe` | A, B oder C; Bedeutung zusammen mit Version und Experiment auswerten |
 | `v7_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
 | `v7_score_nutzen` | Nützlichkeit des Scores für den Überblick |
 | `v7_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
@@ -102,12 +102,22 @@ technischen Namen. Das gilt für CSV und ZIP. Der geschützte serverseitige
 sein historisches Textformat für Auswahlantworten bleibt erhalten. Für numerische
 Numiqo-Auswertungen den Verwaltungsdownload verwenden.
 
-Eine Zeile entspricht einer Teilnahme. Der aktuelle A/B-Vergleich verwendet
-Fragebogen V7 und eigene `v7_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1 und
-Nein=0. Die sieben Persönlichkeitsfragen sowie die beiden Fragen zu Score und
-Begründungen werden nur Variante B gestellt. Bei A bleiben ihre Werte leer und
-der Antwortstatus lautet `skipped`. `v7_studiengruppe_originalcode` bedeutet
-**0=A, 1=B**; die Metadatenspalte `studiengruppe` enthält dagegen direkt A oder B.
+Eine Zeile entspricht einer Teilnahme. Der aktuelle A/B/C-Vergleich verwendet
+Fragebogen V8 und eigene `v8_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1 und
+Nein=0. A ist die Basisvariante; B erlaubt die Auswahl unveränderter Vorlagen;
+C bietet dieselben Vorlagen und zusätzlich die Selbstgestaltung. Gemeinsame
+Persönlichkeits-, Score- und Begründungsfragen werden B und C gestellt. Nur B
+bewertet die Einfachheit der Vorlagenauswahl (`v8_ki_vorlagenauswahl_einfachheit`),
+nur C bewertet die Einrichtung und beantwortet die Selbstauskunft zur Anpassung.
+Nicht gestellte Fragen bleiben leer mit Status `skipped`.
+`v8_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
+`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v1` kennzeichnet
+diesen Vergleich. Die automatisch beobachtete Vorlagen-/Selbstgestaltungsnutzung
+ist keine vierte randomisierte Gruppe und kann von der erlaubten Funktion abweichen:
+Eine Person in C kann ausschließlich eine Vorlage nutzen.
+
+Historische V7-Antworten behalten ihre eigenen Spalten und Codes **0=A, 1=B**.
+B war dort frei gestaltbar und darf nicht als neue Vorlagengruppe B behandelt werden.
 
 Historischer Fragebogen V4 verwendet eigene `v4_`-Spalten:
 Ja=1, Nein=0 (nominal); fünf beschriftete Kategorien (ordinal); Nützlichkeit und Chat-Hilfe
@@ -121,7 +131,7 @@ entfällt in den neueren Versionen.
 
 Identische historische V2/V3-Fragen stehen in `v2_v3_`-Spalten, die vier zusätzlichen
 V3-Nützlichkeitsfragen in `v3_`-Spalten und V1-Antworten in `v1_`-Spalten.
-Spätere Versionen bleiben separat in `v4_` bis `v7_`.
+Spätere Versionen bleiben separat in `v4_` bis `v8_`.
 Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
 Das Codebuch enthält den vollständigen Originalwortlaut, Antwortcodes und Originalcodes,
 Skalenenden, fehlende Werte, Filterführung und Bewertungsrichtung. Die Aufwandsfrage ist
@@ -216,7 +226,7 @@ zweite Teilnahme anzulegen. Löschung über dieselbe Teilnahme-ID entfernt auch 
 
 Alle subjektiven Bewertungen verwenden 1–10. Neue Antworten stehen in `v5_`-Spalten, historische V4-Werte unverändert in `v4_`-Spalten. Die Frage nach einer eigenen Chatnachricht entfällt in V5. Filter und Codebuch unterscheiden beide Versionen; Werte verschiedener Skalen nicht ungeprüft zusammenfassen.
 
-## A/B-Gesamtpaketvergleich (V7)
+## Historischer A/B-Gesamtpaketvergleich (V7)
 
 Der aktuelle Vergleich untersucht das gesamte Funktionspaket:
 
@@ -236,7 +246,7 @@ funktionsbezogene Zusatzfragen werden nur B gestellt.
 
 Die Verwaltung zeigt und filtert einheitlich **A** und **B**. CSV/Numiqo-ZIP enthalten
 `studiengruppe`, `experiment_id`, `zugeteilt_am_utc`, `vorherige_systemnutzung` und getrennte
-`v7_`-Antwortspalten. Neue Zuordnungen verwenden `experiment_id=diana-ab-v1`.
+`v7_`-Antwortspalten. Zuordnungen dieses historischen Stands verwendeten `experiment_id=diana-ab-v1`.
 Vorhandene Zuordnungen bleiben erhalten; eine fortgesetzte Teilnahme kann deshalb
 V7-Antworten mit einer älteren Experiment-ID enthalten. `vorherige_systemnutzung` beschreibt
 die Situation vor der ursprünglichen Zuordnung und ist kein vollständiger Nachweis
@@ -263,9 +273,9 @@ und erfasste Systemstände gemeinsam prüfen; Ergebnisse nicht ungeprüft zusamm
 ## Diagramme und Einzelantworten
 
 Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
-bei 1–10-Bewertungen außerdem Mittelwert, Median und gültige Fallzahl. A/B werden
+bei 1–10-Bewertungen außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
 farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
-Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V7/abgeschlossen;
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V8/abgeschlossen;
 ältere Antworten lassen sich mit dem Fragebogenfilter auswählen.
 Fragebogenversionen und Experimentkennungen werden nicht zusammengefasst.
 Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene
@@ -287,7 +297,7 @@ werden nicht automatisch gelöscht.
 
 ## Allgemeiner Chat und zufällige Reihenfolge in A
 
-Seit 11. September 2026 verwenden neue Zuordnungen `diana-ab-v2`. A hat einen
+Vom 11. September 2026 bis zur Einführung von V8 verwendeten neue Zuordnungen `diana-ab-v2`. A hat einen
 allgemeinen Chat ohne fachliche Beratungsrolle und ohne zusätzliche Antwortlängen-
 grenze. Die bis zu 20 Retrieval-Kandidaten werden zufällig angeordnet; derselbe
 Pool bleibt bei Antworten und Neubewertung stabil. `darstellungs_versionen` in

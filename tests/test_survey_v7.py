@@ -10,7 +10,7 @@ from pydantic import ValidationError
 
 from privacy import ConsentInput, token_hash
 from survey_store import (
-    SURVEY_DEFINITION, SURVEY_FIELDS, V6_SURVEY_DEFINITION, VERSIONED_FIELDS,
+    V7_SURVEY_DEFINITION as SURVEY_DEFINITION, V7_SURVEY_FIELDS as SURVEY_FIELDS, V6_SURVEY_DEFINITION, VERSIONED_FIELDS,
     SurveyDraftRequest, SurveyRequest, SurveySubmissionV6, SurveySubmissionV7,
     answer_status, field_visible,
 )
@@ -75,7 +75,7 @@ def seed_record(app, version, arm, identifier):
     token = identifier * 64
     notice = {'ready': True, 'version': 'a' * 64}
     privacy.accept(ConsentInput(token=token, version=notice['version'], accepted=True), notice)
-    experiment = 'diana-bc-v1' if version == 'diana-v6' else 'diana-ab-v1'
+    experiment = 'diana-abc-v1' if version == 'diana-v8' else 'diana-bc-v1' if version == 'diana-v6' else 'diana-ab-v1'
     with store.connect() as db:
         db.execute('INSERT INTO study_assignments VALUES (?, ?, ?, ?, ?)',
                    (token_hash(token), experiment, arm, '2026-09-10T12:00:00+00:00', 0))
@@ -99,7 +99,8 @@ def test_admin_and_exports_use_ab_labels_without_rewriting_legacy_answers(admin_
         listing = client.get('/api/admin/responses?arm=' + arm).json
         assert listing['total'] == 2
         assert {item['id'] for item in listing['items']} == ids
-    assert client.get('/api/admin/responses?arm=C').status_code == 400
+    assert client.get('/api/admin/responses?arm=C').status_code == 200
+    assert client.get('/api/admin/responses?arm=C').json['total'] == 0
     assert client.get('/api/admin/responses?version=diana-v7').json['total'] == 2
     legacy = client.get('/api/admin/responses/' + 'a'*32).json
     assert legacy['study_arm'] == 'A' and legacy['answers']['study_arm'] == 'B'
@@ -125,7 +126,7 @@ def test_admin_and_exports_use_ab_labels_without_rewriting_legacy_answers(admin_
     book = {field['variable']: field for field in json.loads(package.read('codebook.json'))}
     assert book['v6_study_arm']['original_codes'] == {'0': 'B', '1': 'C'}
     assert book['v7_study_arm']['original_codes'] == {'0': 'A', '1': 'B'}
-    assert set(book['study_arm']['codes']) == {'A', 'B'}
+    assert set(book['study_arm']['codes']) == {'A', 'B', 'C'}
     assert 'diana-v6' in book['study_arm']['notes']
     assert book['v7_score_usefulness']['visible_if'] == {'field': 'study_arm', 'equals': 'B'}
     csvbook = next(csv.DictReader(io.StringIO(package.read('codebook.csv').decode('utf-8-sig')), delimiter=';'))

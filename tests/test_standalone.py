@@ -34,7 +34,7 @@ def grant_test(client, arm):
 def test_direct_pages_are_served_and_independent_of_study_release(standalone):
     _, client, _ = standalone
     assert client.get('/api/privacy').json['notice']['ready'] is False
-    for arm in ('A', 'B'):
+    for arm in ('A', 'B', 'C'):
         for suffix in ('', '/', '/datenschutz'):
             assert client.get(f'/test/{arm.lower()}{suffix}').status_code == 200
         headers = grant_test(client, arm)
@@ -45,12 +45,13 @@ def test_direct_pages_are_served_and_independent_of_study_release(standalone):
 
 def test_fixed_arms_isolate_sessions_and_never_create_study_data(standalone):
     app, client, llm = standalone
-    a, b = grant_test(client, 'A'), grant_test(client, 'B')
+    a, b, c = grant_test(client, 'A'), grant_test(client, 'B'), grant_test(client, 'C')
     configured = {'mode':'custom','name':'Meine Beratung','traits':['analytisch'],'focus':'innovation'}
     first = client.post('/api/onboard', headers=a, json={**payload(), 'advisor':configured})
     assert first.status_code == 201
     assert first.json['advisor']['preset'] == 'neutral'
-    second = client.post('/api/onboard', headers=b, json={**payload(), 'advisor':configured})
+    assert client.post('/api/onboard', headers=b, json={**payload(), 'advisor':configured}).status_code == 400
+    second = client.post('/api/onboard', headers=c, json={**payload(), 'advisor':configured})
     assert second.status_code == 201
     assert second.json['advisor']['name'] == 'Meine Beratung'
     assert second.json['advisor_mlds']['personality'] == second.json['advisor']
@@ -65,14 +66,14 @@ def test_fixed_arms_isolate_sessions_and_never_create_study_data(standalone):
     assert answer.status_code == 200 and answer.json['advisor']['preset'] == 'neutral'
     assert len(answer.json['messages']) == 3
     assert answer.json['advisor_mlds']['personality'] == answer.json['advisor']
-    for headers in (a,b):
+    for headers in (a,b,c):
         for method,path in [('post','/api/study-assignment'),('post','/api/survey-responses'),('put','/api/survey-drafts'),('get','/api/survey-drafts/'+'c'*32)]:
             assert getattr(client,method)(path,headers=headers).status_code == 428
         assert client.post('/api/study-assignment',headers={'X-Diana-Consent':headers['X-Diana-Consent']}).status_code == 428
     with sqlite3.connect(app.config['DATABASE_PATH']) as db:
         for table in ('survey_responses','survey_drafts','study_assignments','study_runs','survey_response_metadata'):
             assert db.execute(f'SELECT COUNT(*) FROM {table}').fetchone()[0] == 0
-        assert db.execute('SELECT purpose FROM privacy_consents ORDER BY purpose').fetchall() == [('test_a',),('test_b',)]
+        assert db.execute('SELECT purpose FROM privacy_consents ORDER BY purpose').fetchall() == [('test_a',),('test_b',),('test_c',)]
 
 
 def test_test_consent_cannot_be_reused_across_purposes_and_withdrawal_is_scoped(standalone):

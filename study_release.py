@@ -22,7 +22,7 @@ class StudyReleases:
         files = ['llm_service.py', 'advisor.py', 'retrieval.py', 'schemas.py', 'app.py',
                  'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
-        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json']
+        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'test_access.py']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}
@@ -30,6 +30,9 @@ class StudyReleases:
             try: packages[name] = importlib.metadata.version(name)
             except importlib.metadata.PackageNotFoundError: packages[name] = None
         manifest = dict(format_version=1, openai_model=MODEL, reasoning_effort=REASONING_EFFORT,
+                        experiment_id='diana-abc-v1',
+                        assignment_probabilities={'A':1/3,'B':1/3,'C':1/3},
+                        personality_policies={'A':'generic','B':'templates','C':'configurable'},
                         neutral_presentation='random-order-generic-chat-v2',
                         personality_usage_capture_version=CAPTURE_VERSION,
                         neutral_chat_max_output_tokens=None, neutral_chat_max_characters=None,

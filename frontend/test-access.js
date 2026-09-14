@@ -1,5 +1,5 @@
 export function standaloneArm(path = globalThis.window?.location?.pathname || '') {
-  return /^\/test\/(a|b)(?:\/datenschutz)?\/?$/.exec(path)?.[1]?.toUpperCase() || null;
+  return /^\/test\/(a|b|c)(?:\/datenschutz)?\/?$/.exec(path)?.[1]?.toUpperCase() || null;
 }
 export function consentPurpose(host = globalThis.window) {
   const arm = standaloneArm(host?.location?.pathname);
