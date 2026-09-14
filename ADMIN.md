@@ -47,7 +47,7 @@ wiederhergestellt werden.
 - Bereits heruntergeladene Kopien und Backups müssen separat bearbeitet werden.
 
 Diagramme und Downloads verwenden den explizit gespeicherten Korrekturstand.
-Die CSV dokumentiert `correction_count` und `last_corrected_at_utc`; das
+Die CSV dokumentiert `antwortkorrekturen_anzahl` und `zuletzt_korrigiert_am_utc`; das
 Auswertungspaket enthält bei korrigierten Teilnahmen zusätzlich
 `answer_corrections.json` mit den vollständigen Vorher-/Nachher-Antwortständen.
 Der erste Vorher-Stand bewahrt die ursprünglichen Antworten vor einer
@@ -66,35 +66,93 @@ sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenba
 1. In der Verwaltung **CSV für Numiqo** oder **Auswertungspaket** wählen.
    Beide berücksichtigen den aktuellen ID-, Versions-, Status- und Variantenfilter,
    über alle Seiten hinweg.
-2. Das Paket entpacken und in Numiqo über **Import/Export** die Datei
+2. Unter **Spaltennamen** ist **Deutsch · verständliche Namen** vorausgewählt.
+   **Technisch · bisherige Schlüssel** bleibt für vorhandene Auswertungsskripte verfügbar.
+   Beide Formate enthalten dieselben Werte in derselben Reihenfolge; gespeichert wird
+   weiterhin unter den bisherigen Antwortschlüsseln.
+3. Das Paket entpacken und in Numiqo über **Import/Export** die Datei
    `diana_numiqo.csv` auswählen: UTF-8, Semikolon als Trennzeichen, erste Zeile als
    Variablennamen. Numiqo unterstützt CSV-Dateien laut
    [offiziellem Handbuch](https://numiqo.com/tutorial/user-manual).
-3. Die Variablentypen und Wertelabels anhand von `codebook.csv` oder
-   `codebook.json` einstellen. Das Codebuch wird nicht automatisch in Numiqo geladen.
+4. Variablentypen und Wertelabels anhand von `codebook.csv` oder `codebook.json`
+   einstellen. Das Codebuch wird nicht automatisch in Numiqo geladen.
+   `spaltenzuordnung.csv` verbindet jeden Exportnamen mit technischem Originalschlüssel,
+   vollständiger Frage und Fragebogenversion. `study_manifest.json` dokumentiert
+   zusätzlich die gewählte Spaltenbenennung.
 
-Eine Zeile entspricht einer Teilnahme; `response_status` unterscheidet abgeschlossene
-Antworten und automatisch gespeicherte Entwürfe. Der aktuelle A/B-Vergleich verwendet
+Beispiele für den Standardexport:
+
+| Exportspalte | Bedeutung |
+| --- | --- |
+| `teilnahme_id` | Pseudonyme Teilnahme-ID |
+| `teilnahme_status` | `completed` oder `in_progress` |
+| `studiengruppe` | Einheitliche Gruppe A oder B |
+| `v7_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
+| `v7_score_nutzen` | Nützlichkeit des Scores für den Überblick |
+| `v7_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
+| `v7_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
+| `v7_ki_selbst_angepasst_selbstauskunft` | Antwort des Teilnehmers auf die Anpassungsfrage |
+| `ki_letzte_verwendung` | Automatisch erfasste Herkunft der angewendeten Persönlichkeit |
+
+Spaltennamen sind eindeutig, klein geschrieben und verwenden ausschließlich
+ASCII-Buchstaben, Ziffern und Unterstriche. Die API verwendet standardmäßig
+`/api/admin/export?columns=readable`; `columns=technical` erhält die bisherigen
+technischen Namen. Das gilt für CSV und ZIP. Der geschützte serverseitige
+`survey-export`-Befehl verwendet ebenfalls die verständlichen Spaltennamen;
+sein historisches Textformat für Auswahlantworten bleibt erhalten. Für numerische
+Numiqo-Auswertungen den Verwaltungsdownload verwenden.
+
+Eine Zeile entspricht einer Teilnahme. Der aktuelle A/B-Vergleich verwendet
 Fragebogen V7 und eigene `v7_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1 und
 Nein=0. Die sieben Persönlichkeitsfragen sowie die beiden Fragen zu Score und
 Begründungen werden nur Variante B gestellt. Bei A bleiben ihre Werte leer und
-der Antwortstatus lautet `skipped`.
+der Antwortstatus lautet `skipped`. `v7_studiengruppe_originalcode` bedeutet
+**0=A, 1=B**; die Metadatenspalte `studiengruppe` enthält dagegen direkt A oder B.
 
 Historischer Fragebogen V4 verwendet eigene `v4_`-Spalten:
 Ja=1, Nein=0 (nominal); fünf beschriftete Kategorien (ordinal); Nützlichkeit und Chat-Hilfe
 1–10 (ordinal). Demografische Auswahlwerte sind im Codebuch codiert; Freitext bleibt Text.
 ID, Modell und Version sind nominal. „Unentschieden“ bei Wiederverwendung ist der gültige
-Wert 3. Fehlende Bewertungen sind leer, nicht 0. Die jeweilige `_status`-Spalte erklärt:
-`answered`, `not_used`, `not_assessable`, `not_specified`, `skipped`, `no_answer`, `not_asked`.
+Wert 3. Fehlende Bewertungen sind leer, nicht 0. Die jeweilige `_antwortstatus`-Spalte
+(im technischen Format `_status`) erklärt `answered`, `not_used`, `not_assessable`,
+`not_specified`, `skipped`, `no_answer`, `not_asked` und `unanswered`.
 In V4 bleiben bei `chat_used=no` die drei Folgefragen leer (`skipped`). Diese Frage
 entfällt in den neueren Versionen.
 
-Historische V2/V3-Antworten bleiben in den bisherigen Spalten, V1 bleibt in `v1_`-Spalten.
+Identische historische V2/V3-Fragen stehen in `v2_v3_`-Spalten, die vier zusätzlichen
+V3-Nützlichkeitsfragen in `v3_`-Spalten und V1-Antworten in `v1_`-Spalten.
+Spätere Versionen bleiben separat in `v4_` bis `v7_`.
 Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
-Versionsfilter, Detailansicht und Codebuch berücksichtigen V1 bis V7; die Detailansicht zeigt
-für alte Antworten weiterhin deren ursprüngliche Frageformulierungen.
+Das Codebuch enthält den vollständigen Originalwortlaut, Antwortcodes und Originalcodes,
+Skalenenden, fehlende Werte, Filterführung und Bewertungsrichtung. Die Aufwandsfrage ist
+explizit als gegenläufig markiert (`reverse_direction=true`); die Zahlen werden **nicht**
+automatisch umgepolt. Daraus entsteht kein ungeprüfter Gesamtwert.
 Formelähnlicher Freitext erhält ein vorangestelltes Apostroph zum Schutz beim
 Öffnen in Tabellenprogrammen; dies bei qualitativer Textauswertung berücksichtigen.
+
+### Automatische Herkunft der KI-Persönlichkeit
+
+Diese Metadaten ergänzen die Selbstauskunft, ohne sie zu überschreiben:
+
+- `ki_erste_verwendung` / `ki_letzte_verwendung`: `template` (unveränderte Vorlage),
+  `custom` (selbst gestaltet oder Vorlage angepasst), `unknown` (unbekannt) oder
+  `not_applicable` (in Variante A nicht anwendbar).
+- `ki_erste_vorlage` / `ki_letzte_vorlage`: `career` (Top-Berufsberater) oder `expert`
+  (Fachexperte), soweit eine unveränderte Vorlage verwendet wurde.
+- `ki_jemals_selbst_gestaltet` / `ki_jemals_vorlage`: 1 = im erfassten Zeitraum
+  beobachtet, 0 = im vollständig erfassten Zeitraum nicht beobachtet. Bei unbekannten
+  Abschnitten bleibt das Feld leer, sofern die Nutzung nicht positiv beobachtet wurde.
+- `ki_auswahlwechsel_anzahl`: Übergänge zwischen Herkunft/Vorlage, einschließlich
+  unbekannt → bekannt. Wiederholte Verwendung derselben Auswahl zählt nicht erneut;
+  einzelne Textbearbeitungen werden nicht gezählt.
+- `ki_nutzung_erfassungsversion`, `ki_erstmals_angewendet_am_utc` und
+  `ki_auswahl_geaendert_am_utc`: Erfassungsschema und beobachteter Zeitraum.
+
+Gezählt werden tatsächlich angewendete Auswahlen nach erfolgreichem Such-/Chatlauf,
+nicht reine Klicks im Editor. Bei abgeschlossenen Umfragen bleibt der Stand bei
+Abgabe erhalten; Entwürfe zeigen den aktuellen erfassten Stand. Vor Einführung der
+Erfassung gibt es keine rückwirkend erfundenen Daten: `unknown`, Erfassungsversion 0
+und leere Zählwerte. Namen, Eigenschaftstexte und Chats werden hier nicht gespeichert.
 
 Es erfolgt kein automatischer Upload an Numiqo. Ein Import im dortigen Konto
 ist eine eigene Datenweitergabe; die Dateien enthalten pseudonyme Einzelantworten
@@ -149,8 +207,8 @@ die noch ausstehende Studienfreigabe in `privacy_settings.json` nicht frei.
 
 Seit diesem Stand werden Entwürfe nach jeder Antwort gespeichert. Die Verwaltung
 zeigt `Unvollständig` und `Abgeschlossen` mit einem Statusfilter, der auch für Downloads
-gilt. `response_status` und `last_saved_at_utc` sind im Export enthalten; bei unvollständigen
-Teilnahmen ist `submitted_at_utc` leer. Noch nicht beantwortete Pflichtfragen erhalten
+gilt. `teilnahme_status` und `zuletzt_gespeichert_am_utc` sind im Export enthalten; bei unvollständigen
+Teilnahmen ist `abgeschlossen_am_utc` leer. Noch nicht beantwortete Pflichtfragen erhalten
 `unanswered` in ihrer Statusspalte. Ein späterer Abschluss ersetzt den Entwurf, ohne eine
 zweite Teilnahme anzulegen. Löschung über dieselbe Teilnahme-ID entfernt auch Entwürfe.
 
@@ -177,10 +235,10 @@ verglichenen Paket. Gemeinsame Ergebnisfragen erlauben den Gruppenvergleich;
 funktionsbezogene Zusatzfragen werden nur B gestellt.
 
 Die Verwaltung zeigt und filtert einheitlich **A** und **B**. CSV/Numiqo-ZIP enthalten
-`study_arm`, `experiment_id`, `assigned_at_utc`, `prior_exposure` und getrennte
+`studiengruppe`, `experiment_id`, `zugeteilt_am_utc`, `vorherige_systemnutzung` und getrennte
 `v7_`-Antwortspalten. Neue Zuordnungen verwenden `experiment_id=diana-ab-v1`.
 Vorhandene Zuordnungen bleiben erhalten; eine fortgesetzte Teilnahme kann deshalb
-V7-Antworten mit einer älteren Experiment-ID enthalten. `prior_exposure` beschreibt
+V7-Antworten mit einer älteren Experiment-ID enthalten. `vorherige_systemnutzung` beschreibt
 die Situation vor der ursprünglichen Zuordnung und ist kein vollständiger Nachweis
 aller früheren Systemnutzungen. Abbrüche stehen unter **Unvollständig**.
 
@@ -191,9 +249,9 @@ unverändert. Damals hatten **beide** Gruppen Scores und Begründungen. Die hist
 Originalcodes **B** (neutral) und **C** (personalisiert) erscheinen in der Verwaltung
 als **A** beziehungsweise **B**; die Speicherung wird dafür nicht umgeschrieben.
 
-Die Metadatenspalte `study_arm` verwendet die einheitliche Anzeige A/B. Die eigene
-Spalte `v6_study_arm` bewahrt die ursprüngliche Codierung numerisch: **0 = originales B**,
-**1 = originales C**. Bei V7 bedeutet `v7_study_arm` dagegen **0 = A**, **1 = B**.
+Die Metadatenspalte `studiengruppe` verwendet die einheitliche Anzeige A/B. Die eigene
+Spalte `v6_studiengruppe_originalcode` bewahrt die ursprüngliche Codierung numerisch: **0 = originales B**,
+**1 = originales C**. Bei V7 bedeutet `v7_studiengruppe_originalcode` dagegen **0 = A**, **1 = B**.
 `original_codes` im Codebuch dokumentiert diese Zuordnung. Die historische
 Experiment-ID bleibt `diana-bc-v1`; historische Antworten erhalten keine nachträglich
 erfundene aktuelle Zuordnung.
@@ -232,7 +290,7 @@ werden nicht automatisch gelöscht.
 Seit 11. September 2026 verwenden neue Zuordnungen `diana-ab-v2`. A hat einen
 allgemeinen Chat ohne fachliche Beratungsrolle und ohne zusätzliche Antwortlängen-
 grenze. Die bis zu 20 Retrieval-Kandidaten werden zufällig angeordnet; derselbe
-Pool bleibt bei Antworten und Neubewertung stabil. `presentation_versions` in
+Pool bleibt bei Antworten und Neubewertung stabil. `darstellungs_versionen` in
 CSV und Diagrammkohorten trennt `random-order-generic-chat-v1` von älteren oder
 undokumentierten Ständen. Mehrere während einer Teilnahme genutzte Stände bleiben
 gesondert erkennbar. Ursprüngliche Gruppenzuordnungen werden nicht verändert.

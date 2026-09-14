@@ -46,7 +46,7 @@ def test_v4_and_v5_exports_keep_distinct_scales_and_codebooks(admin_app):
     assert client.post('/api/survey-responses',json=v5_payload(personality_setup=10)).status_code==201
     login(client)
     assert client.get('/api/admin/responses?version=diana-v5').json['total']==1
-    rows=list(csv.DictReader(io.StringIO(client.get('/api/admin/export').data.decode('utf-8-sig')),delimiter=';'))
+    rows=list(csv.DictReader(io.StringIO(client.get('/api/admin/export?columns=technical').data.decode('utf-8-sig')),delimiter=';'))
     old=next(row for row in rows if row['survey_version']=='diana-v4')
     new=next(row for row in rows if row['survey_version']=='diana-v5')
     assert old['v4_personality_setup']=='4' and old['v5_personality_setup']==''

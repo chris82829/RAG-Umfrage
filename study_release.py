@@ -9,6 +9,7 @@ from pathlib import Path
 
 from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPUT_TOKENS
 from retrieval import MODEL_ID, MODEL_REVISION, CACHE_VERSION, RRF_K, LEG_LIMIT
+from study_usage import CAPTURE_VERSION, usage_snapshot
 
 
 def canonical(value):
@@ -21,7 +22,7 @@ class StudyReleases:
         files = ['llm_service.py', 'advisor.py', 'retrieval.py', 'schemas.py', 'app.py',
                  'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
-        files += ['persona_mlds.py', 'survey_definition_v7.json']
+        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}
@@ -30,6 +31,7 @@ class StudyReleases:
             except importlib.metadata.PackageNotFoundError: packages[name] = None
         manifest = dict(format_version=1, openai_model=MODEL, reasoning_effort=REASONING_EFFORT,
                         neutral_presentation='random-order-generic-chat-v2',
+                        personality_usage_capture_version=CAPTURE_VERSION,
                         neutral_chat_max_output_tokens=None, neutral_chat_max_characters=None,
                         response_store=False, max_output_tokens=MAX_OUTPUT_TOKENS,
                         rerank_output_tokens=RERANK_OUTPUT_TOKENS, embedding_model=MODEL_ID,
@@ -50,12 +52,21 @@ class StudyReleases:
     def mark_run(self, digest, db):
         db.execute('INSERT OR IGNORE INTO study_runs VALUES (?, ?)', (digest, self.release_id))
 
-    def capture_response(self, digest, submission_id, db):
+    def capture_response(self, digest, submission_id, db, *, completed=False):
+        # Never retrofit historical/completed submissions with later behavior.
+        if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='survey_responses'").fetchone():
+            if db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (submission_id,)).fetchone():
+                return
         ids = [row[0] for row in db.execute('SELECT release_id FROM study_runs WHERE token_hash=? ORDER BY release_id',(digest,))]
         previous = db.execute('SELECT metadata_json FROM survey_response_metadata WHERE submission_id=?', (submission_id,)).fetchone()
+        metadata = json.loads(previous[0]) if previous else {}
+        if metadata.get('personality_usage_frozen'):
+            return
         if previous:
-            ids = sorted(set(ids) | set(json.loads(previous[0]).get('release_ids', [])))
-        db.execute('INSERT INTO survey_response_metadata VALUES (?, ?) ON CONFLICT(submission_id) DO UPDATE SET metadata_json=excluded.metadata_json', (submission_id, canonical({'release_ids':ids})))
+            ids = sorted(set(ids) | set(metadata.get('release_ids', [])))
+        metadata.update(release_ids=ids, personality_usage=usage_snapshot(digest, db),
+                        personality_usage_frozen=bool(completed))
+        db.execute('INSERT INTO survey_response_metadata VALUES (?, ?) ON CONFLICT(submission_id) DO UPDATE SET metadata_json=excluded.metadata_json', (submission_id, canonical(metadata)))
 
     def all(self):
         with sqlite3.connect(self.path) as db:

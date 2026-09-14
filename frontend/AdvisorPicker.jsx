@@ -2,15 +2,16 @@ import React, { useId, useState } from 'react';
 import { Check, BriefcaseBusiness, GraduationCap, Info, SlidersHorizontal } from 'lucide-react';
 import { ADVISOR_DESCRIPTION_MAX_LENGTH, advisorFromTemplate, advisorTemplates, editableAdvisor, sameAdvisor, traitLabels, focusLabels, focusDescriptions } from './advisor.js';
 import './advisor-picker.css';
+import {templateSelection, selectedTemplate as selectionTemplate} from './advisor-selection.js';
 
-export default function AdvisorPicker({ value, onChange, disabled, headingRef, onExplain, templates = advisorTemplates }) {
+export default function AdvisorPicker({ value, onChange, disabled, headingRef, onExplain, templates = advisorTemplates, selection }) {
   const draft = editableAdvisor(value);
   const id = useId();
   const [notice, setNotice] = useState('');
-  const selectedTemplate = Object.keys(templates).find(key => sameAdvisor(draft, advisorFromTemplate(key, templates))) || '';
-  const update = (key, item) => onChange({ ...draft, [key]: item });
+  const selectedTemplate = selectionTemplate(selection, Object.keys(templates).find(key => sameAdvisor(draft, advisorFromTemplate(key, templates))) || '');
+  const update = (key, item) => onChange({ ...draft, [key]: item }, templateSelection(''));
   function useTemplate(key) {
-    onChange(advisorFromTemplate(key, templates));
+    onChange(advisorFromTemplate(key, templates), templateSelection(key));
     setNotice(key ? `${templates[key].name} ausgewählt.` : 'Du kannst deine KI jetzt selbst gestalten.');
   }
   return <section className="advisor-picker advisor-builder" aria-label="Deine Suchpersönlichkeit">

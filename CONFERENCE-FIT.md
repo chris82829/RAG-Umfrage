@@ -14,6 +14,14 @@ Der Effekt der Persönlichkeit allein ist damit nicht identifizierbar. Um diesen
 
 Die bewusst zufällige Reihenfolge in A ist als Baseline begründungsbedürftig: Ein Vorteil von B kann bereits aus der Sortierung entstehen. Eine übliche relevanzsortierte Vergleichssuche wäre überzeugender. Diese Bewertung ändert das bestehende Experiment nicht automatisch.
 
+## Vorlage oder eigene Konfiguration ist keine dritte randomisierte Gruppe
+
+Die automatische Erfassung der tatsächlichen Persönlichkeitsauswahl ergänzt eine Nutzungsvariable. Die zufällige Zuteilung bleibt A/B. Innerhalb B wählen Teilnehmende selbst zwischen Top-Berufsberater, Fachexperte und eigener Konfiguration; auch unveränderte Vorlagen enthalten bereits eine Persönlichkeit. Diese selbst gewählten Untergruppen können sich etwa in Motivation, Erfahrung oder verfügbarem Zeitbudget unterscheiden. Unterschiede in ihren Antworten sind deshalb explorativ zu interpretieren und kein kausaler Nachweis für freie Konfiguration. Wechsel werden erfasst; die Einordnung sollte vor der Analyse definiert werden, etwa anhand der ersten tatsächlich verwendeten Auswahl, ergänzt um eine Wechselanalyse.
+
+Für die Frage nach dem Mehrwert freier Konfiguration genügt ein neuer, sauber abgegrenzter Vergleich mit zufälliger Zuteilung zu einer festgelegten Beratungsvorlage oder zur konfigurierbaren Beratung. In beiden Bedingungen müssten Modell, Daten, Score-/Begründungsanzeige, Ergebnisfilter und Rankingverfahren gleich sein; die durch die konfigurierte Persönlichkeit beabsichtigte Änderung der Gewichtung ist dann Teil der Intervention. Wer nur den Sprachstil prüfen will, muss auch die resultierende Stellenreihenfolge gleich halten. Ein zusätzliches C im bisherigen Vergleich löst die übrigen Unterschiede zwischen A und B nicht automatisch. Änderungen am Experiment sollten als neue Version vor der Haupterhebung festgelegt werden.
+
+Die neue Erfassung protokolliert Quelle, Vorlagentyp, erste und letzte tatsächlich angewendete Auswahl, Auswahlwechsel und deren Zeitpunkte. Historische Werte bleiben unbekannt; abgeschlossene Teilnahmen behalten ihren Abschlussstand. Als zusätzliche, noch nicht neu implementierte Messwerte wären Suchdauer, fehlgeschlagene Suchen, erfolgreiche Chatnachrichten und letzter erreichter Schritt sinnvoll. Dafür reichen Zählwerte und Zeitangaben; Gesprächsinhalte sind nicht erforderlich.
+
 ## Vor einer Einreichung
 
 - Einen primären Endpunkt und Hypothesen, Ausschlussregeln, Stichprobenplanung und Auswertungsplan vor der Haupterhebung festlegen. Pilot- und nachträglich veränderte Systemstände getrennt behandeln.

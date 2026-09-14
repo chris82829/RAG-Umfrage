@@ -88,7 +88,7 @@ def test_admin_lists_exports_filters_and_deletes_partial_answers(admin_app):
     assert client.get('/api/admin/responses?status=in_progress').json['total']==1
     assert client.get('/api/admin/responses?status=completed').json['total']==1
     assert client.get('/api/admin/responses?status=invalid').status_code==400
-    response=client.get('/api/admin/export?status=in_progress')
+    response=client.get('/api/admin/export?columns=technical&status=in_progress')
     row=next(csv.DictReader(io.StringIO(response.data.decode('utf-8-sig')),delimiter=';'))
     assert row['response_status']=='in_progress' and row['submitted_at_utc']=='' and row['last_saved_at_utc']
     assert row['v4_age_group']=='3' and row['v4_gender']==''

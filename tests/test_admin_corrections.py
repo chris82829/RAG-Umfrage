@@ -65,15 +65,15 @@ def test_saved_correction_is_audited_and_used_in_charts_and_all_exports(admin_ap
         assert original_metadata == {table: [tuple(item) for item in db.execute('SELECT * FROM ' + table)] for table in original_metadata}
     charts = client.get('/api/admin/analytics?version=diana-v7').json
     assert question(charts, 'system_usefulness')['overall']['mean'] == 4
-    exported = next(csv.DictReader(io.StringIO(client.get('/api/admin/export').data.decode('utf-8-sig')), delimiter=';'))
+    exported = next(csv.DictReader(io.StringIO(client.get('/api/admin/export?columns=technical').data.decode('utf-8-sig')), delimiter=';'))
     assert exported['v7_system_usefulness'] == '4' and exported['correction_count'] == '1'
     cli_csv = io.StringIO(); store.export_csv(cli_csv)
     assert 'Korrigiertes Suchvorhaben' in cli_csv.getvalue()
-    archive = zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?format=zip').data))
+    archive = zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?columns=technical&format=zip').data))
     history = json.loads(archive.read('answer_corrections.json'))
     assert history[0]['corrections'][0]['before']['system_usefulness'] == 8
     assert history[0]['participation_id'] == before['participation_id']
-    assert 'answer_corrections.json' not in zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?format=zip&q=UNKNOWN').data)).namelist()
+    assert 'answer_corrections.json' not in zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?columns=technical&format=zip&q=UNKNOWN').data)).namelist()
 
 
 @pytest.mark.parametrize('changes', [

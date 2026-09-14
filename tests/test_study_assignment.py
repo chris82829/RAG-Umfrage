@@ -114,7 +114,7 @@ def test_draft_submission_exports_and_group_filter_use_server_assignment(experim
     login(client)
     assert client.get('/api/admin/responses?arm='+arm).json['total']==1
     assert client.get('/api/admin/responses?arm='+wrong).json['total']==0
-    row=next(csv.DictReader(io.StringIO(client.get('/api/admin/export?arm='+arm).data.decode('utf-8-sig')),delimiter=';'))
+    row=next(csv.DictReader(io.StringIO(client.get('/api/admin/export?columns=technical&arm='+arm).data.decode('utf-8-sig')),delimiter=';'))
     assert row['study_arm']==arm and row['experiment_id']==assignment['experiment_id']
     assert row['v7_system_usefulness']=='8' and row['prior_exposure']=='0'
     assert row['v7_personality_setup_status']==('skipped' if arm=='A' else 'answered')

@@ -110,7 +110,7 @@ def test_admin_and_exports_use_ab_labels_without_rewriting_legacy_answers(admin_
     assert V6_SURVEY_DEFINITION == archive_before
 
     rows = {row['participation_id']: row for row in csv.DictReader(
-        io.StringIO(client.get('/api/admin/export').data.decode('utf-8-sig')), delimiter=';')}
+        io.StringIO(client.get('/api/admin/export?columns=technical').data.decode('utf-8-sig')), delimiter=';')}
     by_case = {(row['survey_version'], row['study_arm']): row for row in rows.values()}
     assert len(by_case) == 4
     for (version, arm), row in by_case.items():
@@ -121,7 +121,7 @@ def test_admin_and_exports_use_ab_labels_without_rewriting_legacy_answers(admin_
         assert row[prefix + 'personality_setup_status'] == ('skipped' if arm == 'A' else 'answered')
         assert row['experiment_id'] == ('diana-bc-v1' if version == 'diana-v6' else 'diana-ab-v1')
         assert None not in row
-    package = zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?format=zip').data))
+    package = zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?columns=technical&format=zip').data))
     book = {field['variable']: field for field in json.loads(package.read('codebook.json'))}
     assert book['v6_study_arm']['original_codes'] == {'0': 'B', '1': 'C'}
     assert book['v7_study_arm']['original_codes'] == {'0': 'A', '1': 'B'}

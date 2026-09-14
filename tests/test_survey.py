@@ -155,7 +155,7 @@ def test_server_cli_exports_labels_unicode_newlines_and_no_overwrite(survey_app,
     assert rows[1][3:8] == ['21–24 Jahre', 'Keine Angabe', 'Masterstudium', 'Informatik', payload()['search_goal']]
     assert rows[1][8:21] == ['8'] * 13
     assert rows[1][21:25] == [''] * 4
-    assert '(1–10)' in rows[0][8]
+    assert rows[0][8] == 'v2_v3_ki_wirkung_verstaendnis'
     assert runner.invoke(args=['survey-export', '--output', str(output)]).exit_code != 0
     assert output.read_bytes() == raw
 
@@ -169,7 +169,7 @@ def test_old_forms_remain_submittable_and_export_separately_without_rescaling(su
     stream = io.StringIO()
     survey_app.extensions['survey_store'].export_csv(stream)
     rows = list(csv.reader(io.StringIO(stream.getvalue()), delimiter=';'))
-    assert all(header.startswith('V1: ') for header in rows[0][21:25])
+    assert all(header.startswith('v1_') for header in rows[0][21:25])
     assert rows[1][2] == 'diana-v1' and rows[1][3:21] == [''] * 18
     assert rows[1][21:25] == ['4', 'Etwas Mehrwert', 'Eher ja', 'Gute Bedienung.']
     assert rows[2][2] == 'diana-v3' and rows[2][8:21] == ['8'] * 13

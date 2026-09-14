@@ -25,7 +25,7 @@ def login(client):
     return {'X-CSRF-Token':response.json['csrf']}
 
 
-@pytest.mark.parametrize('path',['/api/admin/responses','/api/admin/responses/'+ 'a'*32,'/api/admin/export?format=csv','/api/admin/export?format=zip'])
+@pytest.mark.parametrize('path',['/api/admin/responses','/api/admin/responses/'+ 'a'*32,'/api/admin/export?columns=technical&format=csv','/api/admin/export?columns=technical&format=zip'])
 def test_answers_and_exports_are_never_public(admin_app,path):
     admin_app.extensions['survey_store'].save(SurveySubmission(**payload()))
     response=admin_app.test_client().get(path)
@@ -82,7 +82,7 @@ def test_numiqo_export_is_rectangular_numeric_and_keeps_legacy_scale_separate(ad
     store=admin_app.extensions['survey_store'];store.save(SurveySubmission(**payload(search_goal='Python; SQL\n"Data"',study_field='=1+1')))
     store.save(LegacySurveySubmission(**legacy_payload()))
     client=admin_app.test_client();login(client)
-    response=client.get('/api/admin/export?format=csv')
+    response=client.get('/api/admin/export?columns=technical&format=csv')
     assert response.status_code==200 and response.data.startswith(b'\xef\xbb\xbf')
     rows=list(csv.DictReader(io.StringIO(response.data.decode('utf-8-sig')),delimiter=';'))
     current=next(row for row in rows if row['survey_version']=='diana-v3')
@@ -93,9 +93,9 @@ def test_numiqo_export_is_rectangular_numeric_and_keeps_legacy_scale_separate(ad
     assert current['search_goal']=='Python; SQL\n"Data"' and current['study_field']=="'=1+1"
     assert current['openai_models']=='' and current['study_release_ids']==''
     assert None not in current
-    assert len(list(csv.DictReader(io.StringIO(client.get('/api/admin/export?version=diana-v3').data.decode('utf-8-sig')),delimiter=';')))==1
-    package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?format=zip').data))
-    assert set(package.namelist())=={'diana_numiqo.csv','codebook.csv','codebook.json','study_manifest.json','README.txt'}
+    assert len(list(csv.DictReader(io.StringIO(client.get('/api/admin/export?columns=technical&version=diana-v3').data.decode('utf-8-sig')),delimiter=';')))==1
+    package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?columns=technical&format=zip').data))
+    assert set(package.namelist())=={'diana_numiqo.csv','codebook.csv','codebook.json','study_manifest.json','spaltenzuordnung.csv','README.txt'}
     book=json.loads(package.read('codebook.json'))
     assert next(item for item in book if item['variable']=='score_usefulness')['endpoints']['low']=='Gar nicht nützlich'
     assert '4' not in next(item for item in book if item['variable']=='gender')['codes']
@@ -107,10 +107,10 @@ def test_numiqo_export_is_rectangular_numeric_and_keeps_legacy_scale_separate(ad
 
 def test_recorded_release_is_preserved_in_export_and_not_backfilled(admin_app):
     store=admin_app.extensions['survey_store'];releases=admin_app.extensions['study_releases']
-    store.save(SurveySubmission(**payload()))
-    with store.connect() as db:
+    def capture(db, record_id):
         releases.mark_run(token_hash('a'*64),db)
-        releases.capture_response(token_hash('a'*64),'a'*32,db)
+        releases.capture_response(token_hash('a'*64),record_id,db,completed=True)
+    store.save(SurveySubmission(**payload()),before_save=capture)
     rows=admin_app.extensions['admin_data'].records()
     assert rows[0]['openai_models']==['gpt-5.4-2026-03-05']
     assert rows[0]['study_release_ids']==[releases.release_id]

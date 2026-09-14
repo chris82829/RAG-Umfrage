@@ -66,7 +66,7 @@ def test_v4_admin_export_codes_missing_and_previous_versions_remain_separate(adm
     detail=client.get('/api/admin/responses/'+'c'*32).json
     assert detail['definition']['version']=='diana-v4'
     assert client.get('/api/admin/responses/'+'a'*32).json['definition']['version']=='diana-v3'
-    package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?format=zip').data))
+    package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?columns=technical&format=zip').data))
     rows=list(csv.DictReader(io.StringIO(package.read('diana_numiqo.csv').decode('utf-8-sig')),delimiter=';'))
     new=next(row for row in rows if row['survey_version']=='diana-v4')
     old=next(row for row in rows if row['survey_version']=='diana-v3')
@@ -93,5 +93,5 @@ def test_v4_readable_export_handles_null_and_nonresponse_without_mislabeling(sur
     survey_app.extensions['survey_store'].save(SurveySubmissionV4(**data))
     stream=io.StringIO();survey_app.extensions['survey_store'].export_csv(stream)
     row=next(csv.DictReader(io.StringIO(stream.getvalue()),delimiter=';'))
-    assert row['V4: score_usefulness Antwortstatus']=='not_used'
-    assert row['V4: '+next(f['title'] for f in SURVEY_FIELDS if f['name']=='feedback')]=="'@TEST"
+    assert row['v4_score_nutzen_antwortstatus']=='not_used'
+    assert row['v4_verbesserungsvorschlaege_freitext']=="'@TEST"

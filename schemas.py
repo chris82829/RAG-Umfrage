@@ -49,20 +49,35 @@ class Profile(APIModel):
         return self
 
 
+class AdvisorSelection(APIModel):
+    source: Literal['template', 'custom']
+    template_id: Literal['career', 'expert'] | None = None
+
+    @model_validator(mode='after')
+    def consistent_source(self):
+        if (self.source == 'template') != (self.template_id is not None):
+            raise ValueError('Vorlage und Auswahlart passen nicht zusammen.')
+        return self
+
+
 class SearchInput(APIModel):
     profile: Profile
     advisor: AdvisorConfig = Field(default_factory=AdvisorConfig)
+    advisor_selection: AdvisorSelection | None = None
 
 
 class ChatInput(APIModel):
     session_id: str = Field(min_length=32, max_length=100, pattern=r'^[A-Za-z0-9_-]+$')
     message: str = Field(default='', max_length=3000)
     advisor: AdvisorConfig | None = None
+    advisor_selection: AdvisorSelection | None = None
     profile: Profile | None = None
     mode: Literal['auto', 'rerank', 'search'] = 'auto'
 
     @model_validator(mode='after')
     def meaningful_turn(self):
+        if self.advisor_selection is not None and self.advisor is None:
+            raise ValueError('Die Persönlichkeitsauswahl benötigt die zugehörige Konfiguration.')
         if not self.message and self.advisor is None and self.profile is None and self.mode == 'auto':
             raise ValueError('Nachricht, Profil, Persönlichkeitskonfiguration oder Aktion erforderlich.')
         if self.message and self.profile is not None:

@@ -298,13 +298,16 @@ class SurveyStore:
                 raise SurveyConflict('Diese Teilnahme wurde bereits mit anderen Antworten gespeichert.')
             return False
 
-    def export_csv(self, stream):
+    def export_csv(self, stream, columns='readable'):
         """Server-side export only. The caller opens the file with UTF-8 BOM."""
         writer = csv.writer(stream, delimiter=';')
-        headers = [field['title'] + (' (1–10)' if field['kind'] == 'scale' else '') for field in LEGACY_SURVEY_FIELDS]
-        v4_headers = [column for version, fields in VERSIONED_FIELDS.items() for field in fields for column in (version[6:].upper()+': '+field['title'], version[6:].upper()+': '+field['name']+' Antwortstatus')]
-        writer.writerow(['Teilnahme-ID', 'Gespeichert (UTC)', 'Fragebogenversion',
-                         *headers, *['V1: ' + question for question in QUESTIONS], *v4_headers])
+        from export_columns import export_headers
+        technical = ['participation_id', 'submitted_at_utc', 'survey_version',
+                     *[field['name'] for field in LEGACY_SURVEY_FIELDS],
+                     *['v1_' + name for name in ('chat_helpfulness','added_value','future_preference','feedback')],
+                     *[column for version, fields in VERSIONED_FIELDS.items() for field in fields
+                       for column in (version[6:]+'_'+field['name'], version[6:]+'_'+field['name']+'_status')]]
+        writer.writerow(export_headers(technical, columns))
         count = 0
         with self.connect() as db:
             participation_ids = {}

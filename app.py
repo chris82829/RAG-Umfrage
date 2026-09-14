@@ -26,6 +26,7 @@ from session_store import SessionConflict, SessionStore, EphemeralSessionStore
 from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
 from persona_mlds import advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
+from study_usage import StudyPersonalityUsage, normalize_selection
 from study_assignment import StudyAssignments
 from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
@@ -210,6 +211,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         store.seed_if_empty(BASE_DIR / 'dummy_jobs.json')
     sessions = (SessionStore if app.config['PERSIST_CHAT_SESSIONS'] else EphemeralSessionStore)(db_path)
     privacy = PrivacyStore(db_path)
+    personality_usage = StudyPersonalityUsage(db_path)
     notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
     releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
     surveys = SurveyStore(db_path)
@@ -225,7 +227,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     performance_logger.setLevel(logging.INFO)
     language_model = llm or OpenAIService(api_key=app.config['OPENAI_API_KEY'],
                                         performance_logger=performance_logger)
-    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine,
+    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine, personality_usage=personality_usage,
                           llm_service=language_model, survey_store=surveys, privacy_store=privacy, study_releases=releases)
 
     @contextmanager
@@ -267,7 +269,13 @@ def create_app(config=None, *, retriever=None, llm=None):
             return personality_templates['career']['advisor'] if requested.get('preset') == 'neutral' and requested.get('mode', 'preset') == 'preset' else requested
         return assignments.advisor(consent_token(), requested)
 
-    def consent_link(kind):
+    def checked_selection(advisor, selection):
+        try:
+            return normalize_selection(advisor, selection), None
+        except ValueError as failure:
+            return None, error_response({'code':'advisor_selection_mismatch','message':str(failure)},400)
+
+    def consent_link(kind, *, selection=None, completed=False):
         if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return None
         token = consent_token()
@@ -280,8 +288,10 @@ def create_app(config=None, *, retriever=None, llm=None):
                 return
             if kind == 'chat':
                 releases.mark_run(digest, db)
+                if selection is not None:
+                    personality_usage.mark_applied(digest, selection, db)
             elif not db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (record_id,)).fetchone():
-                releases.capture_response(digest, record_id, db)
+                releases.capture_response(digest, record_id, db, completed=completed)
         return attach
 
     @app.before_request
@@ -383,7 +393,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error
         try:
             assignments.validate_answers(consent_token(), body.root.version, body.root.model_dump())
-            created = surveys.save(body.root, before_save=consent_link('survey'))
+            created = surveys.save(body.root, before_save=consent_link('survey', completed=True))
         except ValueError as failure:
             return error_response({'code':'assignment_mismatch','message':str(failure)},400)
         except SurveyConflict as error:
@@ -595,7 +605,18 @@ def create_app(config=None, *, retriever=None, llm=None):
         body, error = parse_body(SearchInput)
         if error:
             return error
-        return jsonify(public_state(match(body.profile.model_dump(), advisor=request_advisor(body.advisor.model_dump()))))
+        advisor = request_advisor(body.advisor.model_dump())
+        selection, error = checked_selection(advisor, body.advisor_selection)
+        if error:
+            return error
+        result = {**match(body.profile.model_dump(), advisor=advisor), 'advisor_selection':selection}
+        if app.config['PRIVACY_REQUIRED'] and not test_arm():
+            with surveys.connect() as db:
+                db.execute('BEGIN IMMEDIATE')
+                digest = privacy.require(consent_token(), request_notice(), db)
+                releases.mark_run(digest, db)
+                personality_usage.mark_applied(digest, selection, db)
+        return jsonify(public_state(result))
 
     @app.post('/api/onboard')
     def onboard():
@@ -604,12 +625,15 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error
         assigned = request_assignment()
         search_advisor = request_advisor(body.advisor.model_dump())
+        selection, error = checked_selection(search_advisor, body.advisor_selection)
+        if error:
+            return error
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)
-            state = {**result, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
+            state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
-            session_id = sessions.create(state, before_save=consent_link('chat'))
+            session_id = sessions.create(state, before_save=consent_link('chat', selection=selection))
             return {'session_id': session_id, **public_state(state)}
 
         return operation_response(operation(), status=201)
@@ -651,8 +675,14 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
         previous_advisor = request_advisor(advisor_from_mlds(state.get('advisor_mlds', state.get('advisor', {}))))
         selected_advisor = request_advisor(body.advisor.model_dump() if body.advisor is not None else previous_advisor)
+        previous_selection = normalize_selection(previous_advisor, state.get('advisor_selection'))
+        selected_selection, error = checked_selection(selected_advisor,
+            body.advisor_selection if body.advisor is not None else previous_selection)
+        if error:
+            return error
         def operation():
             advisor = selected_advisor
+            applied_selection = selected_selection
             profile = body.profile.model_dump() if body.profile is not None else state['profile']
             context = {'messages': state['messages'][-12:], 'jobs': public_state({**state, 'advisor': advisor})['jobs'][:20]}
             action = 'answer'
@@ -710,24 +740,28 @@ def create_app(config=None, *, retriever=None, llm=None):
                           'vorab eingeschränkt. Starte einmal „Neue Suche“, damit auch andere '
                           'Stellen berücksichtigt werden. Danach kannst du wieder nur neu bewerten.')
                 profile, advisor = state['profile'], previous_advisor
+                applied_selection = previous_selection
             elif body.mode == 'rerank' and (core_changed or planned_action == 'search'):
                 action = 'answer'
                 answer = ('Dafür ist eine neue Suche nötig, weil sich die Suchkriterien ändern '
                           'oder weitere Stellen benötigt werden. Wähle „Neue Suche“ oder „Automatisch“. '
                           'Dein bisheriges Profil und die Ergebnisse bleiben erhalten.')
                 profile, advisor = state['profile'], previous_advisor
+                applied_selection = previous_selection
             elif action == 'rerank' and '_candidates' not in state:
                 action = 'answer'
                 answer = ('Für diesen älteren Chat wurden nur die angezeigten Empfehlungen gespeichert. '
                           'Wähle einmal „Neue Suche“, um die vollständige Auswahl für späteres '
                           'Nachsortieren zu speichern. Dein Profil und die Ergebnisse bleiben erhalten.')
                 profile, advisor = state['profile'], previous_advisor
+                applied_selection = previous_selection
             elif action == 'rerank' and not state['_candidates']:
                 action = 'answer'
                 answer = ('Deine bisherige Suche hat keine passenden Stellen gefunden. '
                           'Zum Nachsortieren sind deshalb keine Jobs vorhanden. '
                           'Ändere dein Suchprofil oder starte eine neue Suche.')
                 profile, advisor = state['profile'], previous_advisor
+                applied_selection = previous_selection
 
             if action == 'search':
                 result = yield from match_steps(
@@ -752,8 +786,8 @@ def create_app(config=None, *, retriever=None, llm=None):
             messages = state['messages'] + ([{'role': 'user', 'content': body.message}] if body.message else [])
             messages.append({'role': 'assistant', 'content': result['assistant_message'],
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
-            new_state = {**result, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), 'messages': messages[-100:]}
-            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat'))
+            new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), 'messages': messages[-100:]}
+            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection))
             return {'session_id': body.session_id, **public_state(new_state)}
 
         return operation_response(operation())

@@ -157,8 +157,10 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
         try:query,version,status,arm=filters()
         except ValueError:return error('Ungültiger Filter.',400)
         rows=data.filtered(query,version,status,arm);kind=request.args.get('format','csv')
-        if kind=='csv':content=data.csv_data(rows);filename='diana_numiqo.csv';mime='text/csv; charset=utf-8'
-        elif kind=='zip':content=data.package(rows);filename='diana_auswertung.zip';mime='application/zip'
+        columns=request.args.get('columns','readable')
+        if columns not in ('readable','technical'):return error('Unbekannte Spaltenbenennung.',400)
+        if kind=='csv':content=data.csv_data(rows,columns=columns);filename='diana_numiqo.csv';mime='text/csv; charset=utf-8'
+        elif kind=='zip':content=data.package(rows,columns=columns);filename='diana_auswertung.zip';mime='application/zip'
         else:return error('Unbekanntes Exportformat.',400)
         response=make_response(content);response.headers['Content-Type']=mime
         response.headers['Content-Disposition']=f'attachment; filename="{filename}"'

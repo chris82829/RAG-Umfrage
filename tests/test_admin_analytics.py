@@ -59,12 +59,12 @@ def test_status_selection_matches_charts_csv_and_zip_with_partial_answers(admin_
         assert data['total']==count
         summary=question(data,'system_usefulness')['overall']
         assert summary['mean']==mean and summary['n']==valid
-        raw=client.get('/api/admin/export?format=csv&'+query).data
+        raw=client.get('/api/admin/export?columns=technical&format=csv&'+query).data
         rows=list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig')),delimiter=';'))
         assert len(rows)==count
         assert sum(row['v7_system_usefulness']!='' for row in rows)==valid
         if status:assert all(row['response_status']==status for row in rows)
-        package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?format=zip&'+query).data))
+        package=zipfile.ZipFile(io.BytesIO(client.get('/api/admin/export?columns=technical&format=zip&'+query).data))
         assert package.read('diana_numiqo.csv')==raw
 
 
