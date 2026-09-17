@@ -1,0 +1,45 @@
+{
+  "endpoint": "/api/onboard",
+  "body": {
+    "profile": {
+      "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+      "skills": [
+        "Python-Grundlagen",
+        "HTML",
+        "CSS",
+        "JavaScript-Grundlagen",
+        "Git-Grundlagen"
+      ],
+      "preferences": [
+        "Arbeit im Entwicklungsteam",
+        "Praktischer Einstieg ins Berufsleben"
+      ],
+      "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+      "filters": {
+        "employment_types": [
+          "werkstudent"
+        ],
+        "locations": [],
+        "remote": [],
+        "max_hours": null
+      }
+    },
+    "advisor": {
+      "mode": "custom",
+      "preset": "diana",
+      "name": "Mein Einstiegscoach",
+      "description": "Erkläre fachliche Anforderungen verständlich. Unterscheide Voraussetzungen von Kenntnissen, die ich im Job lernen kann. Begründe deine Empfehlungen konkret und ohne pauschales Lob.",
+      "traits": [
+        "ermutigend",
+        "strukturiert"
+      ],
+      "focus": "lernpotenzial"
+    },
+    "advisor_selection": {
+      "source": "custom",
+      "template_id": null
+    }
+  },
+  "adaptive_message": null,
+  "started_utc": "2026-09-17T07:03:21.955507+00:00"
+}

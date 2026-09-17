@@ -1,0 +1,268 @@
+{
+  "source_id": "P06",
+  "pool_sha256": "1014c73524e52a8b1efcb8472d0184371ad3e5184ee311c8e62dd52bfd2d979f",
+  "assessor": "Codex",
+  "judgments": [
+    {
+      "job_id": "809546",
+      "relevance": 1,
+      "reason": "BWL, MS Office, Terminorganisation und kaufmännische Praxis bieten einen nachvollziehbaren Anschluss an die Studiengangsverwaltung. Die konkreten Aufgaben betreffen jedoch Studierende und Studienbetrieb, nicht interne Personaladministration oder Mitarbeitenden-Onboarding. Erwachsenenbildungs-/Veranstaltungserfahrung und Englisch C1 sind im Profil nicht belegt; Nürnberg und flexible Arbeit gleichen den schwachen Zielbezug nicht aus.",
+      "evidence": [
+        "Beratung und Betreuung von Studieninteressierten und Studierenden",
+        "Vorlesungs- und Prüfungsplanung",
+        "erste Berufserfahung im Bereich Erwachsenenbildung oder Veranstaltungsmanagement",
+        "sehr gute Englischkenntnisse (Niveau C1)"
+      ]
+    },
+    {
+      "job_id": "818500",
+      "relevance": 0,
+      "reason": "Bereichscontrolling, Gebührenkalkulation und Wirtschaftlichkeitsrechnungen sind fachlich außerhalb des festgelegten HR- und Onboarding-Ziels. Sehr gute SAP-Kenntnisse sowie die eigenständige Controllingfunktion sind durch Noras kaufmännische Sachbearbeitung und HR-Grundlagen ebenfalls nicht gedeckt. Teilzeit und Homeoffice machen die Stelle nicht zu einer Personalaufgabe.",
+      "evidence": [
+        "Sie sind Bereichscontroller und begleiten Ihren Bereich in allen wirtschaftlichen Angelegenheiten.",
+        "Sie kalkulieren verschiedene Gebührensätze.",
+        "Sie besitzen sehr gute Kenntnisse in SAP, vorzugsweise im Modul CO."
+      ]
+    },
+    {
+      "job_id": "809805",
+      "relevance": 2,
+      "reason": "Operative HR-Unterstützung, Personal-Dokumentation und Datenpflege passen direkt zum Ziel und zu Noras Verwaltungs- und Office-Erfahrung. SAP ist ausdrücklich nur ein Plus, eine eigenverantwortliche Entgeltabrechnung wird nicht verlangt. Der studentische Status bei bevorstehendem Studienabschluss, die gewünschte längerfristige Unterstützung und Augsburg sind relevante Kompromisse; eine dauerhafte Anschlussbeschäftigung oder besondere Einarbeitung ist nicht belegt.",
+      "evidence": [
+        "Tatkräftige Unterstützung unserer HR-Abteilung im operativen Tagesgeschäft und bei administrativen Aufgaben",
+        "Dateneingabe und -verwaltung sowie Pflege von Dokumentationen",
+        "SAP-Kenntnisse wären ein „Plus“",
+        "Sie sind in einem betriebswirtschaftlichen, rechtswissenschaftlichen oder einem vergleichbaren Studiengang eingeschrieben",
+        "mit einer wöchentlichen Arbeitszeit von bis zu 20 Stunden"
+      ]
+    },
+    {
+      "job_id": "840943",
+      "relevance": 2,
+      "reason": "Mitarbeit an Personalentwicklung und Führungs-Onboarding bietet einen fachlichen Anschluss an den BWL-Personalschwerpunkt und das Onboarding-Hochschulprojekt. Nürnberg und mobile Teilzeitmodelle unterstützen die Wünsche. Die eigenständige Entwicklung und organisationsweite Einführung von Gesprächskonzepten ist allerdings anspruchsvoller als die bevorzugte administrative Einstiegsrolle; verlangte New-Work-/Agile-Methoden sind nicht nachgewiesen und der Studienabschluss steht noch bevor.",
+      "evidence": [
+        "Entwicklung eines Konzepts für unterschiedlichste Gesprächsanlässe, wie Probezeitgespräche, Feedbackgespräche, Offboarding-Gespräche sowie Einführung dieses in die Organisation",
+        "Unterstützung im Onboarding von Führungskräften",
+        "Arbeitsmethoden aus dem agilen Arbeiten und New Work sind Ihnen vertraut",
+        "Flexible und mobile Arbeitszeitmodelle"
+      ]
+    },
+    {
+      "job_id": "828525",
+      "relevance": 0,
+      "reason": "Es geht um externe Forschungs-, Lizenz- und Vertragsvorgänge, nicht um Personaladministration oder Arbeitsverträge. Das geforderte Vertragsmanagement-/Wirtschaftsrechtsstudium beziehungsweise eine juristische Ausbildung oder einschlägige Vertragserfahrung ist für Nora nicht belegt; ihr BWL-Personalschwerpunkt ersetzt diesen speziellen Zugang nicht. Einarbeitung, Hybridarbeit und die regionale Lage ändern den fachlichen Fehlbezug nicht.",
+      "evidence": [
+        "stimmen sie mit unseren Jurist*innen sowie mit unseren Fachabteilungen und den externen Auftraggebern ab",
+        "Abgeschlossenes Hochschulstudium (auch Fachhochschule) mit Schwerpunkt Vertragsmanagement oder internationales Wirtschaftsrecht, alternativ eine vergleichbare juristische Ausbildung oder einschlägige Berufserfahrung",
+        "AGB-basierte Angebote, Kooperations- oder Lizenzverträge"
+      ]
+    },
+    {
+      "job_id": "832882",
+      "relevance": 1,
+      "reason": "Verwaltungsprozesse, Veranstaltungsorganisation und ein Welcome Service nutzen übertragbare Organisations- und Kommunikationsfähigkeiten. Zielgruppe sind aber internationale Studierende und Gäste statt Beschäftigte im internen HR-Prozess. Internationale Hochschulkenntnisse, Auslandserfahrung und sehr gutes Englisch sind nicht belegt. Die ausdrücklich angebotene Einarbeitung macht den Einstieg plausibler, beseitigt aber die inhaltliche Zielabweichung nicht.",
+      "evidence": [
+        "administrative Unterstützung des internationalen Studien- und Lehrbetriebs der Fakultät",
+        "Unterstützung im Sinne eines Welcome Services für internationale Gäste der Fakultät",
+        "Kenntnisse des Bologna-Prozesses und unterschiedlicher internationaler Hochschulsysteme sowie eigene studien- oder berufsbezogene Auslandserfahrung",
+        "Eine fundierte Einarbeitung sowie vielseitige interne Fortbildungsmöglichkeiten"
+      ]
+    },
+    {
+      "job_id": "852676",
+      "relevance": 0,
+      "reason": "Die Stelle ist reine Finanzbuchhaltung und enthält keine Personaladministration, Beschäftigtenbetreuung oder Onboarding-Aufgabe. Allgemeine BWL- und Excel-Kenntnisse reichen für einen Bezug zum konkret festgelegten HR-Ziel nicht aus. Der studentische Teilzeitrahmen allein begründet keine Relevanz.",
+      "evidence": [
+        "Kontierung und Verbuchung laufender Geschäftsvorgänge",
+        "Unterstützung im Bereich der Debitoren-/Kreditorenbuchhaltung",
+        "Studium im Bereich Betriebswirtschaftslehre idealerweise mit dem Schwerpunkt Finanzen oder vergleichbarer Fachrichtung"
+      ]
+    },
+    {
+      "job_id": "841353",
+      "relevance": 2,
+      "reason": "Personalstatistiken, interne HR-Berichte und Datenpflege sind ein plausibler angrenzender Bereich der Personaladministration; BWL und Excel bilden dafür eine Grundlage. 20 Stunden, Homeoffice und fundierte Einarbeitung passen zum Einstieg. Schwerpunkt sind allerdings Kennzahlensysteme und Dashboards statt Mitarbeitendenbetreuung oder Onboarding; einschlägige Datenbankkenntnisse und sehr gutes Englisch bleiben ungeklärt.",
+      "evidence": [
+        "Ausbau des internen Informations- und Berichtwesens im Bereich Personal",
+        "Erstellung von Personalstatistiken für interne und externe Empfänger",
+        "Entwicklung und Pflege von Dashboards zu definierten Themenbereichen (insbesondere im Personalmanagement)",
+        "Eine fundierte Einarbeitung sowie vielseitige interne Fortbildungsmöglichkeiten",
+        "Gute EDV-Kennnisse, vor allem in den gängigen MS-Office-Anwendungen und einschlägigen Datenbankanwendungen"
+      ]
+    },
+    {
+      "job_id": "819249",
+      "relevance": 2,
+      "reason": "Administrative Unterstützung einer internen HR-Abteilung passt fachlich zu Nora; vorhandene Verwaltungspraxis und Office-Kenntnisse sind nutzbar, SAP ist optional. Maximal zehn Stunden liegen deutlich unter den gewünschten 20–25 Stunden, und der studentische Vertrag sowie Augsburg sind weitere Kompromisse. Diese weichen bzw. zeitlich klärungsbedürftigen Bedingungen senken die Passung, führen bei direktem HR-Bezug aber nicht automatisch zum Ausschluss.",
+      "evidence": [
+        "Tatkräftige Unterstützung unserer HR-Abteilung im operativen Tagesgeschäft und bei administrativen Aufgaben",
+        "Erste Berufserfahrung im Verwaltungsbereich sind von Vorteil",
+        "SAP-Kenntnisse wären ein „Plus“",
+        "Flexible Zeiteinteilung nach Absprache mit einer wöchentlichen Arbeitszeit von bis zu 10 Stunden"
+      ]
+    },
+    {
+      "job_id": "841212",
+      "relevance": 1,
+      "reason": "Die Verwaltung von Bewerbungs- und Studienprozessen kann Noras Organisations-, Kommunikations- und BWL-Kenntnisse nutzen. Gemeint sind jedoch Hochschulzulassung und Studienbetrieb, keine Personalgewinnung oder Personaladministration. Deshalb bleibt der Bezug zum gewünschten beruflichen Wechsel schwach, obwohl Nürnberg und mobile Teilzeitarbeit gut zum Rahmen passen.",
+      "evidence": [
+        "Abwicklung von Bewerbungsverfahren (Bewerbungsmanagement, Zulassungs-/ Ablehnungsprüfung, Durchführung von Eignungsfeststellungsverfahren und Überprüfung von Nachqualifikationsauflagen)",
+        "Planung, Durchführung und Weiterentwicklung der wichtigsten Prozesse zur Betreuung, Verwaltung, Planung und Koordination des operativen Studienbetriebs",
+        "Vorlesungs- und Prüfungsplanung",
+        "Flexible und mobile Arbeitszeitmodelle"
+      ]
+    },
+    {
+      "job_id": "835580",
+      "relevance": 1,
+      "reason": "Büroorganisation, Dokumentenmanagement und Terminarbeit passen zu den vorhandenen kaufmännischen Kompetenzen; 20 Stunden und fundierte Einarbeitung sind positiv belegt. Die Stelle betreut jedoch Fakultäts-, Prüfungs- und Raumverwaltung und enthält keine konkrete interne HR- oder Onboarding-Aufgabe. Sie ist daher höchstens eine allgemeine administrative Alternative, nicht der angestrebte fachliche Einstieg.",
+      "evidence": [
+        "Mitarbeit in Angelegenheiten der Prüfungsverwaltung",
+        "Organisation des Raummanagements in der Fakultät",
+        "Organisationsgeschick im Bereich der Büroorganisation inkl. Dokumentenmanagement",
+        "Eine fundierte Einarbeitung sowie vielseitige interne Fortbildungsmöglichkeiten"
+      ]
+    },
+    {
+      "job_id": "823885",
+      "relevance": 0,
+      "reason": "Suchtprävention an Schulen ist kein Personalmanagement. Außerdem wird ein Abschluss in Sozialer Arbeit/Sozialpädagogik mit mehrjähriger Präventions- und Gesundheitsförderungserfahrung verlangt; Noras BWL-Hintergrund und kaufmännische Praxis erfüllen dieses klar andere Fachprofil nicht. Die passende Stundenzahl ändert daran nichts.",
+      "evidence": [
+        "Cannabisprävention an Schulen",
+        "erfolgreich abgeschlossenes Hochschulstudium (Diplom-FH oder Bachelor) der Fachrichtung Soziale Arbeit / Sozialpädagogik",
+        "mehrjährige Berufserfahrung im Bereich Prävention und Gesundheitsförderung"
+      ]
+    },
+    {
+      "job_id": "837309",
+      "relevance": 0,
+      "reason": "Die beschriebenen Aufgaben gehören zu Steuerberatung, Finanzbuchhaltung und Wirtschaftsprüfung, nicht zu HR-Administration oder Onboarding. Das angebotene Erlernen von DATEV wäre eine Entwicklung in einem anderen Fachgebiet. BWL, Excel und Teilzeit reichen für das unveränderte Personalmanagement-Ziel nicht aus.",
+      "evidence": [
+        "Werkstudent (m/w/d) für Steuerberatung und Wirtschaftsprüfung",
+        "Finanzbuchhaltung meistern",
+        "Steuererklärungen vorbereiten (keine Panik, wir helfen dir!)",
+        "Jahres- und Konzernabschlüsse erstellen und prüfen"
+      ]
+    },
+    {
+      "job_id": "832477",
+      "relevance": 1,
+      "reason": "Terminmanagement und Prozessverbesserung haben einen Anschluss an Noras bisherige Organisationserfahrung und ihr Projekt. Es handelt sich aber um Studierendenservice, Webauftritt und CRM statt interne Personalprozesse. Zehn Stunden und Regensburg weichen zusätzlich von ihren weichen Wünschen ab; die angebotene Einarbeitung macht daraus keine HR-Einstiegsstelle.",
+      "evidence": [
+        "Weiterentwicklung des Internetauftritts des Student Lifecycle Centers",
+        "Ermittlung und Analyse des Nutzens des Tools „assisto“ für Terminvereinbarungen u.a. mit der Studierendenberatung",
+        "Unterstützung bei der Einführung eines CRM in Zusammenarbeit mit der Stabstelle Kommunikation",
+        "ca. 10 Stunden pro Woche"
+      ]
+    },
+    {
+      "job_id": "857698",
+      "relevance": 2,
+      "reason": "Administrative Anträge, Abrechnungsunterstützung und Tagesgeschäft in einer Personalabteilung passen zum angestrebten Einstieg. Die Stelle verlangt MS Office und Interesse an HR, nicht bereits eigene Entgeltabrechnung oder SAP-HCM-Erfahrung; die unspezifischen Abrechnungen werden nicht als eigenverantwortliche Payroll umgedeutet. 20 Stunden passen, während Augsburg und die verbleibende Dauer der Immatrikulation angesichts des bevorstehenden Abschlusses zu klären sind.",
+      "evidence": [
+        "Tatkräftige Unterstützung bei administrativen Aufgaben wie der Bearbeitung von Anträgen und Abrechnungen",
+        "Support im Tagesgeschäft und bei Projekten des Teams und der Abteilung",
+        "Sie sind in einem Studiengang eingeschrieben",
+        "Interesse an HR Themen und bestenfalls daran, unser Team längerfristig zu unterstützen",
+        "mit einer wöchentlichen Arbeitszeit von bis zu 20 Stunden"
+      ]
+    },
+    {
+      "job_id": "852705",
+      "relevance": 1,
+      "reason": "Bestellungsbearbeitung und Sachbearbeitung passen unmittelbar zur bisherigen kaufmännischen Auftragsbearbeitung. Die Stelle betrifft jedoch Kundenaccounts, Kundenservice und technische Produkte, nicht Personaladministration; sie würde den ausdrücklich gewünschten HR-Wechsel kaum unterstützen. Nürnberg wird im Anzeigentext genannt, hebt diese Zielabweichung aber nicht auf.",
+      "evidence": [
+        "Innerhalb unserer Abteilung Customer Data Analytics: Dokumente innerhalb des Accountverifizierungsprozesses prüfen",
+        "Innerhalb unserer Abteilung Customer Service / Sales & Product Advice: Bestellungsbearbeitung Access Data Bearbeitung",
+        "Für unseren Standort in Nürnberg oder Falkenstein suchen wir Werkstudierende"
+      ]
+    },
+    {
+      "job_id": "857711",
+      "relevance": 1,
+      "reason": "Allgemeine Amtsverwaltung, Office und Aktenorganisation nutzen übertragbare kaufmännische Kompetenzen. Personalangelegenheiten werden nur als Zuständigkeit der Serviceeinheit genannt; die konkrete Aufgabenliste besteht vor allem aus Post, Akten, Haushalt, Schule und Gebäuden. Eine HR-Einstiegsfunktion ist damit nicht belegt. Der annähernd volle Stundenumfang und Holzkirchen sind zusätzliche weiche Konflikte; ein passendes Jobsharing ist nur bedingt möglich.",
+      "evidence": [
+        "Die Amtsverwaltung ist als interne Serviceeinheit insbesondere für allgemeine Verwaltungsangelegenheiten, Haushalts- und Personalangelegenheiten sowie Informations- und Kommunikationstechnik zuständig.",
+        "Sachbearbeitung in Haushalts- und Schulangelegenheiten Hausverwaltung und Gebäudebewirtschaftung",
+        "Die Stelle ist grundsätzlich teilzeitfähig, sofern die vollumfängliche Aufgabenerfüllung durch Jobsharing gewährleistet ist."
+      ]
+    },
+    {
+      "job_id": "858898",
+      "relevance": 1,
+      "reason": "Recruiting und Retention sind personalbezogene Themen, doch die Tätigkeit ist ein Forschungs- und Transferprojekt mit Erhebungen und XR-Werkzeugen statt interner Personaladministration. Noras BWL- und Organisationspraxis bietet nur einen begrenzten Anschluss; erweiterte empirische Methoden sowie SPSS, MaxQDA und XR-Kenntnisse sind nicht belegt. 24 Stunden und die regionale Lage heben diese erheblichen fachlichen Lücken nicht auf.",
+      "evidence": [
+        "Durchführung quantitativer und qualitativer Erhebungen in betrieblichen und schulischen Kontexten",
+        "Auswahl, Erprobung und Weiterentwicklung von XR-Tools und beruflicher Arbeitsproben in Unterricht und Ausbildung",
+        "einschlägige EDV-Kenntnisse (MS-Office, SPSS, MaxQDA), erweiterte Kenntnisse der Methoden der empirischen Sozialforschung",
+        "Sie haben grundlegende Kenntnisse XR-gestützter Tools für Lehre/Ausbildung"
+      ]
+    },
+    {
+      "job_id": "809753",
+      "relevance": 0,
+      "reason": "Wie beim fachlich gleichartigen Vertragsmanagement-Angebot fehlt der Bezug zu internen Personalprozessen: Es werden Forschungs- und Lizenzverträge mit externen Auftraggebern betreut. Gefordert werden Vertragsmanagement/Wirtschaftsrecht, eine juristische Ausbildung oder einschlägige Erfahrung; das ist durch Noras HR-BWL-Profil nicht nachgewiesen. Allgemeines Organisationsvermögen und Onboarding als Arbeitgeberleistung ersetzen den fachlichen Zugang nicht.",
+      "evidence": [
+        "stimmen sie mit unseren Jurist*innen sowie mit unseren Fachabteilungen und den externen Auftraggebern ab",
+        "Abgeschlossenes Hochschulstudium (auch Fachhochschule) mit Schwerpunkt Vertragsmanagement oder internationales Wirtschaftsrecht, alternativ eine vergleichbare juristische Ausbildung oder einschlägige Berufserfahrung",
+        "AGB-basierte Angebote, Kooperations- oder Lizenzverträge"
+      ]
+    },
+    {
+      "job_id": "827955",
+      "relevance": 3,
+      "reason": "Die ausdrückliche Unterstützung eines bestehenden Mitarbeitenden-Onboarding-Programms trifft Noras Ziel und ihr Onboarding-Hochschulprojekt besonders direkt. Der wirtschaftswissenschaftliche Zugang, routinierte Office-Nutzung, individuelle Einarbeitung, 60-Prozent-Teilzeit und Homeoffice ergeben insgesamt eine starke Passung, ohne Payroll-/SAP-Spezialisierung zu verlangen. Regensburg bleibt ein Ortskompromiss; Abschlusszeitpunkt sowie erste Veranstaltungsorganisation sind vor einer Bewerbung zu klären und werden nicht als bereits nachgewiesen unterstellt.",
+      "evidence": [
+        "Unterstützung bei der Umsetzung und Weiterentwicklung des bestehenden fakultätsübergreifenden Onboarding-Portfolios für neuberufene Professorinnen und Professoren",
+        "Erste Erfahrungen in der Konzeption und Organisation von Veranstaltungen",
+        "Eine individuelle Einarbeitung durch ein motiviertes und hilfsbereites Team sowie vielseitige interne und externe Fortbildungsmöglichkeiten",
+        "Teilzeitbeschäftigung im Umfang von 60%",
+        "Home-Office Möglichkeiten"
+      ]
+    },
+    {
+      "job_id": "824340",
+      "relevance": 2,
+      "reason": "Wie das nahezu identische Angebot mit zehn Wochenstunden bietet diese Stelle einen fachlich passenden Einstieg in interne HR-Administration. Verwaltungs- und Office-Erfahrung passen, SAP ist optional. Die deutlich niedrigere Stundenzahl, der studentische Status nahe dem Abschluss und Augsburg verhindern eine starke Gesamtpassung, werden aber nicht als starre Ausschlusskriterien verwendet.",
+      "evidence": [
+        "Tatkräftige Unterstützung unserer HR-Abteilung im operativen Tagesgeschäft und bei administrativen Aufgaben",
+        "Erste Berufserfahrung im Verwaltungsbereich sind von Vorteil",
+        "SAP-Kenntnisse wären ein „Plus“",
+        "Flexible Zeiteinteilung nach Absprache mit einer wöchentlichen Arbeitszeit von bis zu 10 Stunden"
+      ]
+    },
+    {
+      "job_id": "815652",
+      "relevance": 0,
+      "reason": "Das Arbeitsfeld Suchtprävention ist fachfremd zum feststehenden Personalmanagement-Ziel. Die verlangte Qualifikation in Sozialer Arbeit/Sozialpädagogik und mehrjährige Erfahrung in Prävention sind mit dem dokumentierten BWL- und kaufmännischen Hintergrund nicht vereinbar. Organisatorische Teilaufgaben und 20 Stunden ändern diese grundlegende Abweichung nicht.",
+      "evidence": [
+        "Cannabisprävention an Schulen",
+        "erfolgreich abgeschlossenes Hochschulstudium (Diplom-FH oder Bachelor) der Fachrichtung Soziale Arbeit / Sozialpädagogik",
+        "mehrjährige Berufserfahrung im Bereich Prävention und Gesundheitsförderung"
+      ]
+    },
+    {
+      "job_id": "836732",
+      "relevance": 1,
+      "reason": "Kundendatenpflege, Vertragsangebote und Kundenkommunikation nutzen Noras Sachbearbeitungs- und Excel-Erfahrung. Der Schwerpunkt ist jedoch Energievertrieb und Kundenservice; interne Personaladministration oder Onboarding werden nicht beschrieben. Es bleibt eine kaufmännische Alternative mit schwachem Anschluss an den ausdrücklich gewünschten HR-Wechsel, ungeachtet flexibler Teilzeit.",
+      "evidence": [
+        "Erstellung von Angeboten und Verträgen für unsere (Groß-)Kunden aus der Energiewirtschaft",
+        "Erfassung von Kundendaten sowie Systempflege",
+        "Interesse an Themen rund um die Energiewirtschaft und den Vertrieb",
+        "Kommunikation mit Kunden via Telefon, E-Mail sowie begleitend persönlich vor Ort"
+      ]
+    },
+    {
+      "job_id": "836504",
+      "relevance": 2,
+      "reason": "Die Unterstützung der internen Personalabteilung und das Vereinheitlichen von Stellenbeschreibungen passen zu kaufmännischer Organisation und BWL-Personalgrundlagen. Vorkenntnisse im Personalwesen sind ausdrücklich nicht zwingend und ein Lernangebot ist belegt. Die Arbeit betrifft ein Entgelttarif-Projekt, nicht selbstständige laufende Entgeltabrechnung; dennoch liegt sie nur teilweise auf dem gewünschten Administrations-/Onboarding-Schwerpunkt. Studentischer Status nahe dem Abschluss sowie Schönwald sind weitere Kompromisse.",
+      "evidence": [
+        "Sie unterstützen die Personalabteilung bei der Neustrukturierung der Entlohnung des neuen Entgeltrahmentarifvertrages",
+        "Sie formulieren und vereinheitlichen Stellenbeschreibungen in Zusammenarbeit mit der Betriebsleitung",
+        "nicht zwingend Kentnisse im Personalwesen erforderlich",
+        "Anspruchsvolle Aufgaben mit großem Lern- und Entwicklungspotenzial",
+        "Hybrider Arbeitsort (Remote- und Office-Tage)"
+      ]
+    }
+  ]
+}

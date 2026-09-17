@@ -1,0 +1,850 @@
+{
+  "task": "P01-C.T0.RerankingResult.02",
+  "started_utc": "2026-09-17T07:03:32.650360+00:00",
+  "ok": true,
+  "request_sha256": "658cbf35c019e5f7a1bb1945c3594ca53a5b0d89df321cd5ce3a66dce15d36ca",
+  "http_status": 200,
+  "response": {
+    "id": "resp_08e195614505a5ec016aab90c4ec7087d2bb144e167ee78443",
+    "object": "response",
+    "created_at": 1789628612,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1789628650,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 10000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_08e195614505a5ec016aab90c5ab8487d29fcad2a4ccb93004",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"rankings\":[{\"job_id\":\"829115\",\"components\":{\"technical_fit\":64,\"preferences_fit\":50,\"technical_depth\":72,\"learning\":null,\"innovation\":null,\"clarity\":78},\"reasons\":[\"Deine HTML-, CSS-, JavaScript-, Python- und Git-Grundlagen passen zu Frontend-, Backend- und Webapp-Aufgaben; offen sind React/Angular, SQL und agile Praxis.\",\"Du kannst hier an Webapplikationen auf Client- und Server-Seite mitarbeiten; das ist ein direkter Praxiseinstieg im Entwicklungsteam.\",\"Die Stelle nennt 10 bis 20 Stunden pro Woche; zu Betreuung oder Einarbeitung macht die Anzeige keine klare Angabe.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React/Angular\",\"relationale Datenbanken\",\"agile Softwareentwicklung\"]},{\"job_id\":\"820065\",\"components\":{\"technical_fit\":58,\"preferences_fit\":50,\"technical_depth\":65,\"learning\":82,\"innovation\":68,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS- und JavaScript-Grundlagen passen zu den Frontend-Aufgaben; offen bleiben das geforderte 4. Semester und belastbare Nachweise über gute Frontend-Kenntnisse.\",\"Die Stelle bietet eine umfassende Einarbeitung und Arbeit an einer Website; das passt gut zu einem begleiteten Einstieg.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP oder Node.js\"]},{\"job_id\":\"837416\",\"components\":{\"technical_fit\":57,\"preferences_fit\":35,\"technical_depth\":70,\"learning\":78,\"innovation\":72,\"clarity\":76},\"reasons\":[\"Deine Grundlagen in HTML, CSS und JavaScript passen zu responsiven UIs; offen sind PHP, MySQL, CMS und moderne Frameworks wie Vue oder React.\",\"Du kannst in echten Projekten im Team mitarbeiten und Ideen einbringen; Weiterbildungsmöglichkeiten sind ausdrücklich genannt.\",\"Die Stelle nennt 20 bis 40 Stunden pro Woche; das ist als Präferenzpunkt weniger passend, Homeoffice ist aber möglich.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP\",\"MySQL\",\"CMS-Systeme\",\"Vue.js/React/Laravel\"]},{\"job_id\":\"828195\",\"components\":{\"technical_fit\":73,\"preferences_fit\":50,\"technical_depth\":52,\"learning\":74,\"innovation\":60,\"clarity\":77},\"reasons\":[\"Deine Grundlagen in HTML, CSS und JavaScript sind für Website-Pflege und Web-Formulare direkt nutzbar; CMS-Erfahrung ist noch nicht belegt.\",\"Die Anzeige nennt Einarbeitung in CMS und Formularsysteme; das macht den Einstieg trotz fehlender Berufserfahrung gut erreichbar.\",\"15 bis 20 Stunden sind angegeben; zum Arbeitsmodell bleibt die Anzeige im Datensatz widersprüchlich und damit teilweise offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"CMS\",\"JQuery\"]},{\"job_id\":\"835027\",\"components\":{\"technical_fit\":44,\"preferences_fit\":50,\"technical_depth\":58,\"learning\":88,\"innovation\":70,\"clarity\":80},\"reasons\":[\"Deine HTML-, CSS- und JavaScript-Grundlagen passen zur Implementierung von Weboberflächen; zentrale UI-Design-Kenntnisse und Design-Tools sind aber nicht belegt.\",\"Das Mentoringprogramm und Seminare schaffen einen klaren Lernrahmen für den Einstieg in Teamarbeit und Prototypen.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; weitere weiche Präferenzen bleiben offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"UI-Design\",\"Design-Tools\"]},{\"job_id\":\"830863\",\"components\":{\"technical_fit\":61,\"preferences_fit\":50,\"technical_depth\":67,\"learning\":null,\"innovation\":68,\"clarity\":74},\"reasons\":[\"Deine HTML-, CSS- und JavaScript-Grundlagen passen zur Web-UI-Entwicklung; offen sind TypeScript, Vue 2/3 und Arbeit mit Figma-Designs.\",\"Du kannst hier direkt an Analyse-Webanwendungen mitarbeiten und eigene Ideen einbringen; das ist ein praktischer Team-Einstieg.\",\"Remote und 10 bis 40 Stunden sind genannt; zu Einarbeitung oder Betreuung macht die Anzeige keine klare Angabe.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Vue.js\",\"Figma\"]},{\"job_id\":\"845512\",\"components\":{\"technical_fit\":49,\"preferences_fit\":50,\"technical_depth\":76,\"learning\":72,\"innovation\":64,\"clarity\":78},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen berühren Teile der Aufgaben; zentrale Anforderungen wie Matlab/Simulink, Java oder Linux sind nicht belegt.\",\"Du bekommst eigene Aufgabenbereiche mit steigender Selbstständigkeit und Einblicke in Softwarepraxis; das spricht für Entwicklung im Team.\",\"Hybrid sowie 12 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Matlab/Simulink/PLC Coder\",\"Java/C/C++\",\"Linux\",\"PHP\",\"XML\"]},{\"job_id\":\"861511\",\"components\":{\"technical_fit\":54,\"preferences_fit\":50,\"technical_depth\":74,\"learning\":72,\"innovation\":66,\"clarity\":82},\"reasons\":[\"Deine HTML-, CSS-, JavaScript-, Python- und Git-Grundlagen passen zum Einstieg in Webaufgaben; offen sind Nuxt, Vue, Node, TypeScript, GraphQL und REST-Praxis.\",\"Die Stelle verbindet Frontend-Arbeit mit Python-Microservices und nennt Raum zum Lernen und Ausprobieren; das ist ein erreichbarer nächster Entwicklungsschritt.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; weitere Präferenzen bleiben offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"Nuxt.js\",\"Vue.js\",\"Node.js\",\"TypeScript\",\"GraphQL\",\"REST APIs\",\"Headless CMS\"]},{\"job_id\":\"824568\",\"components\":{\"technical_fit\":55,\"preferences_fit\":50,\"technical_depth\":73,\"learning\":84,\"innovation\":68,\"clarity\":57},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen passen zu Teilen der Web- und Datenbankaufgaben; Angular, Spring Boot und SQL sind offen.\",\"Die Anzeige nennt qualifizierte Betreuung, intensive Einarbeitung und konkreten Praxisbezug; das ist stark für den ersten Entwicklungseinstieg.\",\"Arbeitszeiten und Homeoffice sind flexibel beschrieben; die Aufgaben sind breit gefächert und dadurch fachlich weniger klar zugeschnitten.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Angular\",\"Spring Boot\",\"SQL\"]},{\"job_id\":\"843348\",\"components\":{\"technical_fit\":60,\"preferences_fit\":50,\"technical_depth\":66,\"learning\":80,\"innovation\":64,\"clarity\":77},\"reasons\":[\"Deine JavaScript- und Git-Grundlagen passen zum Einstieg in Fullstack-Aufgaben; offen sind React oder Vue, REST/GraphQL und Testing-Frameworks.\",\"Du arbeitest im Entwicklerteam an Web- und App-Anwendungen und bekommst Unterstützung bei deiner technischen Weiterentwicklung.\",\"Die Stelle ist onsite und die Wochenstunden sind sehr offen; das Arbeitsmodell ist bekannt, weitere Präferenzen aber nicht festgelegt.\"],\"matched_skills\":[\"JavaScript-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React/Vue.js\",\"REST/GraphQL\",\"Flutter\",\"Testing-Frameworks\"]},{\"job_id\":\"837775\",\"components\":{\"technical_fit\":62,\"preferences_fit\":50,\"technical_depth\":61,\"learning\":88,\"innovation\":70,\"clarity\":72},\"reasons\":[\"Dein Studienprojekt mit HTML, CSS und einfachem JavaScript passt zu den geforderten ersten Webprojekten; Java im Backend ist noch nicht belegt.\",\"Mentoringprogramm, Teamarbeit und neue Technologien schaffen einen starken Lernrahmen für den ersten Praxisschritt.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; die konkreten Technologien der bestehenden Systeme bleiben teilweise offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Java\"]},{\"job_id\":\"860555\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur einen Teil ab; zentrale Anforderungen wie Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Schulungen und Entwicklungsmöglichkeiten sind klar genannt; das hilft beim Einstieg, trotz deutlicher Fachlücken.\",\"Hybrid mit einem Bürotag pro Woche und 20 Stunden ist angegeben; weitere Präferenzen sind nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"834700\",\"components\":{\"technical_fit\":57,\"preferences_fit\":50,\"technical_depth\":69,\"learning\":null,\"innovation\":58,\"clarity\":74},\"reasons\":[\"Deine Web-Grundlagen passen zu Web-Oberflächen; offen sind Linux, Cloud-Technologien und die Entwicklung von Echtzeitanwendungen oder Containern.\",\"Du arbeitest in einem SCRUM-Team an Software und Web-Oberflächen mit; das ist ein brauchbarer Praxiseinstieg im Entwicklungsteam.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; zu Einarbeitung oder Weiterbildung macht die Anzeige keine klare Angabe.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Linux\",\"Cloud-Technologien\",\"C/C++/C#\"]},{\"job_id\":\"843131\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Zertifizierungen und Schulungen geben einen klaren Lernrahmen für den Einstieg.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"834695\",\"components\":{\"technical_fit\":39,\"preferences_fit\":50,\"technical_depth\":63,\"learning\":76,\"innovation\":74,\"clarity\":76},\"reasons\":[\"Deine Python-, JavaScript- und CSS-Grundlagen passen nur teilweise; ein Masterstudium sowie REST-API-Praxis und KI-Schwerpunkt sind nicht belegt.\",\"Die Stelle bietet praktische Erfahrung und ein unterstützendes Team; fachlich liegt sie aber deutlich neben deinem Web-Einstiegsprofil.\",\"Remote und bis 20 Stunden sind genannt; weitere Präferenzen bleiben offen.\"],\"matched_skills\":[\"Python-Grundlagen\",\"JavaScript-Grundlagen\",\"CSS\"],\"missing_skills\":[\"REST-APIs\",\"Künstliche Intelligenz\"]},{\"job_id\":\"857135\",\"components\":{\"technical_fit\":45,\"preferences_fit\":50,\"technical_depth\":72,\"learning\":86,\"innovation\":71,\"clarity\":81},\"reasons\":[\"Deine JavaScript-, Python- und Git-Grundlagen passen zum Feld Webentwicklung; React, TypeScript, REST-APIs und Testing mit Cypress sind aber nicht belegt.\",\"Die Stelle bietet kleine Programmieraufgaben, wachsende Verantwortung und flexible Stunden; das ist lernstark, aber fachlich anspruchsvoller als dein aktueller Stand.\",\"8 bis 12 Stunden und Hybrid sind angegeben; das passt als bekannte Präferenz nicht negativ, weitere Wünsche sind offen.\"],\"matched_skills\":[\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"TypeScript\",\"REST APIs\",\"Cypress\"]},{\"job_id\":\"816293\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Zertifizierungen und Schulungen geben einen klaren Rahmen, obwohl die Fachhürde hoch ist.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"845150\",\"components\":{\"technical_fit\":56,\"preferences_fit\":50,\"technical_depth\":64,\"learning\":84,\"innovation\":58,\"clarity\":78},\"reasons\":[\"Deine Python- und Git-Grundlagen passen zu den Grundanforderungen; offen sind REST-Services, CI/CD und Testautomatisierung sowie das geforderte 4. Semester.\",\"Mentoren passen Aufgaben an deinen Kenntnisstand an und die Stelle bietet Weiterbildung; das ist für den ersten Praxisschritt stark.\",\"Hybrid und 10 bis 40 Stunden sind angegeben; das Stundenmodell ist weit, aber nicht nachweislich unpassend.\"],\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]},{\"job_id\":\"826611\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Zertifizierungen und Schulungen schaffen einen guten Lernrahmen trotz klarer Fachlücken.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"833009\",\"components\":{\"technical_fit\":56,\"preferences_fit\":50,\"technical_depth\":64,\"learning\":84,\"innovation\":58,\"clarity\":76},\"reasons\":[\"Deine Python- und Git-Grundlagen passen zu Teilen der Anforderungen; offen sind REST-Services, CI/CD und Testautomatisierung sowie das geforderte 4. Semester.\",\"Mentoren und passende Aufgaben nach Kenntnisstand machen den Einstieg erreichbar und lernorientiert.\",\"Hybrid und 10 bis 40 Stunden sind angegeben; das Arbeitsmodell ist bekannt, weitere Präferenzen bleiben offen.\"],\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]}],\"assistant_message\":\"Deine stärkste Basis liegt klar in den Frontend-Grundlagen mit HTML, CSS und JavaScript aus dem Studienprojekt. Besonders erreichbar wirken Stellen mit ausdrücklich genannter Einarbeitung oder Mentoring und klaren Webaufgaben. Anspruchsvoller werden Anzeigen, sobald React, TypeScript, SQL oder Java schon als belastbare Vorkenntnisse vorausgesetzt werden. Ein guter nächster Schritt sind deshalb Bewerbungen auf Rollen mit Website-, Webformular- oder Junior-Webapp-Aufgaben, bei denen Lernen im Team sichtbar angeboten wird.\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "RerankingResult",
+        "schema": {
+          "$defs": {
+            "RankedJob": {
+              "additionalProperties": false,
+              "properties": {
+                "job_id": {
+                  "minLength": 1,
+                  "title": "Job Id",
+                  "type": "string"
+                },
+                "components": {
+                  "$ref": "#/$defs/ScoreComponents"
+                },
+                "reasons": {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "maxItems": 3,
+                  "minItems": 2,
+                  "title": "Reasons",
+                  "type": "array"
+                },
+                "matched_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Matched Skills",
+                  "type": "array"
+                },
+                "missing_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Missing Skills",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "job_id",
+                "components",
+                "reasons",
+                "matched_skills",
+                "missing_skills"
+              ],
+              "title": "RankedJob",
+              "type": "object"
+            },
+            "ScoreComponents": {
+              "additionalProperties": false,
+              "properties": {
+                "technical_fit": {
+                  "maximum": 100,
+                  "minimum": 1,
+                  "title": "Technical Fit",
+                  "type": "integer"
+                },
+                "preferences_fit": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences Fit"
+                },
+                "technical_depth": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Technical Depth"
+                },
+                "learning": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Learning"
+                },
+                "innovation": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Innovation"
+                },
+                "clarity": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Clarity"
+                }
+              },
+              "required": [
+                "technical_fit",
+                "preferences_fit",
+                "technical_depth",
+                "learning",
+                "innovation",
+                "clarity"
+              ],
+              "title": "ScoreComponents",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "rankings": {
+              "items": {
+                "$ref": "#/$defs/RankedJob"
+              },
+              "maxItems": 20,
+              "minItems": 1,
+              "title": "Rankings",
+              "type": "array"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "rankings",
+            "assistant_message"
+          ],
+          "title": "RerankingResult",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 23074,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 1792
+      },
+      "output_tokens": 3392,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 26466
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 23074,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 1792
+    },
+    "output_tokens": 3392,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 26466
+  },
+  "result": {
+    "rankings": [
+      {
+        "job_id": "829115",
+        "components": {
+          "technical_fit": 64,
+          "preferences_fit": 50,
+          "technical_depth": 72,
+          "learning": null,
+          "innovation": null,
+          "clarity": 78
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript-, Python- und Git-Grundlagen passen zu Frontend-, Backend- und Webapp-Aufgaben; offen sind React/Angular, SQL und agile Praxis.",
+          "Du kannst hier an Webapplikationen auf Client- und Server-Seite mitarbeiten; das ist ein direkter Praxiseinstieg im Entwicklungsteam.",
+          "Die Stelle nennt 10 bis 20 Stunden pro Woche; zu Betreuung oder Einarbeitung macht die Anzeige keine klare Angabe."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "React/Angular",
+          "relationale Datenbanken",
+          "agile Softwareentwicklung"
+        ]
+      },
+      {
+        "job_id": "820065",
+        "components": {
+          "technical_fit": 58,
+          "preferences_fit": 50,
+          "technical_depth": 65,
+          "learning": 82,
+          "innovation": 68,
+          "clarity": 79
+        },
+        "reasons": [
+          "Deine HTML-, CSS- und JavaScript-Grundlagen passen zu den Frontend-Aufgaben; offen bleiben das geforderte 4. Semester und belastbare Nachweise über gute Frontend-Kenntnisse.",
+          "Die Stelle bietet eine umfassende Einarbeitung und Arbeit an einer Website; das passt gut zu einem begleiteten Einstieg.",
+          "Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "PHP oder Node.js"
+        ]
+      },
+      {
+        "job_id": "837416",
+        "components": {
+          "technical_fit": 57,
+          "preferences_fit": 35,
+          "technical_depth": 70,
+          "learning": 78,
+          "innovation": 72,
+          "clarity": 76
+        },
+        "reasons": [
+          "Deine Grundlagen in HTML, CSS und JavaScript passen zu responsiven UIs; offen sind PHP, MySQL, CMS und moderne Frameworks wie Vue oder React.",
+          "Du kannst in echten Projekten im Team mitarbeiten und Ideen einbringen; Weiterbildungsmöglichkeiten sind ausdrücklich genannt.",
+          "Die Stelle nennt 20 bis 40 Stunden pro Woche; das ist als Präferenzpunkt weniger passend, Homeoffice ist aber möglich."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "PHP",
+          "MySQL",
+          "CMS-Systeme",
+          "Vue.js/React/Laravel"
+        ]
+      },
+      {
+        "job_id": "828195",
+        "components": {
+          "technical_fit": 73,
+          "preferences_fit": 50,
+          "technical_depth": 52,
+          "learning": 74,
+          "innovation": 60,
+          "clarity": 77
+        },
+        "reasons": [
+          "Deine Grundlagen in HTML, CSS und JavaScript sind für Website-Pflege und Web-Formulare direkt nutzbar; CMS-Erfahrung ist noch nicht belegt.",
+          "Die Anzeige nennt Einarbeitung in CMS und Formularsysteme; das macht den Einstieg trotz fehlender Berufserfahrung gut erreichbar.",
+          "15 bis 20 Stunden sind angegeben; zum Arbeitsmodell bleibt die Anzeige im Datensatz widersprüchlich und damit teilweise offen."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "CMS",
+          "JQuery"
+        ]
+      },
+      {
+        "job_id": "835027",
+        "components": {
+          "technical_fit": 44,
+          "preferences_fit": 50,
+          "technical_depth": 58,
+          "learning": 88,
+          "innovation": 70,
+          "clarity": 80
+        },
+        "reasons": [
+          "Deine HTML-, CSS- und JavaScript-Grundlagen passen zur Implementierung von Weboberflächen; zentrale UI-Design-Kenntnisse und Design-Tools sind aber nicht belegt.",
+          "Das Mentoringprogramm und Seminare schaffen einen klaren Lernrahmen für den Einstieg in Teamarbeit und Prototypen.",
+          "Hybrid und 10 bis 20 Stunden sind angegeben; weitere weiche Präferenzen bleiben offen."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "UI-Design",
+          "Design-Tools"
+        ]
+      },
+      {
+        "job_id": "830863",
+        "components": {
+          "technical_fit": 61,
+          "preferences_fit": 50,
+          "technical_depth": 67,
+          "learning": null,
+          "innovation": 68,
+          "clarity": 74
+        },
+        "reasons": [
+          "Deine HTML-, CSS- und JavaScript-Grundlagen passen zur Web-UI-Entwicklung; offen sind TypeScript, Vue 2/3 und Arbeit mit Figma-Designs.",
+          "Du kannst hier direkt an Analyse-Webanwendungen mitarbeiten und eigene Ideen einbringen; das ist ein praktischer Team-Einstieg.",
+          "Remote und 10 bis 40 Stunden sind genannt; zu Einarbeitung oder Betreuung macht die Anzeige keine klare Angabe."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "TypeScript",
+          "Vue.js",
+          "Figma"
+        ]
+      },
+      {
+        "job_id": "845512",
+        "components": {
+          "technical_fit": 49,
+          "preferences_fit": 50,
+          "technical_depth": 76,
+          "learning": 72,
+          "innovation": 64,
+          "clarity": 78
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript- und Python-Grundlagen berühren Teile der Aufgaben; zentrale Anforderungen wie Matlab/Simulink, Java oder Linux sind nicht belegt.",
+          "Du bekommst eigene Aufgabenbereiche mit steigender Selbstständigkeit und Einblicke in Softwarepraxis; das spricht für Entwicklung im Team.",
+          "Hybrid sowie 12 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Matlab/Simulink/PLC Coder",
+          "Java/C/C++",
+          "Linux",
+          "PHP",
+          "XML"
+        ]
+      },
+      {
+        "job_id": "861511",
+        "components": {
+          "technical_fit": 54,
+          "preferences_fit": 50,
+          "technical_depth": 74,
+          "learning": 72,
+          "innovation": 66,
+          "clarity": 82
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript-, Python- und Git-Grundlagen passen zum Einstieg in Webaufgaben; offen sind Nuxt, Vue, Node, TypeScript, GraphQL und REST-Praxis.",
+          "Die Stelle verbindet Frontend-Arbeit mit Python-Microservices und nennt Raum zum Lernen und Ausprobieren; das ist ein erreichbarer nächster Entwicklungsschritt.",
+          "Hybrid und 10 bis 20 Stunden sind angegeben; weitere Präferenzen bleiben offen."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "Nuxt.js",
+          "Vue.js",
+          "Node.js",
+          "TypeScript",
+          "GraphQL",
+          "REST APIs",
+          "Headless CMS"
+        ]
+      },
+      {
+        "job_id": "824568",
+        "components": {
+          "technical_fit": 55,
+          "preferences_fit": 50,
+          "technical_depth": 73,
+          "learning": 84,
+          "innovation": 68,
+          "clarity": 57
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript- und Python-Grundlagen passen zu Teilen der Web- und Datenbankaufgaben; Angular, Spring Boot und SQL sind offen.",
+          "Die Anzeige nennt qualifizierte Betreuung, intensive Einarbeitung und konkreten Praxisbezug; das ist stark für den ersten Entwicklungseinstieg.",
+          "Arbeitszeiten und Homeoffice sind flexibel beschrieben; die Aufgaben sind breit gefächert und dadurch fachlich weniger klar zugeschnitten."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "TypeScript",
+          "Angular",
+          "Spring Boot",
+          "SQL"
+        ]
+      },
+      {
+        "job_id": "843348",
+        "components": {
+          "technical_fit": 60,
+          "preferences_fit": 50,
+          "technical_depth": 66,
+          "learning": 80,
+          "innovation": 64,
+          "clarity": 77
+        },
+        "reasons": [
+          "Deine JavaScript- und Git-Grundlagen passen zum Einstieg in Fullstack-Aufgaben; offen sind React oder Vue, REST/GraphQL und Testing-Frameworks.",
+          "Du arbeitest im Entwicklerteam an Web- und App-Anwendungen und bekommst Unterstützung bei deiner technischen Weiterentwicklung.",
+          "Die Stelle ist onsite und die Wochenstunden sind sehr offen; das Arbeitsmodell ist bekannt, weitere Präferenzen aber nicht festgelegt."
+        ],
+        "matched_skills": [
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "React/Vue.js",
+          "REST/GraphQL",
+          "Flutter",
+          "Testing-Frameworks"
+        ]
+      },
+      {
+        "job_id": "837775",
+        "components": {
+          "technical_fit": 62,
+          "preferences_fit": 50,
+          "technical_depth": 61,
+          "learning": 88,
+          "innovation": 70,
+          "clarity": 72
+        },
+        "reasons": [
+          "Dein Studienprojekt mit HTML, CSS und einfachem JavaScript passt zu den geforderten ersten Webprojekten; Java im Backend ist noch nicht belegt.",
+          "Mentoringprogramm, Teamarbeit und neue Technologien schaffen einen starken Lernrahmen für den ersten Praxisschritt.",
+          "Hybrid und 10 bis 20 Stunden sind angegeben; die konkreten Technologien der bestehenden Systeme bleiben teilweise offen."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java"
+        ]
+      },
+      {
+        "job_id": "860555",
+        "components": {
+          "technical_fit": 41,
+          "preferences_fit": 50,
+          "technical_depth": 71,
+          "learning": 82,
+          "innovation": null,
+          "clarity": 79
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur einen Teil ab; zentrale Anforderungen wie Java, Spring, TypeScript, Angular und SQL sind nicht belegt.",
+          "Kontinuierliche Unterstützung, Schulungen und Entwicklungsmöglichkeiten sind klar genannt; das hilft beim Einstieg, trotz deutlicher Fachlücken.",
+          "Hybrid mit einem Bürotag pro Woche und 20 Stunden ist angegeben; weitere Präferenzen sind nicht festgelegt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java",
+          "Spring",
+          "TypeScript",
+          "Angular",
+          "PostgreSQL",
+          "SQL",
+          "Spark"
+        ]
+      },
+      {
+        "job_id": "834700",
+        "components": {
+          "technical_fit": 57,
+          "preferences_fit": 50,
+          "technical_depth": 69,
+          "learning": null,
+          "innovation": 58,
+          "clarity": 74
+        },
+        "reasons": [
+          "Deine Web-Grundlagen passen zu Web-Oberflächen; offen sind Linux, Cloud-Technologien und die Entwicklung von Echtzeitanwendungen oder Containern.",
+          "Du arbeitest in einem SCRUM-Team an Software und Web-Oberflächen mit; das ist ein brauchbarer Praxiseinstieg im Entwicklungsteam.",
+          "Hybrid und 10 bis 20 Stunden sind angegeben; zu Einarbeitung oder Weiterbildung macht die Anzeige keine klare Angabe."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "Linux",
+          "Cloud-Technologien",
+          "C/C++/C#"
+        ]
+      },
+      {
+        "job_id": "843131",
+        "components": {
+          "technical_fit": 41,
+          "preferences_fit": 50,
+          "technical_depth": 71,
+          "learning": 82,
+          "innovation": null,
+          "clarity": 79
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.",
+          "Kontinuierliche Unterstützung, Zertifizierungen und Schulungen geben einen klaren Lernrahmen für den Einstieg.",
+          "Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java",
+          "Spring",
+          "TypeScript",
+          "Angular",
+          "PostgreSQL",
+          "SQL",
+          "Spark"
+        ]
+      },
+      {
+        "job_id": "834695",
+        "components": {
+          "technical_fit": 39,
+          "preferences_fit": 50,
+          "technical_depth": 63,
+          "learning": 76,
+          "innovation": 74,
+          "clarity": 76
+        },
+        "reasons": [
+          "Deine Python-, JavaScript- und CSS-Grundlagen passen nur teilweise; ein Masterstudium sowie REST-API-Praxis und KI-Schwerpunkt sind nicht belegt.",
+          "Die Stelle bietet praktische Erfahrung und ein unterstützendes Team; fachlich liegt sie aber deutlich neben deinem Web-Einstiegsprofil.",
+          "Remote und bis 20 Stunden sind genannt; weitere Präferenzen bleiben offen."
+        ],
+        "matched_skills": [
+          "Python-Grundlagen",
+          "JavaScript-Grundlagen",
+          "CSS"
+        ],
+        "missing_skills": [
+          "REST-APIs",
+          "Künstliche Intelligenz"
+        ]
+      },
+      {
+        "job_id": "857135",
+        "components": {
+          "technical_fit": 45,
+          "preferences_fit": 50,
+          "technical_depth": 72,
+          "learning": 86,
+          "innovation": 71,
+          "clarity": 81
+        },
+        "reasons": [
+          "Deine JavaScript-, Python- und Git-Grundlagen passen zum Feld Webentwicklung; React, TypeScript, REST-APIs und Testing mit Cypress sind aber nicht belegt.",
+          "Die Stelle bietet kleine Programmieraufgaben, wachsende Verantwortung und flexible Stunden; das ist lernstark, aber fachlich anspruchsvoller als dein aktueller Stand.",
+          "8 bis 12 Stunden und Hybrid sind angegeben; das passt als bekannte Präferenz nicht negativ, weitere Wünsche sind offen."
+        ],
+        "matched_skills": [
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "React",
+          "TypeScript",
+          "REST APIs",
+          "Cypress"
+        ]
+      },
+      {
+        "job_id": "816293",
+        "components": {
+          "technical_fit": 41,
+          "preferences_fit": 50,
+          "technical_depth": 71,
+          "learning": 82,
+          "innovation": null,
+          "clarity": 79
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.",
+          "Kontinuierliche Unterstützung, Zertifizierungen und Schulungen geben einen klaren Rahmen, obwohl die Fachhürde hoch ist.",
+          "Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java",
+          "Spring",
+          "TypeScript",
+          "Angular",
+          "PostgreSQL",
+          "SQL",
+          "Spark"
+        ]
+      },
+      {
+        "job_id": "845150",
+        "components": {
+          "technical_fit": 56,
+          "preferences_fit": 50,
+          "technical_depth": 64,
+          "learning": 84,
+          "innovation": 58,
+          "clarity": 78
+        },
+        "reasons": [
+          "Deine Python- und Git-Grundlagen passen zu den Grundanforderungen; offen sind REST-Services, CI/CD und Testautomatisierung sowie das geforderte 4. Semester.",
+          "Mentoren passen Aufgaben an deinen Kenntnisstand an und die Stelle bietet Weiterbildung; das ist für den ersten Praxisschritt stark.",
+          "Hybrid und 10 bis 40 Stunden sind angegeben; das Stundenmodell ist weit, aber nicht nachweislich unpassend."
+        ],
+        "matched_skills": [
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "REST-Services",
+          "CI/CD",
+          "Testautomatisierung"
+        ]
+      },
+      {
+        "job_id": "826611",
+        "components": {
+          "technical_fit": 41,
+          "preferences_fit": 50,
+          "technical_depth": 71,
+          "learning": 82,
+          "innovation": null,
+          "clarity": 79
+        },
+        "reasons": [
+          "Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.",
+          "Kontinuierliche Unterstützung, Zertifizierungen und Schulungen schaffen einen guten Lernrahmen trotz klarer Fachlücken.",
+          "Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind nicht festgelegt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java",
+          "Spring",
+          "TypeScript",
+          "Angular",
+          "PostgreSQL",
+          "SQL",
+          "Spark"
+        ]
+      },
+      {
+        "job_id": "833009",
+        "components": {
+          "technical_fit": 56,
+          "preferences_fit": 50,
+          "technical_depth": 64,
+          "learning": 84,
+          "innovation": 58,
+          "clarity": 76
+        },
+        "reasons": [
+          "Deine Python- und Git-Grundlagen passen zu Teilen der Anforderungen; offen sind REST-Services, CI/CD und Testautomatisierung sowie das geforderte 4. Semester.",
+          "Mentoren und passende Aufgaben nach Kenntnisstand machen den Einstieg erreichbar und lernorientiert.",
+          "Hybrid und 10 bis 40 Stunden sind angegeben; das Arbeitsmodell ist bekannt, weitere Präferenzen bleiben offen."
+        ],
+        "matched_skills": [
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "REST-Services",
+          "CI/CD",
+          "Testautomatisierung"
+        ]
+      }
+    ],
+    "assistant_message": "Deine stärkste Basis liegt klar in den Frontend-Grundlagen mit HTML, CSS und JavaScript aus dem Studienprojekt. Besonders erreichbar wirken Stellen mit ausdrücklich genannter Einarbeitung oder Mentoring und klaren Webaufgaben. Anspruchsvoller werden Anzeigen, sobald React, TypeScript, SQL oder Java schon als belastbare Vorkenntnisse vorausgesetzt werden. Ein guter nächster Schritt sind deshalb Bewerbungen auf Rollen mit Website-, Webformular- oder Junior-Webapp-Aufgaben, bei denen Lernen im Team sichtbar angeboten wird."
+  },
+  "raw_text": "{\"rankings\":[{\"job_id\":\"829115\",\"components\":{\"technical_fit\":64,\"preferences_fit\":50,\"technical_depth\":72,\"learning\":null,\"innovation\":null,\"clarity\":78},\"reasons\":[\"Deine HTML-, CSS-, JavaScript-, Python- und Git-Grundlagen passen zu Frontend-, Backend- und Webapp-Aufgaben; offen sind React/Angular, SQL und agile Praxis.\",\"Du kannst hier an Webapplikationen auf Client- und Server-Seite mitarbeiten; das ist ein direkter Praxiseinstieg im Entwicklungsteam.\",\"Die Stelle nennt 10 bis 20 Stunden pro Woche; zu Betreuung oder Einarbeitung macht die Anzeige keine klare Angabe.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React/Angular\",\"relationale Datenbanken\",\"agile Softwareentwicklung\"]},{\"job_id\":\"820065\",\"components\":{\"technical_fit\":58,\"preferences_fit\":50,\"technical_depth\":65,\"learning\":82,\"innovation\":68,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS- und JavaScript-Grundlagen passen zu den Frontend-Aufgaben; offen bleiben das geforderte 4. Semester und belastbare Nachweise über gute Frontend-Kenntnisse.\",\"Die Stelle bietet eine umfassende Einarbeitung und Arbeit an einer Website; das passt gut zu einem begleiteten Einstieg.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP oder Node.js\"]},{\"job_id\":\"837416\",\"components\":{\"technical_fit\":57,\"preferences_fit\":35,\"technical_depth\":70,\"learning\":78,\"innovation\":72,\"clarity\":76},\"reasons\":[\"Deine Grundlagen in HTML, CSS und JavaScript passen zu responsiven UIs; offen sind PHP, MySQL, CMS und moderne Frameworks wie Vue oder React.\",\"Du kannst in echten Projekten im Team mitarbeiten und Ideen einbringen; Weiterbildungsmöglichkeiten sind ausdrücklich genannt.\",\"Die Stelle nennt 20 bis 40 Stunden pro Woche; das ist als Präferenzpunkt weniger passend, Homeoffice ist aber möglich.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP\",\"MySQL\",\"CMS-Systeme\",\"Vue.js/React/Laravel\"]},{\"job_id\":\"828195\",\"components\":{\"technical_fit\":73,\"preferences_fit\":50,\"technical_depth\":52,\"learning\":74,\"innovation\":60,\"clarity\":77},\"reasons\":[\"Deine Grundlagen in HTML, CSS und JavaScript sind für Website-Pflege und Web-Formulare direkt nutzbar; CMS-Erfahrung ist noch nicht belegt.\",\"Die Anzeige nennt Einarbeitung in CMS und Formularsysteme; das macht den Einstieg trotz fehlender Berufserfahrung gut erreichbar.\",\"15 bis 20 Stunden sind angegeben; zum Arbeitsmodell bleibt die Anzeige im Datensatz widersprüchlich und damit teilweise offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"CMS\",\"JQuery\"]},{\"job_id\":\"835027\",\"components\":{\"technical_fit\":44,\"preferences_fit\":50,\"technical_depth\":58,\"learning\":88,\"innovation\":70,\"clarity\":80},\"reasons\":[\"Deine HTML-, CSS- und JavaScript-Grundlagen passen zur Implementierung von Weboberflächen; zentrale UI-Design-Kenntnisse und Design-Tools sind aber nicht belegt.\",\"Das Mentoringprogramm und Seminare schaffen einen klaren Lernrahmen für den Einstieg in Teamarbeit und Prototypen.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; weitere weiche Präferenzen bleiben offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"UI-Design\",\"Design-Tools\"]},{\"job_id\":\"830863\",\"components\":{\"technical_fit\":61,\"preferences_fit\":50,\"technical_depth\":67,\"learning\":null,\"innovation\":68,\"clarity\":74},\"reasons\":[\"Deine HTML-, CSS- und JavaScript-Grundlagen passen zur Web-UI-Entwicklung; offen sind TypeScript, Vue 2/3 und Arbeit mit Figma-Designs.\",\"Du kannst hier direkt an Analyse-Webanwendungen mitarbeiten und eigene Ideen einbringen; das ist ein praktischer Team-Einstieg.\",\"Remote und 10 bis 40 Stunden sind genannt; zu Einarbeitung oder Betreuung macht die Anzeige keine klare Angabe.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Vue.js\",\"Figma\"]},{\"job_id\":\"845512\",\"components\":{\"technical_fit\":49,\"preferences_fit\":50,\"technical_depth\":76,\"learning\":72,\"innovation\":64,\"clarity\":78},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen berühren Teile der Aufgaben; zentrale Anforderungen wie Matlab/Simulink, Java oder Linux sind nicht belegt.\",\"Du bekommst eigene Aufgabenbereiche mit steigender Selbstständigkeit und Einblicke in Softwarepraxis; das spricht für Entwicklung im Team.\",\"Hybrid sowie 12 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Matlab/Simulink/PLC Coder\",\"Java/C/C++\",\"Linux\",\"PHP\",\"XML\"]},{\"job_id\":\"861511\",\"components\":{\"technical_fit\":54,\"preferences_fit\":50,\"technical_depth\":74,\"learning\":72,\"innovation\":66,\"clarity\":82},\"reasons\":[\"Deine HTML-, CSS-, JavaScript-, Python- und Git-Grundlagen passen zum Einstieg in Webaufgaben; offen sind Nuxt, Vue, Node, TypeScript, GraphQL und REST-Praxis.\",\"Die Stelle verbindet Frontend-Arbeit mit Python-Microservices und nennt Raum zum Lernen und Ausprobieren; das ist ein erreichbarer nächster Entwicklungsschritt.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; weitere Präferenzen bleiben offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"Nuxt.js\",\"Vue.js\",\"Node.js\",\"TypeScript\",\"GraphQL\",\"REST APIs\",\"Headless CMS\"]},{\"job_id\":\"824568\",\"components\":{\"technical_fit\":55,\"preferences_fit\":50,\"technical_depth\":73,\"learning\":84,\"innovation\":68,\"clarity\":57},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen passen zu Teilen der Web- und Datenbankaufgaben; Angular, Spring Boot und SQL sind offen.\",\"Die Anzeige nennt qualifizierte Betreuung, intensive Einarbeitung und konkreten Praxisbezug; das ist stark für den ersten Entwicklungseinstieg.\",\"Arbeitszeiten und Homeoffice sind flexibel beschrieben; die Aufgaben sind breit gefächert und dadurch fachlich weniger klar zugeschnitten.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Angular\",\"Spring Boot\",\"SQL\"]},{\"job_id\":\"843348\",\"components\":{\"technical_fit\":60,\"preferences_fit\":50,\"technical_depth\":66,\"learning\":80,\"innovation\":64,\"clarity\":77},\"reasons\":[\"Deine JavaScript- und Git-Grundlagen passen zum Einstieg in Fullstack-Aufgaben; offen sind React oder Vue, REST/GraphQL und Testing-Frameworks.\",\"Du arbeitest im Entwicklerteam an Web- und App-Anwendungen und bekommst Unterstützung bei deiner technischen Weiterentwicklung.\",\"Die Stelle ist onsite und die Wochenstunden sind sehr offen; das Arbeitsmodell ist bekannt, weitere Präferenzen aber nicht festgelegt.\"],\"matched_skills\":[\"JavaScript-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React/Vue.js\",\"REST/GraphQL\",\"Flutter\",\"Testing-Frameworks\"]},{\"job_id\":\"837775\",\"components\":{\"technical_fit\":62,\"preferences_fit\":50,\"technical_depth\":61,\"learning\":88,\"innovation\":70,\"clarity\":72},\"reasons\":[\"Dein Studienprojekt mit HTML, CSS und einfachem JavaScript passt zu den geforderten ersten Webprojekten; Java im Backend ist noch nicht belegt.\",\"Mentoringprogramm, Teamarbeit und neue Technologien schaffen einen starken Lernrahmen für den ersten Praxisschritt.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; die konkreten Technologien der bestehenden Systeme bleiben teilweise offen.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Java\"]},{\"job_id\":\"860555\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur einen Teil ab; zentrale Anforderungen wie Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Schulungen und Entwicklungsmöglichkeiten sind klar genannt; das hilft beim Einstieg, trotz deutlicher Fachlücken.\",\"Hybrid mit einem Bürotag pro Woche und 20 Stunden ist angegeben; weitere Präferenzen sind nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"834700\",\"components\":{\"technical_fit\":57,\"preferences_fit\":50,\"technical_depth\":69,\"learning\":null,\"innovation\":58,\"clarity\":74},\"reasons\":[\"Deine Web-Grundlagen passen zu Web-Oberflächen; offen sind Linux, Cloud-Technologien und die Entwicklung von Echtzeitanwendungen oder Containern.\",\"Du arbeitest in einem SCRUM-Team an Software und Web-Oberflächen mit; das ist ein brauchbarer Praxiseinstieg im Entwicklungsteam.\",\"Hybrid und 10 bis 20 Stunden sind angegeben; zu Einarbeitung oder Weiterbildung macht die Anzeige keine klare Angabe.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Linux\",\"Cloud-Technologien\",\"C/C++/C#\"]},{\"job_id\":\"843131\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Zertifizierungen und Schulungen geben einen klaren Lernrahmen für den Einstieg.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"834695\",\"components\":{\"technical_fit\":39,\"preferences_fit\":50,\"technical_depth\":63,\"learning\":76,\"innovation\":74,\"clarity\":76},\"reasons\":[\"Deine Python-, JavaScript- und CSS-Grundlagen passen nur teilweise; ein Masterstudium sowie REST-API-Praxis und KI-Schwerpunkt sind nicht belegt.\",\"Die Stelle bietet praktische Erfahrung und ein unterstützendes Team; fachlich liegt sie aber deutlich neben deinem Web-Einstiegsprofil.\",\"Remote und bis 20 Stunden sind genannt; weitere Präferenzen bleiben offen.\"],\"matched_skills\":[\"Python-Grundlagen\",\"JavaScript-Grundlagen\",\"CSS\"],\"missing_skills\":[\"REST-APIs\",\"Künstliche Intelligenz\"]},{\"job_id\":\"857135\",\"components\":{\"technical_fit\":45,\"preferences_fit\":50,\"technical_depth\":72,\"learning\":86,\"innovation\":71,\"clarity\":81},\"reasons\":[\"Deine JavaScript-, Python- und Git-Grundlagen passen zum Feld Webentwicklung; React, TypeScript, REST-APIs und Testing mit Cypress sind aber nicht belegt.\",\"Die Stelle bietet kleine Programmieraufgaben, wachsende Verantwortung und flexible Stunden; das ist lernstark, aber fachlich anspruchsvoller als dein aktueller Stand.\",\"8 bis 12 Stunden und Hybrid sind angegeben; das passt als bekannte Präferenz nicht negativ, weitere Wünsche sind offen.\"],\"matched_skills\":[\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"TypeScript\",\"REST APIs\",\"Cypress\"]},{\"job_id\":\"816293\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Zertifizierungen und Schulungen geben einen klaren Rahmen, obwohl die Fachhürde hoch ist.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind im Profil nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"845150\",\"components\":{\"technical_fit\":56,\"preferences_fit\":50,\"technical_depth\":64,\"learning\":84,\"innovation\":58,\"clarity\":78},\"reasons\":[\"Deine Python- und Git-Grundlagen passen zu den Grundanforderungen; offen sind REST-Services, CI/CD und Testautomatisierung sowie das geforderte 4. Semester.\",\"Mentoren passen Aufgaben an deinen Kenntnisstand an und die Stelle bietet Weiterbildung; das ist für den ersten Praxisschritt stark.\",\"Hybrid und 10 bis 40 Stunden sind angegeben; das Stundenmodell ist weit, aber nicht nachweislich unpassend.\"],\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]},{\"job_id\":\"826611\",\"components\":{\"technical_fit\":41,\"preferences_fit\":50,\"technical_depth\":71,\"learning\":82,\"innovation\":null,\"clarity\":79},\"reasons\":[\"Deine HTML-, CSS-, JavaScript- und Python-Grundlagen decken nur Teilaufgaben ab; Java, Spring, TypeScript, Angular und SQL sind nicht belegt.\",\"Kontinuierliche Unterstützung, Zertifizierungen und Schulungen schaffen einen guten Lernrahmen trotz klarer Fachlücken.\",\"Hybrid und 15 bis 20 Stunden sind angegeben; weitere Präferenzen sind nicht festgelegt.\"],\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\"]},{\"job_id\":\"833009\",\"components\":{\"technical_fit\":56,\"preferences_fit\":50,\"technical_depth\":64,\"learning\":84,\"innovation\":58,\"clarity\":76},\"reasons\":[\"Deine Python- und Git-Grundlagen passen zu Teilen der Anforderungen; offen sind REST-Services, CI/CD und Testautomatisierung sowie das geforderte 4. Semester.\",\"Mentoren und passende Aufgaben nach Kenntnisstand machen den Einstieg erreichbar und lernorientiert.\",\"Hybrid und 10 bis 40 Stunden sind angegeben; das Arbeitsmodell ist bekannt, weitere Präferenzen bleiben offen.\"],\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]}],\"assistant_message\":\"Deine stärkste Basis liegt klar in den Frontend-Grundlagen mit HTML, CSS und JavaScript aus dem Studienprojekt. Besonders erreichbar wirken Stellen mit ausdrücklich genannter Einarbeitung oder Mentoring und klaren Webaufgaben. Anspruchsvoller werden Anzeigen, sobald React, TypeScript, SQL oder Java schon als belastbare Vorkenntnisse vorausgesetzt werden. Ein guter nächster Schritt sind deshalb Bewerbungen auf Rollen mit Website-, Webformular- oder Junior-Webapp-Aufgaben, bei denen Lernen im Team sichtbar angeboten wird.\"}",
+  "finished_utc": "2026-09-17T07:04:11.099507+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 109600,
+    "input_token_bound": 117792,
+    "max_tokens": 10000,
+    "reserved_usd": "0.44448",
+    "task_id": "P01-C.T0.RerankingResult.02",
+    "post_number": 11,
+    "status": "settled",
+    "charged_usd": "0.108565",
+    "usage": {
+      "input_tokens": 23074,
+      "output_tokens": 3392,
+      "total_tokens": 26466
+    },
+    "created_utc": "2026-09-17T07:03:32.649849+00:00",
+    "settled_utc": "2026-09-17T07:04:11.103350+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

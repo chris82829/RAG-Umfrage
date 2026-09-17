@@ -1,0 +1,1902 @@
+{
+  "schema_version": "diana-selected-persona-pilot-2",
+  "created_date": "2026-09-17",
+  "scope": "Zwei fiktive Personen (P01 Mara Seidel, Informatikstudentin, und P06 Nora Peters, kaufmännischer Wechsel ins Personalmanagement), jeweils drei unabhängige Sitzungen in A/B/C, je eine initiale Suche und drei adaptive Nutzernachrichten; insgesamt sechs Sitzungen und 24 Ranglistensnapshots.",
+  "planned_sessions": 6,
+  "planned_unique_personas": 2,
+  "planned_snapshots": 24,
+  "budget": {
+    "usd_hard_cap": "3.00",
+    "maximum_paid_posts": 80,
+    "separate_simulator_api": false,
+    "separate_judge_api": false,
+    "automatic_stop": "Keine Überschreitung oder automatische Erhöhung der Grenzen; fehlende Messpunkte bei Abbruch offen ausweisen."
+  },
+  "source_personas_sha256": "6d5e31ff993b4bad074d462559891683144f31cbe74903c838437971e568d0f4",
+  "production_advisor_definitions_sha256": "ff82dcc631c56627e19fb99b450d47cfe719931cb94d5941207ac7de17f371f3",
+  "prepared_personas_status": "Die ursprünglichen zwölf Personendokumente bleiben Vorbereitung. Nur P01 und P06 werden ausgeführt. Frühere größere Pläne sowie zwischenzeitliche Pläne mit drei unterschiedlichen Personen, nur P01 oder P03 als zweiter Person wurden vor bezahlten Systemaufrufen dieses Piloten ersetzt.",
+  "judgment_policy": "Je Person ein gemeinsamer anonymisierter Stellenpool aus allen zwölf tatsächlich erhaltenen Snapshots; unveränderter vollständiger Informationsbedarf und genau ein Codex-Relevanzurteil je Person-Job-Paar für alle Varianten und Zeitpunkte.",
+  "message_policy": "Je Person drei unveränderte Informationsetappen in A/B/C. Codex formuliert die tatsächliche Nachricht nach Sichtung der realen Antwort innerhalb des eingefrorenen Faktenbudgets; keine zusätzliche Simulations-API. Tatsächliche Nachrichten und Anpassungsbegründungen werden separat gespeichert.",
+  "interpretation_limit": "Deskriptiver Pilot mit n=2 gepaarten synthetischen Personen und einer Sitzung je Person/Variante. Keine Repräsentativität, Konfidenzintervalle oder Signifikanztests; keine belastbaren Aussagen über allgemeine kausale Unterschiede zwischen A/B/C.",
+  "validation": {
+    "profile_and_advisor_schemas": "passed",
+    "identical_initial_profiles_within_person": "passed",
+    "identical_full_information_needs_within_person": "passed",
+    "identical_three_milestones_within_person": "passed"
+  },
+  "cases": [
+    {
+      "id": "P01-A",
+      "name": "Mara Seidel",
+      "age": 19,
+      "group": "Studienanfängerin · Informatik · erste Praxiserfahrung",
+      "fictional": true,
+      "study_variants": [
+        "A"
+      ],
+      "biography": "Mara lebt in Nürnberg und studiert im zweiten Bachelorsemester Informatik. Sie hat bislang nur Hochschulprojekte und möchte erstmals in einem Entwicklungsteam mitarbeiten. Ihr Ziel ist ein fachlich passender Einstieg neben dem Studium; ein prestigeträchtiger Arbeitgeber ist ihr weniger wichtig als verständliche Aufgaben und Betreuung.",
+      "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+      "experience": [
+        "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+        "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+      ],
+      "skills": [
+        "Python-Grundlagen",
+        "HTML",
+        "CSS",
+        "JavaScript-Grundlagen",
+        "Git-Grundlagen"
+      ],
+      "limitations": [
+        "Kein React- oder TypeScript-Projekt.",
+        "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+      ],
+      "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+        "experience": [
+          "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+          "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+        ],
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "limitations": [
+          "Kein React- oder TypeScript-Projekt.",
+          "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+        ],
+        "employment_types": [
+          "werkstudent"
+        ],
+        "relevant_task_families": [
+          "Frontend- und Webentwicklung",
+          "Pflege und Weiterentwicklung von Weboberflächen",
+          "Einsteigergeeignete Webtests mit Entwicklungsbezug"
+        ],
+        "ordered_priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Senior-Frontend-Verantwortung oder verbindlich mehrjährige React-Erfahrung bei fehlendem Einstiegspfad; fachfremde reine Vertriebs-, Service- oder Verwaltungsaufgaben.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Webaufgaben passen zu HTML/CSS/JavaScript-Grundlagen, Studierende mit wenig Erfahrung sind angesprochen, und Einarbeitung ist belegt; Arbeitszeit und Region unterstützen den Wunsch, soweit beschrieben."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "cv_text": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.\nGruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.\nPython-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung.\nGrenzen: Kein React- oder TypeScript-Projekt.; Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 12.0
+        }
+      },
+      "advisor_config": {
+        "mode": "preset",
+        "preset": "standard",
+        "name": "Standardberatung",
+        "traits": [],
+        "focus": "ausgewogen",
+        "description": ""
+      },
+      "advisor_selection": null,
+      "preferred_template": "career",
+      "preferred_template_reason": "Erster beruflicher Einstieg; passende Einarbeitung und ein realistischer nächster Schritt stehen im Vordergrund.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+        "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+        "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "canonical_information_and_fallback": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "canonical_information_and_fallback": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Suchkriterien; Prüfung der ersten Stelle anhand des bereits erklärten Bedarfs.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+        }
+      ],
+      "initially_omitted_information": [
+        "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+        "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3"
+      ],
+      "case_id": "P01-A",
+      "source_id": "P01",
+      "assigned_arm": "A",
+      "synthetic": true,
+      "start_profile": {
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "advisor": {
+        "mode": "preset",
+        "preset": "standard",
+        "name": "Standardberatung",
+        "traits": [],
+        "focus": "ausgewogen",
+        "description": ""
+      },
+      "messages": [
+        "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+        "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+        "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+      ],
+      "execution_note": "Eine von drei unabhängigen Sitzungen derselben vorab definierten fiktiven Person. Nachrichten sind adaptiv zu formulieren; messages/planned_messages sind nur Formulierungsgrundlagen. Keine tatsächlichen Antworten vorweggenommen."
+    },
+    {
+      "id": "P01-B",
+      "name": "Mara Seidel",
+      "age": 19,
+      "group": "Studienanfängerin · Informatik · erste Praxiserfahrung",
+      "fictional": true,
+      "study_variants": [
+        "B"
+      ],
+      "biography": "Mara lebt in Nürnberg und studiert im zweiten Bachelorsemester Informatik. Sie hat bislang nur Hochschulprojekte und möchte erstmals in einem Entwicklungsteam mitarbeiten. Ihr Ziel ist ein fachlich passender Einstieg neben dem Studium; ein prestigeträchtiger Arbeitgeber ist ihr weniger wichtig als verständliche Aufgaben und Betreuung.",
+      "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+      "experience": [
+        "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+        "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+      ],
+      "skills": [
+        "Python-Grundlagen",
+        "HTML",
+        "CSS",
+        "JavaScript-Grundlagen",
+        "Git-Grundlagen"
+      ],
+      "limitations": [
+        "Kein React- oder TypeScript-Projekt.",
+        "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+      ],
+      "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+        "experience": [
+          "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+          "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+        ],
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "limitations": [
+          "Kein React- oder TypeScript-Projekt.",
+          "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+        ],
+        "employment_types": [
+          "werkstudent"
+        ],
+        "relevant_task_families": [
+          "Frontend- und Webentwicklung",
+          "Pflege und Weiterentwicklung von Weboberflächen",
+          "Einsteigergeeignete Webtests mit Entwicklungsbezug"
+        ],
+        "ordered_priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Senior-Frontend-Verantwortung oder verbindlich mehrjährige React-Erfahrung bei fehlendem Einstiegspfad; fachfremde reine Vertriebs-, Service- oder Verwaltungsaufgaben.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Webaufgaben passen zu HTML/CSS/JavaScript-Grundlagen, Studierende mit wenig Erfahrung sind angesprochen, und Einarbeitung ist belegt; Arbeitszeit und Region unterstützen den Wunsch, soweit beschrieben."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "cv_text": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.\nGruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.\nPython-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung.\nGrenzen: Kein React- oder TypeScript-Projekt.; Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 12.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Top-Berufsberater",
+        "traits": [
+          "empathisch",
+          "strukturiert",
+          "ermutigend"
+        ],
+        "focus": "lernpotenzial",
+        "description": "Arbeite als besonders sorgfältiger KI-Berufsberater. Hilf bei der Entscheidung für einen realistischen nächsten beruflichen Schritt. Verbinde eine konkrete Aufgabe der Anzeige mit einem belegten Projekt, einer Fähigkeit oder Erfahrung aus dem Profil. Prüfe Einstiegsvoraussetzungen und ausdrücklich zugesagte Einarbeitung, Betreuung oder Entwicklung; leite daraus keine automatische Zusage ab. Unterscheide zwingende Voraussetzungen, erlernbare optionale Kenntnisse und fehlende Informationen. Zeige bei einer Beratungsfrage einen unmittelbar nutzbaren nächsten Schritt: eine konkrete Frage an den Arbeitgeber, einen relevanten Nachweis aus einem eigenen Projekt oder einen kleinen Lernschritt. Bei konkurrierenden Zielen benenne den Zielkonflikt und kläre höchstens die wichtigste offene Priorität. Orientiere dich an den ausdrücklich genannten Zielen; eine Werkstudentensuche bedeutet nicht automatisch Lernpriorität. Sprich zugewandt, verständlich und ohne leeres Lob. Eigene Hinweise und Formatwünsche des Nutzers präzisieren die Beratung. Behaupte keine echte Zulassung, Einstellungschance oder ungenannte Jobvorteile."
+      },
+      "advisor_selection": {
+        "source": "template",
+        "template_id": "career"
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Erster beruflicher Einstieg; passende Einarbeitung und ein realistischer nächster Schritt stehen im Vordergrund.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+        "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+        "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "canonical_information_and_fallback": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "canonical_information_and_fallback": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Suchkriterien; Prüfung der ersten Stelle anhand des bereits erklärten Bedarfs.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+        }
+      ],
+      "initially_omitted_information": [
+        "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+        "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung."
+      ],
+      "snapshot_names": [
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3"
+      ],
+      "case_id": "P01-B",
+      "source_id": "P01",
+      "assigned_arm": "B",
+      "synthetic": true,
+      "start_profile": {
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "advisor": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Top-Berufsberater",
+        "traits": [
+          "empathisch",
+          "strukturiert",
+          "ermutigend"
+        ],
+        "focus": "lernpotenzial",
+        "description": "Arbeite als besonders sorgfältiger KI-Berufsberater. Hilf bei der Entscheidung für einen realistischen nächsten beruflichen Schritt. Verbinde eine konkrete Aufgabe der Anzeige mit einem belegten Projekt, einer Fähigkeit oder Erfahrung aus dem Profil. Prüfe Einstiegsvoraussetzungen und ausdrücklich zugesagte Einarbeitung, Betreuung oder Entwicklung; leite daraus keine automatische Zusage ab. Unterscheide zwingende Voraussetzungen, erlernbare optionale Kenntnisse und fehlende Informationen. Zeige bei einer Beratungsfrage einen unmittelbar nutzbaren nächsten Schritt: eine konkrete Frage an den Arbeitgeber, einen relevanten Nachweis aus einem eigenen Projekt oder einen kleinen Lernschritt. Bei konkurrierenden Zielen benenne den Zielkonflikt und kläre höchstens die wichtigste offene Priorität. Orientiere dich an den ausdrücklich genannten Zielen; eine Werkstudentensuche bedeutet nicht automatisch Lernpriorität. Sprich zugewandt, verständlich und ohne leeres Lob. Eigene Hinweise und Formatwünsche des Nutzers präzisieren die Beratung. Behaupte keine echte Zulassung, Einstellungschance oder ungenannte Jobvorteile."
+      },
+      "messages": [
+        "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+        "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+        "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+      ],
+      "execution_note": "Eine von drei unabhängigen Sitzungen derselben vorab definierten fiktiven Person. Nachrichten sind adaptiv zu formulieren; messages/planned_messages sind nur Formulierungsgrundlagen. Keine tatsächlichen Antworten vorweggenommen."
+    },
+    {
+      "id": "P01-C",
+      "name": "Mara Seidel",
+      "age": 19,
+      "group": "Studienanfängerin · Informatik · erste Praxiserfahrung",
+      "fictional": true,
+      "study_variants": [
+        "C"
+      ],
+      "biography": "Mara lebt in Nürnberg und studiert im zweiten Bachelorsemester Informatik. Sie hat bislang nur Hochschulprojekte und möchte erstmals in einem Entwicklungsteam mitarbeiten. Ihr Ziel ist ein fachlich passender Einstieg neben dem Studium; ein prestigeträchtiger Arbeitgeber ist ihr weniger wichtig als verständliche Aufgaben und Betreuung.",
+      "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+      "experience": [
+        "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+        "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+      ],
+      "skills": [
+        "Python-Grundlagen",
+        "HTML",
+        "CSS",
+        "JavaScript-Grundlagen",
+        "Git-Grundlagen"
+      ],
+      "limitations": [
+        "Kein React- oder TypeScript-Projekt.",
+        "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+      ],
+      "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+        "experience": [
+          "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+          "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+        ],
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "limitations": [
+          "Kein React- oder TypeScript-Projekt.",
+          "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+        ],
+        "employment_types": [
+          "werkstudent"
+        ],
+        "relevant_task_families": [
+          "Frontend- und Webentwicklung",
+          "Pflege und Weiterentwicklung von Weboberflächen",
+          "Einsteigergeeignete Webtests mit Entwicklungsbezug"
+        ],
+        "ordered_priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Senior-Frontend-Verantwortung oder verbindlich mehrjährige React-Erfahrung bei fehlendem Einstiegspfad; fachfremde reine Vertriebs-, Service- oder Verwaltungsaufgaben.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Webaufgaben passen zu HTML/CSS/JavaScript-Grundlagen, Studierende mit wenig Erfahrung sind angesprochen, und Einarbeitung ist belegt; Arbeitszeit und Region unterstützen den Wunsch, soweit beschrieben."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "cv_text": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.\nGruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.\nPython-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung.\nGrenzen: Kein React- oder TypeScript-Projekt.; Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 12.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Mein Einstiegscoach",
+        "description": "Erkläre fachliche Anforderungen verständlich. Unterscheide Voraussetzungen von Kenntnissen, die ich im Job lernen kann. Begründe deine Empfehlungen konkret und ohne pauschales Lob.",
+        "traits": [
+          "ermutigend",
+          "strukturiert"
+        ],
+        "focus": "lernpotenzial"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Erster beruflicher Einstieg; passende Einarbeitung und ein realistischer nächster Schritt stehen im Vordergrund.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+        "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+        "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "canonical_information_and_fallback": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "canonical_information_and_fallback": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Suchkriterien; Prüfung der ersten Stelle anhand des bereits erklärten Bedarfs.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+        }
+      ],
+      "initially_omitted_information": [
+        "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+        "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung."
+      ],
+      "snapshot_names": [
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ],
+      "case_id": "P01-C",
+      "source_id": "P01",
+      "assigned_arm": "C",
+      "synthetic": true,
+      "start_profile": {
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "advisor": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Mein Einstiegscoach",
+        "description": "Erkläre fachliche Anforderungen verständlich. Unterscheide Voraussetzungen von Kenntnissen, die ich im Job lernen kann. Begründe deine Empfehlungen konkret und ohne pauschales Lob.",
+        "traits": [
+          "ermutigend",
+          "strukturiert"
+        ],
+        "focus": "lernpotenzial"
+      },
+      "messages": [
+        "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+        "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+        "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+      ],
+      "execution_note": "Eine von drei unabhängigen Sitzungen derselben vorab definierten fiktiven Person. Nachrichten sind adaptiv zu formulieren; messages/planned_messages sind nur Formulierungsgrundlagen. Keine tatsächlichen Antworten vorweggenommen."
+    },
+    {
+      "id": "P06-A",
+      "name": "Nora Peters",
+      "age": 35,
+      "group": "Berufliche Neuorientierung · Personalmanagement · Teilzeit",
+      "fictional": true,
+      "study_variants": [
+        "A"
+      ],
+      "biography": "Nora hat mehrere Jahre in der kaufmännischen Auftragsbearbeitung gearbeitet und schließt ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab. Sie möchte in eine fachliche Einstiegsrolle im Personalbereich wechseln. Ihre bisherigen Kompetenzen liegen in Organisation, zuverlässiger Sachbearbeitung und Kommunikation; spezielle HR-Systeme muss sie noch erlernen.",
+      "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+      "experience": [
+        "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+        "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+      ],
+      "skills": [
+        "Kaufmännische Sachbearbeitung",
+        "MS Office",
+        "Excel",
+        "Terminorganisation",
+        "Interne Kommunikation",
+        "Personalmanagement-Grundlagen"
+      ],
+      "limitations": [
+        "Noch keine hauptberufliche HR-Tätigkeit.",
+        "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+      ],
+      "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+      "employment_types": [
+        "teilzeit"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+        "experience": [
+          "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+          "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+        ],
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "limitations": [
+          "Noch keine hauptberufliche HR-Tätigkeit.",
+          "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+        ],
+        "employment_types": [
+          "teilzeit"
+        ],
+        "relevant_task_families": [
+          "Interne Personaladministration",
+          "HR-Assistenz mit Entwicklungsmöglichkeit",
+          "Onboarding und Mitarbeitendenbetreuung"
+        ],
+        "ordered_priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Eigenverantwortliche Entgeltabrechnung mit zwingender Erfahrung; Senior-HR-Rolle oder überwiegend vertriebliche Personalvermittlung.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Interne Personalaufgaben passen zu kaufmännischer Erfahrung und BWL-Grundlagen; relevante HR-Einarbeitung ist vorgesehen oder Spezialwissen nicht zwingend, Teilzeit ist angegeben."
+      },
+      "initial_profile": {
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "cv_text": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.\nSieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.\nHochschulprojekt zur Verbesserung eines Onboarding-Prozesses.\nGrenzen: Noch keine hauptberufliche HR-Tätigkeit.; Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Fürth"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 25.0
+        }
+      },
+      "advisor_config": {
+        "mode": "preset",
+        "preset": "standard",
+        "name": "Standardberatung",
+        "traits": [],
+        "focus": "ausgewogen",
+        "description": ""
+      },
+      "advisor_selection": null,
+      "preferred_template": "career",
+      "preferred_template_reason": "Realistischer Berufswechsel auf Grundlage übertragbarer kaufmännischer Fähigkeiten.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "canonical_information_and_fallback": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "canonical_information_and_fallback": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Quereinstieg begründet prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+        }
+      ],
+      "initially_omitted_information": [
+        "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+        "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3"
+      ],
+      "case_id": "P06-A",
+      "source_id": "P06",
+      "assigned_arm": "A",
+      "synthetic": true,
+      "start_profile": {
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "advisor": {
+        "mode": "preset",
+        "preset": "standard",
+        "name": "Standardberatung",
+        "traits": [],
+        "focus": "ausgewogen",
+        "description": ""
+      },
+      "messages": [
+        "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+      ],
+      "execution_note": "Eine von drei unabhängigen Sitzungen derselben vorab definierten fiktiven Person. Nachrichten sind adaptiv zu formulieren; messages/planned_messages sind nur Formulierungsgrundlagen. Keine tatsächlichen Antworten vorweggenommen."
+    },
+    {
+      "id": "P06-B",
+      "name": "Nora Peters",
+      "age": 35,
+      "group": "Berufliche Neuorientierung · Personalmanagement · Teilzeit",
+      "fictional": true,
+      "study_variants": [
+        "B"
+      ],
+      "biography": "Nora hat mehrere Jahre in der kaufmännischen Auftragsbearbeitung gearbeitet und schließt ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab. Sie möchte in eine fachliche Einstiegsrolle im Personalbereich wechseln. Ihre bisherigen Kompetenzen liegen in Organisation, zuverlässiger Sachbearbeitung und Kommunikation; spezielle HR-Systeme muss sie noch erlernen.",
+      "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+      "experience": [
+        "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+        "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+      ],
+      "skills": [
+        "Kaufmännische Sachbearbeitung",
+        "MS Office",
+        "Excel",
+        "Terminorganisation",
+        "Interne Kommunikation",
+        "Personalmanagement-Grundlagen"
+      ],
+      "limitations": [
+        "Noch keine hauptberufliche HR-Tätigkeit.",
+        "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+      ],
+      "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+      "employment_types": [
+        "teilzeit"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+        "experience": [
+          "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+          "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+        ],
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "limitations": [
+          "Noch keine hauptberufliche HR-Tätigkeit.",
+          "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+        ],
+        "employment_types": [
+          "teilzeit"
+        ],
+        "relevant_task_families": [
+          "Interne Personaladministration",
+          "HR-Assistenz mit Entwicklungsmöglichkeit",
+          "Onboarding und Mitarbeitendenbetreuung"
+        ],
+        "ordered_priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Eigenverantwortliche Entgeltabrechnung mit zwingender Erfahrung; Senior-HR-Rolle oder überwiegend vertriebliche Personalvermittlung.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Interne Personalaufgaben passen zu kaufmännischer Erfahrung und BWL-Grundlagen; relevante HR-Einarbeitung ist vorgesehen oder Spezialwissen nicht zwingend, Teilzeit ist angegeben."
+      },
+      "initial_profile": {
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "cv_text": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.\nSieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.\nHochschulprojekt zur Verbesserung eines Onboarding-Prozesses.\nGrenzen: Noch keine hauptberufliche HR-Tätigkeit.; Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Fürth"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 25.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Top-Berufsberater",
+        "traits": [
+          "empathisch",
+          "strukturiert",
+          "ermutigend"
+        ],
+        "focus": "lernpotenzial",
+        "description": "Arbeite als besonders sorgfältiger KI-Berufsberater. Hilf bei der Entscheidung für einen realistischen nächsten beruflichen Schritt. Verbinde eine konkrete Aufgabe der Anzeige mit einem belegten Projekt, einer Fähigkeit oder Erfahrung aus dem Profil. Prüfe Einstiegsvoraussetzungen und ausdrücklich zugesagte Einarbeitung, Betreuung oder Entwicklung; leite daraus keine automatische Zusage ab. Unterscheide zwingende Voraussetzungen, erlernbare optionale Kenntnisse und fehlende Informationen. Zeige bei einer Beratungsfrage einen unmittelbar nutzbaren nächsten Schritt: eine konkrete Frage an den Arbeitgeber, einen relevanten Nachweis aus einem eigenen Projekt oder einen kleinen Lernschritt. Bei konkurrierenden Zielen benenne den Zielkonflikt und kläre höchstens die wichtigste offene Priorität. Orientiere dich an den ausdrücklich genannten Zielen; eine Werkstudentensuche bedeutet nicht automatisch Lernpriorität. Sprich zugewandt, verständlich und ohne leeres Lob. Eigene Hinweise und Formatwünsche des Nutzers präzisieren die Beratung. Behaupte keine echte Zulassung, Einstellungschance oder ungenannte Jobvorteile."
+      },
+      "advisor_selection": {
+        "source": "template",
+        "template_id": "career"
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Realistischer Berufswechsel auf Grundlage übertragbarer kaufmännischer Fähigkeiten.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "canonical_information_and_fallback": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "canonical_information_and_fallback": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Quereinstieg begründet prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+        }
+      ],
+      "initially_omitted_information": [
+        "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+        "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis."
+      ],
+      "snapshot_names": [
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3"
+      ],
+      "case_id": "P06-B",
+      "source_id": "P06",
+      "assigned_arm": "B",
+      "synthetic": true,
+      "start_profile": {
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "advisor": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Top-Berufsberater",
+        "traits": [
+          "empathisch",
+          "strukturiert",
+          "ermutigend"
+        ],
+        "focus": "lernpotenzial",
+        "description": "Arbeite als besonders sorgfältiger KI-Berufsberater. Hilf bei der Entscheidung für einen realistischen nächsten beruflichen Schritt. Verbinde eine konkrete Aufgabe der Anzeige mit einem belegten Projekt, einer Fähigkeit oder Erfahrung aus dem Profil. Prüfe Einstiegsvoraussetzungen und ausdrücklich zugesagte Einarbeitung, Betreuung oder Entwicklung; leite daraus keine automatische Zusage ab. Unterscheide zwingende Voraussetzungen, erlernbare optionale Kenntnisse und fehlende Informationen. Zeige bei einer Beratungsfrage einen unmittelbar nutzbaren nächsten Schritt: eine konkrete Frage an den Arbeitgeber, einen relevanten Nachweis aus einem eigenen Projekt oder einen kleinen Lernschritt. Bei konkurrierenden Zielen benenne den Zielkonflikt und kläre höchstens die wichtigste offene Priorität. Orientiere dich an den ausdrücklich genannten Zielen; eine Werkstudentensuche bedeutet nicht automatisch Lernpriorität. Sprich zugewandt, verständlich und ohne leeres Lob. Eigene Hinweise und Formatwünsche des Nutzers präzisieren die Beratung. Behaupte keine echte Zulassung, Einstellungschance oder ungenannte Jobvorteile."
+      },
+      "messages": [
+        "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+      ],
+      "execution_note": "Eine von drei unabhängigen Sitzungen derselben vorab definierten fiktiven Person. Nachrichten sind adaptiv zu formulieren; messages/planned_messages sind nur Formulierungsgrundlagen. Keine tatsächlichen Antworten vorweggenommen."
+    },
+    {
+      "id": "P06-C",
+      "name": "Nora Peters",
+      "age": 35,
+      "group": "Berufliche Neuorientierung · Personalmanagement · Teilzeit",
+      "fictional": true,
+      "study_variants": [
+        "C"
+      ],
+      "biography": "Nora hat mehrere Jahre in der kaufmännischen Auftragsbearbeitung gearbeitet und schließt ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab. Sie möchte in eine fachliche Einstiegsrolle im Personalbereich wechseln. Ihre bisherigen Kompetenzen liegen in Organisation, zuverlässiger Sachbearbeitung und Kommunikation; spezielle HR-Systeme muss sie noch erlernen.",
+      "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+      "experience": [
+        "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+        "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+      ],
+      "skills": [
+        "Kaufmännische Sachbearbeitung",
+        "MS Office",
+        "Excel",
+        "Terminorganisation",
+        "Interne Kommunikation",
+        "Personalmanagement-Grundlagen"
+      ],
+      "limitations": [
+        "Noch keine hauptberufliche HR-Tätigkeit.",
+        "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+      ],
+      "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+      "employment_types": [
+        "teilzeit"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+        "experience": [
+          "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+          "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+        ],
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "limitations": [
+          "Noch keine hauptberufliche HR-Tätigkeit.",
+          "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+        ],
+        "employment_types": [
+          "teilzeit"
+        ],
+        "relevant_task_families": [
+          "Interne Personaladministration",
+          "HR-Assistenz mit Entwicklungsmöglichkeit",
+          "Onboarding und Mitarbeitendenbetreuung"
+        ],
+        "ordered_priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Eigenverantwortliche Entgeltabrechnung mit zwingender Erfahrung; Senior-HR-Rolle oder überwiegend vertriebliche Personalvermittlung.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Interne Personalaufgaben passen zu kaufmännischer Erfahrung und BWL-Grundlagen; relevante HR-Einarbeitung ist vorgesehen oder Spezialwissen nicht zwingend, Teilzeit ist angegeben."
+      },
+      "initial_profile": {
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "cv_text": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.\nSieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.\nHochschulprojekt zur Verbesserung eines Onboarding-Prozesses.\nGrenzen: Noch keine hauptberufliche HR-Tätigkeit.; Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Fürth"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 25.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Umstiegsberatung",
+        "description": "Nutze übertragbare Fähigkeiten, ohne daraus nicht belegte Fachpraxis abzuleiten. Zeige einen realistischen Einstieg und benenne konkrete Einarbeitungsbedarfe. Beziehe dich auf Stelleninhalte, nicht auf mein Alter.",
+        "traits": [
+          "empathisch",
+          "direkt"
+        ],
+        "focus": "lernpotenzial"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Realistischer Berufswechsel auf Grundlage übertragbarer kaufmännischer Fähigkeiten.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "canonical_information_and_fallback": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "canonical_information_and_fallback": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Quereinstieg begründet prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+        }
+      ],
+      "initially_omitted_information": [
+        "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+        "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis."
+      ],
+      "snapshot_names": [
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ],
+      "case_id": "P06-C",
+      "source_id": "P06",
+      "assigned_arm": "C",
+      "synthetic": true,
+      "start_profile": {
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "advisor": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Umstiegsberatung",
+        "description": "Nutze übertragbare Fähigkeiten, ohne daraus nicht belegte Fachpraxis abzuleiten. Zeige einen realistischen Einstieg und benenne konkrete Einarbeitungsbedarfe. Beziehe dich auf Stelleninhalte, nicht auf mein Alter.",
+        "traits": [
+          "empathisch",
+          "direkt"
+        ],
+        "focus": "lernpotenzial"
+      },
+      "messages": [
+        "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+      ],
+      "execution_note": "Eine von drei unabhängigen Sitzungen derselben vorab definierten fiktiven Person. Nachrichten sind adaptiv zu formulieren; messages/planned_messages sind nur Formulierungsgrundlagen. Keine tatsächlichen Antworten vorweggenommen."
+    }
+  ]
+}

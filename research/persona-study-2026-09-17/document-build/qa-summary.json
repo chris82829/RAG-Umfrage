@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "final_document_count": 2,
+  "total_pages": 8,
+  "runtime": "bundled Codex Python and bundled LibreOffice only",
+  "operation_marker_count": 1,
+  "original_marker_expected_count": 12,
+  "scope_change": "User narrowed to two personas; each dossier covers all three study variants.",
+  "documents": [
+    {
+      "file": "P01-mara-seidel.docx",
+      "pages": 4,
+      "all_pages_visually_reviewed": true,
+      "result": "pass",
+      "docx_sha256": "23f9fb1af239cbe6e6e18e28f201392e0df66625b85f4662f5324bfc26362faf",
+      "page_images": [
+        {
+          "page": 1,
+          "sha256": "5483e05bb137c6074ec8394398fa4960afe0e1c23196236c483662ce836b7df2"
+        },
+        {
+          "page": 2,
+          "sha256": "fbabba6ca9dc401065a56ec16d12fe497dc8a9a807a2567e50149481980c48ef"
+        },
+        {
+          "page": 3,
+          "sha256": "c0331a817edda66b844c2c77b63159d6da8a2b664e1c948d53bf49c2f3b73fa7"
+        },
+        {
+          "page": 4,
+          "sha256": "2ec4c4d17b1797e3935fbb91fbfa8e799b1f30eadd108d07adf3499e0a2c2c69"
+        }
+      ]
+    },
+    {
+      "file": "P06-nora-peters.docx",
+      "pages": 4,
+      "all_pages_visually_reviewed": true,
+      "result": "pass",
+      "docx_sha256": "277587675c46c9a5883254ce9725c4e4c288455747b977952e444ed53329667c",
+      "page_images": [
+        {
+          "page": 1,
+          "sha256": "607b83759ab45267b61e2d19de30f384c29430ada2cae7a9d29138b064195c0d"
+        },
+        {
+          "page": 2,
+          "sha256": "6b709dfccff74a986aa6a5b312b001ecbff44161df2b1d1d67bd62643cfb93b2"
+        },
+        {
+          "page": 3,
+          "sha256": "5a47bc72deedd14138e1be9e9c7d3c012c12c07b802c84f370de5b7edcbc5232"
+        },
+        {
+          "page": 4,
+          "sha256": "19d8ed768abd81749d4ae91b75c7ba8b8215e1222579d4fc4314c26ca833af40"
+        }
+      ]
+    }
+  ]
+}

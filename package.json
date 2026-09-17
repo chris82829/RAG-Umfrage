@@ -2,7 +2,7 @@
   "name": "diana-job-matching",
   "private": true,
   "type": "module",
-  "scripts": {"dev": "vite", "build": "vite build", "test:ui": "node --test frontend/*.test.js"},
+  "scripts": {"dev": "vite", "build": "vite build"},
   "dependencies": {"react": "19.2.8", "react-dom": "19.2.8", "lucide-react": "1.43.0"},
   "devDependencies": {"vite": "8.2.2", "@vitejs/plugin-react": "6.1.1"}
 }

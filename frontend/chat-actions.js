@@ -1,4 +1,5 @@
 import { sameAdvisor } from './advisor.js';
+import { chatAllowance } from './chat-limit.js';
 
 export function candidatePool(session) {
   const pool = session?.candidate_pool;
@@ -7,8 +8,9 @@ export function candidatePool(session) {
   return { count, available: pool?.available === true, refreshRequired, canRerank: pool?.available === true && count > 0 && !refreshRequired };
 }
 
-export function canSendChat(mode, message, session) {
+export function canSendChat(mode, message, session, options) {
   if (!session) return false;
+  if (message.trim() && chatAllowance(session, options).blocked) return false;
   if (mode === 'rerank') return candidatePool(session).canRerank;
   return mode === 'search' || (mode === 'auto' && !!message.trim());
 }

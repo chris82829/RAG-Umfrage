@@ -29,8 +29,9 @@ export function hasSearchResults(session) {
 }
 
 export function hasChatMessage(session) {
-  return hasSearchResults(session) && Array.isArray(session.messages)
-    && session.messages.some(message => message.role === 'user' && typeof message.content === 'string' && message.content.trim());
+  return hasSearchResults(session) && ((Number.isInteger(session.chat_usage?.used) && session.chat_usage.used > 0)
+    || (Array.isArray(session.messages)
+      && session.messages.some(message => message.role === 'user' && typeof message.content === 'string' && message.content.trim())));
 }
 
 export function isSurveyResultsView({ session, page, booting, busy, editor, personalityIntro }) {

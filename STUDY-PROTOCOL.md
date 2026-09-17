@@ -19,7 +19,15 @@ Der angestrebte Beitrag ist die Verbindung benutzerdefinierter Bewertungsschwerp
 | B | Top-Berufsberater oder Fachexperte | Zwischen den unveränderten Vorlagen wechseln |
 | C | Dieselben Vorlagen wie B | Zusätzlich Name, Eigenschaften, Bewertungsschwerpunkt und Hinweise selbst gestalten |
 
-B und C starten mit dem Top-Berufsberater. Freie Gestaltung ist in C freiwillig. Alle Gruppen verwenden dasselbe Modell-Snapshot, Denkaufwand, technische Antwortbudgets, den gleichen Datenbestand, BM25/E5/RRF, Top-20-Pool und Bewertungsablauf. Scores, Begründungen, Score-Sortierung und anfängliche 70er-Anzeigeschwelle sind überall vorhanden. Neue A-Sitzungen werden nicht zufällig sortiert oder durch einen fachfremden Prompt eingeschränkt. Unterschiedliche resultierende Scores oder Reihenfolgen durch die Beratungsgewichtung sind beabsichtigt; der Algorithmus und die Anzeige sind vergleichbar.
+B und C starten mit dem Top-Berufsberater. Freie Gestaltung ist in C freiwillig. Alle Gruppen verwenden dasselbe Modell-Snapshot, Denkaufwand, technische Antwortbudgets, den gleichen Datenbestand, BM25/E5/RRF, Top-20-Pool und Bewertungsablauf. Scores, Begründungen und Score-Sortierung sind überall vorhanden. Zunächst erscheinen die ersten zehn Stellen; die übrigen bis zu 20 lassen sich mit „Weitere Stellen anzeigen“ öffnen. Es gibt keine Mindestscore-Schwelle für die Anzeige. Neue A-Sitzungen werden nicht zufällig sortiert oder durch einen fachfremden Prompt eingeschränkt. Unterschiedliche resultierende Scores oder Reihenfolgen durch die Beratungsgewichtung sind beabsichtigt; der Algorithmus und die Anzeige sind vergleichbar.
+
+### Entwicklungsänderung vom 14. September 2026: Beratung v2
+
+`evidence-advisory-v2` konkretisiert die Entscheidungshilfe in B/C: Verknüpfung von Profil und Anzeigenbelegen, wichtigste offene Voraussetzung, situationsbezogener nächster Schritt und Vergleich anhand derselben Kriterien. C kann Vorlagen übernehmen und bearbeiten. Mit `explicit-priority-v3` steuert ausschließlich der explizite Suchfokus die ergänzenden Gewichte; Gesprächseigenschaften beeinflussen den Ton. Fachpassung (60 %) und Profilpräferenzen (15 %) bleiben vorrangig, die übrigen 25 % bilden den gewählten Schwerpunkt ab. A bleibt eine fachkundige Standardberatung.
+
+Gemeinsame Fehlerkorrekturen gelten für alle aktuellen Gruppen: kein 600-Zeichen-Limit im Ausgabeschema, serverseitige Schutzgrenze von 6.000 Zeichen und Zurückweisung von Fehlerobjekten als Beratungsantwort. Modell-Snapshot, Denkaufwand und Tokenbudgets bleiben gleich. Dies garantiert weder vollständige Modellantworten noch bessere Ergebnisse; die technische Prüfung verwendet simulierte API-Antworten.
+
+Diese Änderungen wurden nach Einsicht in den bisherigen technischen Pilotversuch entwickelt. Dessen Ergebnisse sind Entwicklungsdaten und kein unabhängiger Wirksamkeitsnachweis der neuen Version. Originaldateien bleiben erhalten. Vor einer neuen Erhebung den endgültigen Release festschreiben; Teilnahmen vor und nach diesem Wechsel anhand der gespeicherten `release_id` getrennt auswerten. Gleiche Experiment-/Fragebogennamen allein erlauben kein Pooling über geänderte Interventionen. `advisory_version` und `scoring_version` stehen zusätzlich im Release-Manifest. Details: `research/development/2026-09-14-advisory-v2/README.md`.
 
 ## Zuteilung und Ablauf
 
@@ -28,7 +36,9 @@ B und C starten mit dem Top-Berufsberater. Freie Gestaltung ist in C freiwillig.
 - Vor Systembeginn: Nutzung von Jobportalen und KI-Chats in den letzten sechs Monaten. Antwortbereiche: nie, seltener als wöchentlich, wöchentlich aber nicht täglich, täglich; zusätzlich keine Angabe.
 - Während einer Suche nur Fakten: demografische Angaben und Suchvorhaben. Bewertungen des Systems, Chats und der Persönlichkeitswirkung werden erst nach der Nutzung gestellt.
 - Gemeinsame Ergebnisfragen stehen vor bedingungsspezifischen Fragen. Antworten werden fortlaufend gespeichert. Mindestens eine erfolgreich beantwortete eigene Chatnachricht öffnet die nachfolgenden Bewertungsseiten; eine automatische Begrüßung zählt nicht.
+- In allen drei Umfragegruppen sind pro Teilnahme höchstens drei erfolgreich beantwortete eigene Chatnachrichten möglich. Fehlgeschlagene Anfragen zählen nicht; Neuladen und neue Suchsitzungen setzen den teilnahmebezogenen Zähler nicht zurück. Formularänderungen ohne Nachricht zählen nicht als Chatnachricht. Das Limit wird serverseitig geprüft und im Release-Manifest dokumentiert; historische Teilnahmen mit anderem Interaktionsumfang sind entsprechend zu unterscheiden.
 - `/test/a`, `/test/b` und `/test/c` sind getrennte Demonstrationszugänge. Sie liefern keine Studienzuweisungen, Umfrageantworten oder Nutzungsmetriken der Studie.
+  Auf diesen Testseiten ist die Anzahl eigener Chatnachrichten unbegrenzt.
 
 Vor der Haupterhebung ein kleiner kognitiver Pretest, beispielsweise 6–10 Personen mit unterschiedlichen Fachrichtungen und Endgeräten: Aufgabenverständnis, Bedeutung der Vorlagen und Selbstgestaltung, Skalenanker und Warte-/Fragenführung prüfen. Diese Zahl ist ein Vorschlag für den Pretest, keine statistische Fallzahl für den Gruppenvergleich. Pretestdaten nicht als reguläre Hauptstudiendaten zusammenfassen.
 

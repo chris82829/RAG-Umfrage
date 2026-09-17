@@ -1,0 +1,342 @@
+{
+  "task": "P06-B.T2.ChatDecision.01",
+  "started_utc": "2026-09-17T07:10:26.692528+00:00",
+  "ok": true,
+  "request_sha256": "bdb373014b25f9748f6675e0a77c071fba0cb1859ef5617a1b2d11dabf15e7ef",
+  "http_status": 200,
+  "response": {
+    "id": "resp_082a069df14f7f65016aab92631f8487d2b84e505e11eec32f",
+    "object": "response",
+    "created_at": 1789629027,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1789629032,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 6000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_082a069df14f7f65016aab926433d487d29337520136bfc6ad",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"action\":\"rerank\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":25,\"clear_max_hours\":false}},\"assistant_message\":\"Ich berücksichtige das neu: Ihr belegter Kern ist strukturierte kaufmännische Praxis plus HR-Grundlagen und ein Onboarding-Projekt. Für die Reihenfolge sprechen damit vor allem Stellen nach vorn, die interne HR-Administration mit planbaren Zeiten um 20 bis 25 Stunden verbinden und eine realistische Einarbeitung für Themen wie Entgeltabrechnung oder SAP HCM erwarten lassen, statt diese stillschweigend vorauszusetzen.\\n\\nVoraussichtlich gewinnt dadurch besonders die Augsburger Personalstelle mit bis zu 20 Stunden, weil die Aufgaben operativ-administrativ sind und SAP nur als Plus genannt ist. Die OTH-Regensburg-Onboarding-Stelle bleibt fachlich nah an Ihrem Profil, ist mit 24 Stunden auch stimmig, rückt aber etwas hinter administrative HR-Rollen, weil sie stärker veranstaltungs- und entwicklungsbezogen ist. Deutlich zurück sollten Rollen mit 10 Stunden, klarer Controlling-/Tariflast oder ohne engen HR-Kern fallen.\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "ChatDecision",
+        "schema": {
+          "$defs": {
+            "FilterPatch": {
+              "additionalProperties": false,
+              "properties": {
+                "employment_types": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "werkstudent",
+                          "praktikum",
+                          "vollzeit",
+                          "teilzeit",
+                          "ausbildung",
+                          "trainee",
+                          "abschlussarbeit",
+                          "sonstige"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 8,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Employment Types"
+                },
+                "locations": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 10,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Locations"
+                },
+                "remote": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "onsite",
+                          "hybrid",
+                          "remote",
+                          "unknown"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Remote"
+                },
+                "max_hours": {
+                  "anyOf": [
+                    {
+                      "exclusiveMinimum": 0,
+                      "maximum": 80,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Max Hours"
+                },
+                "clear_max_hours": {
+                  "title": "Clear Max Hours",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "employment_types",
+                "locations",
+                "remote",
+                "max_hours",
+                "clear_max_hours"
+              ],
+              "title": "FilterPatch",
+              "type": "object"
+            },
+            "ProfilePatch": {
+              "additionalProperties": false,
+              "properties": {
+                "query": {
+                  "anyOf": [
+                    {
+                      "maxLength": 3000,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Query"
+                },
+                "skills": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 60,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Skills"
+                },
+                "preferences": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 30,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences"
+                },
+                "filters": {
+                  "$ref": "#/$defs/FilterPatch"
+                }
+              },
+              "required": [
+                "query",
+                "skills",
+                "preferences",
+                "filters"
+              ],
+              "title": "ProfilePatch",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "answer",
+                "rerank",
+                "search"
+              ],
+              "title": "Action",
+              "type": "string"
+            },
+            "profile_patch": {
+              "$ref": "#/$defs/ProfilePatch"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "action",
+            "profile_patch",
+            "assistant_message"
+          ],
+          "title": "ChatDecision",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 33008,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3840
+      },
+      "output_tokens": 265,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 33273
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 33008,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 3840
+    },
+    "output_tokens": 265,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 33273
+  },
+  "result": {
+    "action": "rerank",
+    "profile_patch": {
+      "query": null,
+      "skills": null,
+      "preferences": null,
+      "filters": {
+        "employment_types": null,
+        "locations": null,
+        "remote": null,
+        "max_hours": 25.0,
+        "clear_max_hours": false
+      }
+    },
+    "assistant_message": "Ich berücksichtige das neu: Ihr belegter Kern ist strukturierte kaufmännische Praxis plus HR-Grundlagen und ein Onboarding-Projekt. Für die Reihenfolge sprechen damit vor allem Stellen nach vorn, die interne HR-Administration mit planbaren Zeiten um 20 bis 25 Stunden verbinden und eine realistische Einarbeitung für Themen wie Entgeltabrechnung oder SAP HCM erwarten lassen, statt diese stillschweigend vorauszusetzen.\n\nVoraussichtlich gewinnt dadurch besonders die Augsburger Personalstelle mit bis zu 20 Stunden, weil die Aufgaben operativ-administrativ sind und SAP nur als Plus genannt ist. Die OTH-Regensburg-Onboarding-Stelle bleibt fachlich nah an Ihrem Profil, ist mit 24 Stunden auch stimmig, rückt aber etwas hinter administrative HR-Rollen, weil sie stärker veranstaltungs- und entwicklungsbezogen ist. Deutlich zurück sollten Rollen mit 10 Stunden, klarer Controlling-/Tariflast oder ohne engen HR-Kern fallen."
+  },
+  "raw_text": "{\"action\":\"rerank\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":25,\"clear_max_hours\":false}},\"assistant_message\":\"Ich berücksichtige das neu: Ihr belegter Kern ist strukturierte kaufmännische Praxis plus HR-Grundlagen und ein Onboarding-Projekt. Für die Reihenfolge sprechen damit vor allem Stellen nach vorn, die interne HR-Administration mit planbaren Zeiten um 20 bis 25 Stunden verbinden und eine realistische Einarbeitung für Themen wie Entgeltabrechnung oder SAP HCM erwarten lassen, statt diese stillschweigend vorauszusetzen.\\n\\nVoraussichtlich gewinnt dadurch besonders die Augsburger Personalstelle mit bis zu 20 Stunden, weil die Aufgaben operativ-administrativ sind und SAP nur als Plus genannt ist. Die OTH-Regensburg-Onboarding-Stelle bleibt fachlich nah an Ihrem Profil, ist mit 24 Stunden auch stimmig, rückt aber etwas hinter administrative HR-Rollen, weil sie stärker veranstaltungs- und entwicklungsbezogen ist. Deutlich zurück sollten Rollen mit 10 Stunden, klarer Controlling-/Tariflast oder ohne engen HR-Kern fallen.\"}",
+  "finished_utc": "2026-09-17T07:10:32.865564+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 153238,
+    "input_token_bound": 161430,
+    "max_tokens": 6000,
+    "reserved_usd": "0.493575",
+    "task_id": "P06-B.T2.ChatDecision.01",
+    "post_number": 26,
+    "status": "settled",
+    "charged_usd": "0.086495",
+    "usage": {
+      "input_tokens": 33008,
+      "output_tokens": 265,
+      "total_tokens": 33273
+    },
+    "created_utc": "2026-09-17T07:10:26.691967+00:00",
+    "settled_utc": "2026-09-17T07:10:32.866859+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

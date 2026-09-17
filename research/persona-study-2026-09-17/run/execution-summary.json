@@ -1,0 +1,58 @@
+{
+  "synthetic": true,
+  "personas": 2,
+  "sessions": 6,
+  "messages_per_session": 3,
+  "snapshots": 24,
+  "provider_requests": 42,
+  "all_requests_succeeded": true,
+  "model": "gpt-5.4-2026-03-05",
+  "reasoning": "none",
+  "judge_api_requests": 0,
+  "simulator_api_requests": 0,
+  "undiscounted_token_cost_usd": "3.6641125",
+  "authorized_budget_usd": "4.50",
+  "initial_budget_usd": "3",
+  "cost_note": "Provider usage multiplied by standard input/output rates; cache discounts, credits and taxes not applied. Not an invoice.",
+  "corpus_jobs": 8537,
+  "turns": {
+    "0": {
+      "actions": {
+        "search": 6
+      },
+      "mean_elapsed_seconds": 50.971,
+      "min_elapsed_seconds": 47.239,
+      "max_elapsed_seconds": 54.469
+    },
+    "1": {
+      "actions": {
+        "rerank": 6
+      },
+      "mean_elapsed_seconds": 35.911,
+      "min_elapsed_seconds": 32.265,
+      "max_elapsed_seconds": 42.795
+    },
+    "2": {
+      "actions": {
+        "rerank": 6
+      },
+      "mean_elapsed_seconds": 37.553,
+      "min_elapsed_seconds": 32.874,
+      "max_elapsed_seconds": 43.171
+    },
+    "3": {
+      "actions": {
+        "answer": 6
+      },
+      "mean_elapsed_seconds": 6.719,
+      "min_elapsed_seconds": 5.465,
+      "max_elapsed_seconds": 9.525
+    }
+  },
+  "T3_rankings_unchanged_from_T2": true,
+  "reference_need": "Full frozen persona knowledge, identical at T0/T1/T2/T3 and across A/B/C",
+  "synthetic_survey_records_created": 0,
+  "git_base_commit": "1326eaebbe5d13cb44dd07a7eb38de9d74650f1b",
+  "git_branch": "konferenzstudie-2026-09-14",
+  "git_note": "Working tree source was frozen separately; this run was not committed or pushed."
+}

@@ -1,0 +1,352 @@
+{
+  "case_id": "P01-C",
+  "source_id": "P01",
+  "condition": "C",
+  "advisor": {
+    "mode": "custom",
+    "preset": "diana",
+    "name": "Mein Einstiegscoach",
+    "description": "Erkläre fachliche Anforderungen verständlich. Unterscheide Voraussetzungen von Kenntnissen, die ich im Job lernen kann. Begründe deine Empfehlungen konkret und ohne pauschales Lob.",
+    "traits": [
+      "ermutigend",
+      "strukturiert"
+    ],
+    "focus": "lernpotenzial"
+  },
+  "messages": [
+    {
+      "advisor_name": "Mein-Einstiegscoach-KI",
+      "content": "Hallo! 20 Stellen gefunden und bewertet. Links siehst du die ersten 10; weitere findest du über „Weitere Stellen anzeigen“.\n\nDeine stärkste Basis liegt klar in den Frontend-Grundlagen mit HTML, CSS und JavaScript aus dem Studienprojekt. Besonders erreichbar wirken Stellen mit ausdrücklich genannter Einarbeitung oder Mentoring und klaren Webaufgaben. Anspruchsvoller werden Anzeigen, sobald React, TypeScript, SQL oder Java schon als belastbare Vorkenntnisse vorausgesetzt werden. Ein guter nächster Schritt sind deshalb Bewerbungen auf Rollen mit Website-, Webformular- oder Junior-Webapp-Aufgaben, bei denen Lernen im Team sichtbar angeboten wird.\n\nHier kannst du Rückfragen stellen und deine Suche verfeinern.",
+      "role": "assistant"
+    },
+    {
+      "content": "Das von dir angesprochene Mentoring ist mir besonders wichtig: Ich möchte eingearbeitet werden und bei Fragen eine feste Ansprechperson haben. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Mein-Einstiegscoach-KI",
+      "content": "Deine stärkste Grundlage bleibt der Web-Einstieg mit HTML, CSS und JavaScript. Mit deinem Fokus auf Einarbeitung rücken jetzt Stellen nach vorn, die Mentoring, umfassende Einarbeitung oder auf den Kenntnisstand angepasste Aufgaben ausdrücklich nennen. Besonders greifbar wirken deshalb die Anzeigen von Fraunhofer, Qupe, der Stadt Erlangen und echion. Der wichtigste Prüfpunkt bleibt oft gleich: Viele Stellen bieten Lernen an, aber eine feste Ansprechperson ist nur selten ausdrücklich belegt. Wenn du willst, kann ich dir im nächsten Schritt genau die Stellen herausziehen, die Mentoring am klarsten formulieren.",
+      "role": "assistant"
+    },
+    {
+      "content": "Du nennst Mentoring als wichtigen Punkt. Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung und eine feste Ansprechperson bleiben mir wichtig.",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Mein-Einstiegscoach-KI",
+      "content": "Deine stärkste Basis bleibt klar im Web-Einstieg mit HTML, CSS, JavaScript und Git. Mit deinem neuen Fokus rücken jetzt vor allem Stellen nach vorn, die Nürnberg oder Erlangen, etwa 10 bis 12 Stunden und belegte Lernunterstützung zusammenbringen. Besonders tragfähig wirken damit die Fraunhofer-Stellen in Erlangen, Qupe in Zirndorf und die Stadt Erlangen. Der entscheidende Prüfpunkt bleibt oft derselbe: Mentoring oder Einarbeitung ist teils klar genannt, eine feste Ansprechperson aber nur selten ausdrücklich belegt.",
+      "role": "assistant"
+    },
+    {
+      "content": "Bei der ersten Stelle „Werkstudent/Praktikant (w/m/d) - im Bereich der Web-App Entwicklung“ (Job-ID 837775): Warum ist sie jetzt ganz oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist.",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Mein-Einstiegscoach-KI",
+      "content": "Deine belegte Stärke für diese Fraunhofer-Stelle ist der Web-Einstieg mit HTML, CSS und einfachem JavaScript aus dem Studienprojekt. Genau deshalb steht sie jetzt oben: Sie verbindet Erlangen, einen zu deinem Semester passenden Stundenrahmen von 10 bis 20 Stunden, erste Webprojekterfahrung als Anforderung und ein ausdrücklich genanntes Mentoringprogramm.\n\nSchon gut erreichbar wirken für dich die Weiterentwicklung bestehender Systeme in kleinen Beiträgen, Softwaretests in der Qualitätssicherung und Recherche zu neuen Technologien. Dafür bringst du bereits passende Grundlagen in Webentwicklung und Git mit. Einarbeitung brauchst du am ehesten dort, wo der Stack tiefer wird: TypeScript ist nur idealerweise genannt, und Java im Backend ist bei dir nicht belegt. Offen bleibt außerdem, wie viel der Arbeit wirklich Frontend-Web-App ist und wie viel eher Testing oder Recherche.\n\nZu Arbeitszeit und Betreuung ist der nächste klare Prüfpunkt: 10 bis 20 Stunden sind genannt, aber nicht, ob 10 bis 12 Stunden während des Semesters regelmäßig problemlos möglich sind. Beim Thema Betreuung ist das Mentoringprogramm ein starkes Signal, aber eine feste Ansprechperson im Alltag wird in der Anzeige nicht ausdrücklich zugesagt.",
+      "role": "assistant"
+    }
+  ],
+  "operations": [
+    {
+      "turn": 0,
+      "action": "search",
+      "elapsed_seconds": 49.199,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "max_hours": null,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "828195",
+        "837775",
+        "843348",
+        "820065",
+        "845150",
+        "833009",
+        "829115",
+        "824568",
+        "837416",
+        "830863",
+        "861511",
+        "845512",
+        "834700",
+        "857135",
+        "835027",
+        "860555",
+        "843131",
+        "816293",
+        "826611",
+        "834695"
+      ],
+      "scores": [
+        69,
+        65,
+        63,
+        62,
+        61,
+        61,
+        60,
+        60,
+        58,
+        58,
+        58,
+        55,
+        55,
+        55,
+        54,
+        51,
+        51,
+        51,
+        51,
+        39
+      ]
+    },
+    {
+      "turn": 1,
+      "action": "rerank",
+      "elapsed_seconds": 32.414,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "max_hours": null,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben",
+          "Einarbeitung",
+          "Feste Ansprechperson bei Fragen"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "828195",
+        "837775",
+        "820065",
+        "845150",
+        "833009",
+        "843348",
+        "824568",
+        "837416",
+        "829115",
+        "830863",
+        "861511",
+        "835027",
+        "834700",
+        "857135",
+        "845512",
+        "860555",
+        "843131",
+        "816293",
+        "826611",
+        "834695"
+      ],
+      "scores": [
+        74,
+        69,
+        65,
+        65,
+        65,
+        64,
+        63,
+        62,
+        61,
+        59,
+        59,
+        58,
+        57,
+        57,
+        56,
+        55,
+        55,
+        55,
+        55,
+        39
+      ]
+    },
+    {
+      "turn": 2,
+      "action": "rerank",
+      "elapsed_seconds": 37.001,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "max_hours": 12.0,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben",
+          "Einarbeitung",
+          "Feste Ansprechperson bei Fragen"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "837775",
+        "828195",
+        "845150",
+        "833009",
+        "829115",
+        "820065",
+        "857135",
+        "835027",
+        "843348",
+        "824568",
+        "830863",
+        "845512",
+        "861511",
+        "837416",
+        "834700",
+        "843131",
+        "816293",
+        "826611",
+        "860555",
+        "834695"
+      ],
+      "scores": [
+        72,
+        71,
+        68,
+        67,
+        64,
+        62,
+        62,
+        61,
+        61,
+        60,
+        59,
+        59,
+        59,
+        58,
+        57,
+        50,
+        50,
+        50,
+        47,
+        39
+      ]
+    },
+    {
+      "turn": 3,
+      "action": "answer",
+      "elapsed_seconds": 5.959,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "max_hours": 12.0,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben",
+          "Einarbeitung",
+          "Feste Ansprechperson bei Fragen"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "837775",
+        "828195",
+        "845150",
+        "833009",
+        "829115",
+        "820065",
+        "857135",
+        "835027",
+        "843348",
+        "824568",
+        "830863",
+        "845512",
+        "861511",
+        "837416",
+        "834700",
+        "843131",
+        "816293",
+        "826611",
+        "860555",
+        "834695"
+      ],
+      "scores": [
+        72,
+        71,
+        68,
+        67,
+        64,
+        62,
+        62,
+        61,
+        61,
+        60,
+        59,
+        59,
+        59,
+        58,
+        57,
+        50,
+        50,
+        50,
+        47,
+        39
+      ]
+    }
+  ]
+}

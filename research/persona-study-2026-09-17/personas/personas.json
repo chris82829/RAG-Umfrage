@@ -1,0 +1,3410 @@
+{
+  "schema_version": "diana-persona-study-2-abc-adaptive",
+  "created_date": "2026-09-17",
+  "authoring": "Manuell durch den Codex-Assistenten verfasste synthetische Fälle; keine externe API und keine echten Teilnehmerdaten.",
+  "conditions": "Jede der zwölf Personen durchläuft A, B und C in separaten Sitzungen mit identischem initialem Profil: ein Suchlauf und drei auf reale Antworten bezogene Nachrichten je Variante. Die Informationsetappen, vollständigen Suchbedürfnisse, Zielbereiche und Stellenarten bleiben über die Varianten konstant. A feste Standardberatung; B vorab gewählte unveränderte Vorlage; C vorab festgelegte eigene Konfiguration.",
+  "sampling": "Gezielte Vielfalt von zwölf Ausbildungs-/Berufsphasen und Fachgebieten, keine Zufallsstichprobe und keine Behauptung demografischer Repräsentativität.",
+  "cases": [
+    {
+      "id": "P01",
+      "name": "Mara Seidel",
+      "age": 19,
+      "group": "Studienanfängerin · Informatik · erste Praxiserfahrung",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Mara lebt in Nürnberg und studiert im zweiten Bachelorsemester Informatik. Sie hat bislang nur Hochschulprojekte und möchte erstmals in einem Entwicklungsteam mitarbeiten. Ihr Ziel ist ein fachlich passender Einstieg neben dem Studium; ein prestigeträchtiger Arbeitgeber ist ihr weniger wichtig als verständliche Aufgaben und Betreuung.",
+      "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+      "experience": [
+        "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+        "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+      ],
+      "skills": [
+        "Python-Grundlagen",
+        "HTML",
+        "CSS",
+        "JavaScript-Grundlagen",
+        "Git-Grundlagen"
+      ],
+      "limitations": [
+        "Kein React- oder TypeScript-Projekt.",
+        "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+      ],
+      "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "education": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.",
+        "experience": [
+          "Gruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.",
+          "Python-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung."
+        ],
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "limitations": [
+          "Kein React- oder TypeScript-Projekt.",
+          "Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung."
+        ],
+        "employment_types": [
+          "werkstudent"
+        ],
+        "relevant_task_families": [
+          "Frontend- und Webentwicklung",
+          "Pflege und Weiterentwicklung von Weboberflächen",
+          "Einsteigergeeignete Webtests mit Entwicklungsbezug"
+        ],
+        "ordered_priorities": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 12.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Senior-Frontend-Verantwortung oder verbindlich mehrjährige React-Erfahrung bei fehlendem Einstiegspfad; fachfremde reine Vertriebs-, Service- oder Verwaltungsaufgaben.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Webaufgaben passen zu HTML/CSS/JavaScript-Grundlagen, Studierende mit wenig Erfahrung sind angesprochen, und Einarbeitung ist belegt; Arbeitszeit und Region unterstützen den Wunsch, soweit beschrieben."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Werkstudententätigkeit in der Webentwicklung für einen fachlichen Einstieg.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "preferences": [
+          "Betreuter Einstieg mit Einarbeitung oder benannter fachlicher Unterstützung.",
+          "Webaufgaben mit HTML, CSS und einfachen JavaScript-Anteilen; React ist ein Lernziel, keine vorhandene Kompetenz.",
+          "Etwa 10–12 Stunden pro Woche und möglichst Nürnberg/Erlangen; Hybridarbeit ist willkommen."
+        ],
+        "cv_text": "B.Sc. Informatik, 2. Semester; Programmierung und Webgrundlagen abgeschlossen.\nGruppenprojekt: kleine HTML/CSS-Webseite mit JavaScript-Formularprüfung.\nPython-Übungen zu Dateien, Listen und einfachen Tests; keine produktive Berufserfahrung.\nGrenzen: Kein React- oder TypeScript-Projekt.; Noch keine Erfahrung mit Cloud-Infrastruktur oder selbstständiger Projektverantwortung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 12.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Mein Einstiegscoach",
+        "description": "Erkläre fachliche Anforderungen verständlich. Unterscheide Voraussetzungen von Kenntnissen, die ich im Job lernen kann. Begründe deine Empfehlungen konkret und ohne pauschales Lob.",
+        "traits": [
+          "ermutigend",
+          "strukturiert"
+        ],
+        "focus": "lernpotenzial"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Erster beruflicher Einstieg; passende Einarbeitung und ein realistischer nächster Schritt stehen im Vordergrund.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+        "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+        "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "canonical_information_and_fallback": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "canonical_information_and_fallback": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Suchkriterien; Prüfung der ersten Stelle anhand des bereits erklärten Bedarfs.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Warum steht die erste Stelle jetzt oben? Erkläre mir bitte, welche Aufgaben ich schon schaffen könnte, wo ich Einarbeitung brauche und was zu Arbeitszeit und Betreuung noch offen ist."
+        }
+      ],
+      "initially_omitted_information": [
+        "Eine feste Ansprechperson und Einarbeitung sind wichtiger als sofortige Eigenverantwortung.",
+        "Gewünschter Umfang 10–12 Stunden; regionaler Wunsch; keine React-Erfahrung."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P02",
+      "name": "Jonas Winter",
+      "age": 24,
+      "group": "Fortgeschrittener Bachelor · Data Science · erste einschlägige Praxis",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Jonas studiert im sechsten Semester Wirtschaftsinformatik in Regensburg. Er möchte seine bisherigen Analysekenntnisse in echten Datenprojekten einsetzen. Eine kurze Tätigkeit in der Hochschulverwaltung hat ihm gezeigt, dass er wiederholte Datenerfassung vermeiden und stärker an Auswertungen mitarbeiten möchte.",
+      "education": "B.Sc. Wirtschaftsinformatik, 6. Semester; Statistik, Datenbanken und maschinelles Lernen als Grundlagenmodule.",
+      "experience": [
+        "Hochschulprojekt: Verkaufsdaten bereinigt und mit Pandas visualisiert.",
+        "Drei Monate studentische Aushilfe mit Excel-Auswertungen; keine Verantwortung für produktive ML-Systeme."
+      ],
+      "skills": [
+        "Python",
+        "Pandas",
+        "SQL",
+        "Git",
+        "Statistik-Grundlagen",
+        "Excel"
+      ],
+      "limitations": [
+        "Keine berufliche Erfahrung mit Deep Learning, MLOps oder Cloud-Deployment.",
+        "Power BI nur aus einer Einführung; kein fortgeschrittenes DAX."
+      ],
+      "job_goal": "Werkstudentenstelle in Data Analytics oder Data Science.",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Regensburg",
+          "München"
+        ],
+        "remote": [
+          "hybrid",
+          "remote"
+        ],
+        "max_hours": 20.0,
+        "priorities": [
+          "Datenbereinigung, SQL-Abfragen und nachvollziehbare Analysen statt überwiegend manueller Datenpflege.",
+          "Erweiterung in reproduzierbare Python-Analysen; keine Pflicht zu bereits produktiv eingesetztem Deep Learning.",
+          "Etwa 16–20 Stunden pro Woche; Regensburg oder hybride Tätigkeit mit wenigen Präsenztagen in München."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Werkstudentenstelle in Data Analytics oder Data Science.",
+        "education": "B.Sc. Wirtschaftsinformatik, 6. Semester; Statistik, Datenbanken und maschinelles Lernen als Grundlagenmodule.",
+        "experience": [
+          "Hochschulprojekt: Verkaufsdaten bereinigt und mit Pandas visualisiert.",
+          "Drei Monate studentische Aushilfe mit Excel-Auswertungen; keine Verantwortung für produktive ML-Systeme."
+        ],
+        "skills": [
+          "Python",
+          "Pandas",
+          "SQL",
+          "Git",
+          "Statistik-Grundlagen",
+          "Excel"
+        ],
+        "limitations": [
+          "Keine berufliche Erfahrung mit Deep Learning, MLOps oder Cloud-Deployment.",
+          "Power BI nur aus einer Einführung; kein fortgeschrittenes DAX."
+        ],
+        "employment_types": [
+          "werkstudent"
+        ],
+        "relevant_task_families": [
+          "Data Analytics",
+          "Data Science mit zugänglichem Kompetenzniveau",
+          "SQL- und Python-basierte Datenaufbereitung",
+          "Business Intelligence mit substanziellem Analyseanteil"
+        ],
+        "ordered_priorities": [
+          "Datenbereinigung, SQL-Abfragen und nachvollziehbare Analysen statt überwiegend manueller Datenpflege.",
+          "Erweiterung in reproduzierbare Python-Analysen; keine Pflicht zu bereits produktiv eingesetztem Deep Learning.",
+          "Etwa 16–20 Stunden pro Woche; Regensburg oder hybride Tätigkeit mit wenigen Präsenztagen in München."
+        ],
+        "locations": [
+          "Regensburg",
+          "München"
+        ],
+        "remote": [
+          "hybrid",
+          "remote"
+        ],
+        "max_hours": 20.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Überwiegend reine Datenerfassung ohne Analysebezug oder verbindliche mehrjährige MLOps-/Deep-Learning-Erfahrung.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Die Anzeige nennt substanzielle Python-/SQL-Analysen oder Datenaufbereitung, verlangt kein unerreichbares Produktions-ML-Niveau und ist als studentische Mitarbeit geeignet."
+      },
+      "initial_profile": {
+        "query": "Ich suche eine Werkstudentenstelle in Data Analytics oder Data Science. Ich studiere Wirtschaftsinformatik im sechsten Semester und arbeite mit Python, Pandas und SQL.",
+        "skills": [
+          "Python",
+          "Pandas",
+          "SQL",
+          "Git",
+          "Statistik-Grundlagen",
+          "Excel"
+        ],
+        "preferences": [
+          "Analytische Aufgaben",
+          "Arbeit mit realen Daten"
+        ],
+        "cv_text": "Wirtschaftsinformatik, 6. Semester. Studienprojekt mit Python/Pandas und SQL. Erste Excel-Auswertungen als studentische Aushilfe. Grundlagen in Statistik und maschinellem Lernen.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Werkstudentenstelle in Data Analytics oder Data Science.",
+        "skills": [
+          "Python",
+          "Pandas",
+          "SQL",
+          "Git",
+          "Statistik-Grundlagen",
+          "Excel"
+        ],
+        "preferences": [
+          "Datenbereinigung, SQL-Abfragen und nachvollziehbare Analysen statt überwiegend manueller Datenpflege.",
+          "Erweiterung in reproduzierbare Python-Analysen; keine Pflicht zu bereits produktiv eingesetztem Deep Learning.",
+          "Etwa 16–20 Stunden pro Woche; Regensburg oder hybride Tätigkeit mit wenigen Präsenztagen in München."
+        ],
+        "cv_text": "B.Sc. Wirtschaftsinformatik, 6. Semester; Statistik, Datenbanken und maschinelles Lernen als Grundlagenmodule.\nHochschulprojekt: Verkaufsdaten bereinigt und mit Pandas visualisiert.\nDrei Monate studentische Aushilfe mit Excel-Auswertungen; keine Verantwortung für produktive ML-Systeme.\nGrenzen: Keine berufliche Erfahrung mit Deep Learning, MLOps oder Cloud-Deployment.; Power BI nur aus einer Einführung; kein fortgeschrittenes DAX.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Regensburg",
+            "München"
+          ],
+          "remote": [
+            "hybrid",
+            "remote"
+          ],
+          "max_hours": 20.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Mein Datenberater",
+        "description": "Nenne zuerst den wichtigsten fachlichen Beleg. Sage klar, welche Erfahrung tatsächlich belegt ist und wo eine Anzeige mehr fordert. Unterstütze den Vergleich konkreter Tätigkeiten.",
+        "traits": [
+          "analytisch",
+          "direkt"
+        ],
+        "focus": "fachliche_tiefe"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "expert",
+      "preferred_template_reason": "Einordnung konkreter Python-/SQL-Analyseaufgaben und der dazu benötigten Kenntnisse.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "expert"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Ich möchte vor allem Daten mit Python und SQL aufbereiten und analysieren. Reine Dateneingabe oder überwiegende Dashboard-Pflege reizen mich weniger. Bitte gewichte diese Aufgaben stärker und sortiere neu.",
+        "Machine Learning kenne ich aus einem Grundkurs, aber ich habe noch kein Modell produktiv betrieben. Ich suche etwa 16 bis 20 Stunden und wäre bei einer hybriden Stelle auch für einzelne Präsenztage in München offen. Bitte passe die Reihenfolge entsprechend an.",
+        "Bitte prüfe bei der ersten Stelle: Welche Aufgaben passen konkret zu Python und SQL, welche Kenntnisse fehlen mir noch, und nennt die Anzeige wirklich den gewünschten Analyseanteil?"
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Überwiegend manuelle Datenpflege und reine Dashboard-Pflege sind nachrangig.",
+          "canonical_information_and_fallback": "Ich möchte vor allem Daten mit Python und SQL aufbereiten und analysieren. Reine Dateneingabe oder überwiegende Dashboard-Pflege reizen mich weniger. Bitte gewichte diese Aufgaben stärker und sortiere neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Begrenzte ML-Praxis sowie Wunsch nach hybridem Umfang 16–20 Stunden.",
+          "canonical_information_and_fallback": "Machine Learning kenne ich aus einem Grundkurs, aber ich habe noch kein Modell produktiv betrieben. Ich suche etwa 16 bis 20 Stunden und wäre bei einer hybriden Stelle auch für einzelne Präsenztage in München offen. Bitte passe die Reihenfolge entsprechend an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Bitte prüfe bei der ersten Stelle: Welche Aufgaben passen konkret zu Python und SQL, welche Kenntnisse fehlen mir noch, und nennt die Anzeige wirklich den gewünschten Analyseanteil?",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Überwiegend manuelle Datenpflege und reine Dashboard-Pflege sind nachrangig.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich möchte vor allem Daten mit Python und SQL aufbereiten und analysieren. Reine Dateneingabe oder überwiegende Dashboard-Pflege reizen mich weniger. Bitte gewichte diese Aufgaben stärker und sortiere neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Begrenzte ML-Praxis sowie Wunsch nach hybridem Umfang 16–20 Stunden.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Machine Learning kenne ich aus einem Grundkurs, aber ich habe noch kein Modell produktiv betrieben. Ich suche etwa 16 bis 20 Stunden und wäre bei einer hybriden Stelle auch für einzelne Präsenztage in München offen. Bitte passe die Reihenfolge entsprechend an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Suchkriterien; belegte Passung und verbleibende Lücken prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Bitte prüfe bei der ersten Stelle: Welche Aufgaben passen konkret zu Python und SQL, welche Kenntnisse fehlen mir noch, und nennt die Anzeige wirklich den gewünschten Analyseanteil?"
+        }
+      ],
+      "initially_omitted_information": [
+        "Überwiegend manuelle Datenpflege und reine Dashboard-Pflege sind nachrangig.",
+        "Begrenzte ML-Praxis sowie Wunsch nach hybridem Umfang 16–20 Stunden."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P03",
+      "name": "Leonie Brandt",
+      "age": 25,
+      "group": "Masterstudentin · Elektrotechnik · Embedded Systems",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Leonie studiert Elektrotechnik im zweiten Mastersemester in Erlangen. Sie sucht ein praktisches Entwicklungsprojekt, das Laborarbeit und hardwarenahe Programmierung verbindet. Sie will sich im Bereich eingebetteter Systeme vertiefen und nicht ausschließlich Verwaltungs- oder Koordinationsaufgaben übernehmen.",
+      "education": "M.Sc. Elektrotechnik, 2. Semester; abgeschlossener B.Sc. Elektrotechnik.",
+      "experience": [
+        "Bachelorprojekt: Mikrocontroller misst Sensordaten und überträgt sie seriell.",
+        "Laborversuche mit Oszilloskop, C und einfachen Regelkreisen."
+      ],
+      "skills": [
+        "C",
+        "C++-Grundlagen",
+        "Mikrocontroller",
+        "Messtechnik",
+        "MATLAB",
+        "Git"
+      ],
+      "limitations": [
+        "Keine AUTOSAR-Erfahrung.",
+        "Kein eigenständig entwickelter FPGA; VHDL nur als Überblick."
+      ],
+      "job_goal": "Praktikum in Embedded-Software-Entwicklung oder hardwarenaher Systementwicklung.",
+      "employment_types": [
+        "praktikum"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Erlangen",
+          "Nürnberg",
+          "München"
+        ],
+        "remote": [
+          "onsite",
+          "hybrid"
+        ],
+        "max_hours": 40.0,
+        "priorities": [
+          "Eigene C-Entwicklung und praktische Arbeit mit Sensoren oder Mikrocontrollern.",
+          "Messung, Test und Debugging am realen System statt überwiegend Dokumentation oder Projektkoordination.",
+          "Fünf bis sechs Monate Vollzeitpraktikum; Präsenz im Labor ist erwünscht und regionaler Umzug möglich."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Praktikum in Embedded-Software-Entwicklung oder hardwarenaher Systementwicklung.",
+        "education": "M.Sc. Elektrotechnik, 2. Semester; abgeschlossener B.Sc. Elektrotechnik.",
+        "experience": [
+          "Bachelorprojekt: Mikrocontroller misst Sensordaten und überträgt sie seriell.",
+          "Laborversuche mit Oszilloskop, C und einfachen Regelkreisen."
+        ],
+        "skills": [
+          "C",
+          "C++-Grundlagen",
+          "Mikrocontroller",
+          "Messtechnik",
+          "MATLAB",
+          "Git"
+        ],
+        "limitations": [
+          "Keine AUTOSAR-Erfahrung.",
+          "Kein eigenständig entwickelter FPGA; VHDL nur als Überblick."
+        ],
+        "employment_types": [
+          "praktikum"
+        ],
+        "relevant_task_families": [
+          "Embedded-Software",
+          "Mikrocontrollerprogrammierung",
+          "Sensorik mit hardwarenahem Softwareanteil",
+          "Systemtest und Debugging im Embedded-Umfeld"
+        ],
+        "ordered_priorities": [
+          "Eigene C-Entwicklung und praktische Arbeit mit Sensoren oder Mikrocontrollern.",
+          "Messung, Test und Debugging am realen System statt überwiegend Dokumentation oder Projektkoordination.",
+          "Fünf bis sechs Monate Vollzeitpraktikum; Präsenz im Labor ist erwünscht und regionaler Umzug möglich."
+        ],
+        "locations": [
+          "Erlangen",
+          "Nürnberg",
+          "München"
+        ],
+        "remote": [
+          "onsite",
+          "hybrid"
+        ],
+        "max_hours": 40.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Verbindliche fortgeschrittene AUTOSAR-/FPGA-Praxis ohne Lernoption; reine Elektromontage, Projektassistenz oder allgemeine IT ohne Embedded-Bezug.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Konkrete C-/Mikrocontroller- oder Sensorikentwicklung und praktische Tests sind beschrieben und für eine Elektrotechnik-Masterstudentin mit Projektpraxis zugänglich."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Elektrotechnik im Master und suche ein Praktikum in der Embedded-Software-Entwicklung oder hardwarenahen Systementwicklung.",
+        "skills": [
+          "C",
+          "C++-Grundlagen",
+          "Mikrocontroller",
+          "Messtechnik",
+          "MATLAB",
+          "Git"
+        ],
+        "preferences": [
+          "Technische Entwicklungsaufgaben",
+          "Zusammenarbeit mit Hardware und Software"
+        ],
+        "cv_text": "Master Elektrotechnik nach abgeschlossenem Bachelor. Ein Mikrocontrollerprojekt mit C, Sensordaten und Messtechnik; MATLAB und Git aus Studium und Projekten.",
+        "filters": {
+          "employment_types": [
+            "praktikum"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Praktikum in Embedded-Software-Entwicklung oder hardwarenaher Systementwicklung.",
+        "skills": [
+          "C",
+          "C++-Grundlagen",
+          "Mikrocontroller",
+          "Messtechnik",
+          "MATLAB",
+          "Git"
+        ],
+        "preferences": [
+          "Eigene C-Entwicklung und praktische Arbeit mit Sensoren oder Mikrocontrollern.",
+          "Messung, Test und Debugging am realen System statt überwiegend Dokumentation oder Projektkoordination.",
+          "Fünf bis sechs Monate Vollzeitpraktikum; Präsenz im Labor ist erwünscht und regionaler Umzug möglich."
+        ],
+        "cv_text": "M.Sc. Elektrotechnik, 2. Semester; abgeschlossener B.Sc. Elektrotechnik.\nBachelorprojekt: Mikrocontroller misst Sensordaten und überträgt sie seriell.\nLaborversuche mit Oszilloskop, C und einfachen Regelkreisen.\nGrenzen: Keine AUTOSAR-Erfahrung.; Kein eigenständig entwickelter FPGA; VHDL nur als Überblick.",
+        "filters": {
+          "employment_types": [
+            "praktikum"
+          ],
+          "locations": [
+            "Erlangen",
+            "Nürnberg",
+            "München"
+          ],
+          "remote": [
+            "onsite",
+            "hybrid"
+          ],
+          "max_hours": 40.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Embedded-Beratung",
+        "description": "Prüfe die technischen Voraussetzungen genau. Erfinde keine Erfahrung und unterscheide Muss-Anforderungen von sinnvollen Lernzielen. Begründe die Empfehlung anhand der beschriebenen Entwicklungsaufgaben.",
+        "traits": [
+          "analytisch",
+          "kritisch",
+          "strukturiert"
+        ],
+        "focus": "fachliche_tiefe"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "expert",
+      "preferred_template_reason": "Abgleich hardwarenaher Entwicklungsmethoden mit vorhandener Elektrotechnikpraxis.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "expert"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Am liebsten möchte ich selbst in C programmieren und mit Sensoren oder Mikrocontrollern im Labor arbeiten. Reine Dokumentation oder Projektkoordination wäre weniger passend. Bitte sortiere die Praktika nach diesem Schwerpunkt neu.",
+        "Ich kann fünf bis sechs Monate in Vollzeit ins Praktikum gehen und bin für Laborarbeit vor Ort sowie einen regionalen Umzug offen. AUTOSAR habe ich noch nicht verwendet und keinen FPGA selbst entwickelt. Berücksichtige das bitte bei der Reihenfolge.",
+        "Welche konkrete Entwicklungsaufgabe würde ich bei der ersten Stelle übernehmen? Bitte zeige auch, ob eine meiner fehlenden Kenntnisse ausdrücklich vorausgesetzt wird oder erst im Praktikum erlernt werden kann."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Sensorik, Mikrocontroller und praktische C-Entwicklung stehen im Vordergrund.",
+          "canonical_information_and_fallback": "Am liebsten möchte ich selbst in C programmieren und mit Sensoren oder Mikrocontrollern im Labor arbeiten. Reine Dokumentation oder Projektkoordination wäre weniger passend. Bitte sortiere die Praktika nach diesem Schwerpunkt neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Keine AUTOSAR-/FPGA-Praxis; fünf bis sechs Monate und Laborpräsenz möglich.",
+          "canonical_information_and_fallback": "Ich kann fünf bis sechs Monate in Vollzeit ins Praktikum gehen und bin für Laborarbeit vor Ort sowie einen regionalen Umzug offen. AUTOSAR habe ich noch nicht verwendet und keinen FPGA selbst entwickelt. Berücksichtige das bitte bei der Reihenfolge.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Welche konkrete Entwicklungsaufgabe würde ich bei der ersten Stelle übernehmen? Bitte zeige auch, ob eine meiner fehlenden Kenntnisse ausdrücklich vorausgesetzt wird oder erst im Praktikum erlernt werden kann.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Sensorik, Mikrocontroller und praktische C-Entwicklung stehen im Vordergrund.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Am liebsten möchte ich selbst in C programmieren und mit Sensoren oder Mikrocontrollern im Labor arbeiten. Reine Dokumentation oder Projektkoordination wäre weniger passend. Bitte sortiere die Praktika nach diesem Schwerpunkt neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Keine AUTOSAR-/FPGA-Praxis; fünf bis sechs Monate und Laborpräsenz möglich.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich kann fünf bis sechs Monate in Vollzeit ins Praktikum gehen und bin für Laborarbeit vor Ort sowie einen regionalen Umzug offen. AUTOSAR habe ich noch nicht verwendet und keinen FPGA selbst entwickelt. Berücksichtige das bitte bei der Reihenfolge."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; technische Anforderungen der ersten Stelle prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Welche konkrete Entwicklungsaufgabe würde ich bei der ersten Stelle übernehmen? Bitte zeige auch, ob eine meiner fehlenden Kenntnisse ausdrücklich vorausgesetzt wird oder erst im Praktikum erlernt werden kann."
+        }
+      ],
+      "initially_omitted_information": [
+        "Sensorik, Mikrocontroller und praktische C-Entwicklung stehen im Vordergrund.",
+        "Keine AUTOSAR-/FPGA-Praxis; fünf bis sechs Monate und Laborpräsenz möglich."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P04",
+      "name": "Ben Keller",
+      "age": 22,
+      "group": "Duales Bachelorstudium · Mechatronik · Abschlussarbeit",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Ben schließt ein duales Mechatronikstudium ab. Seine bisherigen Praxisphasen lagen in einem mittelständischen Fertigungsbetrieb. Er sucht für die Abschlussarbeit eine konkrete technische Problemstellung mit messbarem Ergebnis und möchte seine SPS- und Versuchserfahrung nutzen.",
+      "education": "B.Eng. Mechatronik, letztes Studienjahr im dualen Modell; Bachelorarbeit steht bevor.",
+      "experience": [
+        "Drei Praxisphasen in Instandhaltung und Fertigungsautomatisierung.",
+        "Kleines SPS-Projekt zur Zustandsüberwachung einer Station und Versuchsauswertung in Excel."
+      ],
+      "skills": [
+        "SPS-Grundlagen",
+        "TIA Portal",
+        "Siemens S7-Grundlagen",
+        "Sensorik",
+        "Technische Zeichnungen",
+        "Excel"
+      ],
+      "limitations": [
+        "Keine fortgeschrittene Robotikprogrammierung.",
+        "Keine Erfahrung in der alleinigen Planung kompletter Produktionsanlagen."
+      ],
+      "job_goal": "Bachelorarbeit in Automatisierungstechnik oder mechatronischer Produktionsentwicklung.",
+      "employment_types": [
+        "abschlussarbeit"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Fürth",
+          "Erlangen"
+        ],
+        "remote": [
+          "onsite",
+          "hybrid"
+        ],
+        "max_hours": 40.0,
+        "priorities": [
+          "Umsetzung oder Erprobung eines Prototyps mit realen Anlagen- oder Sensordaten.",
+          "Klar abgrenzbares Thema mit fachlicher Betreuung und dokumentierbaren Ergebnissen.",
+          "Vier bis sechs Monate Abschlussarbeit im Raum Nürnberg; praktische Anwesenheit ist möglich."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Bachelorarbeit in Automatisierungstechnik oder mechatronischer Produktionsentwicklung.",
+        "education": "B.Eng. Mechatronik, letztes Studienjahr im dualen Modell; Bachelorarbeit steht bevor.",
+        "experience": [
+          "Drei Praxisphasen in Instandhaltung und Fertigungsautomatisierung.",
+          "Kleines SPS-Projekt zur Zustandsüberwachung einer Station und Versuchsauswertung in Excel."
+        ],
+        "skills": [
+          "SPS-Grundlagen",
+          "TIA Portal",
+          "Siemens S7-Grundlagen",
+          "Sensorik",
+          "Technische Zeichnungen",
+          "Excel"
+        ],
+        "limitations": [
+          "Keine fortgeschrittene Robotikprogrammierung.",
+          "Keine Erfahrung in der alleinigen Planung kompletter Produktionsanlagen."
+        ],
+        "employment_types": [
+          "abschlussarbeit"
+        ],
+        "relevant_task_families": [
+          "Automatisierungsbezogene Bachelorarbeit",
+          "Mechatronische Entwicklung",
+          "SPS-, Sensorik- oder Produktionsprototypen"
+        ],
+        "ordered_priorities": [
+          "Umsetzung oder Erprobung eines Prototyps mit realen Anlagen- oder Sensordaten.",
+          "Klar abgrenzbares Thema mit fachlicher Betreuung und dokumentierbaren Ergebnissen.",
+          "Vier bis sechs Monate Abschlussarbeit im Raum Nürnberg; praktische Anwesenheit ist möglich."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Fürth",
+          "Erlangen"
+        ],
+        "remote": [
+          "onsite",
+          "hybrid"
+        ],
+        "max_hours": 40.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Ausschließlich Master-/Promotionsarbeit mit verbindlich zu hohem Niveau; rein wirtschaftliche Abschlussarbeit oder verpflichtende fortgeschrittene Robotik ohne Anschluss an vorhandene Fähigkeiten.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Eine fachlich passende Bachelorarbeit enthält praktische Entwicklung oder Messung, ein zugängliches SPS-/Sensorikprofil und ein erkennbar bearbeitbares Thema."
+      },
+      "initial_profile": {
+        "query": "Ich suche eine Bachelorarbeit in der Automatisierungstechnik oder mechatronischen Produktionsentwicklung. Ich studiere dual Mechatronik und habe erste SPS- und Fertigungserfahrung.",
+        "skills": [
+          "SPS-Grundlagen",
+          "TIA Portal",
+          "Siemens S7-Grundlagen",
+          "Sensorik",
+          "Technische Zeichnungen",
+          "Excel"
+        ],
+        "preferences": [
+          "Praxisnahes technisches Thema",
+          "Zusammenarbeit mit einem Entwicklungsteam"
+        ],
+        "cv_text": "Duales Mechatronikstudium im Abschlussjahr. Praxisphasen in Fertigungsautomatisierung; SPS-Grundlagen mit TIA Portal und Siemens S7, Sensorik und Versuchsauswertung.",
+        "filters": {
+          "employment_types": [
+            "abschlussarbeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Bachelorarbeit in Automatisierungstechnik oder mechatronischer Produktionsentwicklung.",
+        "skills": [
+          "SPS-Grundlagen",
+          "TIA Portal",
+          "Siemens S7-Grundlagen",
+          "Sensorik",
+          "Technische Zeichnungen",
+          "Excel"
+        ],
+        "preferences": [
+          "Umsetzung oder Erprobung eines Prototyps mit realen Anlagen- oder Sensordaten.",
+          "Klar abgrenzbares Thema mit fachlicher Betreuung und dokumentierbaren Ergebnissen.",
+          "Vier bis sechs Monate Abschlussarbeit im Raum Nürnberg; praktische Anwesenheit ist möglich."
+        ],
+        "cv_text": "B.Eng. Mechatronik, letztes Studienjahr im dualen Modell; Bachelorarbeit steht bevor.\nDrei Praxisphasen in Instandhaltung und Fertigungsautomatisierung.\nKleines SPS-Projekt zur Zustandsüberwachung einer Station und Versuchsauswertung in Excel.\nGrenzen: Keine fortgeschrittene Robotikprogrammierung.; Keine Erfahrung in der alleinigen Planung kompletter Produktionsanlagen.",
+        "filters": {
+          "employment_types": [
+            "abschlussarbeit"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Fürth",
+            "Erlangen"
+          ],
+          "remote": [
+            "onsite",
+            "hybrid"
+          ],
+          "max_hours": 40.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Mein Projektberater",
+        "description": "Mache verständlich, was ich im Projekt konkret bauen oder verbessern würde. Prüfe, ob Aufgaben, Daten und Betreuung in der Anzeige beschrieben sind; spekuliere nicht über Firmeninterna.",
+        "traits": [
+          "neugierig",
+          "strukturiert"
+        ],
+        "focus": "innovation"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "expert",
+      "preferred_template_reason": "Fachliche Machbarkeit und methodische Abgrenzung einer mechatronischen Abschlussarbeit.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "expert"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Für meine Arbeit möchte ich einen Prototyp umsetzen oder an einer realen Anlage etwas messen und verbessern. Eine reine Literatur- oder Marktstudie wäre weniger passend. Bitte ordne die Abschlussarbeiten danach neu.",
+        "Ich plane vier bis sechs Monate und brauche ein klar abgegrenztes Thema mit fachlicher Betreuung. SPS-Grundlagen bringe ich mit, fortgeschrittene Roboterprogrammierung noch nicht. Bitte berücksichtige das und sortiere die Ergebnisse erneut.",
+        "Wie gut eignet sich die erste Stelle für meine Bachelorarbeit? Bitte trenne konkret belegte Angaben zu Prototyp, Daten und Betreuung von Punkten, die ich vorher beim Unternehmen klären müsste."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Prototyp und reale Messdaten sind gegenüber reiner Literaturarbeit bevorzugt.",
+          "canonical_information_and_fallback": "Für meine Arbeit möchte ich einen Prototyp umsetzen oder an einer realen Anlage etwas messen und verbessern. Eine reine Literatur- oder Marktstudie wäre weniger passend. Bitte ordne die Abschlussarbeiten danach neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Themenabgrenzung, Betreuung und verfügbarer Umfang; keine fortgeschrittene Robotik.",
+          "canonical_information_and_fallback": "Ich plane vier bis sechs Monate und brauche ein klar abgegrenztes Thema mit fachlicher Betreuung. SPS-Grundlagen bringe ich mit, fortgeschrittene Roboterprogrammierung noch nicht. Bitte berücksichtige das und sortiere die Ergebnisse erneut.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Wie gut eignet sich die erste Stelle für meine Bachelorarbeit? Bitte trenne konkret belegte Angaben zu Prototyp, Daten und Betreuung von Punkten, die ich vorher beim Unternehmen klären müsste.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Prototyp und reale Messdaten sind gegenüber reiner Literaturarbeit bevorzugt.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Für meine Arbeit möchte ich einen Prototyp umsetzen oder an einer realen Anlage etwas messen und verbessern. Eine reine Literatur- oder Marktstudie wäre weniger passend. Bitte ordne die Abschlussarbeiten danach neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Themenabgrenzung, Betreuung und verfügbarer Umfang; keine fortgeschrittene Robotik.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich plane vier bis sechs Monate und brauche ein klar abgegrenztes Thema mit fachlicher Betreuung. SPS-Grundlagen bringe ich mit, fortgeschrittene Roboterprogrammierung noch nicht. Bitte berücksichtige das und sortiere die Ergebnisse erneut."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Machbarkeit und Nachweise prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Wie gut eignet sich die erste Stelle für meine Bachelorarbeit? Bitte trenne konkret belegte Angaben zu Prototyp, Daten und Betreuung von Punkten, die ich vorher beim Unternehmen klären müsste."
+        }
+      ],
+      "initially_omitted_information": [
+        "Prototyp und reale Messdaten sind gegenüber reiner Literaturarbeit bevorzugt.",
+        "Themenabgrenzung, Betreuung und verfügbarer Umfang; keine fortgeschrittene Robotik."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P05",
+      "name": "Elif Aydin",
+      "age": 27,
+      "group": "Internationale Masterstudentin · Supply Chain · mehrsprachiges Profil",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Elif hat ihren Bachelor in Betriebswirtschaft außerhalb Deutschlands abgeschlossen und studiert nun International Business im Master in München. Sie spricht Deutsch auf C1- und Englisch auf C1-Niveau. Ihre Berufswünsche ergeben sich aus ihrer Logistikpraxis und ihren Analyseinteressen, nicht aus Herkunft oder Geschlecht.",
+      "education": "M.Sc. International Business, 3. Semester; ausländischer BWL-Bachelor fachlich abgeschlossen.",
+      "experience": [
+        "Sechsmonatiges Praktikum in operativer Logistik: Liefertermine verfolgt und Excel-Listen ausgewertet.",
+        "Studienprojekt zur Bestandsplanung und Lieferkettenanalyse."
+      ],
+      "skills": [
+        "Excel",
+        "Pivot-Tabellen",
+        "Supply-Chain-Grundlagen",
+        "Bestandsplanung-Grundlagen",
+        "Deutsch C1",
+        "Englisch C1"
+      ],
+      "limitations": [
+        "SAP bisher nur aus einer Einführung.",
+        "Keine fortgeschrittene Python- oder SQL-Praxis."
+      ],
+      "job_goal": "Werkstudentenstelle im Supply-Chain-Management oder in der Logistikanalyse.",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "München",
+          "Augsburg"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 20.0,
+        "priorities": [
+          "Bestands-, Lieferketten- oder Prozessanalysen mit Excel statt überwiegend Telefon-Disposition.",
+          "Internationales Team oder englischsprachige Zusammenarbeit ist ein Plus, kein Ersatz für fachliche Passung.",
+          "16–20 Stunden und möglichst Hybridarbeit im Raum München; SAP soll erlernbar sein."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Werkstudentenstelle im Supply-Chain-Management oder in der Logistikanalyse.",
+        "education": "M.Sc. International Business, 3. Semester; ausländischer BWL-Bachelor fachlich abgeschlossen.",
+        "experience": [
+          "Sechsmonatiges Praktikum in operativer Logistik: Liefertermine verfolgt und Excel-Listen ausgewertet.",
+          "Studienprojekt zur Bestandsplanung und Lieferkettenanalyse."
+        ],
+        "skills": [
+          "Excel",
+          "Pivot-Tabellen",
+          "Supply-Chain-Grundlagen",
+          "Bestandsplanung-Grundlagen",
+          "Deutsch C1",
+          "Englisch C1"
+        ],
+        "limitations": [
+          "SAP bisher nur aus einer Einführung.",
+          "Keine fortgeschrittene Python- oder SQL-Praxis."
+        ],
+        "employment_types": [
+          "werkstudent"
+        ],
+        "relevant_task_families": [
+          "Supply-Chain-Analyse",
+          "Bestands- oder Bedarfsplanung",
+          "Logistikcontrolling",
+          "Operatives Supply-Chain-Management mit Analyseanteil"
+        ],
+        "ordered_priorities": [
+          "Bestands-, Lieferketten- oder Prozessanalysen mit Excel statt überwiegend Telefon-Disposition.",
+          "Internationales Team oder englischsprachige Zusammenarbeit ist ein Plus, kein Ersatz für fachliche Passung.",
+          "16–20 Stunden und möglichst Hybridarbeit im Raum München; SAP soll erlernbar sein."
+        ],
+        "locations": [
+          "München",
+          "Augsburg"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 20.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Überwiegend Lagerarbeit oder reine Telefon-Disposition; verbindliche mehrjährige SAP-Spezialisierung oder fortgeschrittene Data-Engineering-Anforderungen.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Substanzielle Logistik- oder Bestandsanalyse mit zugänglichen Excel-Anforderungen und studentischem Niveau; SAP-Einführung ist möglich oder vertiefte SAP-Praxis nicht verpflichtend."
+      },
+      "initial_profile": {
+        "query": "Ich studiere International Business im Master und suche eine Werkstudentenstelle im Supply-Chain-Management oder in der Logistikanalyse. Ich habe Logistikpraktikumserfahrung und arbeite gut mit Excel.",
+        "skills": [
+          "Excel",
+          "Pivot-Tabellen",
+          "Supply-Chain-Grundlagen",
+          "Bestandsplanung-Grundlagen",
+          "Deutsch C1",
+          "Englisch C1"
+        ],
+        "preferences": [
+          "Analytische Aufgaben in der Logistik",
+          "Zusammenarbeit in einem Team"
+        ],
+        "cv_text": "Master International Business, 3. Semester; BWL-Bachelor. Sechs Monate Logistikpraktikum, Excel/Pivot-Auswertungen und Studienprojekt zur Bestandsplanung. Deutsch und Englisch C1.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Werkstudentenstelle im Supply-Chain-Management oder in der Logistikanalyse.",
+        "skills": [
+          "Excel",
+          "Pivot-Tabellen",
+          "Supply-Chain-Grundlagen",
+          "Bestandsplanung-Grundlagen",
+          "Deutsch C1",
+          "Englisch C1"
+        ],
+        "preferences": [
+          "Bestands-, Lieferketten- oder Prozessanalysen mit Excel statt überwiegend Telefon-Disposition.",
+          "Internationales Team oder englischsprachige Zusammenarbeit ist ein Plus, kein Ersatz für fachliche Passung.",
+          "16–20 Stunden und möglichst Hybridarbeit im Raum München; SAP soll erlernbar sein."
+        ],
+        "cv_text": "M.Sc. International Business, 3. Semester; ausländischer BWL-Bachelor fachlich abgeschlossen.\nSechsmonatiges Praktikum in operativer Logistik: Liefertermine verfolgt und Excel-Listen ausgewertet.\nStudienprojekt zur Bestandsplanung und Lieferkettenanalyse.\nGrenzen: SAP bisher nur aus einer Einführung.; Keine fortgeschrittene Python- oder SQL-Praxis.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "München",
+            "Augsburg"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 20.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Supply-Chain-Beratung",
+        "description": "Beziehe Empfehlungen auf meine tatsächlich genannten Kenntnisse. Erkläre Aufgaben und Lücken konkret. Unbekannte Anforderungen sollen als offen erscheinen und nicht als unterstellte Defizite.",
+        "traits": [
+          "analytisch",
+          "empathisch"
+        ],
+        "focus": "ausgewogen"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Übertragung erster Logistikpraxis in eine passende studentische Tätigkeit.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Ich möchte gern Bestände, Lieferketten oder Abläufe analysieren. Eine Stelle, die überwiegend aus telefonischer Disposition besteht, wäre weniger passend. Bitte gewichte den Analyseanteil stärker und sortiere neu.",
+        "SAP kenne ich erst aus einer Einführung. Ein internationales Team wäre schön; ich spreche Deutsch und Englisch auf C1-Niveau. Ich suche 16 bis 20 Stunden, am liebsten hybrid im Raum München. Bitte passe die Reihenfolge daran an.",
+        "Was spricht bei der ersten Stelle für meinen Einstieg? Bitte erkläre besonders den Anteil an Analyse, die SAP-Anforderungen und welche Angaben zu Hybridarbeit noch fehlen."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Analyse und Planung sind wichtiger als hauptsächlich telefonische Disposition.",
+          "canonical_information_and_fallback": "Ich möchte gern Bestände, Lieferketten oder Abläufe analysieren. Eine Stelle, die überwiegend aus telefonischer Disposition besteht, wäre weniger passend. Bitte gewichte den Analyseanteil stärker und sortiere neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "SAP-Einstiegsniveau, Hybridpräferenz und Interesse an internationaler Zusammenarbeit.",
+          "canonical_information_and_fallback": "SAP kenne ich erst aus einer Einführung. Ein internationales Team wäre schön; ich spreche Deutsch und Englisch auf C1-Niveau. Ich suche 16 bis 20 Stunden, am liebsten hybrid im Raum München. Bitte passe die Reihenfolge daran an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Was spricht bei der ersten Stelle für meinen Einstieg? Bitte erkläre besonders den Anteil an Analyse, die SAP-Anforderungen und welche Angaben zu Hybridarbeit noch fehlen.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Analyse und Planung sind wichtiger als hauptsächlich telefonische Disposition.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich möchte gern Bestände, Lieferketten oder Abläufe analysieren. Eine Stelle, die überwiegend aus telefonischer Disposition besteht, wäre weniger passend. Bitte gewichte den Analyseanteil stärker und sortiere neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "SAP-Einstiegsniveau, Hybridpräferenz und Interesse an internationaler Zusammenarbeit.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "SAP kenne ich erst aus einer Einführung. Ein internationales Team wäre schön; ich spreche Deutsch und Englisch auf C1-Niveau. Ich suche 16 bis 20 Stunden, am liebsten hybrid im Raum München. Bitte passe die Reihenfolge daran an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; konkrete Passung überprüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Was spricht bei der ersten Stelle für meinen Einstieg? Bitte erkläre besonders den Anteil an Analyse, die SAP-Anforderungen und welche Angaben zu Hybridarbeit noch fehlen."
+        }
+      ],
+      "initially_omitted_information": [
+        "Analyse und Planung sind wichtiger als hauptsächlich telefonische Disposition.",
+        "SAP-Einstiegsniveau, Hybridpräferenz und Interesse an internationaler Zusammenarbeit."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P06",
+      "name": "Nora Peters",
+      "age": 35,
+      "group": "Berufliche Neuorientierung · Personalmanagement · Teilzeit",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Nora hat mehrere Jahre in der kaufmännischen Auftragsbearbeitung gearbeitet und schließt ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab. Sie möchte in eine fachliche Einstiegsrolle im Personalbereich wechseln. Ihre bisherigen Kompetenzen liegen in Organisation, zuverlässiger Sachbearbeitung und Kommunikation; spezielle HR-Systeme muss sie noch erlernen.",
+      "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+      "experience": [
+        "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+        "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+      ],
+      "skills": [
+        "Kaufmännische Sachbearbeitung",
+        "MS Office",
+        "Excel",
+        "Terminorganisation",
+        "Interne Kommunikation",
+        "Personalmanagement-Grundlagen"
+      ],
+      "limitations": [
+        "Noch keine hauptberufliche HR-Tätigkeit.",
+        "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+      ],
+      "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+      "employment_types": [
+        "teilzeit"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "education": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.",
+        "experience": [
+          "Sieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.",
+          "Hochschulprojekt zur Verbesserung eines Onboarding-Prozesses."
+        ],
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "limitations": [
+          "Noch keine hauptberufliche HR-Tätigkeit.",
+          "Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis."
+        ],
+        "employment_types": [
+          "teilzeit"
+        ],
+        "relevant_task_families": [
+          "Interne Personaladministration",
+          "HR-Assistenz mit Entwicklungsmöglichkeit",
+          "Onboarding und Mitarbeitendenbetreuung"
+        ],
+        "ordered_priorities": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 25.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Eigenverantwortliche Entgeltabrechnung mit zwingender Erfahrung; Senior-HR-Rolle oder überwiegend vertriebliche Personalvermittlung.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Interne Personalaufgaben passen zu kaufmännischer Erfahrung und BWL-Grundlagen; relevante HR-Einarbeitung ist vorgesehen oder Spezialwissen nicht zwingend, Teilzeit ist angegeben."
+      },
+      "initial_profile": {
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Teilzeitstelle im Personalmanagement mit Schwerpunkt Personaladministration oder Onboarding.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "preferences": [
+          "Personaladministration, Betreuung von Mitarbeitenden und Onboarding statt vertriebsorientierter Personalvermittlung.",
+          "Einarbeitung in HR-Systeme; keine eigenständige Entgeltabrechnung ab dem ersten Tag.",
+          "Etwa 20–25 Stunden und planbare Arbeitszeiten im Raum Nürnberg/Fürth; Hybridarbeit ist hilfreich."
+        ],
+        "cv_text": "B.A. Betriebswirtschaft, Abschluss im laufenden Semester; Schwerpunkt Personalmanagement.\nSieben Jahre kaufmännische Auftragsbearbeitung und interne Terminabstimmung.\nHochschulprojekt zur Verbesserung eines Onboarding-Prozesses.\nGrenzen: Noch keine hauptberufliche HR-Tätigkeit.; Keine selbstständige Entgeltabrechnung und keine SAP-HCM-Praxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Fürth"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 25.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Umstiegsberatung",
+        "description": "Nutze übertragbare Fähigkeiten, ohne daraus nicht belegte Fachpraxis abzuleiten. Zeige einen realistischen Einstieg und benenne konkrete Einarbeitungsbedarfe. Beziehe dich auf Stelleninhalte, nicht auf mein Alter.",
+        "traits": [
+          "empathisch",
+          "direkt"
+        ],
+        "focus": "lernpotenzial"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Realistischer Berufswechsel auf Grundlage übertragbarer kaufmännischer Fähigkeiten.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "canonical_information_and_fallback": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "canonical_information_and_fallback": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Quereinstieg begründet prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Ist die erste Stelle ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+        }
+      ],
+      "initially_omitted_information": [
+        "Interne Personaladministration/Onboarding bevorzugt, Personalvermittlung nachrangig.",
+        "20–25 Stunden, planbare Zeiten, keine Abrechnungs-/SAP-HCM-Praxis."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P07",
+      "name": "Paul Richter",
+      "age": 26,
+      "group": "Hochschulabsolvent · Bauingenieurwesen · Berufseinstieg",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Paul hat sein Bachelorstudium Bauingenieurwesen beendet. Er sucht seinen ersten regulären Berufseinstieg und möchte auf seiner Praktikumserfahrung in der Planung aufbauen. Ihm ist fachliche Entwicklung wichtiger als frühe Personalverantwortung.",
+      "education": "Abgeschlossener B.Eng. Bauingenieurwesen; Vertiefung konstruktiver Ingenieurbau.",
+      "experience": [
+        "Vier Monate Praktikum in einem Ingenieurbüro: CAD-Pläne und statische Berechnungen unter Anleitung.",
+        "Bachelorarbeit zur Bemessung eines einfachen Tragwerks."
+      ],
+      "skills": [
+        "AutoCAD",
+        "Statik-Grundlagen",
+        "Tragwerkslehre",
+        "Excel",
+        "Technische Dokumentation"
+      ],
+      "limitations": [
+        "Revit/BIM nur aus einem Einführungskurs.",
+        "Keine eigenständige Bauleitungs- oder Projektleitungserfahrung."
+      ],
+      "job_goal": "Berufseinstieg in Tragwerksplanung oder konstruktivem Ingenieurbau als Vollzeit- oder Traineestelle.",
+      "employment_types": [
+        "vollzeit",
+        "trainee"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Bamberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "onsite",
+          "hybrid"
+        ],
+        "max_hours": 40.0,
+        "priorities": [
+          "Berechnung, Konstruktion und Planung statt überwiegend Bauleitung mit häufig wechselnden Baustellen.",
+          "Fachliche Begleitung durch erfahrene Ingenieurinnen oder Ingenieure.",
+          "Einstieg ohne eigenständige Projektleitungsverantwortung; BIM-Vertiefung ist ein Lernziel."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Berufseinstieg in Tragwerksplanung oder konstruktivem Ingenieurbau als Vollzeit- oder Traineestelle.",
+        "education": "Abgeschlossener B.Eng. Bauingenieurwesen; Vertiefung konstruktiver Ingenieurbau.",
+        "experience": [
+          "Vier Monate Praktikum in einem Ingenieurbüro: CAD-Pläne und statische Berechnungen unter Anleitung.",
+          "Bachelorarbeit zur Bemessung eines einfachen Tragwerks."
+        ],
+        "skills": [
+          "AutoCAD",
+          "Statik-Grundlagen",
+          "Tragwerkslehre",
+          "Excel",
+          "Technische Dokumentation"
+        ],
+        "limitations": [
+          "Revit/BIM nur aus einem Einführungskurs.",
+          "Keine eigenständige Bauleitungs- oder Projektleitungserfahrung."
+        ],
+        "employment_types": [
+          "vollzeit",
+          "trainee"
+        ],
+        "relevant_task_families": [
+          "Tragwerksplanung",
+          "Konstruktiver Ingenieurbau",
+          "Baustatik",
+          "Konstruktionsplanung mit bauingenieurlichem Schwerpunkt"
+        ],
+        "ordered_priorities": [
+          "Berechnung, Konstruktion und Planung statt überwiegend Bauleitung mit häufig wechselnden Baustellen.",
+          "Fachliche Begleitung durch erfahrene Ingenieurinnen oder Ingenieure.",
+          "Einstieg ohne eigenständige Projektleitungsverantwortung; BIM-Vertiefung ist ein Lernziel."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Bamberg",
+          "Erlangen"
+        ],
+        "remote": [
+          "onsite",
+          "hybrid"
+        ],
+        "max_hours": 40.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Zwingend mehrjährige eigenständige Projektleitung, überwiegend Bauleitung oder sachfremde Gebäudeverwaltung ohne konstruktive Ingenieuraufgaben.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Planung und Berechnung im konstruktiven Ingenieurbau sind beschrieben und Absolventen werden zugelassen; Verantwortung bleibt mit betreutem Einstieg vereinbar."
+      },
+      "initial_profile": {
+        "query": "Ich habe Bauingenieurwesen abgeschlossen und suche eine Vollzeit- oder Traineestelle in der Tragwerksplanung beziehungsweise im konstruktiven Ingenieurbau.",
+        "skills": [
+          "AutoCAD",
+          "Statik-Grundlagen",
+          "Tragwerkslehre",
+          "Excel",
+          "Technische Dokumentation"
+        ],
+        "preferences": [
+          "Fachlicher Berufseinstieg",
+          "Arbeit im Planungsteam"
+        ],
+        "cv_text": "B.Eng. Bauingenieurwesen, konstruktiver Ingenieurbau. Vier Monate Planungspraktikum mit AutoCAD und statischen Berechnungen unter Anleitung; Bachelorarbeit zur Tragwerksbemessung.",
+        "filters": {
+          "employment_types": [
+            "vollzeit",
+            "trainee"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Berufseinstieg in Tragwerksplanung oder konstruktivem Ingenieurbau als Vollzeit- oder Traineestelle.",
+        "skills": [
+          "AutoCAD",
+          "Statik-Grundlagen",
+          "Tragwerkslehre",
+          "Excel",
+          "Technische Dokumentation"
+        ],
+        "preferences": [
+          "Berechnung, Konstruktion und Planung statt überwiegend Bauleitung mit häufig wechselnden Baustellen.",
+          "Fachliche Begleitung durch erfahrene Ingenieurinnen oder Ingenieure.",
+          "Einstieg ohne eigenständige Projektleitungsverantwortung; BIM-Vertiefung ist ein Lernziel."
+        ],
+        "cv_text": "Abgeschlossener B.Eng. Bauingenieurwesen; Vertiefung konstruktiver Ingenieurbau.\nVier Monate Praktikum in einem Ingenieurbüro: CAD-Pläne und statische Berechnungen unter Anleitung.\nBachelorarbeit zur Bemessung eines einfachen Tragwerks.\nGrenzen: Revit/BIM nur aus einem Einführungskurs.; Keine eigenständige Bauleitungs- oder Projektleitungserfahrung.",
+        "filters": {
+          "employment_types": [
+            "vollzeit",
+            "trainee"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Bamberg",
+            "Erlangen"
+          ],
+          "remote": [
+            "onsite",
+            "hybrid"
+          ],
+          "max_hours": 40.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Mein Ingenieurcoach",
+        "description": "Prüfe, ob Verantwortung und Voraussetzungen zu einem Berufseinsteiger passen. Erkläre konkrete Planungsaufgaben und mögliche Fachentwicklung. Leite keine eigenständige Berufserfahrung aus einem Praktikum ab.",
+        "traits": [
+          "strukturiert",
+          "kritisch"
+        ],
+        "focus": "fachliche_tiefe"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "expert",
+      "preferred_template_reason": "Unterscheidung zwischen zugänglichen Planungsaufgaben und vorausgesetzter Projekterfahrung.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "expert"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Ich möchte vor allem berechnen, konstruieren und planen. Eine Stelle mit überwiegender Bauleitung und ständig wechselnden Baustellen wäre weniger passend. Bitte priorisiere die Planungsstellen neu.",
+        "Mir ist eine fachliche Begleitung beim Einstieg wichtig. Revit und BIM kenne ich bisher nur aus einem Einführungskurs; Projekte habe ich noch nicht selbst geleitet. Bitte berücksichtige das bei der Reihenfolge.",
+        "Warum wäre die erste Stelle für einen Absolventen wie mich geeignet? Bitte prüfe, ob die Anzeige tatsächlich einen Einstieg ermöglicht oder schon selbstständige Projektleitung und vertiefte BIM-Praxis voraussetzt."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Berechnungs-/Planungsanteil vor Bauleitung und häufiger Reisetätigkeit.",
+          "canonical_information_and_fallback": "Ich möchte vor allem berechnen, konstruieren und planen. Eine Stelle mit überwiegender Bauleitung und ständig wechselnden Baustellen wäre weniger passend. Bitte priorisiere die Planungsstellen neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Betreuter Einstieg; geringe BIM-Kenntnisse und keine Projektleitungsverantwortung.",
+          "canonical_information_and_fallback": "Mir ist eine fachliche Begleitung beim Einstieg wichtig. Revit und BIM kenne ich bisher nur aus einem Einführungskurs; Projekte habe ich noch nicht selbst geleitet. Bitte berücksichtige das bei der Reihenfolge.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Warum wäre die erste Stelle für einen Absolventen wie mich geeignet? Bitte prüfe, ob die Anzeige tatsächlich einen Einstieg ermöglicht oder schon selbstständige Projektleitung und vertiefte BIM-Praxis voraussetzt.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Berechnungs-/Planungsanteil vor Bauleitung und häufiger Reisetätigkeit.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich möchte vor allem berechnen, konstruieren und planen. Eine Stelle mit überwiegender Bauleitung und ständig wechselnden Baustellen wäre weniger passend. Bitte priorisiere die Planungsstellen neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Betreuter Einstieg; geringe BIM-Kenntnisse und keine Projektleitungsverantwortung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mir ist eine fachliche Begleitung beim Einstieg wichtig. Revit und BIM kenne ich bisher nur aus einem Einführungskurs; Projekte habe ich noch nicht selbst geleitet. Bitte berücksichtige das bei der Reihenfolge."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Niveau der ersten Stelle prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Warum wäre die erste Stelle für einen Absolventen wie mich geeignet? Bitte prüfe, ob die Anzeige tatsächlich einen Einstieg ermöglicht oder schon selbstständige Projektleitung und vertiefte BIM-Praxis voraussetzt."
+        }
+      ],
+      "initially_omitted_information": [
+        "Berechnungs-/Planungsanteil vor Bauleitung und häufiger Reisetätigkeit.",
+        "Betreuter Einstieg; geringe BIM-Kenntnisse und keine Projektleitungsverantwortung."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P08",
+      "name": "Sophie Lang",
+      "age": 24,
+      "group": "Masterstudentin · Interaction Design · UX-Praxisphase",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Sophie studiert Interaction Design im Master und möchte ihre Studienprojekte in einem Produktteam anwenden. Sie hat ein Portfolio mit interaktiven Prototypen und ersten Nutzertests. Ihr Interesse gilt dem Zusammenhang zwischen Nutzerbedürfnissen und digitalem Produktdesign.",
+      "education": "M.A. Interaction Design, 2. Semester; B.A. Kommunikationsdesign.",
+      "experience": [
+        "Zwei Studienprojekte mit Figma-Prototypen.",
+        "Moderation kleiner Usability-Tests im Hochschulkontext und qualitative Auswertung."
+      ],
+      "skills": [
+        "Figma",
+        "Wireframes",
+        "Interaktive Prototypen",
+        "Usability-Tests-Grundlagen",
+        "Qualitative Interviews-Grundlagen",
+        "Adobe Illustrator"
+      ],
+      "limitations": [
+        "Keine professionelle Frontend-Entwicklung.",
+        "Keine eigenverantwortliche Leitung großer Research-Studien."
+      ],
+      "job_goal": "Praktikum in UX/UI-Design oder User Research für digitale Produkte.",
+      "employment_types": [
+        "praktikum"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "München",
+          "Berlin"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 40.0,
+        "priorities": [
+          "Arbeit von Nutzerrecherche über Prototyp bis Test; reines Marketing-Layout ist nachrangig.",
+          "Produktteam mit Feedback und erreichbarer Betreuung; vorhandenes Portfolio statt mehrjähriger Praxis.",
+          "Fünf- bis sechsmonatiges Praktikum; Präsenz für Nutzertests ist möglich, Umzug nach München oder Berlin wäre denkbar."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Praktikum in UX/UI-Design oder User Research für digitale Produkte.",
+        "education": "M.A. Interaction Design, 2. Semester; B.A. Kommunikationsdesign.",
+        "experience": [
+          "Zwei Studienprojekte mit Figma-Prototypen.",
+          "Moderation kleiner Usability-Tests im Hochschulkontext und qualitative Auswertung."
+        ],
+        "skills": [
+          "Figma",
+          "Wireframes",
+          "Interaktive Prototypen",
+          "Usability-Tests-Grundlagen",
+          "Qualitative Interviews-Grundlagen",
+          "Adobe Illustrator"
+        ],
+        "limitations": [
+          "Keine professionelle Frontend-Entwicklung.",
+          "Keine eigenverantwortliche Leitung großer Research-Studien."
+        ],
+        "employment_types": [
+          "praktikum"
+        ],
+        "relevant_task_families": [
+          "UX/UI für digitale Produkte",
+          "User Research mit studentischem Einstieg",
+          "Interaction Design und Usability-Testing"
+        ],
+        "ordered_priorities": [
+          "Arbeit von Nutzerrecherche über Prototyp bis Test; reines Marketing-Layout ist nachrangig.",
+          "Produktteam mit Feedback und erreichbarer Betreuung; vorhandenes Portfolio statt mehrjähriger Praxis.",
+          "Fünf- bis sechsmonatiges Praktikum; Präsenz für Nutzertests ist möglich, Umzug nach München oder Berlin wäre denkbar."
+        ],
+        "locations": [
+          "Nürnberg",
+          "München",
+          "Berlin"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 40.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Reine Print-/Marketingproduktion ohne Produkt-UX; zwingende professionelle Frontend-Entwicklung oder mehrjährige eigenständige Research-Leitung.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Konkrete digitale UX-Aufgaben verbinden Figma/Prototyping mit Nutzerbedürfnissen oder Tests und passen zu einem Praktikum mit Studienportfolio."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Interaction Design im Master und suche ein Praktikum im UX/UI-Design oder User Research für digitale Produkte. Ich habe mit Figma Prototypen gebaut und erste Usability-Tests gemacht.",
+        "skills": [
+          "Figma",
+          "Wireframes",
+          "Interaktive Prototypen",
+          "Usability-Tests-Grundlagen",
+          "Qualitative Interviews-Grundlagen",
+          "Adobe Illustrator"
+        ],
+        "preferences": [
+          "Digitale Produktentwicklung",
+          "Zusammenarbeit im Designteam"
+        ],
+        "cv_text": "Interaction-Design-Master nach Kommunikationsdesign-Bachelor. Figma-Portfolio mit zwei Studienprojekten, Wireframes, Prototypen und kleinen moderierten Usability-Tests.",
+        "filters": {
+          "employment_types": [
+            "praktikum"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Praktikum in UX/UI-Design oder User Research für digitale Produkte.",
+        "skills": [
+          "Figma",
+          "Wireframes",
+          "Interaktive Prototypen",
+          "Usability-Tests-Grundlagen",
+          "Qualitative Interviews-Grundlagen",
+          "Adobe Illustrator"
+        ],
+        "preferences": [
+          "Arbeit von Nutzerrecherche über Prototyp bis Test; reines Marketing-Layout ist nachrangig.",
+          "Produktteam mit Feedback und erreichbarer Betreuung; vorhandenes Portfolio statt mehrjähriger Praxis.",
+          "Fünf- bis sechsmonatiges Praktikum; Präsenz für Nutzertests ist möglich, Umzug nach München oder Berlin wäre denkbar."
+        ],
+        "cv_text": "M.A. Interaction Design, 2. Semester; B.A. Kommunikationsdesign.\nZwei Studienprojekte mit Figma-Prototypen.\nModeration kleiner Usability-Tests im Hochschulkontext und qualitative Auswertung.\nGrenzen: Keine professionelle Frontend-Entwicklung.; Keine eigenverantwortliche Leitung großer Research-Studien.",
+        "filters": {
+          "employment_types": [
+            "praktikum"
+          ],
+          "locations": [
+            "Nürnberg",
+            "München",
+            "Berlin"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 40.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine UX-Beratung",
+        "description": "Verbinde Aussagen mit konkreten Design- oder Research-Aufgaben. Zeige Gestaltungsmöglichkeiten, ohne jede kreative Stelle automatisch für passend zu halten. Kennzeichne fehlende Angaben.",
+        "traits": [
+          "kreativ",
+          "analytisch"
+        ],
+        "focus": "innovation"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Übergang vom Studienportfolio in eine betreute praktische Produktdesignrolle.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Besonders interessiert mich die Verbindung aus Nutzerrecherche, Prototypen und Tests. Reine Marketinggrafiken oder Social-Media-Layouts sind weniger mein Ziel. Bitte sortiere die Praktika nach diesem Produkt-UX-Schwerpunkt neu.",
+        "Ich kann fünf bis sechs Monate ins Praktikum gehen und wäre auch für einen Umzug offen. Mein Portfolio stammt aus Studienprojekten; Frontend programmieren kann ich nicht professionell. Bitte bevorzuge passende Produktteams mit Feedback und Einarbeitung und passe die Reihenfolge an.",
+        "Bitte zeige mir bei der ersten Stelle, ob Recherche, Prototyping und Tests wirklich Teil der Aufgaben sind. Wo passt mein Portfolio, und welche Anforderungen wären noch offen?"
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Produkt-UX mit Nutzerrecherche und Tests bevorzugt, Marketinggrafik nachrangig.",
+          "canonical_information_and_fallback": "Besonders interessiert mich die Verbindung aus Nutzerrecherche, Prototypen und Tests. Reine Marketinggrafiken oder Social-Media-Layouts sind weniger mein Ziel. Bitte sortiere die Praktika nach diesem Produkt-UX-Schwerpunkt neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Portfolio, geringe Programmierpraxis, betreute Praxisphase und Umzug möglich.",
+          "canonical_information_and_fallback": "Ich kann fünf bis sechs Monate ins Praktikum gehen und wäre auch für einen Umzug offen. Mein Portfolio stammt aus Studienprojekten; Frontend programmieren kann ich nicht professionell. Bitte bevorzuge passende Produktteams mit Feedback und Einarbeitung und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Bitte zeige mir bei der ersten Stelle, ob Recherche, Prototyping und Tests wirklich Teil der Aufgaben sind. Wo passt mein Portfolio, und welche Anforderungen wären noch offen?",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Produkt-UX mit Nutzerrecherche und Tests bevorzugt, Marketinggrafik nachrangig.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Besonders interessiert mich die Verbindung aus Nutzerrecherche, Prototypen und Tests. Reine Marketinggrafiken oder Social-Media-Layouts sind weniger mein Ziel. Bitte sortiere die Praktika nach diesem Produkt-UX-Schwerpunkt neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Portfolio, geringe Programmierpraxis, betreute Praxisphase und Umzug möglich.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich kann fünf bis sechs Monate ins Praktikum gehen und wäre auch für einen Umzug offen. Mein Portfolio stammt aus Studienprojekten; Frontend programmieren kann ich nicht professionell. Bitte bevorzuge passende Produktteams mit Feedback und Einarbeitung und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Research-/Designanteil prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Bitte zeige mir bei der ersten Stelle, ob Recherche, Prototyping und Tests wirklich Teil der Aufgaben sind. Wo passt mein Portfolio, und welche Anforderungen wären noch offen?"
+        }
+      ],
+      "initially_omitted_information": [
+        "Produkt-UX mit Nutzerrecherche und Tests bevorzugt, Marketinggrafik nachrangig.",
+        "Portfolio, geringe Programmierpraxis, betreute Praxisphase und Umzug möglich."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P09",
+      "name": "Tim Wagner",
+      "age": 23,
+      "group": "Bachelorstudent · Soziale Arbeit · Pflichtpraktikum",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Tim studiert Soziale Arbeit und sucht eine Praxisphase, in der er Beratung und pädagogische Arbeit kennenlernen kann. Er engagiert sich ehrenamtlich in einem offenen Jugendtreff. Er möchte Verantwortung schrittweise unter fachlicher Anleitung übernehmen.",
+      "education": "B.A. Soziale Arbeit, 4. Semester; fünfmonatiges Pflichtpraktikum steht an.",
+      "experience": [
+        "Ein Jahr ehrenamtliche Mitarbeit im Jugendtreff: Gruppenangebote unter Begleitung.",
+        "Hochschulmodule in Gesprächsführung, Sozialpädagogik und Dokumentation."
+      ],
+      "skills": [
+        "Gesprächsführung-Grundlagen",
+        "Planung von Gruppenangeboten",
+        "Sozialpädagogik-Grundlagen",
+        "Dokumentation",
+        "Teamarbeit"
+      ],
+      "limitations": [
+        "Noch kein Studienabschluss und keine staatliche Anerkennung.",
+        "Keine eigenständige Fallführung oder therapeutische Qualifikation."
+      ],
+      "job_goal": "Pflichtpraktikum in der Sozialen Arbeit mit Jugendlichen oder in einer Beratungsstelle.",
+      "employment_types": [
+        "praktikum"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Fürth",
+          "Erlangen"
+        ],
+        "remote": [
+          "onsite"
+        ],
+        "max_hours": 40.0,
+        "priorities": [
+          "Fachliche Anleitung und reflektierte Mitarbeit in Beratung oder Jugendangeboten.",
+          "Ambulante Angebote oder Beratungsstelle bevorzugt; regelmäßige Nachtdienste nachrangig.",
+          "Fünf Monate Pflichtpraktikum; Tätigkeiten müssen mit studentischem Qualifikationsstand vereinbar sein."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Pflichtpraktikum in der Sozialen Arbeit mit Jugendlichen oder in einer Beratungsstelle.",
+        "education": "B.A. Soziale Arbeit, 4. Semester; fünfmonatiges Pflichtpraktikum steht an.",
+        "experience": [
+          "Ein Jahr ehrenamtliche Mitarbeit im Jugendtreff: Gruppenangebote unter Begleitung.",
+          "Hochschulmodule in Gesprächsführung, Sozialpädagogik und Dokumentation."
+        ],
+        "skills": [
+          "Gesprächsführung-Grundlagen",
+          "Planung von Gruppenangeboten",
+          "Sozialpädagogik-Grundlagen",
+          "Dokumentation",
+          "Teamarbeit"
+        ],
+        "limitations": [
+          "Noch kein Studienabschluss und keine staatliche Anerkennung.",
+          "Keine eigenständige Fallführung oder therapeutische Qualifikation."
+        ],
+        "employment_types": [
+          "praktikum"
+        ],
+        "relevant_task_families": [
+          "Sozialpädagogisches Pflichtpraktikum",
+          "Jugendhilfe und Jugendberatung",
+          "Soziale Beratungsarbeit unter Anleitung"
+        ],
+        "ordered_priorities": [
+          "Fachliche Anleitung und reflektierte Mitarbeit in Beratung oder Jugendangeboten.",
+          "Ambulante Angebote oder Beratungsstelle bevorzugt; regelmäßige Nachtdienste nachrangig.",
+          "Fünf Monate Pflichtpraktikum; Tätigkeiten müssen mit studentischem Qualifikationsstand vereinbar sein."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Fürth",
+          "Erlangen"
+        ],
+        "remote": [
+          "onsite"
+        ],
+        "max_hours": 40.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Zwingender abgeschlossener Studiengang oder staatliche Anerkennung für eigenständige Fachkraftrolle; Therapie- oder Pflegeaufgaben ohne passende Qualifikation.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Ein Praktikum für Studierende der Sozialen Arbeit mit fachlicher Anleitung und direkter Jugend-/Beratungsarbeit ist beschrieben; keine fertige Berufszulassung nötig."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Soziale Arbeit im vierten Semester und suche ein Pflichtpraktikum mit Jugendlichen oder in einer Beratungsstelle. Ich habe ehrenamtliche Erfahrung im Jugendtreff.",
+        "skills": [
+          "Gesprächsführung-Grundlagen",
+          "Planung von Gruppenangeboten",
+          "Sozialpädagogik-Grundlagen",
+          "Dokumentation",
+          "Teamarbeit"
+        ],
+        "preferences": [
+          "Direkte Arbeit mit Menschen",
+          "Fachlich passendes Praxissemester"
+        ],
+        "cv_text": "Soziale Arbeit, 4. Semester. Ehrenamtliche Mitarbeit im Jugendtreff mit begleiteten Gruppenangeboten; Grundlagen in Gesprächsführung, Pädagogik und Dokumentation.",
+        "filters": {
+          "employment_types": [
+            "praktikum"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Pflichtpraktikum in der Sozialen Arbeit mit Jugendlichen oder in einer Beratungsstelle.",
+        "skills": [
+          "Gesprächsführung-Grundlagen",
+          "Planung von Gruppenangeboten",
+          "Sozialpädagogik-Grundlagen",
+          "Dokumentation",
+          "Teamarbeit"
+        ],
+        "preferences": [
+          "Fachliche Anleitung und reflektierte Mitarbeit in Beratung oder Jugendangeboten.",
+          "Ambulante Angebote oder Beratungsstelle bevorzugt; regelmäßige Nachtdienste nachrangig.",
+          "Fünf Monate Pflichtpraktikum; Tätigkeiten müssen mit studentischem Qualifikationsstand vereinbar sein."
+        ],
+        "cv_text": "B.A. Soziale Arbeit, 4. Semester; fünfmonatiges Pflichtpraktikum steht an.\nEin Jahr ehrenamtliche Mitarbeit im Jugendtreff: Gruppenangebote unter Begleitung.\nHochschulmodule in Gesprächsführung, Sozialpädagogik und Dokumentation.\nGrenzen: Noch kein Studienabschluss und keine staatliche Anerkennung.; Keine eigenständige Fallführung oder therapeutische Qualifikation.",
+        "filters": {
+          "employment_types": [
+            "praktikum"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Fürth",
+            "Erlangen"
+          ],
+          "remote": [
+            "onsite"
+          ],
+          "max_hours": 40.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Praxisberatung",
+        "description": "Erkläre fachliche Aufgaben und Qualifikationsanforderungen sorgfältig. Unterstütze den begleiteten Berufseinstieg, ohne eine Anerkennung oder therapeutische Ausbildung zu unterstellen.",
+        "traits": [
+          "empathisch",
+          "strukturiert"
+        ],
+        "focus": "lernpotenzial"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Begleiteter Praxiseinstieg mit angemessener Verantwortung für den Studienstand.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Ich möchte Gespräche und Angebote für Jugendliche unter fachlicher Anleitung kennenlernen. Mir ist wichtig, dass ich nicht von Anfang an allein Fälle betreuen soll. Bitte priorisiere die passenden Praktika neu.",
+        "Ich plane fünf Monate Pflichtpraktikum. Ambulante Angebote oder eine Beratungsstelle passen mir besser als regelmäßige Nachtdienste. Meinen Abschluss und die staatliche Anerkennung habe ich noch nicht. Bitte passe die Reihenfolge daran an.",
+        "Ist die erste Stelle wirklich für mein Praxissemester geeignet? Bitte erkläre die pädagogischen Aufgaben, die fachliche Anleitung und ob dort bereits ein Abschluss oder eine Anerkennung verlangt wird."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Beratungs-/Jugendarbeit mit ausdrücklich fachlicher Anleitung bevorzugt.",
+          "canonical_information_and_fallback": "Ich möchte Gespräche und Angebote für Jugendliche unter fachlicher Anleitung kennenlernen. Mir ist wichtig, dass ich nicht von Anfang an allein Fälle betreuen soll. Bitte priorisiere die passenden Praktika neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Ambulant/beratend, keine regelmäßigen Nachtdienste, noch ohne Anerkennung.",
+          "canonical_information_and_fallback": "Ich plane fünf Monate Pflichtpraktikum. Ambulante Angebote oder eine Beratungsstelle passen mir besser als regelmäßige Nachtdienste. Meinen Abschluss und die staatliche Anerkennung habe ich noch nicht. Bitte passe die Reihenfolge daran an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Ist die erste Stelle wirklich für mein Praxissemester geeignet? Bitte erkläre die pädagogischen Aufgaben, die fachliche Anleitung und ob dort bereits ein Abschluss oder eine Anerkennung verlangt wird.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Beratungs-/Jugendarbeit mit ausdrücklich fachlicher Anleitung bevorzugt.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich möchte Gespräche und Angebote für Jugendliche unter fachlicher Anleitung kennenlernen. Mir ist wichtig, dass ich nicht von Anfang an allein Fälle betreuen soll. Bitte priorisiere die passenden Praktika neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Ambulant/beratend, keine regelmäßigen Nachtdienste, noch ohne Anerkennung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich plane fünf Monate Pflichtpraktikum. Ambulante Angebote oder eine Beratungsstelle passen mir besser als regelmäßige Nachtdienste. Meinen Abschluss und die staatliche Anerkennung habe ich noch nicht. Bitte passe die Reihenfolge daran an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; studentische Eignung und offene Rahmenbedingungen prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Ist die erste Stelle wirklich für mein Praxissemester geeignet? Bitte erkläre die pädagogischen Aufgaben, die fachliche Anleitung und ob dort bereits ein Abschluss oder eine Anerkennung verlangt wird."
+        }
+      ],
+      "initially_omitted_information": [
+        "Beratungs-/Jugendarbeit mit ausdrücklich fachlicher Anleitung bevorzugt.",
+        "Ambulant/beratend, keine regelmäßigen Nachtdienste, noch ohne Anerkennung."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P10",
+      "name": "Aylin Hoffmann",
+      "age": 26,
+      "group": "Masterstudentin · Biotechnologie · experimentelle Abschlussarbeit",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Aylin studiert Biotechnologie im letzten Masterjahr. Sie hat in Laborpraktika molekularbiologische Methoden und quantitative Versuchsauswertung kennengelernt. Für die Masterarbeit möchte sie ein experimentelles Thema mit klarer Betreuung bearbeiten.",
+      "education": "M.Sc. Biotechnologie, 4. Semester; Masterarbeit steht bevor.",
+      "experience": [
+        "Laborpraktika mit PCR, Pipettieren und Probenvorbereitung.",
+        "Kleines Forschungspraktikum mit Proteinanalytik und Auswertung in R."
+      ],
+      "skills": [
+        "PCR-Grundlagen",
+        "Pipettieren",
+        "Probenvorbereitung",
+        "Proteinanalytik-Grundlagen",
+        "R-Grundlagen",
+        "Laborprotokolle"
+      ],
+      "limitations": [
+        "Keine eigenständige Säugetierzellkultur.",
+        "Keine mehrjährige GMP- oder klinische Laborpraxis."
+      ],
+      "job_goal": "Masterarbeit in Biotechnologie oder molekularbiologischer Laborforschung.",
+      "employment_types": [
+        "abschlussarbeit"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Erlangen",
+          "Nürnberg",
+          "München"
+        ],
+        "remote": [
+          "onsite"
+        ],
+        "max_hours": 40.0,
+        "priorities": [
+          "Molekularbiologische oder proteinanalytische Experimente mit eigener Datenauswertung.",
+          "Einarbeitung in neue Methoden, insbesondere falls Zellkultur verlangt wird.",
+          "Sechsmonatige Masterarbeit mit wissenschaftlicher Betreuung; Laborpräsenz und regionaler Umzug möglich."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Masterarbeit in Biotechnologie oder molekularbiologischer Laborforschung.",
+        "education": "M.Sc. Biotechnologie, 4. Semester; Masterarbeit steht bevor.",
+        "experience": [
+          "Laborpraktika mit PCR, Pipettieren und Probenvorbereitung.",
+          "Kleines Forschungspraktikum mit Proteinanalytik und Auswertung in R."
+        ],
+        "skills": [
+          "PCR-Grundlagen",
+          "Pipettieren",
+          "Probenvorbereitung",
+          "Proteinanalytik-Grundlagen",
+          "R-Grundlagen",
+          "Laborprotokolle"
+        ],
+        "limitations": [
+          "Keine eigenständige Säugetierzellkultur.",
+          "Keine mehrjährige GMP- oder klinische Laborpraxis."
+        ],
+        "employment_types": [
+          "abschlussarbeit"
+        ],
+        "relevant_task_families": [
+          "Biotechnologische Masterarbeit",
+          "Molekularbiologische Forschung",
+          "Proteinanalytik und experimentelle Datenauswertung"
+        ],
+        "ordered_priorities": [
+          "Molekularbiologische oder proteinanalytische Experimente mit eigener Datenauswertung.",
+          "Einarbeitung in neue Methoden, insbesondere falls Zellkultur verlangt wird.",
+          "Sechsmonatige Masterarbeit mit wissenschaftlicher Betreuung; Laborpräsenz und regionaler Umzug möglich."
+        ],
+        "locations": [
+          "Erlangen",
+          "Nürnberg",
+          "München"
+        ],
+        "remote": [
+          "onsite"
+        ],
+        "max_hours": 40.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Zwingende mehrjährige GMP-, klinische Diagnostik- oder selbstständige Zellkulturpraxis; rein informatisches oder fachfremdes Thema ohne experimentellen Biotechnologiebezug.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Eine Masterarbeit kombiniert zugängliche Labor- oder Protein-/Molekularmethoden mit eigener Auswertung und wissenschaftlicher Begleitung; benötigte neue Methoden sind erlernbar."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Biotechnologie im Master und suche eine experimentelle Masterarbeit in Biotechnologie oder molekularbiologischer Laborforschung.",
+        "skills": [
+          "PCR-Grundlagen",
+          "Pipettieren",
+          "Probenvorbereitung",
+          "Proteinanalytik-Grundlagen",
+          "R-Grundlagen",
+          "Laborprotokolle"
+        ],
+        "preferences": [
+          "Experimentelles Arbeiten",
+          "Wissenschaftliche Fragestellung"
+        ],
+        "cv_text": "Biotechnologie-Master im Abschlussjahr. Laborpraktika mit PCR, Probenvorbereitung und Proteinanalytik; kleine Versuchsauswertungen in R und sorgfältige Laborprotokolle.",
+        "filters": {
+          "employment_types": [
+            "abschlussarbeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Masterarbeit in Biotechnologie oder molekularbiologischer Laborforschung.",
+        "skills": [
+          "PCR-Grundlagen",
+          "Pipettieren",
+          "Probenvorbereitung",
+          "Proteinanalytik-Grundlagen",
+          "R-Grundlagen",
+          "Laborprotokolle"
+        ],
+        "preferences": [
+          "Molekularbiologische oder proteinanalytische Experimente mit eigener Datenauswertung.",
+          "Einarbeitung in neue Methoden, insbesondere falls Zellkultur verlangt wird.",
+          "Sechsmonatige Masterarbeit mit wissenschaftlicher Betreuung; Laborpräsenz und regionaler Umzug möglich."
+        ],
+        "cv_text": "M.Sc. Biotechnologie, 4. Semester; Masterarbeit steht bevor.\nLaborpraktika mit PCR, Pipettieren und Probenvorbereitung.\nKleines Forschungspraktikum mit Proteinanalytik und Auswertung in R.\nGrenzen: Keine eigenständige Säugetierzellkultur.; Keine mehrjährige GMP- oder klinische Laborpraxis.",
+        "filters": {
+          "employment_types": [
+            "abschlussarbeit"
+          ],
+          "locations": [
+            "Erlangen",
+            "Nürnberg",
+            "München"
+          ],
+          "remote": [
+            "onsite"
+          ],
+          "max_hours": 40.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Laborberatung",
+        "description": "Prüfe den methodischen Anschluss an vorhandene Laborpraxis. Trenne erlernbare Methoden von zwingenden Voraussetzungen. Erkläre Forschungsaufgaben konkret und kennzeichne Unbekanntes.",
+        "traits": [
+          "analytisch",
+          "neugierig"
+        ],
+        "focus": "fachliche_tiefe"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "expert",
+      "preferred_template_reason": "Methodischer Anschluss von Laborerfahrung und experimenteller Masterarbeit.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "expert"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Ich möchte Experimente in der Molekularbiologie oder Proteinanalytik durchführen und die Daten selbst auswerten. Eine reine Literaturarbeit wäre weniger passend. Bitte sortiere die Abschlussarbeiten nach diesem Schwerpunkt neu.",
+        "Ich plane sechs Monate und kann im Labor vor Ort arbeiten. Säugetierzellkultur habe ich noch nicht eigenständig gemacht; GMP-Praxis bringe ich ebenfalls nicht mit. Bitte berücksichtige die nötige Einarbeitung und wissenschaftliche Betreuung und passe die Reihenfolge an.",
+        "Welche Methoden der ersten Stelle kann ich mit meinem bisherigen Profil abdecken? Bitte unterscheide ausdrücklich verlangte Erfahrung, mögliche Lernmethoden und Angaben zur Betreuung, die noch fehlen."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Molekular-/Proteinanalytik plus eigene Auswertung, keine reine Literaturarbeit.",
+          "canonical_information_and_fallback": "Ich möchte Experimente in der Molekularbiologie oder Proteinanalytik durchführen und die Daten selbst auswerten. Eine reine Literaturarbeit wäre weniger passend. Bitte sortiere die Abschlussarbeiten nach diesem Schwerpunkt neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Keine selbstständige Zellkultur/GMP, sechs Monate und Betreuung.",
+          "canonical_information_and_fallback": "Ich plane sechs Monate und kann im Labor vor Ort arbeiten. Säugetierzellkultur habe ich noch nicht eigenständig gemacht; GMP-Praxis bringe ich ebenfalls nicht mit. Bitte berücksichtige die nötige Einarbeitung und wissenschaftliche Betreuung und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Welche Methoden der ersten Stelle kann ich mit meinem bisherigen Profil abdecken? Bitte unterscheide ausdrücklich verlangte Erfahrung, mögliche Lernmethoden und Angaben zur Betreuung, die noch fehlen.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Molekular-/Proteinanalytik plus eigene Auswertung, keine reine Literaturarbeit.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich möchte Experimente in der Molekularbiologie oder Proteinanalytik durchführen und die Daten selbst auswerten. Eine reine Literaturarbeit wäre weniger passend. Bitte sortiere die Abschlussarbeiten nach diesem Schwerpunkt neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Keine selbstständige Zellkultur/GMP, sechs Monate und Betreuung.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich plane sechs Monate und kann im Labor vor Ort arbeiten. Säugetierzellkultur habe ich noch nicht eigenständig gemacht; GMP-Praxis bringe ich ebenfalls nicht mit. Bitte berücksichtige die nötige Einarbeitung und wissenschaftliche Betreuung und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; methodische Machbarkeit prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Welche Methoden der ersten Stelle kann ich mit meinem bisherigen Profil abdecken? Bitte unterscheide ausdrücklich verlangte Erfahrung, mögliche Lernmethoden und Angaben zur Betreuung, die noch fehlen."
+        }
+      ],
+      "initially_omitted_information": [
+        "Molekular-/Proteinanalytik plus eigene Auswertung, keine reine Literaturarbeit.",
+        "Keine selbstständige Zellkultur/GMP, sechs Monate und Betreuung."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P11",
+      "name": "Felix Sommer",
+      "age": 24,
+      "group": "Masterstudent · Finance und Controlling · kaufmännische Analyse",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "Felix studiert Finance and Accounting im Master und sucht eine studentische Tätigkeit in der Unternehmenssteuerung. In einem Praktikum hat er Monatsberichte vorbereitet und Zahlenabgleiche unterstützt. Er möchte sein Verständnis von Kennzahlen und Planungsprozessen vertiefen.",
+      "education": "M.Sc. Finance and Accounting, 2. Semester; B.Sc. BWL.",
+      "experience": [
+        "Dreimonatiges Controllingpraktikum mit Kostenstellenlisten und Berichtsvorbereitung.",
+        "Studienprojekt zu Budgetabweichungen mit Excel."
+      ],
+      "skills": [
+        "Excel",
+        "Pivot-Tabellen",
+        "Kostenrechnung",
+        "Buchführungs-Grundlagen",
+        "Kennzahlenanalyse",
+        "PowerPoint"
+      ],
+      "limitations": [
+        "Keine praktische SAP-CO-Erfahrung.",
+        "Keine fortgeschrittene Finanzmodellierung oder Python-Programmierung."
+      ],
+      "job_goal": "Werkstudentenstelle im Controlling oder in der Finanzanalyse eines Unternehmens.",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Erlangen",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 20.0,
+        "priorities": [
+          "Plan-Ist-Vergleiche, Budgetierung und Management-Reporting statt überwiegend Belegerfassung.",
+          "Einblick in betriebliche Steuerung; keine Vertriebsrolle für Finanzprodukte.",
+          "15–20 Stunden im Raum Nürnberg; SAP darf Bestandteil der Einarbeitung sein."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Werkstudentenstelle im Controlling oder in der Finanzanalyse eines Unternehmens.",
+        "education": "M.Sc. Finance and Accounting, 2. Semester; B.Sc. BWL.",
+        "experience": [
+          "Dreimonatiges Controllingpraktikum mit Kostenstellenlisten und Berichtsvorbereitung.",
+          "Studienprojekt zu Budgetabweichungen mit Excel."
+        ],
+        "skills": [
+          "Excel",
+          "Pivot-Tabellen",
+          "Kostenrechnung",
+          "Buchführungs-Grundlagen",
+          "Kennzahlenanalyse",
+          "PowerPoint"
+        ],
+        "limitations": [
+          "Keine praktische SAP-CO-Erfahrung.",
+          "Keine fortgeschrittene Finanzmodellierung oder Python-Programmierung."
+        ],
+        "employment_types": [
+          "werkstudent"
+        ],
+        "relevant_task_families": [
+          "Unternehmenscontrolling",
+          "Finanzplanung und Budgetierung",
+          "Management-Reporting",
+          "Kaufmännische Finanzanalyse"
+        ],
+        "ordered_priorities": [
+          "Plan-Ist-Vergleiche, Budgetierung und Management-Reporting statt überwiegend Belegerfassung.",
+          "Einblick in betriebliche Steuerung; keine Vertriebsrolle für Finanzprodukte.",
+          "15–20 Stunden im Raum Nürnberg; SAP darf Bestandteil der Einarbeitung sein."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Erlangen",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "onsite"
+        ],
+        "max_hours": 20.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Überwiegend Finanzproduktvertrieb, reine Belegerfassung oder zwingend fortgeschrittene Quant-/Programmieranforderungen ohne zugängliche Einarbeitung.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Echte Controlling-/Planungsanalysen nutzen Excel und kaufmännische Kenntnisse auf studentischem Niveau; keine verpflichtende Spezialprogrammierung oder mehrjährige SAP-Praxis."
+      },
+      "initial_profile": {
+        "query": "Ich studiere Finance and Accounting im Master und suche eine Werkstudentenstelle im Controlling oder in der Finanzanalyse eines Unternehmens.",
+        "skills": [
+          "Excel",
+          "Pivot-Tabellen",
+          "Kostenrechnung",
+          "Buchführungs-Grundlagen",
+          "Kennzahlenanalyse",
+          "PowerPoint"
+        ],
+        "preferences": [
+          "Analytische kaufmännische Aufgaben",
+          "Mitarbeit im Finanzteam"
+        ],
+        "cv_text": "Finance-and-Accounting-Master nach BWL-Bachelor. Drei Monate Controllingpraktikum mit Monatsberichten und Excel; Kenntnisse in Kostenrechnung und Kennzahlenanalyse.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Werkstudentenstelle im Controlling oder in der Finanzanalyse eines Unternehmens.",
+        "skills": [
+          "Excel",
+          "Pivot-Tabellen",
+          "Kostenrechnung",
+          "Buchführungs-Grundlagen",
+          "Kennzahlenanalyse",
+          "PowerPoint"
+        ],
+        "preferences": [
+          "Plan-Ist-Vergleiche, Budgetierung und Management-Reporting statt überwiegend Belegerfassung.",
+          "Einblick in betriebliche Steuerung; keine Vertriebsrolle für Finanzprodukte.",
+          "15–20 Stunden im Raum Nürnberg; SAP darf Bestandteil der Einarbeitung sein."
+        ],
+        "cv_text": "M.Sc. Finance and Accounting, 2. Semester; B.Sc. BWL.\nDreimonatiges Controllingpraktikum mit Kostenstellenlisten und Berichtsvorbereitung.\nStudienprojekt zu Budgetabweichungen mit Excel.\nGrenzen: Keine praktische SAP-CO-Erfahrung.; Keine fortgeschrittene Finanzmodellierung oder Python-Programmierung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen",
+            "Fürth"
+          ],
+          "remote": [
+            "hybrid",
+            "onsite"
+          ],
+          "max_hours": 20.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Mein Controllingberater",
+        "description": "Zeige nachvollziehbar, welche Finanzaufgaben zu meinen Kenntnissen passen. Bewerte Aufgaben und Voraussetzungen anhand der Anzeige. Vermeide pauschale Aussagen über Karrierechancen.",
+        "traits": [
+          "analytisch",
+          "strukturiert"
+        ],
+        "focus": "ausgewogen"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "career",
+      "preferred_template_reason": "Weiterentwicklung erster kaufmännischer Praxiserfahrung in einer studentischen Finanzrolle.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "career"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Mich interessieren Plan-Ist-Vergleiche, Budgetierung und Management-Reporting. Reine Belegerfassung oder der Vertrieb von Finanzprodukten wäre weniger passend. Bitte sortiere die Stellen nach diesem Schwerpunkt neu.",
+        "Ich suche etwa 15 bis 20 Stunden im Raum Nürnberg. SAP CO habe ich noch nicht praktisch verwendet und ich programmiere nicht fortgeschritten. Bitte bevorzuge Aufgaben, bei denen ich mit Excel und Controllinggrundlagen einsteigen kann, und passe die Reihenfolge an.",
+        "Warum passt die erste Stelle zu meinem Controllingprofil? Bitte zeige, ob ich dort tatsächlich analysiere und plane und welche SAP- oder sonstigen Kenntnisse noch geklärt werden müssen."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Budgetierung/Plan-Ist/Reporting vor Belegerfassung und Finanzvertrieb.",
+          "canonical_information_and_fallback": "Mich interessieren Plan-Ist-Vergleiche, Budgetierung und Management-Reporting. Reine Belegerfassung oder der Vertrieb von Finanzprodukten wäre weniger passend. Bitte sortiere die Stellen nach diesem Schwerpunkt neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Kein SAP CO und keine fortgeschrittene Programmierung, 15–20 Stunden.",
+          "canonical_information_and_fallback": "Ich suche etwa 15 bis 20 Stunden im Raum Nürnberg. SAP CO habe ich noch nicht praktisch verwendet und ich programmiere nicht fortgeschritten. Bitte bevorzuge Aufgaben, bei denen ich mit Excel und Controllinggrundlagen einsteigen kann, und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Warum passt die erste Stelle zu meinem Controllingprofil? Bitte zeige, ob ich dort tatsächlich analysiere und plane und welche SAP- oder sonstigen Kenntnisse noch geklärt werden müssen.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Budgetierung/Plan-Ist/Reporting vor Belegerfassung und Finanzvertrieb.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Mich interessieren Plan-Ist-Vergleiche, Budgetierung und Management-Reporting. Reine Belegerfassung oder der Vertrieb von Finanzprodukten wäre weniger passend. Bitte sortiere die Stellen nach diesem Schwerpunkt neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Kein SAP CO und keine fortgeschrittene Programmierung, 15–20 Stunden.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich suche etwa 15 bis 20 Stunden im Raum Nürnberg. SAP CO habe ich noch nicht praktisch verwendet und ich programmiere nicht fortgeschritten. Bitte bevorzuge Aufgaben, bei denen ich mit Excel und Controllinggrundlagen einsteigen kann, und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Analyseanteil und Voraussetzungen prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Warum passt die erste Stelle zu meinem Controllingprofil? Bitte zeige, ob ich dort tatsächlich analysiere und plane und welche SAP- oder sonstigen Kenntnisse noch geklärt werden müssen."
+        }
+      ],
+      "initially_omitted_information": [
+        "Budgetierung/Plan-Ist/Reporting vor Belegerfassung und Finanzvertrieb.",
+        "Kein SAP CO und keine fortgeschrittene Programmierung, 15–20 Stunden."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    },
+    {
+      "id": "P12",
+      "name": "David Neumann",
+      "age": 31,
+      "group": "Berufserfahrener Masterstudent · IT-Sicherheit · fachliche Spezialisierung",
+      "fictional": true,
+      "study_variants": [
+        "A",
+        "B",
+        "C"
+      ],
+      "biography": "David arbeitet seit vier Jahren im IT-Support und in der Systemadministration. Parallel studiert er IT-Sicherheit im Master. Er möchte in einer Teilzeitrolle stärker Sicherheitsanalysen und technische Schutzmaßnahmen bearbeiten, statt weiter überwiegend allgemeine Supporttickets zu lösen.",
+      "education": "Berufsbegleitender M.Sc. IT-Sicherheit, 3. Semester; B.Sc. Informatik.",
+      "experience": [
+        "Vier Jahre IT-Support und Systemadministration für Windows/Linux.",
+        "Studienlabor mit Logauswertung und kleinen Python-Skripten zur Analyse; keine leitende Security-Rolle."
+      ],
+      "skills": [
+        "Linux",
+        "Windows-Administration",
+        "Netzwerkgrundlagen",
+        "Python-Grundlagen",
+        "Loganalyse-Grundlagen",
+        "Ticketbearbeitung"
+      ],
+      "limitations": [
+        "Keine berufliche Incident-Response-Verantwortung.",
+        "Keine Offensive-Security-Zertifizierung und keine leitende ISMS-Verantwortung."
+      ],
+      "job_goal": "Teilzeitstelle im Bereich operative IT-Sicherheit oder Security Analysis.",
+      "employment_types": [
+        "teilzeit"
+      ],
+      "soft_preferences": {
+        "locations": [
+          "Nürnberg",
+          "Erlangen",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "remote"
+        ],
+        "max_hours": 30.0,
+        "priorities": [
+          "Technische Log-, Schwachstellen- oder Sicherheitsanalysen statt reinem IT-Helpdesk oder überwiegender Governance-Dokumentation.",
+          "Begleiteter Übergang in Security; keine alleinige Incident-Response- oder ISMS-Verantwortung voraussetzen.",
+          "24–30 planbare Wochenstunden und Hybrid-/Remoteoption bevorzugt; regelmäßige Nachtschichten sind nachrangig."
+        ]
+      },
+      "full_information_need": {
+        "job_goal": "Teilzeitstelle im Bereich operative IT-Sicherheit oder Security Analysis.",
+        "education": "Berufsbegleitender M.Sc. IT-Sicherheit, 3. Semester; B.Sc. Informatik.",
+        "experience": [
+          "Vier Jahre IT-Support und Systemadministration für Windows/Linux.",
+          "Studienlabor mit Logauswertung und kleinen Python-Skripten zur Analyse; keine leitende Security-Rolle."
+        ],
+        "skills": [
+          "Linux",
+          "Windows-Administration",
+          "Netzwerkgrundlagen",
+          "Python-Grundlagen",
+          "Loganalyse-Grundlagen",
+          "Ticketbearbeitung"
+        ],
+        "limitations": [
+          "Keine berufliche Incident-Response-Verantwortung.",
+          "Keine Offensive-Security-Zertifizierung und keine leitende ISMS-Verantwortung."
+        ],
+        "employment_types": [
+          "teilzeit"
+        ],
+        "relevant_task_families": [
+          "Operative IT-Sicherheit",
+          "Security Analysis",
+          "Schwachstellenanalyse",
+          "Sicherheitsorientierte Systemadministration mit Analyseanteil"
+        ],
+        "ordered_priorities": [
+          "Technische Log-, Schwachstellen- oder Sicherheitsanalysen statt reinem IT-Helpdesk oder überwiegender Governance-Dokumentation.",
+          "Begleiteter Übergang in Security; keine alleinige Incident-Response- oder ISMS-Verantwortung voraussetzen.",
+          "24–30 planbare Wochenstunden und Hybrid-/Remoteoption bevorzugt; regelmäßige Nachtschichten sind nachrangig."
+        ],
+        "locations": [
+          "Nürnberg",
+          "Erlangen",
+          "Fürth"
+        ],
+        "remote": [
+          "hybrid",
+          "remote"
+        ],
+        "max_hours": 30.0,
+        "fixed_across_snapshots": true,
+        "evidence_policy": "Die fachliche Passung steht im Vordergrund. Ort, Arbeitsmodell und Stunden sind weiche Wünsche, keine automatischen Ausschlussregeln. Belegte Konflikte können die Passung senken; unbekannte Angaben sind keine bestätigten Konflikte. Fachliche Qualifikationen nur anhand expliziter Aussagen prüfen. Keine Rückschlüsse aus Alter, Name, Herkunft oder Geschlecht."
+      },
+      "evaluation_relevance_rules": {
+        "0": "Fachfremd, außerhalb der unveränderten zulässigen Stellenarten oder wegen einer ausdrücklich zwingenden zentralen Qualifikation eindeutig nicht zugänglich. Alter, Name oder Gruppenzugehörigkeit begründen niemals die Bewertung.",
+        "1": "Nur schwacher Anschluss an Ziel und Kompetenzen oder erhebliche ausdrücklich erkennbare Anforderungslücken. Typische Konflikte dieses Falls: Reiner Helpdesk, überwiegende fachfremde Governance oder zwingende mehrjährige Incident-Response-/ISMS-Leitung; reine Offensive-Security-Spezialrolle mit fehlenden verbindlichen Nachweisen.",
+        "2": "Plausible fachliche Passung und realistisches Niveau mit erlernbaren Lücken; mindestens ein Kernaufgabenbereich passt. Einzelne Wünsche bleiben unbekannt oder es gibt vertretbare Kompromisse. Fehlende Angaben werden nicht als erfüllte Wünsche interpretiert.",
+        "3": "Starke fachliche Passung, realistischer Zugang und konkrete Belege für zentrale Prioritäten. Technische Security-Aufgaben knüpfen an Linux-/Windows-/Netzwerkpraxis an, der Übergang mit Masterkenntnissen ist realistisch und keine alleinige Senior-Verantwortung zwingend."
+      },
+      "initial_profile": {
+        "query": "Ich studiere berufsbegleitend IT-Sicherheit im Master und suche eine Teilzeitstelle in operativer IT-Sicherheit oder Security Analysis. Ich habe vier Jahre Erfahrung in IT-Support und Systemadministration.",
+        "skills": [
+          "Linux",
+          "Windows-Administration",
+          "Netzwerkgrundlagen",
+          "Python-Grundlagen",
+          "Loganalyse-Grundlagen",
+          "Ticketbearbeitung"
+        ],
+        "preferences": [
+          "Technische Sicherheitsaufgaben",
+          "Weiterentwicklung vorhandener IT-Praxis"
+        ],
+        "cv_text": "B.Sc. Informatik, berufsbegleitender IT-Sicherheitsmaster. Vier Jahre Windows-/Linux-Administration und Support; Netzwerkkenntnisse, grundlegende Python-Skripte und Loganalysen aus Studienlaboren.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "full_profile": {
+        "query": "Teilzeitstelle im Bereich operative IT-Sicherheit oder Security Analysis.",
+        "skills": [
+          "Linux",
+          "Windows-Administration",
+          "Netzwerkgrundlagen",
+          "Python-Grundlagen",
+          "Loganalyse-Grundlagen",
+          "Ticketbearbeitung"
+        ],
+        "preferences": [
+          "Technische Log-, Schwachstellen- oder Sicherheitsanalysen statt reinem IT-Helpdesk oder überwiegender Governance-Dokumentation.",
+          "Begleiteter Übergang in Security; keine alleinige Incident-Response- oder ISMS-Verantwortung voraussetzen.",
+          "24–30 planbare Wochenstunden und Hybrid-/Remoteoption bevorzugt; regelmäßige Nachtschichten sind nachrangig."
+        ],
+        "cv_text": "Berufsbegleitender M.Sc. IT-Sicherheit, 3. Semester; B.Sc. Informatik.\nVier Jahre IT-Support und Systemadministration für Windows/Linux.\nStudienlabor mit Logauswertung und kleinen Python-Skripten zur Analyse; keine leitende Security-Rolle.\nGrenzen: Keine berufliche Incident-Response-Verantwortung.; Keine Offensive-Security-Zertifizierung und keine leitende ISMS-Verantwortung.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen",
+            "Fürth"
+          ],
+          "remote": [
+            "hybrid",
+            "remote"
+          ],
+          "max_hours": 30.0
+        }
+      },
+      "advisor_config": {
+        "mode": "custom",
+        "preset": "diana",
+        "name": "Meine Security-Beratung",
+        "description": "Prüfe konkrete Sicherheitsaufgaben und verlangte Verantwortung. Unterscheide Administrationserfahrung von bereits vorhandener Security-Spezialisierung. Sage klar, wenn Informationen in der Anzeige fehlen.",
+        "traits": [
+          "direkt",
+          "kritisch"
+        ],
+        "focus": "fachliche_tiefe"
+      },
+      "advisor_selection": {
+        "source": "custom",
+        "template_id": null
+      },
+      "preferred_template": "expert",
+      "preferred_template_reason": "Präziser Abgleich vorhandener IT-Praxis mit technischen Security-Anforderungen.",
+      "advisor_by_variant": {
+        "A": {
+          "configuration_source": "Feste produktive Standardberatung, preset standard, unverändert."
+        },
+        "B": {
+          "configuration_source": "Unveränderte produktive Vorlage aus frontend/advisor.js",
+          "template_id": "expert"
+        },
+        "C": {
+          "configuration_source": "advisor_config dieses Falls, vor dem Lauf festgelegt und danach unverändert."
+        }
+      },
+      "custom_advisor_design_note": "Zielgerechte Konfiguration anhand des initialen Suchziels und der gewünschten Beratungsweise; keine Behauptung einer objektiv perfekten oder nachweislich optimalen Persönlichkeit. Keine später offengelegten konkreten Wünsche im Beschreibungstext.",
+      "planned_messages": [
+        "Ich möchte vor allem Logs, Schwachstellen oder Sicherheitsereignisse analysieren. Reiner Helpdesk oder eine überwiegend dokumentationsorientierte Governance-Rolle ist weniger mein Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+        "Ich suche 24 bis 30 gut planbare Wochenstunden, gern hybrid. Regelmäßige Nachtschichten wären weniger passend. Incident Response oder ein ISMS habe ich noch nicht eigenverantwortlich geleitet. Bitte berücksichtige den begleiteten Übergang in Security und passe die Reihenfolge an.",
+        "Ist die erste Stelle ein realistischer Schritt von Administration zu Security? Bitte prüfe Aufgaben, vorausgesetzte Security-Erfahrung sowie Angaben zu Schichtdienst und Verantwortung."
+      ],
+      "planned_messages_status": "Nur vorab formulierte Rückfallformulierungen, keine bereits geführte Unterhaltung. Tatsächliche Nachrichten werden anhand realer vorheriger Antworten innerhalb des festgelegten Informationsbudgets formuliert und separat protokolliert.",
+      "adaptive_message_policy": {
+        "identical_milestones_across_arms": true,
+        "exact_message_count_per_arm": 3,
+        "maximum_characters_per_message": 3000,
+        "allowed_adaptation": "Auf höchstens einen konkreten Inhalt der tatsächlich vorherigen Antwort oder auf die tatsächlich erste angezeigte Stelle eingehen. Formulierung natürlich anpassen; sachliche Korrektur einer erfundenen Nutzerannahme nur mit bereits initial oder in der aktuellen/vorherigen Etappe freigegebenen Fakten.",
+        "forbidden_adaptation": "Keine neuen Ziele, Arbeitgebervorlieben, Fähigkeiten, Ausschlussregeln, Zahlen oder Wünsche hinzufügen; keine späteren Etappen vorziehen. Keine Auswahl der Formulierung nach erwarteten Metriken. Keine vorgespielten Antworten, erfundenen Jobtitel oder Job-IDs.",
+        "unexpected_question": "Wenn die Antwort eine Frage zu noch nicht freigegebenen oder nicht im Profil vorhandenen Fakten stellt, diese nicht mit erfundenen Details beantworten. Beim festgelegten Informationsschritt bleiben und die offene Frage gegebenenfalls als ungeklärt benennen.",
+        "fallback": "Wenn keine konkrete Antwortreferenz sinnvoll ist, die geplante Nachricht unverändert verwenden. Tatsächlich gesendete Nachricht und Anpassungsgrund separat speichern."
+      },
+      "adaptive_message_stages": [
+        {
+          "turn": 1,
+          "intent": "Aufgabenschwerpunkt präzisieren und neu sortieren lassen",
+          "new_information_budget": "Operative Analysen gegenüber Helpdesk/Governance bevorzugt.",
+          "canonical_information_and_fallback": "Ich möchte vor allem Logs, Schwachstellen oder Sicherheitsereignisse analysieren. Reiner Helpdesk oder eine überwiegend dokumentationsorientierte Governance-Rolle ist weniger mein Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 2,
+          "intent": "Rahmen und Kompetenzgrenzen präzisieren und neu sortieren lassen",
+          "new_information_budget": "Keine Incident-/ISMS-Leitung, 24–30 planbare Stunden, Nachtarbeit nachrangig.",
+          "canonical_information_and_fallback": "Ich suche 24 bis 30 gut planbare Wochenstunden, gern hybrid. Regelmäßige Nachtschichten wären weniger passend. Incident Response oder ein ISMS habe ich noch nicht eigenverantwortlich geleitet. Bitte berücksichtige den begleiteten Übergang in Security und passe die Reihenfolge an.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": true,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "turn": 3,
+          "intent": "Passung der tatsächlich ersten sichtbaren Stelle kritisch und beleggestützt besprechen",
+          "new_information_budget": "Keine neuen Nutzerfakten oder Wünsche.",
+          "canonical_information_and_fallback": "Ist die erste Stelle ein realistischer Schritt von Administration zu Security? Bitte prüfe Aufgaben, vorausgesetzte Security-Erfahrung sowie Angaben zu Schichtdienst und Verantwortung.",
+          "may_reuse_initial_and_previous_stage_information": true,
+          "must_request_ranking_update": false,
+          "same_information_budget_for_variants": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "disclosure_plan": [
+        {
+          "turn": 1,
+          "fact_or_priority": "Operative Analysen gegenüber Helpdesk/Governance bevorzugt.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich möchte vor allem Logs, Schwachstellen oder Sicherheitsereignisse analysieren. Reiner Helpdesk oder eine überwiegend dokumentationsorientierte Governance-Rolle ist weniger mein Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu."
+        },
+        {
+          "turn": 2,
+          "fact_or_priority": "Keine Incident-/ISMS-Leitung, 24–30 planbare Stunden, Nachtarbeit nachrangig.",
+          "new_information": true,
+          "intent": "Suchwünsche präzisieren und Ergebnisreihenfolge aktualisieren",
+          "message": "Ich suche 24 bis 30 gut planbare Wochenstunden, gern hybrid. Regelmäßige Nachtschichten wären weniger passend. Incident Response oder ein ISMS habe ich noch nicht eigenverantwortlich geleitet. Bitte berücksichtige den begleiteten Übergang in Security und passe die Reihenfolge an."
+        },
+        {
+          "turn": 3,
+          "fact_or_priority": "Keine neuen Kriterien; Verantwortung der ersten Stelle kritisch prüfen.",
+          "new_information": false,
+          "intent": "Erste Stelle anhand des unveränderten Bedarfs begründet besprechen",
+          "message": "Ist die erste Stelle ein realistischer Schritt von Administration zu Security? Bitte prüfe Aufgaben, vorausgesetzte Security-Erfahrung sowie Angaben zu Schichtdienst und Verantwortung."
+        }
+      ],
+      "initially_omitted_information": [
+        "Operative Analysen gegenüber Helpdesk/Governance bevorzugt.",
+        "Keine Incident-/ISMS-Leitung, 24–30 planbare Stunden, Nachtarbeit nachrangig."
+      ],
+      "snapshot_names": [
+        "A_vorher",
+        "A_nach_Nachricht_1",
+        "A_nach_Nachricht_2",
+        "A_nach_Nachricht_3",
+        "B_vorher",
+        "B_nach_Nachricht_1",
+        "B_nach_Nachricht_2",
+        "B_nach_Nachricht_3",
+        "C_vorher",
+        "C_nach_Nachricht_1",
+        "C_nach_Nachricht_2",
+        "C_nach_Nachricht_3"
+      ]
+    }
+  ]
+}

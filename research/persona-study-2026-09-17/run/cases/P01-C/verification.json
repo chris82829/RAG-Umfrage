@@ -1,0 +1,13 @@
+{
+  "complete": true,
+  "snapshots": 4,
+  "user_messages": 3,
+  "arm_enforced": "C",
+  "personality_policy": "configurable",
+  "isolated_survey_table_counts": {
+    "survey_responses": 0,
+    "survey_drafts": 0,
+    "study_assignments": 0,
+    "study_runs": 0
+  }
+}

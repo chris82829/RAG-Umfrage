@@ -47,7 +47,7 @@ FOCUS_DESCRIPTIONS = {
 
 # All personas use the same evidence scale. Only the supplemental priorities
 # change; applicant skills and explicitly stated wishes retain fixed weights.
-SCORING_VERSION = 'persona-weighted-v2'
+SCORING_VERSION = 'explicit-priority-v3'
 DIMENSIONS = ('technical_fit', 'preferences_fit', 'technical_depth',
               'learning', 'innovation', 'clarity')
 SUPPLEMENTAL = DIMENSIONS[2:]
@@ -64,16 +64,6 @@ FOCUS_PRIORITIES = {
     'fachliche_tiefe': (17, 3, 2, 3),
     'lernpotenzial': (3, 17, 3, 2),
     'innovation': (5, 5, 15, 0),
-}
-TRAIT_PRIORITIES = {
-    'analytisch': (3, 0, 0, 3),
-    'direkt': (0, 0, 1, 2),
-    'ermutigend': (0, 4, 0, 0),
-    'empathisch': (0, 3, 0, 1),
-    'neugierig': (0, 3, 2, 0),
-    'kreativ': (0, 0, 5, 0),
-    'strukturiert': (0, 0, 0, 5),
-    'kritisch': (2, 0, 0, 4),
 }
 TRAIT_STYLE = {
     'analytisch': 'Wähle den entscheidenden Beleg aus und leite daraus eine präzise Einschätzung ab. Unterscheide belegte Passung und offene Informationen ausdrücklich, statt nur alle Skills aufzuzählen.',
@@ -107,64 +97,30 @@ PRESET_STYLE_EXAMPLES = {
 
 
 def _custom_expression(traits: list[str]) -> str:
-    """Concrete expression for the editable UI path, never inferred from a name.
-
-    Templates are custom configurations too. Their current traits and free-text
-    wishes must work even after editing, without silently restoring a preset.
-    """
+    """Style is a fallback, never a competing command against an explicit format."""
     selected = set(traits)
     if 'direkt' in selected:
-        plan = ('Bei einer Entscheidungsfrage: Urteil zuerst in höchstens fünf Wörtern. '
-                'Dann prägnante aktive Sätze, die aus dem Beleg eine konkrete Konsequenz ziehen. '
-                'Bei kreativem Blick steht die belegte Wirkung der Arbeit im Mittelpunkt; '
-                'bei empathischem Blick die konkrete Situation oder der geäußerte Wunsch des Nutzers. '
-                'Keine lange Abwägungseinleitung und keine Skill-Aufzählung.')
-        example = ('Ja, diese Stelle lohnt einen Blick. Mit Python baust du hier kleine Prototypen; '
-                   'dein Code wird direkt praktisch eingesetzt. Wie viel du selbst gestalten kannst, bleibt offen.')
-    elif 'strukturiert' in selected and ('analytisch' in selected or 'kritisch' in selected):
-        plan = ('Geordnete Abwägung: belegtes Argument und relevanten offenen Punkt sichtbar trennen, '
-                'daraus ruhig ein Fazit ziehen. Nutze bei Bedarf zwei kurze beschriftete Stichpunkte.')
-        example = ('Dafür spricht: Python ist belegt und wird für kleine Prototypen gebraucht.\n'
-                   'Noch offen: der Umfang eigener Entscheidungen.\n'
-                   'Die fachliche Grundlage stimmt; Gestaltungsspielraum lässt sich daraus noch nicht ableiten.')
+        plan = 'Beginne bei Entscheidungsfragen mit einer klar begründeten Einschätzung und schreibe aktiv.'
+    elif 'strukturiert' in selected:
+        plan = 'Ordne Beleg, offenen Punkt und nächsten Schritt nachvollziehbar.'
     elif 'neugierig' in selected:
-        plan = ('Antworte als interessiertes Gegenüber im fließenden Gespräch, ohne Berichtüberschriften '
-                'wie „Dafür“ oder „Vor Bewerbung klären“. Beginne mit einer anschaulichen konkreten '
-                'Alltagssituation aus den Jobbelegen und verbinde sie mit deiner Einschätzung. '
-                'Führe bei einer Beratungsfrage zu genau einer nützlichen Rückfrage, wenn die Antwort '
-                'bei einem offenen Entscheidungspunkt weiterhilft; reine Faktenfragen brauchen keine Rückfrage.')
-        example = ('Du würdest mit Python kleine Prototypen bauen und deine Kenntnisse praktisch ausprobieren. '
-                   'Wie frei du dabei entscheiden kannst, steht nicht in der Anzeige. '
-                   'Wie wichtig wäre dir eigener Gestaltungsspielraum?')
+        plan = 'Erläutere konkrete Aufgaben anschaulich und kläre entscheidungsrelevante offene Punkte.'
     else:
-        plan = ('Sprich aus den gewählten Eigenschaften heraus. Verbinde den wichtigsten Beleg mit '
-                'seiner Bedeutung für den Nutzer; vermeide einen standardisierten Stellenbericht.')
-        example = ('Mit deinem Python bringst du eine konkrete Grundlage für die kleinen Prototypen mit. '
-                   'Daran kannst du in einer Bewerbung anknüpfen. Eigener Gestaltungsspielraum ist noch nicht beschrieben.')
+        plan = 'Verbinde den wichtigsten Beleg mit seiner Bedeutung für den Nutzer.'
     return ('Antwortgestaltung für die selbst gestaltete Persönlichkeit: ' + plan
-            + ' Die weiteren gewählten Eigenschaften und vereinbaren Freitextwünsche gestalten diesen Aufbau mit. '
-            'Selbstgeschriebenes Ausdrucksbeispiel, kein Zitat und kein Jobbeleg; nur für den fiktiven Fall '
-            '„Python belegt, Python-Prototypen als Aufgabe, Entscheidungsspielraum unbekannt“: '
-            + example + ' Übertrage ausschließlich Satzbau und Ausdruck auf die tatsächlichen Fakten. '
-            'Keine Beispielkenntnisse übernehmen, keine Formel wortwörtlich wiederholen.')
+            + ' Verwende dies nur als Ausgangspunkt, wenn kein ausdrücklicher Formatwunsch vorliegt. '
+            'Die aktuelle Frage und vereinbare eigene Hinweise bestimmen Umfang und Aufbau. '
+            'Keine Pflichtfrage, künstliche Kritik oder erfundenes Lob. '
+            'Ein klarer Nutzerwunsch nach Stichpunkten oder Abschnitten geht einem fließenden Gesprächsstil vor.')
 
 
 def _scoring_weights(config: AdvisorConfig) -> dict[str, int]:
     if config.mode == 'preset':
         priorities = PRESET_PRIORITIES[config.preset]
     else:
-        priorities = list(FOCUS_PRIORITIES[config.focus])
-        for trait in config.traits:
-            priorities = [value + bonus for value, bonus in
-                          zip(priorities, TRAIT_PRIORITIES[trait])]
-        # Largest-remainder allocation keeps the supplemental budget at exactly
-        # 25 percentage points, independent of the order in which traits were picked.
-        total = sum(priorities)
-        allocated = [value * 25 // total for value in priorities]
-        order = sorted(range(4), key=lambda i: (-(priorities[i] * 25 % total), i))
-        for index in order[:25 - sum(allocated)]:
-            allocated[index] += 1
-        priorities = allocated
+        # Users choose the ranking priority explicitly. A request for an empathic
+        # or critical tone must not silently reorder otherwise identical jobs.
+        priorities = FOCUS_PRIORITIES[config.focus]
     return {'technical_fit': 60, 'preferences_fit': 15,
             **dict(zip(SUPPLEMENTAL, priorities))}
 
@@ -201,7 +157,8 @@ def resolve_advisor(config=None):
     focus_description = FOCUS_DESCRIPTIONS[result['focus']]
     if config.mode == 'preset' and config.preset == 'angela':
         focus_description = 'Achte ergänzend besonders auf klare Aufgaben, nachvollziehbare Anforderungen und fachliche Vertiefung.'
-    return {**result, 'neutral': config.mode == 'preset' and config.preset == 'neutral', 'name': normalize_advisor_name(result['name']),
+    return {**result, 'neutral': config.mode == 'preset' and config.preset == 'neutral',
+            'guided_advice': config.mode == 'custom', 'name': normalize_advisor_name(result['name']),
             'traits': list(result['traits']),
             'focus_description': focus_description,
             'style_guidance': style,

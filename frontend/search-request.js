@@ -3,6 +3,8 @@ import {consentHeaders} from './privacy.js';
 function responseError(data, status) {
   const error = new Error(data?.error?.message || 'Die Anfrage konnte nicht verarbeitet werden.');
   error.status = status;
+  error.code = data?.error?.code;
+  error.chatUsage = data?.error?.chat_usage;
   return error;
 }
 

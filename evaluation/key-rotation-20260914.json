@@ -1,0 +1,23 @@
+{
+  "checked_utc": "2026-09-14T09:13:30.189022+00:00",
+  "scope": "DIANA local and existing server app only",
+  "local_env_updated": true,
+  "server_env_updated": true,
+  "server_running_key_verified_without_exposure": true,
+  "local_backend_restarted": true,
+  "model_metadata_access_http_status": 200,
+  "health_checks": [
+    {
+      "url": "http://127.0.0.1:5050/api/health",
+      "status": 200,
+      "healthy": true
+    },
+    {
+      "url": "http://ifaiforschung.informatik.fh-nuernberg.de:5051/api/health",
+      "status": 200,
+      "healthy": true
+    }
+  ],
+  "contains_credentials": false,
+  "production_model_metadata_access_http_status": 200
+}

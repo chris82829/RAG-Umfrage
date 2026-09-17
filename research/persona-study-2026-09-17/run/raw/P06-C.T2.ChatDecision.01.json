@@ -1,0 +1,342 @@
+{
+  "task": "P06-C.T2.ChatDecision.01",
+  "started_utc": "2026-09-17T07:11:11.105116+00:00",
+  "ok": true,
+  "request_sha256": "f3f5a3db5381bdd3fdd7cc094a9e42882786826b267c6676b84d639254220ff7",
+  "http_status": 200,
+  "response": {
+    "id": "resp_0e9131868ed98756016aab928f68e087d299fa75366a5821d8",
+    "object": "response",
+    "created_at": 1789629071,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1789629074,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 6000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_0e9131868ed98756016aab929028ec87d298d0ad1465cb6f1b",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"action\":\"rerank\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":25,\"clear_max_hours\":false}},\"assistant_message\":\"Verstanden. Ich priorisiere die vorhandenen Teilzeitstellen jetzt stärker nach planbaren Zeiten, einer belegten Einarbeitung und einem Stundenrahmen um 20 bis 25 Stunden. Rollen mit klarer Entgeltabrechnung, starkem SAP-HCM-Bezug oder ohne eigenständige Einarbeitung rücken dabei eher nach hinten, weil Sie diese Praxis ausdrücklich noch nicht mitbringen.\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "ChatDecision",
+        "schema": {
+          "$defs": {
+            "FilterPatch": {
+              "additionalProperties": false,
+              "properties": {
+                "employment_types": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "werkstudent",
+                          "praktikum",
+                          "vollzeit",
+                          "teilzeit",
+                          "ausbildung",
+                          "trainee",
+                          "abschlussarbeit",
+                          "sonstige"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 8,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Employment Types"
+                },
+                "locations": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 10,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Locations"
+                },
+                "remote": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "onsite",
+                          "hybrid",
+                          "remote",
+                          "unknown"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Remote"
+                },
+                "max_hours": {
+                  "anyOf": [
+                    {
+                      "exclusiveMinimum": 0,
+                      "maximum": 80,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Max Hours"
+                },
+                "clear_max_hours": {
+                  "title": "Clear Max Hours",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "employment_types",
+                "locations",
+                "remote",
+                "max_hours",
+                "clear_max_hours"
+              ],
+              "title": "FilterPatch",
+              "type": "object"
+            },
+            "ProfilePatch": {
+              "additionalProperties": false,
+              "properties": {
+                "query": {
+                  "anyOf": [
+                    {
+                      "maxLength": 3000,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Query"
+                },
+                "skills": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 60,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Skills"
+                },
+                "preferences": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 30,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences"
+                },
+                "filters": {
+                  "$ref": "#/$defs/FilterPatch"
+                }
+              },
+              "required": [
+                "query",
+                "skills",
+                "preferences",
+                "filters"
+              ],
+              "title": "ProfilePatch",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "answer",
+                "rerank",
+                "search"
+              ],
+              "title": "Action",
+              "type": "string"
+            },
+            "profile_patch": {
+              "$ref": "#/$defs/ProfilePatch"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "action",
+            "profile_patch",
+            "assistant_message"
+          ],
+          "title": "ChatDecision",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 32643,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3840
+      },
+      "output_tokens": 140,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 32783
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 32643,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 3840
+    },
+    "output_tokens": 140,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 32783
+  },
+  "result": {
+    "action": "rerank",
+    "profile_patch": {
+      "query": null,
+      "skills": null,
+      "preferences": null,
+      "filters": {
+        "employment_types": null,
+        "locations": null,
+        "remote": null,
+        "max_hours": 25.0,
+        "clear_max_hours": false
+      }
+    },
+    "assistant_message": "Verstanden. Ich priorisiere die vorhandenen Teilzeitstellen jetzt stärker nach planbaren Zeiten, einer belegten Einarbeitung und einem Stundenrahmen um 20 bis 25 Stunden. Rollen mit klarer Entgeltabrechnung, starkem SAP-HCM-Bezug oder ohne eigenständige Einarbeitung rücken dabei eher nach hinten, weil Sie diese Praxis ausdrücklich noch nicht mitbringen."
+  },
+  "raw_text": "{\"action\":\"rerank\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":25,\"clear_max_hours\":false}},\"assistant_message\":\"Verstanden. Ich priorisiere die vorhandenen Teilzeitstellen jetzt stärker nach planbaren Zeiten, einer belegten Einarbeitung und einem Stundenrahmen um 20 bis 25 Stunden. Rollen mit klarer Entgeltabrechnung, starkem SAP-HCM-Bezug oder ohne eigenständige Einarbeitung rücken dabei eher nach hinten, weil Sie diese Praxis ausdrücklich noch nicht mitbringen.\"}",
+  "finished_utc": "2026-09-17T07:11:14.820723+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 151980,
+    "input_token_bound": 160172,
+    "max_tokens": 6000,
+    "reserved_usd": "0.49043",
+    "task_id": "P06-C.T2.ChatDecision.01",
+    "post_number": 31,
+    "status": "settled",
+    "charged_usd": "0.0837075",
+    "usage": {
+      "input_tokens": 32643,
+      "output_tokens": 140,
+      "total_tokens": 32783
+    },
+    "created_utc": "2026-09-17T07:11:11.104463+00:00",
+    "settled_utc": "2026-09-17T07:11:14.822087+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

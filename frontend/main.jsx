@@ -9,7 +9,8 @@ import './chat-bubbles.css';
 import useChatResize from './useChatResize.js';
 import { messagePreview } from './chat-layout.js';
 import { actionFeedback, candidatePool, canSendChat, pendingFeedback, profileChangeAction, recoveredSubmission, submittedChangeApplied } from './chat-actions.js';
-import { MIN_MATCH_SCORE, resultVisibilityKey, scoreVisibility } from './score-visibility.js';
+import { chatAllowance } from './chat-limit.js';
+import { INITIAL_RESULT_COUNT, resultVisibilityKey, resultVisibility } from './result-visibility.js';
 import { buildChatSuggestions } from './chat-suggestions.js';
 import JourneyGuide from './JourneyGuide.jsx';
 import ProfileSummaryPopover from './ProfileSummaryPopover.jsx';
@@ -92,7 +93,7 @@ function AssistantActionArea({ feedback, children }) {
   </div>;
 }
 
-export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, assistantName, onAsk, busy }) {
+export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, assistantName, onAsk, busy, chatBlocked = false }) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const detailsId = useId();
   const match = showInsights ? job.match : null;
@@ -118,8 +119,8 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
         <button type="button" className="job-action-details" aria-label="Stellendetails" aria-expanded={detailsExpanded} aria-controls={detailsId} onClick={() => setDetailsExpanded(value => !value)}>
           <span className="job-details-label-full" aria-hidden="true">Stellendetails</span><span className="job-details-label-compact" aria-hidden="true">Details</span><ChevronDown size={16} aria-hidden="true" />
         </button>
-        {ranked && <button type="button" className="job-action-chat" disabled={busy} aria-label={`Mit ${assistantName} besprechen`} title={`Mit ${assistantName} besprechen`} onClick={() => onAsk(job)}>
-          <CompassAvatar className="inline-compass" /><span className="job-chat-label-full" aria-hidden="true">Mit {assistantName} besprechen</span><span className="job-chat-label-compact" aria-hidden="true">Besprechen</span><span className="job-chat-label-mobile" aria-hidden="true">Diese Stelle besprechen</span><ArrowRight size={15} aria-hidden="true" />
+        {ranked && <button type="button" className="job-action-chat" disabled={busy} aria-label={chatBlocked ? 'Chat ansehen' : `Mit ${assistantName} besprechen`} title={chatBlocked ? 'Chat ansehen' : `Mit ${assistantName} besprechen`} onClick={() => onAsk(job)}>
+          <CompassAvatar className="inline-compass" /><span className="job-chat-label-full" aria-hidden="true">{chatBlocked ? 'Chat ansehen' : `Mit ${assistantName} besprechen`}</span><span className="job-chat-label-compact" aria-hidden="true">{chatBlocked ? 'Chat ansehen' : 'Besprechen'}</span><span className="job-chat-label-mobile" aria-hidden="true">{chatBlocked ? 'Chat ansehen' : 'Diese Stelle besprechen'}</span><ArrowRight size={15} aria-hidden="true" />
         </button>}
       </div>
       <div className="detail-content" id={detailsId} hidden={!detailsExpanded}>
@@ -132,11 +133,9 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
   </article>;
 }
 
-function ScoreNotice({ lowCount, total, showLowScores, scoreLabel, busy, onToggle }) {
-  return <div className={`score-notice ${lowCount === total && !showLowScores ? 'all-below-threshold' : ''}`}>
-    <strong>{showLowScores ? 'Niedriger bewertete Stellen eingeblendet' : lowCount === total ? 'Noch keine ausreichend passende Stelle' : 'Weitere, weniger passende Stellen verfügbar'}</strong>
-    <p>{lowCount === 1 ? 'Eine bewertete Stelle liegt' : `${lowCount} bewertete Stellen liegen`} unter {MIN_MATCH_SCORE} von 100 Punkten im {scoreLabel}.</p>
-    <button type="button" onClick={onToggle} disabled={busy} aria-expanded={showLowScores} aria-controls="ranked-jobs">{showLowScores ? 'Niedrige Scores wieder ausblenden' : lowCount === total ? (lowCount === 1 ? 'Diese Stelle trotzdem anzeigen' : `Alle ${lowCount} Stellen trotzdem anzeigen`) : `${lowCount} weitere ${lowCount === 1 ? 'Stelle' : 'Stellen'} anzeigen`}<ChevronDown size={16} aria-hidden="true" /></button>
+export function MoreResults({ expanded, busy, onToggle }) {
+  return <div className="more-results">
+    <button type="button" onClick={onToggle} disabled={busy} aria-expanded={expanded} aria-controls="ranked-jobs">{expanded ? 'Weniger Stellen anzeigen' : 'Weitere Stellen anzeigen'}<ChevronDown size={18} aria-hidden="true" /></button>
   </div>;
 }
 
@@ -173,6 +172,7 @@ export function ProfileForm({ neutral = false, allowCustom = true, form, setForm
 
 export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'standard' : studyArm === 'B' ? 'templates' : 'configurable', presentationPolicy = 'ranked_insights'}) {
   const neutral=studyArm==='A';
+  const chatOptions = { testPage: Boolean(standaloneArm()) };
   const allowCustom=personalityPolicy==='configurable';
   const showInsights=presentationPolicy==='ranked_insights';
   const fixedAdvisor=personalityPolicy==='standard' ? standardAdvisor : neutralAdvisor;
@@ -180,6 +180,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   const [catalog, setCatalog] = useState([]);
   const [total, setTotal] = useState(0);
   const [session, setSession] = useState(null);
+  const chatAccess = chatAllowance(session, chatOptions);
   const [revealedResults, setRevealedResults] = useState(null);
   const [form, setForm] = useState({ ...emptyForm });
   const [onboardingStep, setOnboardingStep] = useState(1);
@@ -279,6 +280,16 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   useEffect(() => {
     if (streamingText && followChat.current) messagesEnd.current?.scrollIntoView({ block: 'nearest', behavior: 'auto' });
   }, [streamingText]);
+  useEffect(() => {
+    if (busy || !session || !chatAccess.blocked || !chatAccess.pending || chatAccess.exhausted) return;
+    let active = true;
+    const timer = window.setInterval(() => {
+      api(`/sessions/${session.session_id}`).then(latest => {
+        if (active) setSession(current => current?.session_id === latest.session_id ? latest : current);
+      }).catch(() => {});
+    }, 3000);
+    return () => { active = false; window.clearInterval(timer); };
+  }, [busy, session?.session_id, chatAccess.blocked, chatAccess.pending, chatAccess.exhausted]);
 
   function markSteps(...steps) {
     setCompletedSteps(previous => {
@@ -338,6 +349,9 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     } catch (e) {
       if (generation.current !== turn) return;
       setSearchActive(false); setStreamingText('');
+      if (e.code === 'chat_message_limit' && e.chatUsage) {
+        setSession(current => current?.session_id === session?.session_id ? { ...current, chat_usage: e.chatUsage } : current);
+      }
       if (endpoint === '/chat' && session) {
         // Restore after conflicts or lost replies; never automatically resend a paid request.
         try {
@@ -350,7 +364,9 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
           }
         } catch (restoreError) { if (restoreError.status === 404) { remember(null); setSession(null); setEditor(null); setOnboardingStep(1); setOnboardingStarted(false); setMobileView('jobs'); editorDrafts.current = { profile: false, advisor: false }; setActivity('results'); setCompletedSteps([]); } }
       }
-      setError(e.status === 409 ? 'Dein Chat wurde zwischenzeitlich geändert. Der aktuelle Verlauf ist geladen; deine Eingabe bleibt erhalten.' : e instanceof TypeError ? 'Die Verbindung wurde unterbrochen. Deine Eingabe bleibt erhalten.' : e.message);
+      setError(e.code === 'chat_message_limit' && e.chatUsage ? ''
+        : e.status === 409 && e.code !== 'chat_reservation_expired' ? 'Dein Chat wurde zwischenzeitlich geändert. Der aktuelle Verlauf ist geladen; deine Eingabe bleibt erhalten.'
+        : e instanceof TypeError ? 'Die Verbindung wurde unterbrochen. Deine Eingabe bleibt erhalten.' : e.message);
     } finally { if (generation.current === turn) { sending.current = false; setBusy(false); setPending(''); setOperation(null); setSearchActive(false); setStreamingText(''); } }
   }
   function beginOnboarding() {
@@ -379,7 +395,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   function sendMessage(event) {
     event.preventDefault();
     const message = draft.trim();
-    if (busy || !canSendChat('auto', message, session)) return;
+    if (busy || !canSendChat('auto', message, session, chatOptions)) return;
     setActivity('chat'); setPending(message); void run({ session_id: session.session_id, mode: 'auto', message }, '/chat');
   }
   function applyProfile(event) {
@@ -474,9 +490,9 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     void run({ session_id: session.session_id, mode: 'search' }, '/chat', 'refresh');
   }
   function askAboutJob(job) {
-    setDraft(`Warum passt die Stelle „${job.title}“ bei ${job.company} (Job-ID ${job.id}) zu mir, und welche Kenntnisse fehlen noch?`.slice(0, 3000));
+    if (!chatAccess.blocked) setDraft(`Warum passt die Stelle „${job.title}“ bei ${job.company} (Job-ID ${job.id}) zu mir, und welche Kenntnisse fehlen noch?`.slice(0, 3000));
     setEditor(null); setMobileView('chat'); setActivity('chat'); markSteps(3);
-    requestAnimationFrame(() => document.getElementById('chat-input')?.focus());
+    requestAnimationFrame(() => document.getElementById(chatAccess.blocked ? 'chat-allowance' : 'chat-input')?.focus());
   }
   function reset() {
     if (busy) return;
@@ -497,8 +513,8 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   }
   const jobs = session?.jobs || [];
   const visibilityKey = resultVisibilityKey(session);
-  const showLowScores = visibilityKey !== null && revealedResults === visibilityKey;
-  const { visibleJobs, lowCount } = showInsights ? scoreVisibility(jobs, showLowScores) : { visibleJobs: jobs, lowCount: 0 };
+  const showAllResults = visibilityKey !== null && revealedResults === visibilityKey;
+  const { visibleJobs, additionalCount } = resultVisibility(jobs, showAllResults);
   const chatSuggestions = buildChatSuggestions(session, visibleJobs, { showScores: showInsights });
   const allDemo = catalog.length > 0 && catalog.every(j => demoIds.has(j.id));
   const profileInfo = profileSummary(session?.profile);
@@ -515,19 +531,21 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   const assistantName = advisorAiLabel(session?.advisor);
   const pendingAssistantName = operation?.assistantName || advisorAiLabel(session?.advisor || advisor);
 
-  function toggleLowScoreResults() {
+  function toggleMoreResults() {
     if (busy || booting) return;
-    const revealing = !showLowScores;
-    const visibleIds = new Set(visibleJobs.map(job => job.id));
-    const firstAdditionalIndex = jobs.findIndex(job => !visibleIds.has(job.id));
+    const revealing = !showAllResults;
     setRevealedResults(revealing ? visibilityKey : null);
-    if (revealing && firstAdditionalIndex >= 0) {
-      requestAnimationFrame(() => {
-        const card = document.getElementById('ranked-jobs')?.children[firstAdditionalIndex];
+    requestAnimationFrame(() => {
+      if (revealing) {
+        const card = document.getElementById('ranked-jobs')?.children[INITIAL_RESULT_COUNT];
         card?.querySelector('h3')?.focus({ preventScroll: true });
         card?.scrollIntoView({ block: 'start', behavior: 'auto' });
-      });
-    }
+      } else {
+        const button = document.querySelector('.more-results button');
+        button?.focus({ preventScroll: true });
+        button?.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+      }
+    });
   }
 
   return <><div className="app-shell" hidden={page === 'about'}>
@@ -549,10 +567,10 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
         {error && (showWelcome || mobileView === 'jobs') && <div className={`error-banner${showWelcome ? '' : ' journey-mobile-error'}`} role="alert">{error}</div>}
         {booting ? <div className="empty-state" role="status"><span className="spinner" /><p>Deine Jobsuche wird geladen …</p></div> : session ? <>
           <div id="ranked-jobs" className="jobs-list" aria-busy={busy}>
-            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={showInsights} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} />)}
+            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={showInsights} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} chatBlocked={chatAccess.blocked} />)}
             {!jobs.length && <div className="empty-state"><Search size={34} strokeWidth={1.3} /><h2>Hier ist noch Platz für deinen Match.</h2><p>{profileInfo.hardFilters.length && !pool.refreshRequired ? 'Aktuell gibt es keine Stellen zur gewählten Stellenart. Du kannst im Suchprofil oder Chat weitere Stellenarten einbeziehen.' : 'Aktuell liegen keine Stellenempfehlungen vor. Prüfe dein Suchprofil oder starte eine neue Suche.'}</p><button className="text-button" disabled={busy} onClick={() => { setDraft(profileInfo.hardFilters.length ? 'Welche Stellenarten sind aktuell ausgewählt und welche weiteren kommen für mich infrage?' : 'Welche Angaben sind aktuell in meinem Suchprofil gespeichert?'); showChat(); }}>Suchprofil im Chat besprechen <ArrowRight size={15} /></button></div>}
           </div>
-          {lowCount > 0 && <ScoreNotice lowCount={lowCount} total={jobs.length} showLowScores={showLowScores} scoreLabel={scoreLabel} busy={busy} onToggle={toggleLowScoreResults} />}
+          {additionalCount > 0 && <MoreResults expanded={showAllResults} busy={busy} onToggle={toggleMoreResults} />}
           {allDemo && <p className="catalog-note">Zum Ausprobieren: Diese Anzeigen und Unternehmen sind fiktiv.</p>}
         </> : <SearchIntro allowCustom={allowCustom} neutral={neutral} busy={busy || booting} activeStep={activeStep} completedSteps={completedSteps} onSelect={visitJourneyStep} />}
       </section>
@@ -573,9 +591,14 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
         {indexState?.required && !indexReady && <p className="index-chat-status" role="status">Suchindex: {indexState.completed.toLocaleString('de-DE')} von {indexState.total.toLocaleString('de-DE')} Anzeigen vorbereitet. {session ? 'Fragen und das Bewerten gespeicherter Jobs bleiben möglich. Neue Suchen sind nach Abschluss verfügbar.' : 'Deine Suche ist nach Abschluss verfügbar.'}</p>}
         {!session ? <div className="profile-scroll"><ProfileForm allowCustom={allowCustom} templates={templates} advisorSelection={advisorSelection} neutral={neutral} form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={chooseAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} onExplainAdvisor={() => setPersonalityIntro('help')} /></div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm neutral={neutral} editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' && !neutral ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker allowCustom={allowCustom} templates={templates} selection={advisorSelection} value={advisor} onChange={editAdvisorDraft} disabled={busy} onExplain={() => setPersonalityIntro('help')} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
           <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite" onScroll={event => { const feed = event.currentTarget; followChat.current = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80; }}>{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><ChatMessageText text={pending} assistant={false} /></div>}{busy && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="message-bubble" aria-busy="true">{streamingText ? <div className="message-text streaming-text">{streamingText}</div> : <div className="chat-typing"><span className="sr-only">{progressLabel}</span><span aria-hidden="true"><i /><i /><i /></span></div>}</div></div>}<div ref={messagesEnd} /></div>
-          <div className="chat-bottom">{chatSuggestions.length > 0 && <details className="chat-examples"><summary>Vorschläge für deinen nächsten Schritt</summary><div className="suggestions">{chatSuggestions.map(suggestion => <button key={suggestion.id} disabled={busy} onClick={() => { setDraft(suggestion.message); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><Plus size={13} />{suggestion.label}</button>)}</div></details>}
-            {!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum erneuten Bewerten sind gerade keine gespeicherten Jobs verfügbar.'} Du kannst im Chat um eine neue Suche bitten.</p>}
-            <form className="chat-composer" onSubmit={sendMessage}><label className="sr-only" htmlFor="chat-input">Nachricht an {assistantName}</label><textarea id="chat-input" rows={2} maxLength={3000} value={draft} onChange={e => setDraft(e.target.value)} placeholder="Was möchtest du wissen oder ändern?" disabled={busy} onKeyDown={e => { if (shouldSendOnEnter({...e, isComposing:e.nativeEvent.isComposing}, window.matchMedia('(pointer: coarse)').matches)) { e.preventDefault(); sendMessage(e); } }} /><button type="submit" aria-label="Nachricht senden" disabled={busy || !canSendChat('auto', draft, session)}><ArrowUp size={20} /></button></form>
+          <div className="chat-bottom">{!chatAccess.blocked && chatSuggestions.length > 0 && <details className="chat-examples"><summary>Vorschläge für deinen nächsten Schritt</summary><div className="suggestions">{chatSuggestions.map(suggestion => <button key={suggestion.id} disabled={busy} onClick={() => { setDraft(suggestion.message); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><Plus size={13} />{suggestion.label}</button>)}</div></details>}
+            {!chatAccess.blocked && !pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum erneuten Bewerten sind gerade keine gespeicherten Jobs verfügbar.'} Du kannst im Chat um eine neue Suche bitten.</p>}
+            {chatAccess.limit !== null && <p id="chat-allowance" tabIndex={-1} className={`chat-allowance${chatAccess.blocked ? ' chat-allowance--complete' : ''}`} role="status">
+              {chatAccess.exhausted ? <><strong>Du hast alle 3 Nachrichten genutzt.</strong><span>Du kannst den Chat und die Stellen weiter ansehen und die weiteren Fragen der Umfrage beantworten.</span></>
+                : chatAccess.blocked ? 'Deine Nachrichten werden noch verarbeitet.'
+                : `Für die Umfrage: noch ${chatAccess.remaining} von 3 Nachrichten verfügbar.`}
+            </p>}
+            {!chatAccess.blocked && <form className="chat-composer" onSubmit={sendMessage}><label className="sr-only" htmlFor="chat-input">Nachricht an {assistantName}</label><textarea id="chat-input" aria-describedby={chatAccess.limit !== null ? 'chat-allowance' : undefined} rows={2} maxLength={3000} value={draft} onChange={e => setDraft(e.target.value)} placeholder="Was möchtest du wissen oder ändern?" disabled={busy} onKeyDown={e => { if (shouldSendOnEnter({...e, isComposing:e.nativeEvent.isComposing}, window.matchMedia('(pointer: coarse)').matches)) { e.preventDefault(); sendMessage(e); } }} /><button type="submit" aria-label="Nachricht senden" disabled={busy || !canSendChat('auto', draft, session, chatOptions)}><ArrowUp size={20} /></button></form>}
           </div>
         </>}
         </>}

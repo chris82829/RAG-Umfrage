@@ -1,0 +1,837 @@
+{
+  "task": "P06-A.T1.RerankingResult.02",
+  "started_utc": "2026-09-17T07:08:35.487821+00:00",
+  "ok": true,
+  "request_sha256": "1d6648dcea78abb0dd233ebd1968d82165b9d2fb1c29119b03b1a6b81d3f2d7c",
+  "http_status": 200,
+  "response": {
+    "id": "resp_07d4a0ed6c8713eb016aab91f3dd1487d2b09fc944cbb80c7a",
+    "object": "response",
+    "created_at": 1789628915,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1789628947,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 10000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_07d4a0ed6c8713eb016aab91f4a28087d2a87632b851e9f5d4",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"rankings\":[{\"job_id\":\"841353\",\"components\":{\"technical_fit\":54,\"preferences_fit\":68,\"technical_depth\":70,\"learning\":82,\"innovation\":68,\"clarity\":78},\"reasons\":[\"Excel und MS Office passen zu Personalstatistiken und Dashboards, aber Kennzahlensysteme und Personalcontrolling sind im Profil nicht belegt.\",\"Der Schwerpunkt liegt eher auf datenorientiertem HR als auf Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Personalmanagement-Grundlagen\",\"Interne Kommunikation\"],\"missing_skills\":[\"Kennzahlensysteme\",\"Personalcontrolling\",\"Datenbankanwendungen\",\"Englisch\"]},{\"job_id\":\"809805\",\"components\":{\"technical_fit\":80,\"preferences_fit\":84,\"technical_depth\":58,\"learning\":null,\"innovation\":62,\"clarity\":79},\"reasons\":[\"MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.\",\"Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.\",\"Bis zu 20 Wochenstunden sind belegt; weitere Präferenzangaben zu Ort oder Remote liegen nicht vor.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"819249\",\"components\":{\"technical_fit\":80,\"preferences_fit\":84,\"technical_depth\":58,\"learning\":null,\"innovation\":62,\"clarity\":79},\"reasons\":[\"MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.\",\"Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.\",\"Bis zu 10 Wochenstunden sind belegt; Ort und Arbeitsmodell sind onsite, ohne bekannte Ortspräferenz.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"827955\",\"components\":{\"technical_fit\":78,\"preferences_fit\":82,\"technical_depth\":66,\"learning\":84,\"innovation\":78,\"clarity\":80},\"reasons\":[\"Das belegte Onboarding-Projekt passt direkt zu Aufgaben im Onboarding-Programm, bei Workshops und im Tagesgeschäft der Personalentwicklung.\",\"Die Rolle trifft Ihren Schwerpunkt beim Onboarding, deckt interne Personaladministration und Mitarbeitendenbetreuung aber nur teilweise ab.\",\"Individuelle Einarbeitung und Fortbildungen sind klar genannt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Veranstaltungskonzeption\",\"CMS\",\"Adobe InDesign\",\"Englisch\"]},{\"job_id\":\"824340\",\"components\":{\"technical_fit\":80,\"preferences_fit\":84,\"technical_depth\":58,\"learning\":null,\"innovation\":62,\"clarity\":79},\"reasons\":[\"MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.\",\"Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.\",\"Bis zu 10 Wochenstunden sind belegt; Ort und Arbeitsmodell sind onsite, ohne bekannte Ortspräferenz.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"836504\",\"components\":{\"technical_fit\":72,\"preferences_fit\":70,\"technical_depth\":64,\"learning\":76,\"innovation\":60,\"clarity\":74},\"reasons\":[\"HR-Grundlagen, Excel und Kommunikation passen zu Aufgaben im Personalwesen und zur Arbeit an Stellenbeschreibungen.\",\"Der Schwerpunkt liegt auf Entgelt- und Tarifthemen statt auf interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Lern- und Entwicklungspotenzial sowie hybrides Arbeiten sind ausdrücklich genannt.\"],\"matched_skills\":[\"Excel\",\"MS Office\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Entgeltrahmentarifvertrag\",\"Entlohnungsstruktur\",\"PowerPoint\"]},{\"job_id\":\"857698\",\"components\":{\"technical_fit\":82,\"preferences_fit\":92,\"technical_depth\":50,\"learning\":null,\"innovation\":null,\"clarity\":72},\"reasons\":[\"Kaufmännische Sachbearbeitung, MS Office und Organisationspraxis passen klar zu Anträgen, Abrechnungen und administrativen Aufgaben in der Personalabteilung.\",\"Der Schwerpunkt liegt nah an interner Personaladministration; Mitarbeitendenbetreuung und Onboarding sind in der Anzeige nicht konkret beschrieben.\",\"20 Wochenstunden sind belegt; weitere Präferenzangaben zu Ort oder Remote fehlen.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[]},{\"job_id\":\"818500\",\"components\":{\"technical_fit\":36,\"preferences_fit\":52,\"technical_depth\":74,\"learning\":null,\"innovation\":58,\"clarity\":82},\"reasons\":[\"Die Rolle ist fachlich Controlling mit Berichten, Analysen und SAP CO; interne Personaladministration, Betreuung oder Onboarding stehen nicht im Fokus.\",\"Excel und kaufmännische Erfahrung helfen bei Auswertungen, tragen die geforderte Controlling-Tiefe aber nicht allein.\",\"Teilzeit ist möglich; der bekannte Stundenrahmen reicht bis 39 Stunden und weicht als Präferenz teilweise ab.\"],\"matched_skills\":[\"Excel\",\"MS Office\",\"Kaufmännische Sachbearbeitung\"],\"missing_skills\":[\"Controlling\",\"SAP CO\",\"Abweichungsanalysen\",\"Wirtschaftlichkeitsberechnungen\"]},{\"job_id\":\"840943\",\"components\":{\"technical_fit\":66,\"preferences_fit\":74,\"technical_depth\":70,\"learning\":78,\"innovation\":80,\"clarity\":77},\"reasons\":[\"Das Onboarding-Projekt passt zu Aufgaben im Onboarding von Führungskräften, aber der Kern der Rolle ist konzeptionelle Personalentwicklung.\",\"Mitarbeitendenbezug ist vorhanden, interne Personaladministration steht hier jedoch nicht im Vordergrund.\",\"Interne Fortbildungen sind ausdrücklich genannt, und die Aufgaben sind strukturiert beschrieben.\"],\"matched_skills\":[\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Agile Arbeitsmethoden\",\"Konzeptentwicklung\",\"Personalentwicklungspraxis\"]},{\"job_id\":\"809753\",\"components\":{\"technical_fit\":24,\"preferences_fit\":48,\"technical_depth\":71,\"learning\":86,\"innovation\":null,\"clarity\":81},\"reasons\":[\"Die Stelle verlangt Vertragsmanagement und englischsprachige Verträge; das passt fachlich nicht zum angestrebten HR-Einstieg mit Personaladministration oder Onboarding.\",\"Organisation und Office-Kenntnisse sind relevant, decken Vertragsrecht und Vertragsgestaltung aber nicht ab.\",\"Strukturiertes Onboarding sowie Seminare und Coachings sind klar genannt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"Vertragsrecht\",\"Englisch\",\"SAP\"]},{\"job_id\":\"835580\",\"components\":{\"technical_fit\":70,\"preferences_fit\":58,\"technical_depth\":48,\"learning\":82,\"innovation\":null,\"clarity\":80},\"reasons\":[\"Kaufmännische Sachbearbeitung, Terminorganisation und MS Office passen klar zu Büroorganisation und administrativer Unterstützung.\",\"Die Aufgaben sind strukturiert, liegen aber in der Fakultätsverwaltung statt in interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Englisch\"]},{\"job_id\":\"832477\",\"components\":{\"technical_fit\":48,\"preferences_fit\":46,\"technical_depth\":62,\"learning\":78,\"innovation\":66,\"clarity\":75},\"reasons\":[\"MS Office, Kommunikation und Organisationspraxis passen zu administrativer Mitarbeit und Prozessunterstützung, aber die Stelle liegt nicht im Personalbereich.\",\"CRM-Einführung, Tool-Analyse und Webauftritt sind weiter weg von Ihrem Schwerpunkt Personaladministration, Betreuung und Onboarding.\",\"Fundierte Einarbeitung ist genannt; der Stundenumfang von etwa 10 Stunden ist klar.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"CRM\",\"Webauftritt\",\"Prozessanalyse\",\"Englisch\"]},{\"job_id\":\"836732\",\"components\":{\"technical_fit\":28,\"preferences_fit\":34,\"technical_depth\":55,\"learning\":null,\"innovation\":70,\"clarity\":79},\"reasons\":[\"Die Aufgaben liegen im Vertrieb und in der Energiewirtschaft; das passt fachlich nicht zum gewünschten HR-Schwerpunkt.\",\"Excel, Kommunikation und strukturierte Organisation sind relevant, decken Angebote, Ausschreibungen und Preiskalkulationen aber nur teilweise ab.\",\"Die vertriebsorientierte Ausrichtung weicht ausdrücklich von Ihrem Zielprofil ab.\"],\"matched_skills\":[\"Excel\",\"MS Office\",\"Interne Kommunikation\",\"Terminorganisation\"],\"missing_skills\":[\"Vertrieb\",\"Energiewirtschaft\",\"Preiskalkulation\",\"Ausschreibungen\"]},{\"job_id\":\"828525\",\"components\":{\"technical_fit\":24,\"preferences_fit\":48,\"technical_depth\":71,\"learning\":86,\"innovation\":null,\"clarity\":81},\"reasons\":[\"Die Stelle verlangt Vertragsmanagement und englischsprachige Verträge; das passt fachlich nicht zum angestrebten HR-Einstieg mit Personaladministration oder Onboarding.\",\"Organisation und Office-Kenntnisse sind relevant, decken Vertragsrecht und Vertragsgestaltung aber nicht ab.\",\"Strukturiertes Onboarding sowie Seminare und Coachings sind klar genannt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"Vertragsrecht\",\"Englisch\",\"SAP\"]},{\"job_id\":\"857711\",\"components\":{\"technical_fit\":60,\"preferences_fit\":40,\"technical_depth\":46,\"learning\":null,\"innovation\":null,\"clarity\":78},\"reasons\":[\"Kaufmännische Sachbearbeitung, Office-Kenntnisse und Organisation passen zu Verwaltung, Aktenführung und allgemeinen Serviceaufgaben.\",\"Personalangelegenheiten werden mitgenannt, der Schwerpunkt liegt aber auf allgemeiner Amtsverwaltung statt auf HR-Administration, Betreuung oder Onboarding.\",\"Der bekannte Umfang von 30 bis 38 Wochenstunden weicht von einer kleineren Teilzeitpräferenz ab.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"eAkte\"]},{\"job_id\":\"852676\",\"components\":{\"technical_fit\":28,\"preferences_fit\":40,\"technical_depth\":54,\"learning\":74,\"innovation\":null,\"clarity\":77},\"reasons\":[\"Die Rolle ist Finanzbuchhaltung und passt fachlich nicht zum gewünschten Einstieg in interne Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Excel und strukturierte Arbeitsweise sind relevant, tragen Kontierung und Debitoren-/Kreditorenbuchhaltung aber nicht fachlich.\",\"Weiterentwicklungsmöglichkeiten sind genannt; die Wochenstunden liegen überwiegend im üblichen Teilzeitrahmen.\"],\"matched_skills\":[\"Excel\",\"MS Office\"],\"missing_skills\":[\"Finanzbuchhaltung\",\"Kontierung\",\"Debitorenbuchhaltung\",\"Kreditorenbuchhaltung\"]},{\"job_id\":\"832882\",\"components\":{\"technical_fit\":34,\"preferences_fit\":42,\"technical_depth\":63,\"learning\":82,\"innovation\":58,\"clarity\":80},\"reasons\":[\"Die Stelle verlangt Internationalisierungserfahrung, Auslandserfahrung und englischsprachige Studieninformationen; das ist im Profil nicht belegt.\",\"Organisation, Kommunikation und MS Office sind relevant, der Schwerpunkt liegt aber nicht auf Personaladministration, Betreuung oder Onboarding.\",\"Fundierte Einarbeitung und Fortbildungen sind genannt; 20 Wochenstunden sind klar.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Internationalisierung\",\"Auslandserfahrung\",\"Englisch\",\"Projektanträge\"]},{\"job_id\":\"815652\",\"components\":{\"technical_fit\":18,\"preferences_fit\":38,\"technical_depth\":68,\"learning\":null,\"innovation\":58,\"clarity\":82},\"reasons\":[\"Gefordert sind Soziale Arbeit und mehrjährige Praxis in Prävention; das passt fachlich nicht zu Ihrem HR-Einstiegsprofil.\",\"Kommunikation und Office-Kenntnisse sind übertragbar, tragen die spezialisierte Fachrolle aber nicht.\",\"Teilzeit mit 20 Wochenstunden ist belegt; Angaben zu Einarbeitung oder Weiterbildung fehlen.\"],\"matched_skills\":[\"MS Office\",\"Interne Kommunikation\"],\"missing_skills\":[\"Soziale Arbeit\",\"Prävention\",\"Gesundheitsförderung\",\"Führerschein\"]},{\"job_id\":\"858898\",\"components\":{\"technical_fit\":38,\"preferences_fit\":36,\"technical_depth\":76,\"learning\":80,\"innovation\":74,\"clarity\":78},\"reasons\":[\"Die Stelle verlangt empirische Sozialforschung, Projektmanagement und XR-Tools; das ist fachlich weit weg von Personaladministration, Betreuung oder Onboarding.\",\"Organisation und Kommunikation sind nützlich, decken das Forschungs- und Transferprofil jedoch nur teilweise ab.\",\"Fortbildungsangebot und Willkommensprogramm sind klar genannt; der Umfang von 24 Stunden ist belegt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Projektmanagement\",\"Empirische Sozialforschung\",\"SPSS\",\"MaxQDA\",\"XR-Tools\"]},{\"job_id\":\"823885\",\"components\":{\"technical_fit\":18,\"preferences_fit\":38,\"technical_depth\":68,\"learning\":null,\"innovation\":58,\"clarity\":82},\"reasons\":[\"Gefordert sind Soziale Arbeit und mehrjährige Praxis in Prävention; das passt fachlich nicht zu Ihrem HR-Einstiegsprofil.\",\"Kommunikation und Office-Kenntnisse sind übertragbar, tragen die spezialisierte Fachrolle aber nicht.\",\"Teilzeit mit 20 Wochenstunden ist belegt; Angaben zu Einarbeitung oder Weiterbildung fehlen.\"],\"matched_skills\":[\"MS Office\",\"Interne Kommunikation\"],\"missing_skills\":[\"Soziale Arbeit\",\"Prävention\",\"Gesundheitsförderung\",\"Führerschein\"]}],\"assistant_message\":\"Mit Ihrem präzisierten Schwerpunkt wirken vor allem die HR-Stellen mit klarer Personaladministration und Onboarding-Bezug stimmig. Besonders passend bleiben die administrativen Personalstellen in Augsburg sowie die Onboarding-nahe Rolle in der Personalentwicklung in Regensburg. Deutlich schwächer sind Stellen mit Vertriebs-, Vertrags-, Controlling- oder fachfremdem Schwerpunkt, weil sie Ihr Zielprofil nur am Rand treffen. Wenn Sie möchten, kann ich als Nächstes die aussichtsreichsten drei Stellen noch gezielt miteinander vergleichen.\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "RerankingResult",
+        "schema": {
+          "$defs": {
+            "RankedJob": {
+              "additionalProperties": false,
+              "properties": {
+                "job_id": {
+                  "minLength": 1,
+                  "title": "Job Id",
+                  "type": "string"
+                },
+                "components": {
+                  "$ref": "#/$defs/ScoreComponents"
+                },
+                "reasons": {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "maxItems": 3,
+                  "minItems": 2,
+                  "title": "Reasons",
+                  "type": "array"
+                },
+                "matched_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Matched Skills",
+                  "type": "array"
+                },
+                "missing_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Missing Skills",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "job_id",
+                "components",
+                "reasons",
+                "matched_skills",
+                "missing_skills"
+              ],
+              "title": "RankedJob",
+              "type": "object"
+            },
+            "ScoreComponents": {
+              "additionalProperties": false,
+              "properties": {
+                "technical_fit": {
+                  "maximum": 100,
+                  "minimum": 1,
+                  "title": "Technical Fit",
+                  "type": "integer"
+                },
+                "preferences_fit": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences Fit"
+                },
+                "technical_depth": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Technical Depth"
+                },
+                "learning": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Learning"
+                },
+                "innovation": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Innovation"
+                },
+                "clarity": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Clarity"
+                }
+              },
+              "required": [
+                "technical_fit",
+                "preferences_fit",
+                "technical_depth",
+                "learning",
+                "innovation",
+                "clarity"
+              ],
+              "title": "ScoreComponents",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "rankings": {
+              "items": {
+                "$ref": "#/$defs/RankedJob"
+              },
+              "maxItems": 20,
+              "minItems": 1,
+              "title": "Rankings",
+              "type": "array"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "rankings",
+            "assistant_message"
+          ],
+          "title": "RerankingResult",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 32694,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 1792
+      },
+      "output_tokens": 3146,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 35840
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 32694,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 1792
+    },
+    "output_tokens": 3146,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 35840
+  },
+  "result": {
+    "rankings": [
+      {
+        "job_id": "841353",
+        "components": {
+          "technical_fit": 54,
+          "preferences_fit": 68,
+          "technical_depth": 70,
+          "learning": 82,
+          "innovation": 68,
+          "clarity": 78
+        },
+        "reasons": [
+          "Excel und MS Office passen zu Personalstatistiken und Dashboards, aber Kennzahlensysteme und Personalcontrolling sind im Profil nicht belegt.",
+          "Der Schwerpunkt liegt eher auf datenorientiertem HR als auf Personaladministration, Mitarbeitendenbetreuung oder Onboarding.",
+          "Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Personalmanagement-Grundlagen",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Kennzahlensysteme",
+          "Personalcontrolling",
+          "Datenbankanwendungen",
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "809805",
+        "components": {
+          "technical_fit": 80,
+          "preferences_fit": 84,
+          "technical_depth": 58,
+          "learning": null,
+          "innovation": 62,
+          "clarity": 79
+        },
+        "reasons": [
+          "MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.",
+          "Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.",
+          "Bis zu 20 Wochenstunden sind belegt; weitere Präferenzangaben zu Ort oder Remote liegen nicht vor."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "819249",
+        "components": {
+          "technical_fit": 80,
+          "preferences_fit": 84,
+          "technical_depth": 58,
+          "learning": null,
+          "innovation": 62,
+          "clarity": 79
+        },
+        "reasons": [
+          "MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.",
+          "Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.",
+          "Bis zu 10 Wochenstunden sind belegt; Ort und Arbeitsmodell sind onsite, ohne bekannte Ortspräferenz."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "827955",
+        "components": {
+          "technical_fit": 78,
+          "preferences_fit": 82,
+          "technical_depth": 66,
+          "learning": 84,
+          "innovation": 78,
+          "clarity": 80
+        },
+        "reasons": [
+          "Das belegte Onboarding-Projekt passt direkt zu Aufgaben im Onboarding-Programm, bei Workshops und im Tagesgeschäft der Personalentwicklung.",
+          "Die Rolle trifft Ihren Schwerpunkt beim Onboarding, deckt interne Personaladministration und Mitarbeitendenbetreuung aber nur teilweise ab.",
+          "Individuelle Einarbeitung und Fortbildungen sind klar genannt."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "Veranstaltungskonzeption",
+          "CMS",
+          "Adobe InDesign",
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "824340",
+        "components": {
+          "technical_fit": 80,
+          "preferences_fit": 84,
+          "technical_depth": 58,
+          "learning": null,
+          "innovation": 62,
+          "clarity": 79
+        },
+        "reasons": [
+          "MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.",
+          "Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.",
+          "Bis zu 10 Wochenstunden sind belegt; Ort und Arbeitsmodell sind onsite, ohne bekannte Ortspräferenz."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "836504",
+        "components": {
+          "technical_fit": 72,
+          "preferences_fit": 70,
+          "technical_depth": 64,
+          "learning": 76,
+          "innovation": 60,
+          "clarity": 74
+        },
+        "reasons": [
+          "HR-Grundlagen, Excel und Kommunikation passen zu Aufgaben im Personalwesen und zur Arbeit an Stellenbeschreibungen.",
+          "Der Schwerpunkt liegt auf Entgelt- und Tarifthemen statt auf interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.",
+          "Lern- und Entwicklungspotenzial sowie hybrides Arbeiten sind ausdrücklich genannt."
+        ],
+        "matched_skills": [
+          "Excel",
+          "MS Office",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "Entgeltrahmentarifvertrag",
+          "Entlohnungsstruktur",
+          "PowerPoint"
+        ]
+      },
+      {
+        "job_id": "857698",
+        "components": {
+          "technical_fit": 82,
+          "preferences_fit": 92,
+          "technical_depth": 50,
+          "learning": null,
+          "innovation": null,
+          "clarity": 72
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung, MS Office und Organisationspraxis passen klar zu Anträgen, Abrechnungen und administrativen Aufgaben in der Personalabteilung.",
+          "Der Schwerpunkt liegt nah an interner Personaladministration; Mitarbeitendenbetreuung und Onboarding sind in der Anzeige nicht konkret beschrieben.",
+          "20 Wochenstunden sind belegt; weitere Präferenzangaben zu Ort oder Remote fehlen."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": []
+      },
+      {
+        "job_id": "818500",
+        "components": {
+          "technical_fit": 36,
+          "preferences_fit": 52,
+          "technical_depth": 74,
+          "learning": null,
+          "innovation": 58,
+          "clarity": 82
+        },
+        "reasons": [
+          "Die Rolle ist fachlich Controlling mit Berichten, Analysen und SAP CO; interne Personaladministration, Betreuung oder Onboarding stehen nicht im Fokus.",
+          "Excel und kaufmännische Erfahrung helfen bei Auswertungen, tragen die geforderte Controlling-Tiefe aber nicht allein.",
+          "Teilzeit ist möglich; der bekannte Stundenrahmen reicht bis 39 Stunden und weicht als Präferenz teilweise ab."
+        ],
+        "matched_skills": [
+          "Excel",
+          "MS Office",
+          "Kaufmännische Sachbearbeitung"
+        ],
+        "missing_skills": [
+          "Controlling",
+          "SAP CO",
+          "Abweichungsanalysen",
+          "Wirtschaftlichkeitsberechnungen"
+        ]
+      },
+      {
+        "job_id": "840943",
+        "components": {
+          "technical_fit": 66,
+          "preferences_fit": 74,
+          "technical_depth": 70,
+          "learning": 78,
+          "innovation": 80,
+          "clarity": 77
+        },
+        "reasons": [
+          "Das Onboarding-Projekt passt zu Aufgaben im Onboarding von Führungskräften, aber der Kern der Rolle ist konzeptionelle Personalentwicklung.",
+          "Mitarbeitendenbezug ist vorhanden, interne Personaladministration steht hier jedoch nicht im Vordergrund.",
+          "Interne Fortbildungen sind ausdrücklich genannt, und die Aufgaben sind strukturiert beschrieben."
+        ],
+        "matched_skills": [
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "Agile Arbeitsmethoden",
+          "Konzeptentwicklung",
+          "Personalentwicklungspraxis"
+        ]
+      },
+      {
+        "job_id": "809753",
+        "components": {
+          "technical_fit": 24,
+          "preferences_fit": 48,
+          "technical_depth": 71,
+          "learning": 86,
+          "innovation": null,
+          "clarity": 81
+        },
+        "reasons": [
+          "Die Stelle verlangt Vertragsmanagement und englischsprachige Verträge; das passt fachlich nicht zum angestrebten HR-Einstieg mit Personaladministration oder Onboarding.",
+          "Organisation und Office-Kenntnisse sind relevant, decken Vertragsrecht und Vertragsgestaltung aber nicht ab.",
+          "Strukturiertes Onboarding sowie Seminare und Coachings sind klar genannt."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Vertragsmanagement",
+          "Vertragsrecht",
+          "Englisch",
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "835580",
+        "components": {
+          "technical_fit": 70,
+          "preferences_fit": 58,
+          "technical_depth": 48,
+          "learning": 82,
+          "innovation": null,
+          "clarity": 80
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung, Terminorganisation und MS Office passen klar zu Büroorganisation und administrativer Unterstützung.",
+          "Die Aufgaben sind strukturiert, liegen aber in der Fakultätsverwaltung statt in interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.",
+          "Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "832477",
+        "components": {
+          "technical_fit": 48,
+          "preferences_fit": 46,
+          "technical_depth": 62,
+          "learning": 78,
+          "innovation": 66,
+          "clarity": 75
+        },
+        "reasons": [
+          "MS Office, Kommunikation und Organisationspraxis passen zu administrativer Mitarbeit und Prozessunterstützung, aber die Stelle liegt nicht im Personalbereich.",
+          "CRM-Einführung, Tool-Analyse und Webauftritt sind weiter weg von Ihrem Schwerpunkt Personaladministration, Betreuung und Onboarding.",
+          "Fundierte Einarbeitung ist genannt; der Stundenumfang von etwa 10 Stunden ist klar."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "CRM",
+          "Webauftritt",
+          "Prozessanalyse",
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "836732",
+        "components": {
+          "technical_fit": 28,
+          "preferences_fit": 34,
+          "technical_depth": 55,
+          "learning": null,
+          "innovation": 70,
+          "clarity": 79
+        },
+        "reasons": [
+          "Die Aufgaben liegen im Vertrieb und in der Energiewirtschaft; das passt fachlich nicht zum gewünschten HR-Schwerpunkt.",
+          "Excel, Kommunikation und strukturierte Organisation sind relevant, decken Angebote, Ausschreibungen und Preiskalkulationen aber nur teilweise ab.",
+          "Die vertriebsorientierte Ausrichtung weicht ausdrücklich von Ihrem Zielprofil ab."
+        ],
+        "matched_skills": [
+          "Excel",
+          "MS Office",
+          "Interne Kommunikation",
+          "Terminorganisation"
+        ],
+        "missing_skills": [
+          "Vertrieb",
+          "Energiewirtschaft",
+          "Preiskalkulation",
+          "Ausschreibungen"
+        ]
+      },
+      {
+        "job_id": "828525",
+        "components": {
+          "technical_fit": 24,
+          "preferences_fit": 48,
+          "technical_depth": 71,
+          "learning": 86,
+          "innovation": null,
+          "clarity": 81
+        },
+        "reasons": [
+          "Die Stelle verlangt Vertragsmanagement und englischsprachige Verträge; das passt fachlich nicht zum angestrebten HR-Einstieg mit Personaladministration oder Onboarding.",
+          "Organisation und Office-Kenntnisse sind relevant, decken Vertragsrecht und Vertragsgestaltung aber nicht ab.",
+          "Strukturiertes Onboarding sowie Seminare und Coachings sind klar genannt."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Vertragsmanagement",
+          "Vertragsrecht",
+          "Englisch",
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "857711",
+        "components": {
+          "technical_fit": 60,
+          "preferences_fit": 40,
+          "technical_depth": 46,
+          "learning": null,
+          "innovation": null,
+          "clarity": 78
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung, Office-Kenntnisse und Organisation passen zu Verwaltung, Aktenführung und allgemeinen Serviceaufgaben.",
+          "Personalangelegenheiten werden mitgenannt, der Schwerpunkt liegt aber auf allgemeiner Amtsverwaltung statt auf HR-Administration, Betreuung oder Onboarding.",
+          "Der bekannte Umfang von 30 bis 38 Wochenstunden weicht von einer kleineren Teilzeitpräferenz ab."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "eAkte"
+        ]
+      },
+      {
+        "job_id": "852676",
+        "components": {
+          "technical_fit": 28,
+          "preferences_fit": 40,
+          "technical_depth": 54,
+          "learning": 74,
+          "innovation": null,
+          "clarity": 77
+        },
+        "reasons": [
+          "Die Rolle ist Finanzbuchhaltung und passt fachlich nicht zum gewünschten Einstieg in interne Personaladministration, Mitarbeitendenbetreuung oder Onboarding.",
+          "Excel und strukturierte Arbeitsweise sind relevant, tragen Kontierung und Debitoren-/Kreditorenbuchhaltung aber nicht fachlich.",
+          "Weiterentwicklungsmöglichkeiten sind genannt; die Wochenstunden liegen überwiegend im üblichen Teilzeitrahmen."
+        ],
+        "matched_skills": [
+          "Excel",
+          "MS Office"
+        ],
+        "missing_skills": [
+          "Finanzbuchhaltung",
+          "Kontierung",
+          "Debitorenbuchhaltung",
+          "Kreditorenbuchhaltung"
+        ]
+      },
+      {
+        "job_id": "832882",
+        "components": {
+          "technical_fit": 34,
+          "preferences_fit": 42,
+          "technical_depth": 63,
+          "learning": 82,
+          "innovation": 58,
+          "clarity": 80
+        },
+        "reasons": [
+          "Die Stelle verlangt Internationalisierungserfahrung, Auslandserfahrung und englischsprachige Studieninformationen; das ist im Profil nicht belegt.",
+          "Organisation, Kommunikation und MS Office sind relevant, der Schwerpunkt liegt aber nicht auf Personaladministration, Betreuung oder Onboarding.",
+          "Fundierte Einarbeitung und Fortbildungen sind genannt; 20 Wochenstunden sind klar."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Internationalisierung",
+          "Auslandserfahrung",
+          "Englisch",
+          "Projektanträge"
+        ]
+      },
+      {
+        "job_id": "815652",
+        "components": {
+          "technical_fit": 18,
+          "preferences_fit": 38,
+          "technical_depth": 68,
+          "learning": null,
+          "innovation": 58,
+          "clarity": 82
+        },
+        "reasons": [
+          "Gefordert sind Soziale Arbeit und mehrjährige Praxis in Prävention; das passt fachlich nicht zu Ihrem HR-Einstiegsprofil.",
+          "Kommunikation und Office-Kenntnisse sind übertragbar, tragen die spezialisierte Fachrolle aber nicht.",
+          "Teilzeit mit 20 Wochenstunden ist belegt; Angaben zu Einarbeitung oder Weiterbildung fehlen."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Soziale Arbeit",
+          "Prävention",
+          "Gesundheitsförderung",
+          "Führerschein"
+        ]
+      },
+      {
+        "job_id": "858898",
+        "components": {
+          "technical_fit": 38,
+          "preferences_fit": 36,
+          "technical_depth": 76,
+          "learning": 80,
+          "innovation": 74,
+          "clarity": 78
+        },
+        "reasons": [
+          "Die Stelle verlangt empirische Sozialforschung, Projektmanagement und XR-Tools; das ist fachlich weit weg von Personaladministration, Betreuung oder Onboarding.",
+          "Organisation und Kommunikation sind nützlich, decken das Forschungs- und Transferprofil jedoch nur teilweise ab.",
+          "Fortbildungsangebot und Willkommensprogramm sind klar genannt; der Umfang von 24 Stunden ist belegt."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Projektmanagement",
+          "Empirische Sozialforschung",
+          "SPSS",
+          "MaxQDA",
+          "XR-Tools"
+        ]
+      },
+      {
+        "job_id": "823885",
+        "components": {
+          "technical_fit": 18,
+          "preferences_fit": 38,
+          "technical_depth": 68,
+          "learning": null,
+          "innovation": 58,
+          "clarity": 82
+        },
+        "reasons": [
+          "Gefordert sind Soziale Arbeit und mehrjährige Praxis in Prävention; das passt fachlich nicht zu Ihrem HR-Einstiegsprofil.",
+          "Kommunikation und Office-Kenntnisse sind übertragbar, tragen die spezialisierte Fachrolle aber nicht.",
+          "Teilzeit mit 20 Wochenstunden ist belegt; Angaben zu Einarbeitung oder Weiterbildung fehlen."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Soziale Arbeit",
+          "Prävention",
+          "Gesundheitsförderung",
+          "Führerschein"
+        ]
+      }
+    ],
+    "assistant_message": "Mit Ihrem präzisierten Schwerpunkt wirken vor allem die HR-Stellen mit klarer Personaladministration und Onboarding-Bezug stimmig. Besonders passend bleiben die administrativen Personalstellen in Augsburg sowie die Onboarding-nahe Rolle in der Personalentwicklung in Regensburg. Deutlich schwächer sind Stellen mit Vertriebs-, Vertrags-, Controlling- oder fachfremdem Schwerpunkt, weil sie Ihr Zielprofil nur am Rand treffen. Wenn Sie möchten, kann ich als Nächstes die aussichtsreichsten drei Stellen noch gezielt miteinander vergleichen."
+  },
+  "raw_text": "{\"rankings\":[{\"job_id\":\"841353\",\"components\":{\"technical_fit\":54,\"preferences_fit\":68,\"technical_depth\":70,\"learning\":82,\"innovation\":68,\"clarity\":78},\"reasons\":[\"Excel und MS Office passen zu Personalstatistiken und Dashboards, aber Kennzahlensysteme und Personalcontrolling sind im Profil nicht belegt.\",\"Der Schwerpunkt liegt eher auf datenorientiertem HR als auf Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Personalmanagement-Grundlagen\",\"Interne Kommunikation\"],\"missing_skills\":[\"Kennzahlensysteme\",\"Personalcontrolling\",\"Datenbankanwendungen\",\"Englisch\"]},{\"job_id\":\"809805\",\"components\":{\"technical_fit\":80,\"preferences_fit\":84,\"technical_depth\":58,\"learning\":null,\"innovation\":62,\"clarity\":79},\"reasons\":[\"MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.\",\"Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.\",\"Bis zu 20 Wochenstunden sind belegt; weitere Präferenzangaben zu Ort oder Remote liegen nicht vor.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"819249\",\"components\":{\"technical_fit\":80,\"preferences_fit\":84,\"technical_depth\":58,\"learning\":null,\"innovation\":62,\"clarity\":79},\"reasons\":[\"MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.\",\"Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.\",\"Bis zu 10 Wochenstunden sind belegt; Ort und Arbeitsmodell sind onsite, ohne bekannte Ortspräferenz.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"827955\",\"components\":{\"technical_fit\":78,\"preferences_fit\":82,\"technical_depth\":66,\"learning\":84,\"innovation\":78,\"clarity\":80},\"reasons\":[\"Das belegte Onboarding-Projekt passt direkt zu Aufgaben im Onboarding-Programm, bei Workshops und im Tagesgeschäft der Personalentwicklung.\",\"Die Rolle trifft Ihren Schwerpunkt beim Onboarding, deckt interne Personaladministration und Mitarbeitendenbetreuung aber nur teilweise ab.\",\"Individuelle Einarbeitung und Fortbildungen sind klar genannt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Veranstaltungskonzeption\",\"CMS\",\"Adobe InDesign\",\"Englisch\"]},{\"job_id\":\"824340\",\"components\":{\"technical_fit\":80,\"preferences_fit\":84,\"technical_depth\":58,\"learning\":null,\"innovation\":62,\"clarity\":79},\"reasons\":[\"MS Office, kaufmännische Sachbearbeitung und Organisationspraxis passen gut zu administrativen HR-Aufgaben, Dokumentation und Dateneingabe.\",\"Die Stelle enthält HR-Tagesgeschäft, aber auch Recruiting und Personalcontrolling; der vermittlungsnahe Anteil bleibt offen.\",\"Bis zu 10 Wochenstunden sind belegt; Ort und Arbeitsmodell sind onsite, ohne bekannte Ortspräferenz.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"836504\",\"components\":{\"technical_fit\":72,\"preferences_fit\":70,\"technical_depth\":64,\"learning\":76,\"innovation\":60,\"clarity\":74},\"reasons\":[\"HR-Grundlagen, Excel und Kommunikation passen zu Aufgaben im Personalwesen und zur Arbeit an Stellenbeschreibungen.\",\"Der Schwerpunkt liegt auf Entgelt- und Tarifthemen statt auf interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Lern- und Entwicklungspotenzial sowie hybrides Arbeiten sind ausdrücklich genannt.\"],\"matched_skills\":[\"Excel\",\"MS Office\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Entgeltrahmentarifvertrag\",\"Entlohnungsstruktur\",\"PowerPoint\"]},{\"job_id\":\"857698\",\"components\":{\"technical_fit\":82,\"preferences_fit\":92,\"technical_depth\":50,\"learning\":null,\"innovation\":null,\"clarity\":72},\"reasons\":[\"Kaufmännische Sachbearbeitung, MS Office und Organisationspraxis passen klar zu Anträgen, Abrechnungen und administrativen Aufgaben in der Personalabteilung.\",\"Der Schwerpunkt liegt nah an interner Personaladministration; Mitarbeitendenbetreuung und Onboarding sind in der Anzeige nicht konkret beschrieben.\",\"20 Wochenstunden sind belegt; weitere Präferenzangaben zu Ort oder Remote fehlen.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[]},{\"job_id\":\"818500\",\"components\":{\"technical_fit\":36,\"preferences_fit\":52,\"technical_depth\":74,\"learning\":null,\"innovation\":58,\"clarity\":82},\"reasons\":[\"Die Rolle ist fachlich Controlling mit Berichten, Analysen und SAP CO; interne Personaladministration, Betreuung oder Onboarding stehen nicht im Fokus.\",\"Excel und kaufmännische Erfahrung helfen bei Auswertungen, tragen die geforderte Controlling-Tiefe aber nicht allein.\",\"Teilzeit ist möglich; der bekannte Stundenrahmen reicht bis 39 Stunden und weicht als Präferenz teilweise ab.\"],\"matched_skills\":[\"Excel\",\"MS Office\",\"Kaufmännische Sachbearbeitung\"],\"missing_skills\":[\"Controlling\",\"SAP CO\",\"Abweichungsanalysen\",\"Wirtschaftlichkeitsberechnungen\"]},{\"job_id\":\"840943\",\"components\":{\"technical_fit\":66,\"preferences_fit\":74,\"technical_depth\":70,\"learning\":78,\"innovation\":80,\"clarity\":77},\"reasons\":[\"Das Onboarding-Projekt passt zu Aufgaben im Onboarding von Führungskräften, aber der Kern der Rolle ist konzeptionelle Personalentwicklung.\",\"Mitarbeitendenbezug ist vorhanden, interne Personaladministration steht hier jedoch nicht im Vordergrund.\",\"Interne Fortbildungen sind ausdrücklich genannt, und die Aufgaben sind strukturiert beschrieben.\"],\"matched_skills\":[\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Agile Arbeitsmethoden\",\"Konzeptentwicklung\",\"Personalentwicklungspraxis\"]},{\"job_id\":\"809753\",\"components\":{\"technical_fit\":24,\"preferences_fit\":48,\"technical_depth\":71,\"learning\":86,\"innovation\":null,\"clarity\":81},\"reasons\":[\"Die Stelle verlangt Vertragsmanagement und englischsprachige Verträge; das passt fachlich nicht zum angestrebten HR-Einstieg mit Personaladministration oder Onboarding.\",\"Organisation und Office-Kenntnisse sind relevant, decken Vertragsrecht und Vertragsgestaltung aber nicht ab.\",\"Strukturiertes Onboarding sowie Seminare und Coachings sind klar genannt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"Vertragsrecht\",\"Englisch\",\"SAP\"]},{\"job_id\":\"835580\",\"components\":{\"technical_fit\":70,\"preferences_fit\":58,\"technical_depth\":48,\"learning\":82,\"innovation\":null,\"clarity\":80},\"reasons\":[\"Kaufmännische Sachbearbeitung, Terminorganisation und MS Office passen klar zu Büroorganisation und administrativer Unterstützung.\",\"Die Aufgaben sind strukturiert, liegen aber in der Fakultätsverwaltung statt in interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Englisch\"]},{\"job_id\":\"832477\",\"components\":{\"technical_fit\":48,\"preferences_fit\":46,\"technical_depth\":62,\"learning\":78,\"innovation\":66,\"clarity\":75},\"reasons\":[\"MS Office, Kommunikation und Organisationspraxis passen zu administrativer Mitarbeit und Prozessunterstützung, aber die Stelle liegt nicht im Personalbereich.\",\"CRM-Einführung, Tool-Analyse und Webauftritt sind weiter weg von Ihrem Schwerpunkt Personaladministration, Betreuung und Onboarding.\",\"Fundierte Einarbeitung ist genannt; der Stundenumfang von etwa 10 Stunden ist klar.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"CRM\",\"Webauftritt\",\"Prozessanalyse\",\"Englisch\"]},{\"job_id\":\"836732\",\"components\":{\"technical_fit\":28,\"preferences_fit\":34,\"technical_depth\":55,\"learning\":null,\"innovation\":70,\"clarity\":79},\"reasons\":[\"Die Aufgaben liegen im Vertrieb und in der Energiewirtschaft; das passt fachlich nicht zum gewünschten HR-Schwerpunkt.\",\"Excel, Kommunikation und strukturierte Organisation sind relevant, decken Angebote, Ausschreibungen und Preiskalkulationen aber nur teilweise ab.\",\"Die vertriebsorientierte Ausrichtung weicht ausdrücklich von Ihrem Zielprofil ab.\"],\"matched_skills\":[\"Excel\",\"MS Office\",\"Interne Kommunikation\",\"Terminorganisation\"],\"missing_skills\":[\"Vertrieb\",\"Energiewirtschaft\",\"Preiskalkulation\",\"Ausschreibungen\"]},{\"job_id\":\"828525\",\"components\":{\"technical_fit\":24,\"preferences_fit\":48,\"technical_depth\":71,\"learning\":86,\"innovation\":null,\"clarity\":81},\"reasons\":[\"Die Stelle verlangt Vertragsmanagement und englischsprachige Verträge; das passt fachlich nicht zum angestrebten HR-Einstieg mit Personaladministration oder Onboarding.\",\"Organisation und Office-Kenntnisse sind relevant, decken Vertragsrecht und Vertragsgestaltung aber nicht ab.\",\"Strukturiertes Onboarding sowie Seminare und Coachings sind klar genannt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"Vertragsrecht\",\"Englisch\",\"SAP\"]},{\"job_id\":\"857711\",\"components\":{\"technical_fit\":60,\"preferences_fit\":40,\"technical_depth\":46,\"learning\":null,\"innovation\":null,\"clarity\":78},\"reasons\":[\"Kaufmännische Sachbearbeitung, Office-Kenntnisse und Organisation passen zu Verwaltung, Aktenführung und allgemeinen Serviceaufgaben.\",\"Personalangelegenheiten werden mitgenannt, der Schwerpunkt liegt aber auf allgemeiner Amtsverwaltung statt auf HR-Administration, Betreuung oder Onboarding.\",\"Der bekannte Umfang von 30 bis 38 Wochenstunden weicht von einer kleineren Teilzeitpräferenz ab.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"eAkte\"]},{\"job_id\":\"852676\",\"components\":{\"technical_fit\":28,\"preferences_fit\":40,\"technical_depth\":54,\"learning\":74,\"innovation\":null,\"clarity\":77},\"reasons\":[\"Die Rolle ist Finanzbuchhaltung und passt fachlich nicht zum gewünschten Einstieg in interne Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"Excel und strukturierte Arbeitsweise sind relevant, tragen Kontierung und Debitoren-/Kreditorenbuchhaltung aber nicht fachlich.\",\"Weiterentwicklungsmöglichkeiten sind genannt; die Wochenstunden liegen überwiegend im üblichen Teilzeitrahmen.\"],\"matched_skills\":[\"Excel\",\"MS Office\"],\"missing_skills\":[\"Finanzbuchhaltung\",\"Kontierung\",\"Debitorenbuchhaltung\",\"Kreditorenbuchhaltung\"]},{\"job_id\":\"832882\",\"components\":{\"technical_fit\":34,\"preferences_fit\":42,\"technical_depth\":63,\"learning\":82,\"innovation\":58,\"clarity\":80},\"reasons\":[\"Die Stelle verlangt Internationalisierungserfahrung, Auslandserfahrung und englischsprachige Studieninformationen; das ist im Profil nicht belegt.\",\"Organisation, Kommunikation und MS Office sind relevant, der Schwerpunkt liegt aber nicht auf Personaladministration, Betreuung oder Onboarding.\",\"Fundierte Einarbeitung und Fortbildungen sind genannt; 20 Wochenstunden sind klar.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Internationalisierung\",\"Auslandserfahrung\",\"Englisch\",\"Projektanträge\"]},{\"job_id\":\"815652\",\"components\":{\"technical_fit\":18,\"preferences_fit\":38,\"technical_depth\":68,\"learning\":null,\"innovation\":58,\"clarity\":82},\"reasons\":[\"Gefordert sind Soziale Arbeit und mehrjährige Praxis in Prävention; das passt fachlich nicht zu Ihrem HR-Einstiegsprofil.\",\"Kommunikation und Office-Kenntnisse sind übertragbar, tragen die spezialisierte Fachrolle aber nicht.\",\"Teilzeit mit 20 Wochenstunden ist belegt; Angaben zu Einarbeitung oder Weiterbildung fehlen.\"],\"matched_skills\":[\"MS Office\",\"Interne Kommunikation\"],\"missing_skills\":[\"Soziale Arbeit\",\"Prävention\",\"Gesundheitsförderung\",\"Führerschein\"]},{\"job_id\":\"858898\",\"components\":{\"technical_fit\":38,\"preferences_fit\":36,\"technical_depth\":76,\"learning\":80,\"innovation\":74,\"clarity\":78},\"reasons\":[\"Die Stelle verlangt empirische Sozialforschung, Projektmanagement und XR-Tools; das ist fachlich weit weg von Personaladministration, Betreuung oder Onboarding.\",\"Organisation und Kommunikation sind nützlich, decken das Forschungs- und Transferprofil jedoch nur teilweise ab.\",\"Fortbildungsangebot und Willkommensprogramm sind klar genannt; der Umfang von 24 Stunden ist belegt.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Projektmanagement\",\"Empirische Sozialforschung\",\"SPSS\",\"MaxQDA\",\"XR-Tools\"]},{\"job_id\":\"823885\",\"components\":{\"technical_fit\":18,\"preferences_fit\":38,\"technical_depth\":68,\"learning\":null,\"innovation\":58,\"clarity\":82},\"reasons\":[\"Gefordert sind Soziale Arbeit und mehrjährige Praxis in Prävention; das passt fachlich nicht zu Ihrem HR-Einstiegsprofil.\",\"Kommunikation und Office-Kenntnisse sind übertragbar, tragen die spezialisierte Fachrolle aber nicht.\",\"Teilzeit mit 20 Wochenstunden ist belegt; Angaben zu Einarbeitung oder Weiterbildung fehlen.\"],\"matched_skills\":[\"MS Office\",\"Interne Kommunikation\"],\"missing_skills\":[\"Soziale Arbeit\",\"Prävention\",\"Gesundheitsförderung\",\"Führerschein\"]}],\"assistant_message\":\"Mit Ihrem präzisierten Schwerpunkt wirken vor allem die HR-Stellen mit klarer Personaladministration und Onboarding-Bezug stimmig. Besonders passend bleiben die administrativen Personalstellen in Augsburg sowie die Onboarding-nahe Rolle in der Personalentwicklung in Regensburg. Deutlich schwächer sind Stellen mit Vertriebs-, Vertrags-, Controlling- oder fachfremdem Schwerpunkt, weil sie Ihr Zielprofil nur am Rand treffen. Wenn Sie möchten, kann ich als Nächstes die aussichtsreichsten drei Stellen noch gezielt miteinander vergleichen.\"}",
+  "finished_utc": "2026-09-17T07:09:07.542649+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 152095,
+    "input_token_bound": 160287,
+    "max_tokens": 10000,
+    "reserved_usd": "0.5507175",
+    "task_id": "P06-A.T1.RerankingResult.02",
+    "post_number": 24,
+    "status": "settled",
+    "charged_usd": "0.128925",
+    "usage": {
+      "input_tokens": 32694,
+      "output_tokens": 3146,
+      "total_tokens": 35840
+    },
+    "created_utc": "2026-09-17T07:08:35.486529+00:00",
+    "settled_utc": "2026-09-17T07:09:07.545286+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

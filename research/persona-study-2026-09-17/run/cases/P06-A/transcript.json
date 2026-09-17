@@ -1,0 +1,350 @@
+{
+  "case_id": "P06-A",
+  "source_id": "P06",
+  "condition": "A",
+  "advisor": {
+    "mode": "preset",
+    "preset": "standard",
+    "name": "Standardberatung",
+    "description": "",
+    "traits": [],
+    "focus": "ausgewogen"
+  },
+  "messages": [
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Hallo! 20 Stellen gefunden und bewertet. Links siehst du die ersten 10; weitere findest du über „Weitere Stellen anzeigen“.\n\nDie stärksten Passungen liegen bei den HR-nahen Teilzeitstellen mit administrativen Aufgaben, Recruiting-Unterstützung oder Onboarding-Bezug. Besonders plausibel wirken die Personalstellen an den Hochschulen, weil sie Ihren Einstieg ins Personalmanagement mit MS Office, Organisation und HR-Grundlagen gut aufnehmen. Schwächer sind vor allem fachfremde Rollen aus Vertragswesen, Sozialpädagogik, Vertrieb, Buchhaltung oder spezialisiertem Controlling, weil dafür zentrale Fachbelege im Profil fehlen.\n\nHier kannst du Rückfragen stellen und deine Suche verfeinern.",
+      "role": "assistant"
+    },
+    {
+      "content": "Bei den von dir genannten HR-nahen Aufgaben möchte ich meinen Schwerpunkt genauer festlegen. Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu.",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Mit Ihrem präzisierten Schwerpunkt wirken vor allem die HR-Stellen mit klarer Personaladministration und Onboarding-Bezug stimmig. Besonders passend bleiben die administrativen Personalstellen in Augsburg sowie die Onboarding-nahe Rolle in der Personalentwicklung in Regensburg. Deutlich schwächer sind Stellen mit Vertriebs-, Vertrags-, Controlling- oder fachfremdem Schwerpunkt, weil sie Ihr Zielprofil nur am Rand treffen. Wenn Sie möchten, kann ich als Nächstes die aussichtsreichsten drei Stellen noch gezielt miteinander vergleichen.",
+      "role": "assistant"
+    },
+    {
+      "content": "Die von dir genannten administrativen Personalstellen möchte ich genauer einordnen. Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Für Ihren Fokus auf interne Personaladministration mit planbaren 20 bis 25 Stunden bleiben die administrativen Personalstellen in Augsburg am stimmigsten. Die 20-Stunden-Rolle mit Anträgen und Abrechnungen wirkt dabei am klarsten und am ehesten einarbeitungsfähig. Das Onboarding-Profil in Regensburg bleibt interessant, weil Ihr Projektbezug und die Einarbeitung gut passen, auch wenn der Schwerpunkt stärker in Personalentwicklung als in klassischer Personaladministration liegt.",
+      "role": "assistant"
+    },
+    {
+      "content": "Die erste Stelle ist „Personalentwicklerin/Personalentwickler (m/w/d) - Teilzeit“ (Job-ID 827955). Ist sie für mich ein realistischer Einstieg? Welche meiner kaufmännischen Erfahrungen kann ich dort tatsächlich nutzen, und welche HR-Voraussetzungen sollte ich vorher klären?",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Ja, als Einstieg wirkt die Stelle bei OTH-Regensburg realistisch, wenn Sie sie als Onboarding- und Personalentwicklungsrolle verstehen, nicht als klassische Personaladministration. Stark passen Ihr BWL-Studium mit Schwerpunkt Personal, Ihr Onboarding-Projekt sowie Ihre kaufmännische Organisationspraxis zu Workshops, Terminkoordination, Portalpflege, interner Abstimmung und dem strukturierten Tagesgeschäft.\n\nTatsächlich nutzbar sind vor allem Ihre Erfahrung in kaufmännischer Sachbearbeitung, Terminorganisation, interner Kommunikation, MS Office und Ihr strukturierter Arbeitsstil. Weniger direkt belegt sind dagegen die ausgeschriebenen Punkte Veranstaltungskonzeption, kreative Inhalte für Web oder Print, CMS bzw. Typo3, Adobe InDesign sowie Englisch.\n\nVorher klären sollten Sie vor allem drei Punkte: Erstens, ob ein noch nicht abgeschlossenes Studium akzeptiert wird, da ein abgeschlossenes Bachelorstudium verlangt wird. Zweitens, wie viel praktische Erfahrung in Veranstaltungsorganisation oder Contentpflege wirklich erwartet wird. Drittens, ob CMS-, Design- und Englischkenntnisse nur hilfreich sind oder im Alltag regelmäßig gebraucht werden.",
+      "role": "assistant"
+    }
+  ],
+  "operations": [
+    {
+      "turn": 0,
+      "action": "search",
+      "elapsed_seconds": 47.239,
+      "profile": {
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "max_hours": null,
+          "remote": []
+        },
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich"
+        ],
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "809805",
+        "819249",
+        "824340",
+        "827955",
+        "836504",
+        "857698",
+        "840943",
+        "835580",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "836732",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "815652",
+        "823885"
+      ],
+      "scores": [
+        78,
+        78,
+        78,
+        76,
+        74,
+        74,
+        72,
+        72,
+        64,
+        59,
+        58,
+        39,
+        39,
+        39,
+        39,
+        39,
+        39,
+        39,
+        37,
+        37
+      ]
+    },
+    {
+      "turn": 1,
+      "action": "rerank",
+      "elapsed_seconds": 34.818,
+      "profile": {
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "max_hours": null,
+          "remote": []
+        },
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich",
+          "Interne Personaladministration",
+          "Mitarbeitendenbetreuung",
+          "Onboarding"
+        ],
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "827955",
+        "857698",
+        "809805",
+        "819249",
+        "824340",
+        "836504",
+        "840943",
+        "835580",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "836732",
+        "815652",
+        "823885"
+      ],
+      "scores": [
+        78,
+        77,
+        76,
+        76,
+        76,
+        71,
+        70,
+        67,
+        61,
+        56,
+        53,
+        39,
+        39,
+        39,
+        39,
+        39,
+        39,
+        38,
+        33,
+        33
+      ]
+    },
+    {
+      "turn": 2,
+      "action": "rerank",
+      "elapsed_seconds": 38.744,
+      "profile": {
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "max_hours": 25.0,
+          "remote": []
+        },
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich",
+          "Interne Personaladministration",
+          "Mitarbeitendenbetreuung",
+          "Onboarding"
+        ],
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "827955",
+        "857698",
+        "809805",
+        "819249",
+        "824340",
+        "840943",
+        "835580",
+        "836504",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "836732",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "815652",
+        "823885"
+      ],
+      "scores": [
+        79,
+        77,
+        75,
+        71,
+        71,
+        70,
+        69,
+        68,
+        61,
+        54,
+        51,
+        39,
+        39,
+        39,
+        39,
+        39,
+        39,
+        39,
+        38,
+        38
+      ]
+    },
+    {
+      "turn": 3,
+      "action": "answer",
+      "elapsed_seconds": 6.523,
+      "profile": {
+        "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+        "filters": {
+          "employment_types": [
+            "teilzeit"
+          ],
+          "locations": [],
+          "max_hours": 25.0,
+          "remote": []
+        },
+        "preferences": [
+          "Strukturierte Aufgaben",
+          "Fachlicher Einstieg in den Personalbereich",
+          "Interne Personaladministration",
+          "Mitarbeitendenbetreuung",
+          "Onboarding"
+        ],
+        "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+        "skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "827955",
+        "857698",
+        "809805",
+        "819249",
+        "824340",
+        "840943",
+        "835580",
+        "836504",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "836732",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "815652",
+        "823885"
+      ],
+      "scores": [
+        79,
+        77,
+        75,
+        71,
+        71,
+        70,
+        69,
+        68,
+        61,
+        54,
+        51,
+        39,
+        39,
+        39,
+        39,
+        39,
+        39,
+        39,
+        38,
+        38
+      ]
+    }
+  ]
+}

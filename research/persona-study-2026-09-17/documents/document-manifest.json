@@ -1,0 +1,80 @@
+{
+  "reference_sha256": "d823cd0115186b34c01c6e4b4da3be28b64ee73cac849dbd62d6f4bb6385b0fb",
+  "scope_change": "User changed the requested deliverables from twelve to two persona dossiers across three systems after the create-operation marker; marker not repeated.",
+  "documents": [
+    {
+      "id": "P01",
+      "name": "Mara Seidel",
+      "file": "P01-mara-seidel.docx",
+      "sha256": "23f9fb1af239cbe6e6e18e28f201392e0df66625b85f4662f5324bfc26362faf",
+      "persona_source_sha256": "56a120b5e9b8af6322c419fd0dc728cab0a4ba63f4d77ada0877fb632c34ca02",
+      "preserved_parts": [
+        "word/header1.xml",
+        "word/numbering.xml",
+        "word/fontTable.xml",
+        "word/_rels/fontTable.xml.rels",
+        "word/styles.xml",
+        "word/_rels/document.xml.rels",
+        "_rels/.rels",
+        "word/fonts/NotoSansSymbols-regular.ttf",
+        "word/fonts/NotoSansSymbols-bold.ttf",
+        "word/theme/theme1.xml",
+        "word/media/image1.png",
+        "[Content_Types].xml"
+      ],
+      "modified_parts": [
+        "word/document.xml",
+        "word/footer1.xml",
+        "word/settings.xml"
+      ],
+      "assigned_arms": [
+        "A",
+        "B",
+        "C"
+      ],
+      "b_template": "Top-Berufsberater",
+      "execution_ids": [
+        "P01-A",
+        "P01-B",
+        "P01-C"
+      ]
+    },
+    {
+      "id": "P06",
+      "name": "Nora Peters",
+      "file": "P06-nora-peters.docx",
+      "sha256": "277587675c46c9a5883254ce9725c4e4c288455747b977952e444ed53329667c",
+      "persona_source_sha256": "56a120b5e9b8af6322c419fd0dc728cab0a4ba63f4d77ada0877fb632c34ca02",
+      "preserved_parts": [
+        "word/header1.xml",
+        "word/numbering.xml",
+        "word/fontTable.xml",
+        "word/_rels/fontTable.xml.rels",
+        "word/styles.xml",
+        "word/_rels/document.xml.rels",
+        "_rels/.rels",
+        "word/fonts/NotoSansSymbols-regular.ttf",
+        "word/fonts/NotoSansSymbols-bold.ttf",
+        "word/theme/theme1.xml",
+        "word/media/image1.png",
+        "[Content_Types].xml"
+      ],
+      "modified_parts": [
+        "word/document.xml",
+        "word/footer1.xml",
+        "word/settings.xml"
+      ],
+      "assigned_arms": [
+        "A",
+        "B",
+        "C"
+      ],
+      "b_template": "Top-Berufsberater",
+      "execution_ids": [
+        "P06-A",
+        "P06-B",
+        "P06-C"
+      ]
+    }
+  ]
+}

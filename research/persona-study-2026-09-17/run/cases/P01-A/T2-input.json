@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/chat",
+  "body": {
+    "session_id": "UdXSxLCa-kppP286klDdKwS52oEEbg0iXtHCHXfhiC0",
+    "message": "Du nennst Stellen mit klarer Betreuung. Für die weitere Einordnung ist mir noch wichtig: Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+    "mode": "auto"
+  },
+  "adaptive_message": {
+    "case_id": "P01-A",
+    "turn": 2,
+    "previous_snapshot_sha256": "8c233070041bb75739721aab5b479fd1b3f7a239119376576143950853de2a63",
+    "disclosed_stage": 2,
+    "adaptation_note": "Knüpft an ausdrücklich genannte Betreuung an und ergänzt nur die vorgesehenen Fakten aus Etappe 2.",
+    "message": "Du nennst Stellen mit klarer Betreuung. Für die weitere Einordnung ist mir noch wichtig: Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben."
+  },
+  "started_utc": "2026-09-17T07:10:26.653066+00:00"
+}

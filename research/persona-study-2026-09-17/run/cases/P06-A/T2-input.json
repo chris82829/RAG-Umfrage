@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/chat",
+  "body": {
+    "session_id": "ExxHohpcW4nqTe7BIpme5yQJB3CO8xFNAljzpbVVn5w",
+    "message": "Die von dir genannten administrativen Personalstellen möchte ich genauer einordnen. Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an.",
+    "mode": "auto"
+  },
+  "adaptive_message": {
+    "case_id": "P06-A",
+    "turn": 2,
+    "previous_snapshot_sha256": "ec748aa3af51689ecfba5b9e58d7fab6771ac28d053b53ed4ac101a08dbd19ae",
+    "disclosed_stage": 2,
+    "adaptation_note": "Greift einen tatsächlich genannten Punkt auf; ergänzt ausschließlich das gleiche Informationsbudget aus Etappe 2.",
+    "message": "Die von dir genannten administrativen Personalstellen möchte ich genauer einordnen. Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an."
+  },
+  "started_utc": "2026-09-17T07:11:51.431565+00:00"
+}

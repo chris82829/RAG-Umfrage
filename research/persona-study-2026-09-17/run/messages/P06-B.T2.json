@@ -1,0 +1,8 @@
+{
+  "case_id": "P06-B",
+  "turn": 2,
+  "previous_snapshot_sha256": "82a8cef5e3ccde2ab27efea87eab305e531e02fe75918cc72694ac822f073e58",
+  "disclosed_stage": 2,
+  "adaptation_note": "Greift die tatsächlich genannte operative HR-Administration auf; nur die vorgesehenen Fakten aus Etappe 2.",
+  "message": "Du nennst operative HR-Administration als passend. Für die weitere Einordnung: Ich suche etwa 20 bis 25 Stunden mit gut planbaren Zeiten. Eine Entgeltabrechnung habe ich noch nicht eigenständig gemacht und SAP HCM kenne ich nicht. Bitte berücksichtige die nötige Einarbeitung und passe die Reihenfolge an."
+}

@@ -84,7 +84,7 @@ export function SystemPreparation({state, onChange, onStart, busy, errors, error
       <div className="survey-task"><h2>Deine Aufgabe</h2><ol>
         <li>Erstelle ein Suchprofil für eine Stelle, die du tatsächlich suchen würdest.</li>
         <li>Sieh dir die vorgeschlagenen Stellen und ihre Begründungen an.</li>
-        <li>Stelle im Chat mindestens eine eigene inhaltliche Frage zu einer Stelle oder deinen Suchwünschen.</li>
+        <li>Stelle im Chat mindestens eine eigene inhaltliche Frage zu einer Stelle oder deinen Suchwünschen. Du kannst bis zu drei Nachrichten senden.</li>
       </ol><p>Du kannst deine Suchwünsche anschließend präzisieren. Nutze die angebotenen Einstellungen so, wie sie für dich sinnvoll sind.</p></div>
       {error && <p className="survey-error" role="alert">{error}</p>}
       <div className="survey-form-actions"><AutosaveStatus status={saveStatus} onRetry={onRetry}/><button type="submit" className="survey-primary diana-action-motion" disabled={busy}>{busy?'Wird gespeichert …':'System ausprobieren'}<ArrowRight className="diana-action-arrow" size={18}/></button></div>

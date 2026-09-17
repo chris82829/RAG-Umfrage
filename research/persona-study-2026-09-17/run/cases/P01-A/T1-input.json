@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/chat",
+  "body": {
+    "session_id": "E1lltcRfXq4ZqE-nfM8nMrmczeA5s7KrudkZ-UJhpGg",
+    "message": "Du nennst Einarbeitung als wichtigen Punkt. Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+    "mode": "auto"
+  },
+  "adaptive_message": {
+    "case_id": "P01-A",
+    "turn": 1,
+    "previous_snapshot_sha256": "7b093b0506d35e872bfd3387fa5ac3f2a2fcc5d143afdfcd1ae1b6bedf04015f",
+    "disclosed_stage": 1,
+    "adaptation_note": "Greift die tatsächlich genannte Einarbeitung auf; nur Fakten aus Etappe 1.",
+    "message": "Du nennst Einarbeitung als wichtigen Punkt. Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu."
+  },
+  "started_utc": "2026-09-17T07:07:09.766266+00:00"
+}

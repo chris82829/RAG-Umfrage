@@ -1,0 +1,25 @@
+{
+  "confirmed_utc": "2026-09-17T07:07:11.715525+00:00",
+  "request": "Alle Zeitpunkte immer gegen das gesamte Wissen der Persona messen.",
+  "implemented_before_first_call": true,
+  "reference_fields": [
+    "full_information_need",
+    "full_profile",
+    "evaluation_relevance_rules"
+  ],
+  "fixed_across_conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "fixed_across_snapshots": [
+    "T0",
+    "T1",
+    "T2",
+    "T3"
+  ],
+  "reference_job_grade_reused": true,
+  "later_disclosed_facts_available_to_judge_at_T0": true,
+  "later_disclosed_facts_not_injected_into_system_at_T0": true,
+  "protocol_changed": false
+}

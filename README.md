@@ -72,6 +72,11 @@ Nach der Einwilligung und serverseitigen Zuordnung läuft die Teilnahme so ab:
    sichtbarer Ergebnis-/Chatansicht, nicht während einer Suche oder eines Dialogs.
    Weitergehen setzt mindestens eine erfolgreich beantwortete eigene Chatnachricht
    voraus. Die automatische Begrüßung zählt nicht; andernfalls führt ein Hinweis zum Chat.
+   Pro Umfrageteilnahme sind höchstens **drei erfolgreich beantwortete eigene Nachrichten**
+   möglich, gemeinsam über alle Suchsitzungen dieser Teilnahme. Neuladen oder „Neu starten“
+   setzt den Zähler nicht zurück; fehlgeschlagene Anfragen verbrauchen keine Nachricht.
+   Der Chat zeigt die verbleibende Anzahl an. Danach bleiben Verlauf und Stellen lesbar.
+   Auf `/test/a`, `/test/b` und `/test/c` gibt es diese Begrenzung nicht.
 4. **Rückmeldung geben:** Gemeinsame Kategorien sind **Suchvorhaben**,
    **Deine Erfahrung mit der Suche**, **Suchen im Gespräch**, **Score und Begründungen**
    und **Feedback**. B und C erhalten außerdem Fragen zur Verständlichkeit und
@@ -940,26 +945,24 @@ GPT kann zwischen frischen Suchläufen schwanken; sie ist kein objektiver Messwe
 Eine empirische Bestätigung erfordert annotierte Profile und
 Jobs, etwa für Recall@20, NDCG@5, Precision@5 und Ablationen der drei Suchstufen.
 
-## Tests und Gunicorn
+## Evaluation und Gunicorn
+
+Die bisherigen Forschungs- und Funktionstests wurden am 17.09.2026 auf Wunsch
+aus dem Projekt entfernt und außerhalb des Projekts gesichert. Die neue
+[Evaluation mit zwölf Nutzerpersonas](research/persona-study-2026-09-17/PROTOCOL.md)
+erfasst Variante C vor dem Chat und nach jeder von drei Nachrichten. Die
+Test-URLs `/test/a`, `/test/b` und `/test/c` sind weiterhin Anwendungsfunktionen.
 
 Für die separate Docker-Installation auf dem Forschungsserver, Port 5051,
 siehe [Betrieb und Aktualisierung](DEPLOYMENT.md). Der Container lädt E5 vor der
 ersten Anfrage und speichert Daten dauerhaft außerhalb des Images.
 
 ```bash
-.venv/bin/python -m pytest -q
-
-# Zusätzlich den echten Export in einer temporären Datenbank prüfen:
-JOB_EXPORT_TEST_PATH=/Users/christophscharnagl/Downloads/ChristophJobs01-2026.json \
-  .venv/bin/python -m pytest -q
-
 .venv/bin/gunicorn --workers 1 --threads 4 --timeout 600 \
   --bind 127.0.0.1:5050 'app:create_app()'
 ```
 
-Die automatisierten Tests verwenden echte SQLite-/BM25-Implementierungen und
-injizierte Embeddings bzw. OpenAI-Antworten. Sie benötigen weder API-Guthaben noch
-Modelldownloads. Ein einzelner Worker vermeidet mehrere Kopien des großen E5 im
+Ein einzelner Worker vermeidet mehrere Kopien des großen E5 im
 RAM; Inferenz ist pro Worker gesperrt. `warmup` sollte vor dem Serverstart erfolgen.
 Auf diesem Mac läuft die lokale Webseite mit `.venv/bin/python app.py`. Beim
 Gunicorn-Start mit MPS brach ein Worker wegen der macOS-Initialisierung nach

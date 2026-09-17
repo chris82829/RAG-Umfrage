@@ -1,0 +1,33 @@
+{
+  "utc": "2026-09-17T07:09:57.699053+00:00",
+  "user_authorization": "gesamtlimit 4,5",
+  "old_budget_usd": "3",
+  "new_budget_usd": "4.50",
+  "completed_snapshots": 12,
+  "already_charged_usd": "1.9436550",
+  "accounting_entries_unchanged": true,
+  "models_prompts_profiles_reference_need_unchanged": true,
+  "source_changes": {
+    "research/persona-study-2026-09-17/run_system.py": {
+      "before": "62b18ac6696260be4e945a003565fca34764635dfdb08365ff8a36c6d8e6ae75",
+      "after": "01e9dd279706e44b5a263d6f01e5dd5dc48dbd8c45e3f906359cd4ee06c49a69"
+    },
+    "research/persona-study-2026-09-17/budget.py": {
+      "before": "85dc3f9cc8427fcc91dc933f9cee575e3f0bc62947c0d4d9696d9b793607b642",
+      "after": "acef23df0826dc523a5649f32e77551f884c95db79ea24308571787360a8e4ec"
+    },
+    "research/persona-study-2026-09-17/PROTOCOL.md": {
+      "before": "efac7de59d74d959e3f2a4f3e876e3169e920f8949cb8a4a96d598ad793bd3e0",
+      "after": "d6aca5f4e4c1cbce3b782ae035d697bd7e1b6472cec91459bc2c69aaf4fa5d8c"
+    }
+  },
+  "original_file_sha256": {
+    "run-status.json": "169f4b53c11bdddd0158c4e14af3a9502ecc598f083fa7fb79b677617f7e0e17",
+    "artifact-sha256.json": "4faf55bc01c8b7b71ac3d6cd416cf244f11dbda36dfd5c82339a40e65be62dc1",
+    "budget.py": "85dc3f9cc8427fcc91dc933f9cee575e3f0bc62947c0d4d9696d9b793607b642",
+    "budget-ledger.json": "6fe5b0aca1c226f09ffc387964552dc231e4a0d85de363935ceb3eb63a956e4f",
+    "manifest.json": "14b159854efb35a8d614ff290b042409bd9135a937e4ff6b7462c1be1963bcb0",
+    "run_system.py": "62b18ac6696260be4e945a003565fca34764635dfdb08365ff8a36c6d8e6ae75",
+    "PROTOCOL.md": "efac7de59d74d959e3f2a4f3e876e3169e920f8949cb8a4a96d598ad793bd3e0"
+  }
+}

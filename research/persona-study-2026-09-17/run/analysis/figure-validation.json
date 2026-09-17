@@ -1,0 +1,9 @@
+{
+  "checked_utc": "2026-09-17T07:20:59.979363+00:00",
+  "visual_check": "PNG inspected at full chart scale; labels, legend, panels and footer readable; exact overlapping curves annotated.",
+  "metric_snapshot_count": 24,
+  "no_additional_api_calls": true,
+  "figure_source_sha256": "efa8c7752dd3118a1a06b1118e2cf763663b7ec83558b5744192f165d1fa37e4",
+  "png_sha256": "cea3e7e40a4c170fffee9e68c75af7ddb46caec0a7eec2caee1bde3c170c3459",
+  "svg_sha256": "db2a1af17b076fe9efb9f2e33e9bca894e09a1bd42dbf72be11d905b9949d48e"
+}

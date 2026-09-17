@@ -1,0 +1,834 @@
+{
+  "task": "P06-B.T1.RerankingResult.02",
+  "started_utc": "2026-09-17T07:07:13.438008+00:00",
+  "ok": true,
+  "request_sha256": "6b555c68cd1b5e15e60fc990011e6bbb06670e7616d8d8aa7aa765d89578f7e8",
+  "http_status": 200,
+  "response": {
+    "id": "resp_03edac515b673dab016aab91a1c9ec87d286fa87da27d35574",
+    "object": "response",
+    "created_at": 1789628833,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1789628872,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 10000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_03edac515b673dab016aab91a2a3b887d29619ba9697cb7980",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"rankings\":[{\"job_id\":\"857698\",\"components\":{\"technical_fit\":74,\"preferences_fit\":94,\"technical_depth\":46,\"learning\":58,\"innovation\":40,\"clarity\":71},\"reasons\":[\"Ihre kaufmännische Sachbearbeitung passt direkt zu Anträgen, Abrechnungen und administrativen Aufgaben in der Personalabteilung.\",\"Für Ihr Ziel ist die interne Personaladministration hier klar belegt; Onboarding oder Mitarbeitendenbetreuung werden aber nicht ausdrücklich genannt.\",\"Lernbegleitung oder Einarbeitung werden nur allgemein beschrieben; ein guter nächster Schritt ist die Frage nach konkreten HR-Prozessen im Tagesgeschäft.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[]},{\"job_id\":\"819249\",\"components\":{\"technical_fit\":78,\"preferences_fit\":90,\"technical_depth\":55,\"learning\":72,\"innovation\":54,\"clarity\":82},\"reasons\":[\"Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.\",\"Für Ihren gewünschten HR-Einstieg ist die Nähe zu administrativen Aufgaben klar; Recruiting ist dabei nur ein Teil der Stelle.\",\"Einarbeitung ist nicht ausdrücklich benannt, aber die Stelle verspricht erste Berufserfahrung im Personalmanagement und Mitarbeit in HR-Projekten.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"809805\",\"components\":{\"technical_fit\":78,\"preferences_fit\":89,\"technical_depth\":55,\"learning\":72,\"innovation\":54,\"clarity\":82},\"reasons\":[\"Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.\",\"Für Ihr Ziel sind administrative HR-Aufgaben klar belegt; Recruiting und Personalcontrolling erweitern die Stelle, ohne sie vertriebsnah zu machen.\",\"Einarbeitung ist nicht ausdrücklich genannt, aber HR-Projekte und Digitalisierungsprojekte geben einen realistischen Lernpfad im Personalbereich.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"824340\",\"components\":{\"technical_fit\":78,\"preferences_fit\":90,\"technical_depth\":55,\"learning\":72,\"innovation\":54,\"clarity\":82},\"reasons\":[\"Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.\",\"Für Ihren gewünschten Einstieg sind interne HR-Administration und strukturierte Aufgaben klar erkennbar; Recruiting ist nur ein Teil des Aufgabenspektrums.\",\"Einarbeitung ist nicht ausdrücklich benannt, aber die Stelle bietet erste Berufserfahrung im Personalmanagement und Mitarbeit in HR-Projekten.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"827955\",\"components\":{\"technical_fit\":76,\"preferences_fit\":91,\"technical_depth\":64,\"learning\":86,\"innovation\":80,\"clarity\":83},\"reasons\":[\"Ihr belegtes Onboarding-Projekt und Ihre Organisationspraxis passen direkt zur Weiterentwicklung des Onboarding-Portfolios und zum Veranstaltungsmanagement.\",\"Für Ihren Wunsch nach Onboarding ist die Stelle sehr nah dran; interne Personaladministration und klassische Mitarbeitendenbetreuung stehen aber weniger im Vordergrund.\",\"Die individuelle Einarbeitung ist ausdrücklich genannt; offener Prüfpunkt bleiben Veranstaltungsorganisation, CMS oder InDesign als nicht belegte Fachthemen.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Erfahrungen in der Konzeption und Organisation von Veranstaltungen\",\"CMS-System\",\"Adobe InDesign\",\"Englisch\"]},{\"job_id\":\"836504\",\"components\":{\"technical_fit\":72,\"preferences_fit\":74,\"technical_depth\":58,\"learning\":90,\"innovation\":52,\"clarity\":79},\"reasons\":[\"Excel und Personalmanagement-Grundlagen passen zur Mitarbeit im Personalwesen und zur strukturierten Arbeit an Stellenbeschreibungen.\",\"Die Stelle liegt im internen Personalwesen, aber der Schwerpunkt auf Entgeltrahmentarifvertrag ist spezieller als Ihr Fokus auf Administration, Betreuung und Onboarding.\",\"Das große Lern- und Entwicklungspotenzial ist klar benannt; ein sinnvoller nächster Schritt ist die Frage, wie viel Einarbeitung in tarifbezogene Themen vorgesehen ist.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Kenntnisse im Personalwesen bezogen auf Entgeltrahmentarifvertrag\",\"PowerPoint\"]},{\"job_id\":\"835580\",\"components\":{\"technical_fit\":68,\"preferences_fit\":42,\"technical_depth\":38,\"learning\":85,\"innovation\":28,\"clarity\":83},\"reasons\":[\"Kaufmännische Sachbearbeitung, Terminorganisation und Kommunikation passen klar zu Büroorganisation, Dokumentenmanagement und Veranstaltungskoordination.\",\"Für Ihren Wechsel ins Personalmanagement fehlt der direkte HR-Bezug; die Aufgaben liegen in Fakultätsverwaltung statt Personaladministration oder Onboarding.\",\"Eine fundierte Einarbeitung ist ausdrücklich genannt; als nächster Schritt lohnt die Konzentration auf Stellen mit klarer Personalabteilungsnähe.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Englisch\"]},{\"job_id\":\"841353\",\"components\":{\"technical_fit\":58,\"preferences_fit\":64,\"technical_depth\":66,\"learning\":88,\"innovation\":62,\"clarity\":84},\"reasons\":[\"Excel und MS Office passen zu Personalstatistiken, Berichtswesen und Dashboards im Personalmanagement, aber Kennzahlensysteme sind nicht belegt.\",\"Für Ihren Wunsch nach interner Personaladministration ist der HR-Bezug vorhanden; der Schwerpunkt liegt jedoch klar auf Personalcontrolling statt Betreuung oder Onboarding.\",\"Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt; prüfen sollten Sie, wie viel Controlling-Erfahrung tatsächlich vorausgesetzt wird.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Arbeit mit Kennzahlensystemen\",\"Datenbankanwendungen\",\"Englisch\"]},{\"job_id\":\"841212\",\"components\":{\"technical_fit\":54,\"preferences_fit\":48,\"technical_depth\":52,\"learning\":78,\"innovation\":48,\"clarity\":86},\"reasons\":[\"Organisation, Kommunikation und MS Office passen zu Bewerbungsmanagement, Prozesskoordination und Veranstaltungsplanung.\",\"Für Ihr Ziel fehlt der direkte Einstieg ins Personalwesen; die Stelle führt in Studiengangs- und Hochschuladministration statt interne HR-Arbeit.\",\"Fortbildung ist klar angeboten; der entscheidende Prüfpunkt bleibt, ob Sie bewusst einen Umweg außerhalb des Personalbereichs gehen möchten.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Kaufmännische Sachbearbeitung\"],\"missing_skills\":[\"Englisch\",\"Hochschuladministration\"]},{\"job_id\":\"832477\",\"components\":{\"technical_fit\":52,\"preferences_fit\":39,\"technical_depth\":50,\"learning\":82,\"innovation\":58,\"clarity\":80},\"reasons\":[\"MS Office, Kommunikation und Organisationspraxis passen zu Prozessarbeit, Termin-Tool-Einführung und allgemeiner administrativer Mitarbeit.\",\"Für Ihr Ziel ist der Abstand zum Personalbereich zu groß; die Stelle ist nicht vertriebsnah, aber auch nicht auf HR-Administration oder Onboarding ausgerichtet.\",\"Eine fundierte Einarbeitung ist genannt; sinnvoller ist hier trotzdem die Fokussierung auf Rollen in einer Personalabteilung.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Englisch\"]},{\"job_id\":\"857711\",\"components\":{\"technical_fit\":56,\"preferences_fit\":34,\"technical_depth\":40,\"learning\":62,\"innovation\":24,\"clarity\":79},\"reasons\":[\"Kaufmännische Sachbearbeitung und Office passen zu Verwaltungsaufgaben, Aktenführung und internen Serviceprozessen.\",\"Personalangelegenheiten werden nur am Rand genannt; für Ihren Einstieg in Personaladministration, Betreuung oder Onboarding ist der HR-Bezug zu schwach.\",\"Mobiles Arbeiten nach Einarbeitung ist möglich; der bekannte Stundenrahmen von 30 bis 38 Stunden weicht als Präferenz vom üblichen kleineren Teilzeitrahmen ab.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[]},{\"job_id\":\"818500\",\"components\":{\"technical_fit\":34,\"preferences_fit\":34,\"technical_depth\":70,\"learning\":42,\"innovation\":38,\"clarity\":86},\"reasons\":[\"Excel ist belegt, aber zentrale Controlling-Aufgaben wie Abweichungsanalysen, Wirtschaftsplanung und SAP CO sind im Profil nicht nachgewiesen.\",\"Für Ihren gewünschten Einstieg ins Personalmanagement fehlt der HR-Bezug; die Stelle ist fachlich klar im Controlling verankert.\",\"Arbeitsmodell und Teilzeit sind grundsätzlich offen, aber Lernangebote für den Wechsel in dieses Fachgebiet werden nicht konkret beschrieben.\"],\"matched_skills\":[\"MS Office\",\"Excel\"],\"missing_skills\":[\"Controlling\",\"SAP CO\",\"Abweichungsanalysen\",\"Wirtschaftlichkeitsberechnungen\"]},{\"job_id\":\"852676\",\"components\":{\"technical_fit\":30,\"preferences_fit\":30,\"technical_depth\":44,\"learning\":68,\"innovation\":26,\"clarity\":77},\"reasons\":[\"Excel und strukturierte Arbeitsweise sind anschlussfähig, aber die Aufgaben liegen in Finanzbuchhaltung statt im Personalbereich.\",\"Für Ihr Ziel nach interner HR-Administration oder Onboarding fehlt der fachliche Bezug klar.\",\"Weiterentwicklung ist allgemein genannt; der realistische nächste Schritt bleibt die Konzentration auf Stellen mit Personalabteilung im Aufgabenkern.\"],\"matched_skills\":[\"MS Office\",\"Excel\"],\"missing_skills\":[\"Finanzbuchhaltung\",\"Debitoren-/Kreditorenbuchhaltung\"]},{\"job_id\":\"836732\",\"components\":{\"technical_fit\":28,\"preferences_fit\":20,\"technical_depth\":46,\"learning\":55,\"innovation\":62,\"clarity\":79},\"reasons\":[\"Excel, Kommunikation und Organisationspraxis passen zu Auswertungen und Systempflege, aber die Kernaufgaben liegen im Vertrieb.\",\"Das weicht von Ihrem ausdrücklich genannten Ziel ab, weil vertriebsorientierte Arbeit und Energiewirtschaft statt Personaladministration im Mittelpunkt stehen.\",\"Gestaltungsspielraum ist belegt, doch für den HR-Einstieg bringt diese Stelle fachlich kaum Anschluss.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Interne Kommunikation\",\"Terminorganisation\"],\"missing_skills\":[\"Vertrieb\",\"Energiewirtschaft\",\"Preiskalkulation\"]},{\"job_id\":\"809753\",\"components\":{\"technical_fit\":22,\"preferences_fit\":22,\"technical_depth\":72,\"learning\":92,\"innovation\":34,\"clarity\":81},\"reasons\":[\"Organisationstalent und Office passen zur Koordination, aber Vertragsmanagement, juristische Ausbildung und englische Vertragspraxis sind nicht belegt.\",\"Für Ihr Ziel im Personalmanagement führt die Stelle fachlich klar ins Vertragswesen statt in Personaladministration, Betreuung oder Onboarding.\",\"Strukturiertes Onboarding und Seminare sind stark; der Lernpfad wäre hier aber in ein anderes Fachgebiet gerichtet.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"internationales Wirtschaftsrecht\",\"englischsprachige Verträge\",\"SAP\",\"Englisch\"]},{\"job_id\":\"828525\",\"components\":{\"technical_fit\":22,\"preferences_fit\":22,\"technical_depth\":72,\"learning\":92,\"innovation\":34,\"clarity\":81},\"reasons\":[\"Organisationstalent und Office passen zur Koordination, aber Vertragsmanagement, juristische Ausbildung und englische Vertragspraxis sind nicht belegt.\",\"Für Ihren angestrebten HR-Einstieg führt die Stelle fachlich ins Vertragswesen und nicht in interne Personaladministration oder Onboarding.\",\"Strukturiertes Onboarding und Seminare sind ausdrücklich genannt; der nächste Schritt wäre hier nur sinnvoll, wenn Sie bewusst vom HR-Ziel abweichen möchten.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"internationales Wirtschaftsrecht\",\"englischsprachige Verträge\",\"SAP\",\"Englisch\"]},{\"job_id\":\"823885\",\"components\":{\"technical_fit\":10,\"preferences_fit\":20,\"technical_depth\":61,\"learning\":null,\"innovation\":42,\"clarity\":80},\"reasons\":[\"Zentrale Muss-Anforderungen wie Soziale Arbeit und Berufserfahrung in Prävention oder Gesundheitsförderung sind im Profil nicht belegt.\",\"Für Ihren gewünschten Einstieg ins Personalmanagement liegt das Aufgabenfeld fachlich weit außerhalb von HR-Administration, Betreuung und Onboarding.\",\"Zu Einarbeitung oder Entwicklung nennt die Anzeige keine belastbaren Angaben.\"],\"matched_skills\":[\"MS Office\"],\"missing_skills\":[\"Soziale Arbeit / Sozialpädagogik\",\"Berufserfahrung in Prävention und Gesundheitsförderung\",\"Kenntnisse der Strukturen im Bereich Prävention und Gesundheitsförderung\",\"Pkw-Führerschein\"]},{\"job_id\":\"815652\",\"components\":{\"technical_fit\":10,\"preferences_fit\":20,\"technical_depth\":61,\"learning\":null,\"innovation\":42,\"clarity\":80},\"reasons\":[\"Zentrale Muss-Anforderungen wie Soziale Arbeit und Berufserfahrung in Prävention oder Gesundheitsförderung sind im Profil nicht belegt.\",\"Für Ihr Ziel im Personalmanagement liegt das Aufgabenfeld fachlich deutlich außerhalb von interner HR-Arbeit.\",\"Zu Einarbeitung oder Entwicklung nennt die Anzeige keine belastbaren Angaben.\"],\"matched_skills\":[\"MS Office\"],\"missing_skills\":[\"Soziale Arbeit / Sozialpädagogik\",\"Berufserfahrung in Prävention und Gesundheitsförderung\",\"Kenntnisse der Strukturen im Bereich Prävention und Gesundheitsförderung\",\"Pkw-Führerschein\"]},{\"job_id\":\"858898\",\"components\":{\"technical_fit\":36,\"preferences_fit\":36,\"technical_depth\":75,\"learning\":80,\"innovation\":84,\"clarity\":76},\"reasons\":[\"Organisation und MS Office helfen im Projektkontext, aber Sozialforschung, SPSS, MaxQDA und XR-Tools sind für die Kernaufgaben nicht belegt.\",\"Für Ihr Ziel im Personalbereich gibt es nur thematische Nähe über Recruiting und Retention; die Stelle ist vor allem forschungs- und projektlastig.\",\"Fortbildung und Willkommensprogramm sind klar genannt; der fachliche Lernpfad führt jedoch nicht direkt in Personaladministration oder Onboarding.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Projektmanagement\",\"SPSS\",\"MaxQDA\",\"Methoden der empirischen Sozialforschung\",\"XR-Tools\",\"Kenntnisse des Berufsbildungssystems\"]},{\"job_id\":\"837309\",\"components\":{\"technical_fit\":26,\"preferences_fit\":24,\"technical_depth\":48,\"learning\":84,\"innovation\":44,\"clarity\":74},\"reasons\":[\"Excel und strukturiertes Arbeiten passen, aber die Aufgaben liegen in Steuerberatung, Wirtschaftsprüfung und Finanzbuchhaltung statt im Personalbereich.\",\"Für Ihren gewünschten HR-Einstieg fehlt der Bezug zu interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"DATEV kann man hier lernen, nur wäre das ein Lernpfad in ein anderes Fachgebiet und nicht in HR.\"],\"matched_skills\":[\"MS Office\",\"Excel\"],\"missing_skills\":[\"DATEV\",\"Finanzbuchhaltung\",\"Steuererklärungen\",\"Jahresabschlüsse\",\"Konzernabschlüsse\"]}],\"assistant_message\":\"Für Ihren gewünschten Einstieg nach innen ins Personalwesen wirken die Augsburger Personalstellen jetzt am stimmigsten, weil dort operative HR-Administration klar beschrieben ist. Die Onboarding-Stelle in Regensburg bleibt interessant, wenn Sie Ihr Projekt gezielt ausbauen möchten, ist aber stärker entwicklungs- und veranstaltungsbezogen. Deutlich zurück fallen die vertriebsnahen, buchhalterischen und rein verwaltungsnahen Rollen, weil sie Ihr HR-Ziel nur indirekt unterstützen.\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "RerankingResult",
+        "schema": {
+          "$defs": {
+            "RankedJob": {
+              "additionalProperties": false,
+              "properties": {
+                "job_id": {
+                  "minLength": 1,
+                  "title": "Job Id",
+                  "type": "string"
+                },
+                "components": {
+                  "$ref": "#/$defs/ScoreComponents"
+                },
+                "reasons": {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "maxItems": 3,
+                  "minItems": 2,
+                  "title": "Reasons",
+                  "type": "array"
+                },
+                "matched_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Matched Skills",
+                  "type": "array"
+                },
+                "missing_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Missing Skills",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "job_id",
+                "components",
+                "reasons",
+                "matched_skills",
+                "missing_skills"
+              ],
+              "title": "RankedJob",
+              "type": "object"
+            },
+            "ScoreComponents": {
+              "additionalProperties": false,
+              "properties": {
+                "technical_fit": {
+                  "maximum": 100,
+                  "minimum": 1,
+                  "title": "Technical Fit",
+                  "type": "integer"
+                },
+                "preferences_fit": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences Fit"
+                },
+                "technical_depth": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Technical Depth"
+                },
+                "learning": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Learning"
+                },
+                "innovation": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Innovation"
+                },
+                "clarity": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Clarity"
+                }
+              },
+              "required": [
+                "technical_fit",
+                "preferences_fit",
+                "technical_depth",
+                "learning",
+                "innovation",
+                "clarity"
+              ],
+              "title": "ScoreComponents",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "rankings": {
+              "items": {
+                "$ref": "#/$defs/RankedJob"
+              },
+              "maxItems": 20,
+              "minItems": 1,
+              "title": "Rankings",
+              "type": "array"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "rankings",
+            "assistant_message"
+          ],
+          "title": "RerankingResult",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 33229,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3840
+      },
+      "output_tokens": 3425,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 36654
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 33229,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 3840
+    },
+    "output_tokens": 3425,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 36654
+  },
+  "result": {
+    "rankings": [
+      {
+        "job_id": "857698",
+        "components": {
+          "technical_fit": 74,
+          "preferences_fit": 94,
+          "technical_depth": 46,
+          "learning": 58,
+          "innovation": 40,
+          "clarity": 71
+        },
+        "reasons": [
+          "Ihre kaufmännische Sachbearbeitung passt direkt zu Anträgen, Abrechnungen und administrativen Aufgaben in der Personalabteilung.",
+          "Für Ihr Ziel ist die interne Personaladministration hier klar belegt; Onboarding oder Mitarbeitendenbetreuung werden aber nicht ausdrücklich genannt.",
+          "Lernbegleitung oder Einarbeitung werden nur allgemein beschrieben; ein guter nächster Schritt ist die Frage nach konkreten HR-Prozessen im Tagesgeschäft."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": []
+      },
+      {
+        "job_id": "819249",
+        "components": {
+          "technical_fit": 78,
+          "preferences_fit": 90,
+          "technical_depth": 55,
+          "learning": 72,
+          "innovation": 54,
+          "clarity": 82
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.",
+          "Für Ihren gewünschten HR-Einstieg ist die Nähe zu administrativen Aufgaben klar; Recruiting ist dabei nur ein Teil der Stelle.",
+          "Einarbeitung ist nicht ausdrücklich benannt, aber die Stelle verspricht erste Berufserfahrung im Personalmanagement und Mitarbeit in HR-Projekten."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "809805",
+        "components": {
+          "technical_fit": 78,
+          "preferences_fit": 89,
+          "technical_depth": 55,
+          "learning": 72,
+          "innovation": 54,
+          "clarity": 82
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.",
+          "Für Ihr Ziel sind administrative HR-Aufgaben klar belegt; Recruiting und Personalcontrolling erweitern die Stelle, ohne sie vertriebsnah zu machen.",
+          "Einarbeitung ist nicht ausdrücklich genannt, aber HR-Projekte und Digitalisierungsprojekte geben einen realistischen Lernpfad im Personalbereich."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "824340",
+        "components": {
+          "technical_fit": 78,
+          "preferences_fit": 90,
+          "technical_depth": 55,
+          "learning": 72,
+          "innovation": 54,
+          "clarity": 82
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.",
+          "Für Ihren gewünschten Einstieg sind interne HR-Administration und strukturierte Aufgaben klar erkennbar; Recruiting ist nur ein Teil des Aufgabenspektrums.",
+          "Einarbeitung ist nicht ausdrücklich benannt, aber die Stelle bietet erste Berufserfahrung im Personalmanagement und Mitarbeit in HR-Projekten."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "SAP"
+        ]
+      },
+      {
+        "job_id": "827955",
+        "components": {
+          "technical_fit": 76,
+          "preferences_fit": 91,
+          "technical_depth": 64,
+          "learning": 86,
+          "innovation": 80,
+          "clarity": 83
+        },
+        "reasons": [
+          "Ihr belegtes Onboarding-Projekt und Ihre Organisationspraxis passen direkt zur Weiterentwicklung des Onboarding-Portfolios und zum Veranstaltungsmanagement.",
+          "Für Ihren Wunsch nach Onboarding ist die Stelle sehr nah dran; interne Personaladministration und klassische Mitarbeitendenbetreuung stehen aber weniger im Vordergrund.",
+          "Die individuelle Einarbeitung ist ausdrücklich genannt; offener Prüfpunkt bleiben Veranstaltungsorganisation, CMS oder InDesign als nicht belegte Fachthemen."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "Erfahrungen in der Konzeption und Organisation von Veranstaltungen",
+          "CMS-System",
+          "Adobe InDesign",
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "836504",
+        "components": {
+          "technical_fit": 72,
+          "preferences_fit": 74,
+          "technical_depth": 58,
+          "learning": 90,
+          "innovation": 52,
+          "clarity": 79
+        },
+        "reasons": [
+          "Excel und Personalmanagement-Grundlagen passen zur Mitarbeit im Personalwesen und zur strukturierten Arbeit an Stellenbeschreibungen.",
+          "Die Stelle liegt im internen Personalwesen, aber der Schwerpunkt auf Entgeltrahmentarifvertrag ist spezieller als Ihr Fokus auf Administration, Betreuung und Onboarding.",
+          "Das große Lern- und Entwicklungspotenzial ist klar benannt; ein sinnvoller nächster Schritt ist die Frage, wie viel Einarbeitung in tarifbezogene Themen vorgesehen ist."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "Kenntnisse im Personalwesen bezogen auf Entgeltrahmentarifvertrag",
+          "PowerPoint"
+        ]
+      },
+      {
+        "job_id": "835580",
+        "components": {
+          "technical_fit": 68,
+          "preferences_fit": 42,
+          "technical_depth": 38,
+          "learning": 85,
+          "innovation": 28,
+          "clarity": 83
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung, Terminorganisation und Kommunikation passen klar zu Büroorganisation, Dokumentenmanagement und Veranstaltungskoordination.",
+          "Für Ihren Wechsel ins Personalmanagement fehlt der direkte HR-Bezug; die Aufgaben liegen in Fakultätsverwaltung statt Personaladministration oder Onboarding.",
+          "Eine fundierte Einarbeitung ist ausdrücklich genannt; als nächster Schritt lohnt die Konzentration auf Stellen mit klarer Personalabteilungsnähe."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "841353",
+        "components": {
+          "technical_fit": 58,
+          "preferences_fit": 64,
+          "technical_depth": 66,
+          "learning": 88,
+          "innovation": 62,
+          "clarity": 84
+        },
+        "reasons": [
+          "Excel und MS Office passen zu Personalstatistiken, Berichtswesen und Dashboards im Personalmanagement, aber Kennzahlensysteme sind nicht belegt.",
+          "Für Ihren Wunsch nach interner Personaladministration ist der HR-Bezug vorhanden; der Schwerpunkt liegt jedoch klar auf Personalcontrolling statt Betreuung oder Onboarding.",
+          "Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt; prüfen sollten Sie, wie viel Controlling-Erfahrung tatsächlich vorausgesetzt wird."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "Arbeit mit Kennzahlensystemen",
+          "Datenbankanwendungen",
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "841212",
+        "components": {
+          "technical_fit": 54,
+          "preferences_fit": 48,
+          "technical_depth": 52,
+          "learning": 78,
+          "innovation": 48,
+          "clarity": 86
+        },
+        "reasons": [
+          "Organisation, Kommunikation und MS Office passen zu Bewerbungsmanagement, Prozesskoordination und Veranstaltungsplanung.",
+          "Für Ihr Ziel fehlt der direkte Einstieg ins Personalwesen; die Stelle führt in Studiengangs- und Hochschuladministration statt interne HR-Arbeit.",
+          "Fortbildung ist klar angeboten; der entscheidende Prüfpunkt bleibt, ob Sie bewusst einen Umweg außerhalb des Personalbereichs gehen möchten."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Kaufmännische Sachbearbeitung"
+        ],
+        "missing_skills": [
+          "Englisch",
+          "Hochschuladministration"
+        ]
+      },
+      {
+        "job_id": "832477",
+        "components": {
+          "technical_fit": 52,
+          "preferences_fit": 39,
+          "technical_depth": 50,
+          "learning": 82,
+          "innovation": 58,
+          "clarity": 80
+        },
+        "reasons": [
+          "MS Office, Kommunikation und Organisationspraxis passen zu Prozessarbeit, Termin-Tool-Einführung und allgemeiner administrativer Mitarbeit.",
+          "Für Ihr Ziel ist der Abstand zum Personalbereich zu groß; die Stelle ist nicht vertriebsnah, aber auch nicht auf HR-Administration oder Onboarding ausgerichtet.",
+          "Eine fundierte Einarbeitung ist genannt; sinnvoller ist hier trotzdem die Fokussierung auf Rollen in einer Personalabteilung."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "857711",
+        "components": {
+          "technical_fit": 56,
+          "preferences_fit": 34,
+          "technical_depth": 40,
+          "learning": 62,
+          "innovation": 24,
+          "clarity": 79
+        },
+        "reasons": [
+          "Kaufmännische Sachbearbeitung und Office passen zu Verwaltungsaufgaben, Aktenführung und internen Serviceprozessen.",
+          "Personalangelegenheiten werden nur am Rand genannt; für Ihren Einstieg in Personaladministration, Betreuung oder Onboarding ist der HR-Bezug zu schwach.",
+          "Mobiles Arbeiten nach Einarbeitung ist möglich; der bekannte Stundenrahmen von 30 bis 38 Stunden weicht als Präferenz vom üblichen kleineren Teilzeitrahmen ab."
+        ],
+        "matched_skills": [
+          "Kaufmännische Sachbearbeitung",
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": []
+      },
+      {
+        "job_id": "818500",
+        "components": {
+          "technical_fit": 34,
+          "preferences_fit": 34,
+          "technical_depth": 70,
+          "learning": 42,
+          "innovation": 38,
+          "clarity": 86
+        },
+        "reasons": [
+          "Excel ist belegt, aber zentrale Controlling-Aufgaben wie Abweichungsanalysen, Wirtschaftsplanung und SAP CO sind im Profil nicht nachgewiesen.",
+          "Für Ihren gewünschten Einstieg ins Personalmanagement fehlt der HR-Bezug; die Stelle ist fachlich klar im Controlling verankert.",
+          "Arbeitsmodell und Teilzeit sind grundsätzlich offen, aber Lernangebote für den Wechsel in dieses Fachgebiet werden nicht konkret beschrieben."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel"
+        ],
+        "missing_skills": [
+          "Controlling",
+          "SAP CO",
+          "Abweichungsanalysen",
+          "Wirtschaftlichkeitsberechnungen"
+        ]
+      },
+      {
+        "job_id": "852676",
+        "components": {
+          "technical_fit": 30,
+          "preferences_fit": 30,
+          "technical_depth": 44,
+          "learning": 68,
+          "innovation": 26,
+          "clarity": 77
+        },
+        "reasons": [
+          "Excel und strukturierte Arbeitsweise sind anschlussfähig, aber die Aufgaben liegen in Finanzbuchhaltung statt im Personalbereich.",
+          "Für Ihr Ziel nach interner HR-Administration oder Onboarding fehlt der fachliche Bezug klar.",
+          "Weiterentwicklung ist allgemein genannt; der realistische nächste Schritt bleibt die Konzentration auf Stellen mit Personalabteilung im Aufgabenkern."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel"
+        ],
+        "missing_skills": [
+          "Finanzbuchhaltung",
+          "Debitoren-/Kreditorenbuchhaltung"
+        ]
+      },
+      {
+        "job_id": "836732",
+        "components": {
+          "technical_fit": 28,
+          "preferences_fit": 20,
+          "technical_depth": 46,
+          "learning": 55,
+          "innovation": 62,
+          "clarity": 79
+        },
+        "reasons": [
+          "Excel, Kommunikation und Organisationspraxis passen zu Auswertungen und Systempflege, aber die Kernaufgaben liegen im Vertrieb.",
+          "Das weicht von Ihrem ausdrücklich genannten Ziel ab, weil vertriebsorientierte Arbeit und Energiewirtschaft statt Personaladministration im Mittelpunkt stehen.",
+          "Gestaltungsspielraum ist belegt, doch für den HR-Einstieg bringt diese Stelle fachlich kaum Anschluss."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Interne Kommunikation",
+          "Terminorganisation"
+        ],
+        "missing_skills": [
+          "Vertrieb",
+          "Energiewirtschaft",
+          "Preiskalkulation"
+        ]
+      },
+      {
+        "job_id": "809753",
+        "components": {
+          "technical_fit": 22,
+          "preferences_fit": 22,
+          "technical_depth": 72,
+          "learning": 92,
+          "innovation": 34,
+          "clarity": 81
+        },
+        "reasons": [
+          "Organisationstalent und Office passen zur Koordination, aber Vertragsmanagement, juristische Ausbildung und englische Vertragspraxis sind nicht belegt.",
+          "Für Ihr Ziel im Personalmanagement führt die Stelle fachlich klar ins Vertragswesen statt in Personaladministration, Betreuung oder Onboarding.",
+          "Strukturiertes Onboarding und Seminare sind stark; der Lernpfad wäre hier aber in ein anderes Fachgebiet gerichtet."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Vertragsmanagement",
+          "internationales Wirtschaftsrecht",
+          "englischsprachige Verträge",
+          "SAP",
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "828525",
+        "components": {
+          "technical_fit": 22,
+          "preferences_fit": 22,
+          "technical_depth": 72,
+          "learning": 92,
+          "innovation": 34,
+          "clarity": 81
+        },
+        "reasons": [
+          "Organisationstalent und Office passen zur Koordination, aber Vertragsmanagement, juristische Ausbildung und englische Vertragspraxis sind nicht belegt.",
+          "Für Ihren angestrebten HR-Einstieg führt die Stelle fachlich ins Vertragswesen und nicht in interne Personaladministration oder Onboarding.",
+          "Strukturiertes Onboarding und Seminare sind ausdrücklich genannt; der nächste Schritt wäre hier nur sinnvoll, wenn Sie bewusst vom HR-Ziel abweichen möchten."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Terminorganisation",
+          "Interne Kommunikation"
+        ],
+        "missing_skills": [
+          "Vertragsmanagement",
+          "internationales Wirtschaftsrecht",
+          "englischsprachige Verträge",
+          "SAP",
+          "Englisch"
+        ]
+      },
+      {
+        "job_id": "823885",
+        "components": {
+          "technical_fit": 10,
+          "preferences_fit": 20,
+          "technical_depth": 61,
+          "learning": null,
+          "innovation": 42,
+          "clarity": 80
+        },
+        "reasons": [
+          "Zentrale Muss-Anforderungen wie Soziale Arbeit und Berufserfahrung in Prävention oder Gesundheitsförderung sind im Profil nicht belegt.",
+          "Für Ihren gewünschten Einstieg ins Personalmanagement liegt das Aufgabenfeld fachlich weit außerhalb von HR-Administration, Betreuung und Onboarding.",
+          "Zu Einarbeitung oder Entwicklung nennt die Anzeige keine belastbaren Angaben."
+        ],
+        "matched_skills": [
+          "MS Office"
+        ],
+        "missing_skills": [
+          "Soziale Arbeit / Sozialpädagogik",
+          "Berufserfahrung in Prävention und Gesundheitsförderung",
+          "Kenntnisse der Strukturen im Bereich Prävention und Gesundheitsförderung",
+          "Pkw-Führerschein"
+        ]
+      },
+      {
+        "job_id": "815652",
+        "components": {
+          "technical_fit": 10,
+          "preferences_fit": 20,
+          "technical_depth": 61,
+          "learning": null,
+          "innovation": 42,
+          "clarity": 80
+        },
+        "reasons": [
+          "Zentrale Muss-Anforderungen wie Soziale Arbeit und Berufserfahrung in Prävention oder Gesundheitsförderung sind im Profil nicht belegt.",
+          "Für Ihr Ziel im Personalmanagement liegt das Aufgabenfeld fachlich deutlich außerhalb von interner HR-Arbeit.",
+          "Zu Einarbeitung oder Entwicklung nennt die Anzeige keine belastbaren Angaben."
+        ],
+        "matched_skills": [
+          "MS Office"
+        ],
+        "missing_skills": [
+          "Soziale Arbeit / Sozialpädagogik",
+          "Berufserfahrung in Prävention und Gesundheitsförderung",
+          "Kenntnisse der Strukturen im Bereich Prävention und Gesundheitsförderung",
+          "Pkw-Führerschein"
+        ]
+      },
+      {
+        "job_id": "858898",
+        "components": {
+          "technical_fit": 36,
+          "preferences_fit": 36,
+          "technical_depth": 75,
+          "learning": 80,
+          "innovation": 84,
+          "clarity": 76
+        },
+        "reasons": [
+          "Organisation und MS Office helfen im Projektkontext, aber Sozialforschung, SPSS, MaxQDA und XR-Tools sind für die Kernaufgaben nicht belegt.",
+          "Für Ihr Ziel im Personalbereich gibt es nur thematische Nähe über Recruiting und Retention; die Stelle ist vor allem forschungs- und projektlastig.",
+          "Fortbildung und Willkommensprogramm sind klar genannt; der fachliche Lernpfad führt jedoch nicht direkt in Personaladministration oder Onboarding."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel",
+          "Terminorganisation",
+          "Interne Kommunikation",
+          "Personalmanagement-Grundlagen"
+        ],
+        "missing_skills": [
+          "Projektmanagement",
+          "SPSS",
+          "MaxQDA",
+          "Methoden der empirischen Sozialforschung",
+          "XR-Tools",
+          "Kenntnisse des Berufsbildungssystems"
+        ]
+      },
+      {
+        "job_id": "837309",
+        "components": {
+          "technical_fit": 26,
+          "preferences_fit": 24,
+          "technical_depth": 48,
+          "learning": 84,
+          "innovation": 44,
+          "clarity": 74
+        },
+        "reasons": [
+          "Excel und strukturiertes Arbeiten passen, aber die Aufgaben liegen in Steuerberatung, Wirtschaftsprüfung und Finanzbuchhaltung statt im Personalbereich.",
+          "Für Ihren gewünschten HR-Einstieg fehlt der Bezug zu interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.",
+          "DATEV kann man hier lernen, nur wäre das ein Lernpfad in ein anderes Fachgebiet und nicht in HR."
+        ],
+        "matched_skills": [
+          "MS Office",
+          "Excel"
+        ],
+        "missing_skills": [
+          "DATEV",
+          "Finanzbuchhaltung",
+          "Steuererklärungen",
+          "Jahresabschlüsse",
+          "Konzernabschlüsse"
+        ]
+      }
+    ],
+    "assistant_message": "Für Ihren gewünschten Einstieg nach innen ins Personalwesen wirken die Augsburger Personalstellen jetzt am stimmigsten, weil dort operative HR-Administration klar beschrieben ist. Die Onboarding-Stelle in Regensburg bleibt interessant, wenn Sie Ihr Projekt gezielt ausbauen möchten, ist aber stärker entwicklungs- und veranstaltungsbezogen. Deutlich zurück fallen die vertriebsnahen, buchhalterischen und rein verwaltungsnahen Rollen, weil sie Ihr HR-Ziel nur indirekt unterstützen."
+  },
+  "raw_text": "{\"rankings\":[{\"job_id\":\"857698\",\"components\":{\"technical_fit\":74,\"preferences_fit\":94,\"technical_depth\":46,\"learning\":58,\"innovation\":40,\"clarity\":71},\"reasons\":[\"Ihre kaufmännische Sachbearbeitung passt direkt zu Anträgen, Abrechnungen und administrativen Aufgaben in der Personalabteilung.\",\"Für Ihr Ziel ist die interne Personaladministration hier klar belegt; Onboarding oder Mitarbeitendenbetreuung werden aber nicht ausdrücklich genannt.\",\"Lernbegleitung oder Einarbeitung werden nur allgemein beschrieben; ein guter nächster Schritt ist die Frage nach konkreten HR-Prozessen im Tagesgeschäft.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[]},{\"job_id\":\"819249\",\"components\":{\"technical_fit\":78,\"preferences_fit\":90,\"technical_depth\":55,\"learning\":72,\"innovation\":54,\"clarity\":82},\"reasons\":[\"Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.\",\"Für Ihren gewünschten HR-Einstieg ist die Nähe zu administrativen Aufgaben klar; Recruiting ist dabei nur ein Teil der Stelle.\",\"Einarbeitung ist nicht ausdrücklich benannt, aber die Stelle verspricht erste Berufserfahrung im Personalmanagement und Mitarbeit in HR-Projekten.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"809805\",\"components\":{\"technical_fit\":78,\"preferences_fit\":89,\"technical_depth\":55,\"learning\":72,\"innovation\":54,\"clarity\":82},\"reasons\":[\"Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.\",\"Für Ihr Ziel sind administrative HR-Aufgaben klar belegt; Recruiting und Personalcontrolling erweitern die Stelle, ohne sie vertriebsnah zu machen.\",\"Einarbeitung ist nicht ausdrücklich genannt, aber HR-Projekte und Digitalisierungsprojekte geben einen realistischen Lernpfad im Personalbereich.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"824340\",\"components\":{\"technical_fit\":78,\"preferences_fit\":90,\"technical_depth\":55,\"learning\":72,\"innovation\":54,\"clarity\":82},\"reasons\":[\"Kaufmännische Sachbearbeitung und MS Office passen direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und Mustervorlagen.\",\"Für Ihren gewünschten Einstieg sind interne HR-Administration und strukturierte Aufgaben klar erkennbar; Recruiting ist nur ein Teil des Aufgabenspektrums.\",\"Einarbeitung ist nicht ausdrücklich benannt, aber die Stelle bietet erste Berufserfahrung im Personalmanagement und Mitarbeit in HR-Projekten.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"SAP\"]},{\"job_id\":\"827955\",\"components\":{\"technical_fit\":76,\"preferences_fit\":91,\"technical_depth\":64,\"learning\":86,\"innovation\":80,\"clarity\":83},\"reasons\":[\"Ihr belegtes Onboarding-Projekt und Ihre Organisationspraxis passen direkt zur Weiterentwicklung des Onboarding-Portfolios und zum Veranstaltungsmanagement.\",\"Für Ihren Wunsch nach Onboarding ist die Stelle sehr nah dran; interne Personaladministration und klassische Mitarbeitendenbetreuung stehen aber weniger im Vordergrund.\",\"Die individuelle Einarbeitung ist ausdrücklich genannt; offener Prüfpunkt bleiben Veranstaltungsorganisation, CMS oder InDesign als nicht belegte Fachthemen.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Erfahrungen in der Konzeption und Organisation von Veranstaltungen\",\"CMS-System\",\"Adobe InDesign\",\"Englisch\"]},{\"job_id\":\"836504\",\"components\":{\"technical_fit\":72,\"preferences_fit\":74,\"technical_depth\":58,\"learning\":90,\"innovation\":52,\"clarity\":79},\"reasons\":[\"Excel und Personalmanagement-Grundlagen passen zur Mitarbeit im Personalwesen und zur strukturierten Arbeit an Stellenbeschreibungen.\",\"Die Stelle liegt im internen Personalwesen, aber der Schwerpunkt auf Entgeltrahmentarifvertrag ist spezieller als Ihr Fokus auf Administration, Betreuung und Onboarding.\",\"Das große Lern- und Entwicklungspotenzial ist klar benannt; ein sinnvoller nächster Schritt ist die Frage, wie viel Einarbeitung in tarifbezogene Themen vorgesehen ist.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Kenntnisse im Personalwesen bezogen auf Entgeltrahmentarifvertrag\",\"PowerPoint\"]},{\"job_id\":\"835580\",\"components\":{\"technical_fit\":68,\"preferences_fit\":42,\"technical_depth\":38,\"learning\":85,\"innovation\":28,\"clarity\":83},\"reasons\":[\"Kaufmännische Sachbearbeitung, Terminorganisation und Kommunikation passen klar zu Büroorganisation, Dokumentenmanagement und Veranstaltungskoordination.\",\"Für Ihren Wechsel ins Personalmanagement fehlt der direkte HR-Bezug; die Aufgaben liegen in Fakultätsverwaltung statt Personaladministration oder Onboarding.\",\"Eine fundierte Einarbeitung ist ausdrücklich genannt; als nächster Schritt lohnt die Konzentration auf Stellen mit klarer Personalabteilungsnähe.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Englisch\"]},{\"job_id\":\"841353\",\"components\":{\"technical_fit\":58,\"preferences_fit\":64,\"technical_depth\":66,\"learning\":88,\"innovation\":62,\"clarity\":84},\"reasons\":[\"Excel und MS Office passen zu Personalstatistiken, Berichtswesen und Dashboards im Personalmanagement, aber Kennzahlensysteme sind nicht belegt.\",\"Für Ihren Wunsch nach interner Personaladministration ist der HR-Bezug vorhanden; der Schwerpunkt liegt jedoch klar auf Personalcontrolling statt Betreuung oder Onboarding.\",\"Fundierte Einarbeitung und interne Fortbildungen sind ausdrücklich genannt; prüfen sollten Sie, wie viel Controlling-Erfahrung tatsächlich vorausgesetzt wird.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Arbeit mit Kennzahlensystemen\",\"Datenbankanwendungen\",\"Englisch\"]},{\"job_id\":\"841212\",\"components\":{\"technical_fit\":54,\"preferences_fit\":48,\"technical_depth\":52,\"learning\":78,\"innovation\":48,\"clarity\":86},\"reasons\":[\"Organisation, Kommunikation und MS Office passen zu Bewerbungsmanagement, Prozesskoordination und Veranstaltungsplanung.\",\"Für Ihr Ziel fehlt der direkte Einstieg ins Personalwesen; die Stelle führt in Studiengangs- und Hochschuladministration statt interne HR-Arbeit.\",\"Fortbildung ist klar angeboten; der entscheidende Prüfpunkt bleibt, ob Sie bewusst einen Umweg außerhalb des Personalbereichs gehen möchten.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Kaufmännische Sachbearbeitung\"],\"missing_skills\":[\"Englisch\",\"Hochschuladministration\"]},{\"job_id\":\"832477\",\"components\":{\"technical_fit\":52,\"preferences_fit\":39,\"technical_depth\":50,\"learning\":82,\"innovation\":58,\"clarity\":80},\"reasons\":[\"MS Office, Kommunikation und Organisationspraxis passen zu Prozessarbeit, Termin-Tool-Einführung und allgemeiner administrativer Mitarbeit.\",\"Für Ihr Ziel ist der Abstand zum Personalbereich zu groß; die Stelle ist nicht vertriebsnah, aber auch nicht auf HR-Administration oder Onboarding ausgerichtet.\",\"Eine fundierte Einarbeitung ist genannt; sinnvoller ist hier trotzdem die Fokussierung auf Rollen in einer Personalabteilung.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Englisch\"]},{\"job_id\":\"857711\",\"components\":{\"technical_fit\":56,\"preferences_fit\":34,\"technical_depth\":40,\"learning\":62,\"innovation\":24,\"clarity\":79},\"reasons\":[\"Kaufmännische Sachbearbeitung und Office passen zu Verwaltungsaufgaben, Aktenführung und internen Serviceprozessen.\",\"Personalangelegenheiten werden nur am Rand genannt; für Ihren Einstieg in Personaladministration, Betreuung oder Onboarding ist der HR-Bezug zu schwach.\",\"Mobiles Arbeiten nach Einarbeitung ist möglich; der bekannte Stundenrahmen von 30 bis 38 Stunden weicht als Präferenz vom üblichen kleineren Teilzeitrahmen ab.\"],\"matched_skills\":[\"Kaufmännische Sachbearbeitung\",\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[]},{\"job_id\":\"818500\",\"components\":{\"technical_fit\":34,\"preferences_fit\":34,\"technical_depth\":70,\"learning\":42,\"innovation\":38,\"clarity\":86},\"reasons\":[\"Excel ist belegt, aber zentrale Controlling-Aufgaben wie Abweichungsanalysen, Wirtschaftsplanung und SAP CO sind im Profil nicht nachgewiesen.\",\"Für Ihren gewünschten Einstieg ins Personalmanagement fehlt der HR-Bezug; die Stelle ist fachlich klar im Controlling verankert.\",\"Arbeitsmodell und Teilzeit sind grundsätzlich offen, aber Lernangebote für den Wechsel in dieses Fachgebiet werden nicht konkret beschrieben.\"],\"matched_skills\":[\"MS Office\",\"Excel\"],\"missing_skills\":[\"Controlling\",\"SAP CO\",\"Abweichungsanalysen\",\"Wirtschaftlichkeitsberechnungen\"]},{\"job_id\":\"852676\",\"components\":{\"technical_fit\":30,\"preferences_fit\":30,\"technical_depth\":44,\"learning\":68,\"innovation\":26,\"clarity\":77},\"reasons\":[\"Excel und strukturierte Arbeitsweise sind anschlussfähig, aber die Aufgaben liegen in Finanzbuchhaltung statt im Personalbereich.\",\"Für Ihr Ziel nach interner HR-Administration oder Onboarding fehlt der fachliche Bezug klar.\",\"Weiterentwicklung ist allgemein genannt; der realistische nächste Schritt bleibt die Konzentration auf Stellen mit Personalabteilung im Aufgabenkern.\"],\"matched_skills\":[\"MS Office\",\"Excel\"],\"missing_skills\":[\"Finanzbuchhaltung\",\"Debitoren-/Kreditorenbuchhaltung\"]},{\"job_id\":\"836732\",\"components\":{\"technical_fit\":28,\"preferences_fit\":20,\"technical_depth\":46,\"learning\":55,\"innovation\":62,\"clarity\":79},\"reasons\":[\"Excel, Kommunikation und Organisationspraxis passen zu Auswertungen und Systempflege, aber die Kernaufgaben liegen im Vertrieb.\",\"Das weicht von Ihrem ausdrücklich genannten Ziel ab, weil vertriebsorientierte Arbeit und Energiewirtschaft statt Personaladministration im Mittelpunkt stehen.\",\"Gestaltungsspielraum ist belegt, doch für den HR-Einstieg bringt diese Stelle fachlich kaum Anschluss.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Interne Kommunikation\",\"Terminorganisation\"],\"missing_skills\":[\"Vertrieb\",\"Energiewirtschaft\",\"Preiskalkulation\"]},{\"job_id\":\"809753\",\"components\":{\"technical_fit\":22,\"preferences_fit\":22,\"technical_depth\":72,\"learning\":92,\"innovation\":34,\"clarity\":81},\"reasons\":[\"Organisationstalent und Office passen zur Koordination, aber Vertragsmanagement, juristische Ausbildung und englische Vertragspraxis sind nicht belegt.\",\"Für Ihr Ziel im Personalmanagement führt die Stelle fachlich klar ins Vertragswesen statt in Personaladministration, Betreuung oder Onboarding.\",\"Strukturiertes Onboarding und Seminare sind stark; der Lernpfad wäre hier aber in ein anderes Fachgebiet gerichtet.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"internationales Wirtschaftsrecht\",\"englischsprachige Verträge\",\"SAP\",\"Englisch\"]},{\"job_id\":\"828525\",\"components\":{\"technical_fit\":22,\"preferences_fit\":22,\"technical_depth\":72,\"learning\":92,\"innovation\":34,\"clarity\":81},\"reasons\":[\"Organisationstalent und Office passen zur Koordination, aber Vertragsmanagement, juristische Ausbildung und englische Vertragspraxis sind nicht belegt.\",\"Für Ihren angestrebten HR-Einstieg führt die Stelle fachlich ins Vertragswesen und nicht in interne Personaladministration oder Onboarding.\",\"Strukturiertes Onboarding und Seminare sind ausdrücklich genannt; der nächste Schritt wäre hier nur sinnvoll, wenn Sie bewusst vom HR-Ziel abweichen möchten.\"],\"matched_skills\":[\"MS Office\",\"Terminorganisation\",\"Interne Kommunikation\"],\"missing_skills\":[\"Vertragsmanagement\",\"internationales Wirtschaftsrecht\",\"englischsprachige Verträge\",\"SAP\",\"Englisch\"]},{\"job_id\":\"823885\",\"components\":{\"technical_fit\":10,\"preferences_fit\":20,\"technical_depth\":61,\"learning\":null,\"innovation\":42,\"clarity\":80},\"reasons\":[\"Zentrale Muss-Anforderungen wie Soziale Arbeit und Berufserfahrung in Prävention oder Gesundheitsförderung sind im Profil nicht belegt.\",\"Für Ihren gewünschten Einstieg ins Personalmanagement liegt das Aufgabenfeld fachlich weit außerhalb von HR-Administration, Betreuung und Onboarding.\",\"Zu Einarbeitung oder Entwicklung nennt die Anzeige keine belastbaren Angaben.\"],\"matched_skills\":[\"MS Office\"],\"missing_skills\":[\"Soziale Arbeit / Sozialpädagogik\",\"Berufserfahrung in Prävention und Gesundheitsförderung\",\"Kenntnisse der Strukturen im Bereich Prävention und Gesundheitsförderung\",\"Pkw-Führerschein\"]},{\"job_id\":\"815652\",\"components\":{\"technical_fit\":10,\"preferences_fit\":20,\"technical_depth\":61,\"learning\":null,\"innovation\":42,\"clarity\":80},\"reasons\":[\"Zentrale Muss-Anforderungen wie Soziale Arbeit und Berufserfahrung in Prävention oder Gesundheitsförderung sind im Profil nicht belegt.\",\"Für Ihr Ziel im Personalmanagement liegt das Aufgabenfeld fachlich deutlich außerhalb von interner HR-Arbeit.\",\"Zu Einarbeitung oder Entwicklung nennt die Anzeige keine belastbaren Angaben.\"],\"matched_skills\":[\"MS Office\"],\"missing_skills\":[\"Soziale Arbeit / Sozialpädagogik\",\"Berufserfahrung in Prävention und Gesundheitsförderung\",\"Kenntnisse der Strukturen im Bereich Prävention und Gesundheitsförderung\",\"Pkw-Führerschein\"]},{\"job_id\":\"858898\",\"components\":{\"technical_fit\":36,\"preferences_fit\":36,\"technical_depth\":75,\"learning\":80,\"innovation\":84,\"clarity\":76},\"reasons\":[\"Organisation und MS Office helfen im Projektkontext, aber Sozialforschung, SPSS, MaxQDA und XR-Tools sind für die Kernaufgaben nicht belegt.\",\"Für Ihr Ziel im Personalbereich gibt es nur thematische Nähe über Recruiting und Retention; die Stelle ist vor allem forschungs- und projektlastig.\",\"Fortbildung und Willkommensprogramm sind klar genannt; der fachliche Lernpfad führt jedoch nicht direkt in Personaladministration oder Onboarding.\"],\"matched_skills\":[\"MS Office\",\"Excel\",\"Terminorganisation\",\"Interne Kommunikation\",\"Personalmanagement-Grundlagen\"],\"missing_skills\":[\"Projektmanagement\",\"SPSS\",\"MaxQDA\",\"Methoden der empirischen Sozialforschung\",\"XR-Tools\",\"Kenntnisse des Berufsbildungssystems\"]},{\"job_id\":\"837309\",\"components\":{\"technical_fit\":26,\"preferences_fit\":24,\"technical_depth\":48,\"learning\":84,\"innovation\":44,\"clarity\":74},\"reasons\":[\"Excel und strukturiertes Arbeiten passen, aber die Aufgaben liegen in Steuerberatung, Wirtschaftsprüfung und Finanzbuchhaltung statt im Personalbereich.\",\"Für Ihren gewünschten HR-Einstieg fehlt der Bezug zu interner Personaladministration, Mitarbeitendenbetreuung oder Onboarding.\",\"DATEV kann man hier lernen, nur wäre das ein Lernpfad in ein anderes Fachgebiet und nicht in HR.\"],\"matched_skills\":[\"MS Office\",\"Excel\"],\"missing_skills\":[\"DATEV\",\"Finanzbuchhaltung\",\"Steuererklärungen\",\"Jahresabschlüsse\",\"Konzernabschlüsse\"]}],\"assistant_message\":\"Für Ihren gewünschten Einstieg nach innen ins Personalwesen wirken die Augsburger Personalstellen jetzt am stimmigsten, weil dort operative HR-Administration klar beschrieben ist. Die Onboarding-Stelle in Regensburg bleibt interessant, wenn Sie Ihr Projekt gezielt ausbauen möchten, ist aber stärker entwicklungs- und veranstaltungsbezogen. Deutlich zurück fallen die vertriebsnahen, buchhalterischen und rein verwaltungsnahen Rollen, weil sie Ihr HR-Ziel nur indirekt unterstützen.\"}",
+  "finished_utc": "2026-09-17T07:07:52.535143+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 153757,
+    "input_token_bound": 161949,
+    "max_tokens": 10000,
+    "reserved_usd": "0.5548725",
+    "task_id": "P06-B.T1.RerankingResult.02",
+    "post_number": 15,
+    "status": "settled",
+    "charged_usd": "0.1344475",
+    "usage": {
+      "input_tokens": 33229,
+      "output_tokens": 3425,
+      "total_tokens": 36654
+    },
+    "created_utc": "2026-09-17T07:07:13.437211+00:00",
+    "settled_utc": "2026-09-17T07:07:52.536410+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

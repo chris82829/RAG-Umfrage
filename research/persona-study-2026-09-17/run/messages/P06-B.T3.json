@@ -1,0 +1,8 @@
+{
+  "case_id": "P06-B",
+  "turn": 3,
+  "previous_snapshot_sha256": "66e64e6721329396f4608f17455022eb740544c6ccd8f651fcdfb5bcc0d8236d",
+  "disclosed_stage": 3,
+  "adaptation_note": "Bezieht sich auf die tatsächlich erste Stelle des vorangehenden Zustands. Reine Passungsrückfrage entsprechend Etappe 3; keine neuen Nutzerfakten oder Suchwünsche.",
+  "message": "Ist die erste Stelle „Studentische:r Angestellte:r (m/w/d) in der Abt. Personal in Teilzeit mit bis zu 20 Wochenstunden“ (Job-ID 809805) ein realistischer Einstieg für mich? Welche meiner kaufmännischen Erfahrungen helfen dort tatsächlich, und welche HR-Voraussetzungen müsste ich vorher klären?"
+}

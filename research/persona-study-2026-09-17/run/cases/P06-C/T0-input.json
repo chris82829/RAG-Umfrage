@@ -1,0 +1,46 @@
+{
+  "endpoint": "/api/onboard",
+  "body": {
+    "profile": {
+      "query": "Ich schließe ein berufsbegleitendes BWL-Studium mit Schwerpunkt Personal ab und suche eine Teilzeitstelle im Personalmanagement. Ich bringe kaufmännische Berufserfahrung mit.",
+      "skills": [
+        "Kaufmännische Sachbearbeitung",
+        "MS Office",
+        "Excel",
+        "Terminorganisation",
+        "Interne Kommunikation",
+        "Personalmanagement-Grundlagen"
+      ],
+      "preferences": [
+        "Strukturierte Aufgaben",
+        "Fachlicher Einstieg in den Personalbereich"
+      ],
+      "cv_text": "Sieben Jahre kaufmännische Auftragsbearbeitung. Berufsbegleitendes BWL-Studium kurz vor Abschluss, Schwerpunkt Personal; Projekt zum Onboarding. MS Office, Excel und Organisationspraxis.",
+      "filters": {
+        "employment_types": [
+          "teilzeit"
+        ],
+        "locations": [],
+        "remote": [],
+        "max_hours": null
+      }
+    },
+    "advisor": {
+      "mode": "custom",
+      "preset": "diana",
+      "name": "Meine Umstiegsberatung",
+      "description": "Nutze übertragbare Fähigkeiten, ohne daraus nicht belegte Fachpraxis abzuleiten. Zeige einen realistischen Einstieg und benenne konkrete Einarbeitungsbedarfe. Beziehe dich auf Stelleninhalte, nicht auf mein Alter.",
+      "traits": [
+        "empathisch",
+        "direkt"
+      ],
+      "focus": "lernpotenzial"
+    },
+    "advisor_selection": {
+      "source": "custom",
+      "template_id": null
+    }
+  },
+  "adaptive_message": null,
+  "started_utc": "2026-09-17T07:02:34.327571+00:00"
+}

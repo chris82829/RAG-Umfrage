@@ -1,0 +1,3748 @@
+{
+  "created_utc": "2026-09-17T07:18:35.664252+00:00",
+  "design": {
+    "synthetic": true,
+    "planned_personas": 2,
+    "source_ids": [
+      "P01",
+      "P06"
+    ],
+    "planned_sessions": 6,
+    "planned_snapshots": 24,
+    "available_snapshots": 24,
+    "missing_snapshots": 0,
+    "complete": true,
+    "arms": [
+      "A",
+      "B",
+      "C"
+    ],
+    "turns": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "additional_model_or_network_calls": 0
+  },
+  "definitions": {
+    "ndcg": "Gain 2^grade-1; log2(rank+1) discount; ideal ranking from the persona-specific common pool across all arms and turns.",
+    "binary_relevance": "Grades 2 and 3 count as relevant.",
+    "precision_5": "Relevant among first five divided by five, also for short result lists.",
+    "rr_10": "Single-person reciprocal rank of first relevant item among first ten; zero if none; NA if no judgment universe.",
+    "mrr_10": "Equal-weight mean of available individual RR@10 values at a fixed arm/turn; n is shown.",
+    "missing": "Missing snapshots and undefined metrics are null/NA, never fabricated zeroes.",
+    "delta": "Within-person change from the same arm at T0; aggregate only complete pairs.",
+    "arm_differences": "Contemporaneous within-person paired arm differences; change differences require all four relevant values."
+  },
+  "limitations": [
+    "Two deliberately constructed synthetic personas; repeated snapshots are not independent participants.",
+    "One stochastic session per persona/arm; descriptive only, without significance tests, confidence intervals or general causal claims.",
+    "Codex-created profiles and judgments; no independent human gold standard.",
+    "Pool-relative nDCG, not an ideal ranking established over all 8,537 jobs.",
+    "These are ranking metrics, not measures of chat quality, usability, participant satisfaction or real-world employment outcomes.",
+    "Additional facts disclosed during chat can improve ranking; changes are not attributable to personality alone."
+  ],
+  "pools": [
+    {
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "status": "fully_judged",
+      "pool_size": 23,
+      "available_snapshots": 12,
+      "expected_snapshots": 12,
+      "pool_sha256": "6aabd0b41757364450731b2047273d4e33a2822879a1765d7b8777bd818eccde",
+      "judgments_sha256": "069f9f872574c75df51fc4343bcb621a487078cc88f8d76b411666bc44ad5515",
+      "grade_counts": {
+        "0": 4,
+        "1": 10,
+        "2": 7,
+        "3": 2
+      }
+    },
+    {
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "status": "fully_judged",
+      "pool_size": 24,
+      "available_snapshots": 12,
+      "expected_snapshots": 12,
+      "pool_sha256": "1014c73524e52a8b1efcb8472d0184371ad3e5184ee311c8e62dd52bfd2d979f",
+      "judgments_sha256": "246a2e92e92e2eea250070df460032a9c7d8f55082491144265ec568359501b0",
+      "grade_counts": {
+        "0": 7,
+        "1": 9,
+        "2": 7,
+        "3": 1
+      }
+    }
+  ],
+  "per_persona_arm_turn": [
+    {
+      "case_id": "P01-A",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "A",
+      "turn": 0,
+      "snapshot": "T0",
+      "status": "available",
+      "action": "search",
+      "ranking_count": 20,
+      "ranking": [
+        "829115",
+        "820065",
+        "837775",
+        "828195",
+        "837416",
+        "832418",
+        "861511",
+        "830863",
+        "843348",
+        "833009",
+        "824568",
+        "834700",
+        "835027",
+        "845512",
+        "857135",
+        "834695",
+        "860555",
+        "843131",
+        "816293",
+        "826611"
+      ],
+      "metrics": {
+        "ndcg_10": 0.657464164513403,
+        "ndcg_5": 0.5825058207625492,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-A",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "A",
+      "turn": 1,
+      "snapshot": "T1",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "820065",
+        "829115",
+        "837775",
+        "828195",
+        "837416",
+        "832418",
+        "861511",
+        "843348",
+        "830863",
+        "833009",
+        "824568",
+        "835027",
+        "845512",
+        "834700",
+        "860555",
+        "857135",
+        "834695",
+        "843131",
+        "816293",
+        "826611"
+      ],
+      "metrics": {
+        "ndcg_10": 0.600905336519061,
+        "ndcg_5": 0.5104644519947469,
+        "precision_5": 0.8,
+        "rr_10": 0.5
+      },
+      "delta_from_T0": {
+        "ndcg_10": -0.056558827994341976,
+        "ndcg_5": -0.07204136876780232,
+        "precision_5": 0.0,
+        "rr_10": -0.5
+      }
+    },
+    {
+      "case_id": "P01-A",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "A",
+      "turn": 2,
+      "snapshot": "T2",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "829115",
+        "837775",
+        "828195",
+        "832418",
+        "820065",
+        "830863",
+        "833009",
+        "837416",
+        "861511",
+        "835027",
+        "857135",
+        "845512",
+        "843348",
+        "824568",
+        "834700",
+        "834695",
+        "843131",
+        "816293",
+        "826611",
+        "860555"
+      ],
+      "metrics": {
+        "ndcg_10": 0.6853047466401572,
+        "ndcg_5": 0.6642249942900601,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.02784058212675422,
+        "ndcg_5": 0.0817191735275109,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-A",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "A",
+      "turn": 3,
+      "snapshot": "T3",
+      "status": "available",
+      "action": "answer",
+      "ranking_count": 20,
+      "ranking": [
+        "829115",
+        "837775",
+        "828195",
+        "832418",
+        "820065",
+        "830863",
+        "833009",
+        "837416",
+        "861511",
+        "835027",
+        "857135",
+        "845512",
+        "843348",
+        "824568",
+        "834700",
+        "834695",
+        "843131",
+        "816293",
+        "826611",
+        "860555"
+      ],
+      "metrics": {
+        "ndcg_10": 0.6853047466401572,
+        "ndcg_5": 0.6642249942900601,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.02784058212675422,
+        "ndcg_5": 0.0817191735275109,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-B",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "B",
+      "turn": 0,
+      "snapshot": "T0",
+      "status": "available",
+      "action": "search",
+      "ranking_count": 20,
+      "ranking": [
+        "837775",
+        "832418",
+        "820065",
+        "828195",
+        "843348",
+        "837416",
+        "824568",
+        "830863",
+        "829115",
+        "861511",
+        "833009",
+        "845150",
+        "857135",
+        "834700",
+        "845512",
+        "860555",
+        "849193",
+        "843131",
+        "844821",
+        "834695"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8921011862089984,
+        "ndcg_5": 0.7381941711356501,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-B",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "B",
+      "turn": 1,
+      "snapshot": "T1",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "837775",
+        "820065",
+        "828195",
+        "832418",
+        "843348",
+        "837416",
+        "824568",
+        "830863",
+        "829115",
+        "861511",
+        "833009",
+        "845150",
+        "857135",
+        "834700",
+        "845512",
+        "860555",
+        "849193",
+        "843131",
+        "844821",
+        "834695"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8720366226652034,
+        "ndcg_5": 0.7126370888430653,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": -0.020064563543794933,
+        "ndcg_5": -0.0255570822925848,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-B",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "B",
+      "turn": 2,
+      "snapshot": "T2",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "837775",
+        "820065",
+        "828195",
+        "843348",
+        "829115",
+        "824568",
+        "832418",
+        "830863",
+        "837416",
+        "861511",
+        "833009",
+        "845150",
+        "857135",
+        "845512",
+        "834700",
+        "849193",
+        "843131",
+        "834695",
+        "860555",
+        "844821"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8767104153419074,
+        "ndcg_5": 0.7126370888430653,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": -0.015390770867090953,
+        "ndcg_5": -0.0255570822925848,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-B",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "B",
+      "turn": 3,
+      "snapshot": "T3",
+      "status": "available",
+      "action": "answer",
+      "ranking_count": 20,
+      "ranking": [
+        "837775",
+        "820065",
+        "828195",
+        "843348",
+        "829115",
+        "824568",
+        "832418",
+        "830863",
+        "837416",
+        "861511",
+        "833009",
+        "845150",
+        "857135",
+        "845512",
+        "834700",
+        "849193",
+        "843131",
+        "834695",
+        "860555",
+        "844821"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8767104153419074,
+        "ndcg_5": 0.7126370888430653,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": -0.015390770867090953,
+        "ndcg_5": -0.0255570822925848,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-C",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "C",
+      "turn": 0,
+      "snapshot": "T0",
+      "status": "available",
+      "action": "search",
+      "ranking_count": 20,
+      "ranking": [
+        "828195",
+        "837775",
+        "843348",
+        "820065",
+        "845150",
+        "833009",
+        "829115",
+        "824568",
+        "837416",
+        "830863",
+        "861511",
+        "845512",
+        "834700",
+        "857135",
+        "835027",
+        "860555",
+        "843131",
+        "816293",
+        "826611",
+        "834695"
+      ],
+      "metrics": {
+        "ndcg_10": 0.7097904116052863,
+        "ndcg_5": 0.580158264338096,
+        "precision_5": 0.6,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-C",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "C",
+      "turn": 1,
+      "snapshot": "T1",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "828195",
+        "837775",
+        "820065",
+        "845150",
+        "833009",
+        "843348",
+        "824568",
+        "837416",
+        "829115",
+        "830863",
+        "861511",
+        "835027",
+        "834700",
+        "857135",
+        "845512",
+        "860555",
+        "843131",
+        "816293",
+        "826611",
+        "834695"
+      ],
+      "metrics": {
+        "ndcg_10": 0.6914056702460469,
+        "ndcg_5": 0.4825598132777089,
+        "precision_5": 0.4,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": -0.018384741359239398,
+        "ndcg_5": -0.09759845106038711,
+        "precision_5": -0.19999999999999996,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-C",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "C",
+      "turn": 2,
+      "snapshot": "T2",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "837775",
+        "828195",
+        "845150",
+        "833009",
+        "829115",
+        "820065",
+        "857135",
+        "835027",
+        "843348",
+        "824568",
+        "830863",
+        "845512",
+        "861511",
+        "837416",
+        "834700",
+        "843131",
+        "816293",
+        "826611",
+        "860555",
+        "834695"
+      ],
+      "metrics": {
+        "ndcg_10": 0.6961842828384002,
+        "ndcg_5": 0.654127441183686,
+        "precision_5": 0.6,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": -0.01360612876688616,
+        "ndcg_5": 0.07396917684559001,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P01-C",
+      "source_id": "P01",
+      "name": "Mara Seidel",
+      "arm": "C",
+      "turn": 3,
+      "snapshot": "T3",
+      "status": "available",
+      "action": "answer",
+      "ranking_count": 20,
+      "ranking": [
+        "837775",
+        "828195",
+        "845150",
+        "833009",
+        "829115",
+        "820065",
+        "857135",
+        "835027",
+        "843348",
+        "824568",
+        "830863",
+        "845512",
+        "861511",
+        "837416",
+        "834700",
+        "843131",
+        "816293",
+        "826611",
+        "860555",
+        "834695"
+      ],
+      "metrics": {
+        "ndcg_10": 0.6961842828384002,
+        "ndcg_5": 0.654127441183686,
+        "precision_5": 0.6,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": -0.01360612876688616,
+        "ndcg_5": 0.07396917684559001,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-A",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "A",
+      "turn": 0,
+      "snapshot": "T0",
+      "status": "available",
+      "action": "search",
+      "ranking_count": 20,
+      "ranking": [
+        "809805",
+        "819249",
+        "824340",
+        "827955",
+        "836504",
+        "857698",
+        "840943",
+        "835580",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "836732",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "815652",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8598118500777565,
+        "ndcg_5": 0.822714918800764,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-A",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "A",
+      "turn": 1,
+      "snapshot": "T1",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "827955",
+        "857698",
+        "809805",
+        "819249",
+        "824340",
+        "836504",
+        "840943",
+        "835580",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "836732",
+        "815652",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.9982450513569181,
+        "ndcg_5": 1.0,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.1384332012791616,
+        "ndcg_5": 0.17728508119923603,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-A",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "A",
+      "turn": 2,
+      "snapshot": "T2",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "827955",
+        "857698",
+        "809805",
+        "819249",
+        "824340",
+        "840943",
+        "835580",
+        "836504",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "836732",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "815652",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.9960726591281425,
+        "ndcg_5": 1.0,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.13626080905038596,
+        "ndcg_5": 0.17728508119923603,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-A",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "A",
+      "turn": 3,
+      "snapshot": "T3",
+      "status": "available",
+      "action": "answer",
+      "ranking_count": 20,
+      "ranking": [
+        "827955",
+        "857698",
+        "809805",
+        "819249",
+        "824340",
+        "840943",
+        "835580",
+        "836504",
+        "841353",
+        "857711",
+        "832477",
+        "818500",
+        "809753",
+        "836732",
+        "828525",
+        "852676",
+        "832882",
+        "858898",
+        "815652",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.9960726591281425,
+        "ndcg_5": 1.0,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.13626080905038596,
+        "ndcg_5": 0.17728508119923603,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-B",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "B",
+      "turn": 0,
+      "snapshot": "T0",
+      "status": "available",
+      "action": "search",
+      "ranking_count": 20,
+      "ranking": [
+        "809805",
+        "836504",
+        "819249",
+        "824340",
+        "827955",
+        "857698",
+        "835580",
+        "841353",
+        "841212",
+        "832477",
+        "857711",
+        "818500",
+        "852676",
+        "836732",
+        "809753",
+        "828525",
+        "858898",
+        "837309",
+        "823885",
+        "815652"
+      ],
+      "metrics": {
+        "ndcg_10": 0.810385237962916,
+        "ndcg_5": 0.809068375107377,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-B",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "B",
+      "turn": 1,
+      "snapshot": "T1",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "827955",
+        "819249",
+        "809805",
+        "824340",
+        "836504",
+        "857698",
+        "841353",
+        "835580",
+        "841212",
+        "832477",
+        "857711",
+        "858898",
+        "818500",
+        "852676",
+        "837309",
+        "809753",
+        "828525",
+        "836732",
+        "823885",
+        "815652"
+      ],
+      "metrics": {
+        "ndcg_10": 0.961646746323319,
+        "ndcg_5": 1.0,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.15126150836040309,
+        "ndcg_5": 0.19093162489262305,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-B",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "B",
+      "turn": 2,
+      "snapshot": "T2",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "809805",
+        "827955",
+        "836504",
+        "857698",
+        "841353",
+        "819249",
+        "824340",
+        "835580",
+        "841212",
+        "832477",
+        "857711",
+        "818500",
+        "852676",
+        "836732",
+        "809753",
+        "828525",
+        "858898",
+        "837309",
+        "823885",
+        "815652"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8719058855973021,
+        "ndcg_5": 0.8850729764703048,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.06152064763438614,
+        "ndcg_5": 0.07600460136292786,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-B",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "B",
+      "turn": 3,
+      "snapshot": "T3",
+      "status": "available",
+      "action": "answer",
+      "ranking_count": 20,
+      "ranking": [
+        "809805",
+        "827955",
+        "836504",
+        "857698",
+        "841353",
+        "819249",
+        "824340",
+        "835580",
+        "841212",
+        "832477",
+        "857711",
+        "818500",
+        "852676",
+        "836732",
+        "809753",
+        "828525",
+        "858898",
+        "837309",
+        "823885",
+        "815652"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8719058855973021,
+        "ndcg_5": 0.8850729764703048,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.06152064763438614,
+        "ndcg_5": 0.07600460136292786,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-C",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "C",
+      "turn": 0,
+      "snapshot": "T0",
+      "status": "available",
+      "action": "search",
+      "ranking_count": 20,
+      "ranking": [
+        "836504",
+        "827955",
+        "819249",
+        "809805",
+        "824340",
+        "835580",
+        "857698",
+        "841212",
+        "841353",
+        "809546",
+        "857711",
+        "832477",
+        "836732",
+        "852705",
+        "818500",
+        "809753",
+        "852676",
+        "828525",
+        "858898",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8651976116297456,
+        "ndcg_5": 0.8850729764703048,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-C",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "C",
+      "turn": 1,
+      "snapshot": "T1",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "836504",
+        "827955",
+        "819249",
+        "809805",
+        "824340",
+        "857698",
+        "835580",
+        "841353",
+        "841212",
+        "809546",
+        "857711",
+        "832477",
+        "836732",
+        "852705",
+        "818500",
+        "809753",
+        "852676",
+        "828525",
+        "858898",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.8697334933685263,
+        "ndcg_5": 0.8850729764703048,
+        "precision_5": 1.0,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.004535881738780723,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-C",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "C",
+      "turn": 2,
+      "snapshot": "T2",
+      "status": "available",
+      "action": "rerank",
+      "ranking_count": 20,
+      "ranking": [
+        "827955",
+        "835580",
+        "836504",
+        "809805",
+        "841353",
+        "857698",
+        "841212",
+        "819249",
+        "824340",
+        "809546",
+        "857711",
+        "832477",
+        "836732",
+        "852705",
+        "818500",
+        "809753",
+        "852676",
+        "828525",
+        "858898",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.9193661517747802,
+        "ndcg_5": 0.9017654777972859,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.05416854014503458,
+        "ndcg_5": 0.01669250132698108,
+        "precision_5": -0.19999999999999996,
+        "rr_10": 0.0
+      }
+    },
+    {
+      "case_id": "P06-C",
+      "source_id": "P06",
+      "name": "Nora Peters",
+      "arm": "C",
+      "turn": 3,
+      "snapshot": "T3",
+      "status": "available",
+      "action": "answer",
+      "ranking_count": 20,
+      "ranking": [
+        "827955",
+        "835580",
+        "836504",
+        "809805",
+        "841353",
+        "857698",
+        "841212",
+        "819249",
+        "824340",
+        "809546",
+        "857711",
+        "832477",
+        "836732",
+        "852705",
+        "818500",
+        "809753",
+        "852676",
+        "828525",
+        "858898",
+        "823885"
+      ],
+      "metrics": {
+        "ndcg_10": 0.9193661517747802,
+        "ndcg_5": 0.9017654777972859,
+        "precision_5": 0.8,
+        "rr_10": 1.0
+      },
+      "delta_from_T0": {
+        "ndcg_10": 0.05416854014503458,
+        "ndcg_5": 0.01669250132698108,
+        "precision_5": -0.19999999999999996,
+        "rr_10": 0.0
+      }
+    }
+  ],
+  "arm_turn_means": [
+    {
+      "arm": "A",
+      "turn": 0,
+      "snapshot": "T0",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.7586380072955797,
+        "ndcg_5": 0.7026103697816566,
+        "precision_5": 0.9,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "A",
+      "turn": 1,
+      "snapshot": "T1",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.7995751939379896,
+        "ndcg_5": 0.7552322259973734,
+        "precision_5": 0.9,
+        "mrr_10": 0.75
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.040937186642409806,
+        "ndcg_5": 0.052621856215716856,
+        "precision_5": 0.0,
+        "mrr_10": -0.25
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "A",
+      "turn": 2,
+      "snapshot": "T2",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.8406887028841499,
+        "ndcg_5": 0.83211249714503,
+        "precision_5": 0.9,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.08205069558857009,
+        "ndcg_5": 0.12950212736337346,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "A",
+      "turn": 3,
+      "snapshot": "T3",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.8406887028841499,
+        "ndcg_5": 0.83211249714503,
+        "precision_5": 0.9,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.08205069558857009,
+        "ndcg_5": 0.12950212736337346,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "B",
+      "turn": 0,
+      "snapshot": "T0",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.8512432120859572,
+        "ndcg_5": 0.7736312731215136,
+        "precision_5": 0.9,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "B",
+      "turn": 1,
+      "snapshot": "T1",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.9168416844942613,
+        "ndcg_5": 0.8563185444215327,
+        "precision_5": 0.9,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.06559847240830408,
+        "ndcg_5": 0.08268727130001913,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "B",
+      "turn": 2,
+      "snapshot": "T2",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.8743081504696048,
+        "ndcg_5": 0.798855032656685,
+        "precision_5": 0.9,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.023064938383647593,
+        "ndcg_5": 0.02522375953517153,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "B",
+      "turn": 3,
+      "snapshot": "T3",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.8743081504696048,
+        "ndcg_5": 0.798855032656685,
+        "precision_5": 0.9,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.023064938383647593,
+        "ndcg_5": 0.02522375953517153,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "C",
+      "turn": 0,
+      "snapshot": "T0",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.787494011617516,
+        "ndcg_5": 0.7326156204042005,
+        "precision_5": 0.8,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.0,
+        "ndcg_5": 0.0,
+        "precision_5": 0.0,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "C",
+      "turn": 1,
+      "snapshot": "T1",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.7805695818072866,
+        "ndcg_5": 0.6838163948740068,
+        "precision_5": 0.7,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": -0.006924429810229338,
+        "ndcg_5": -0.04879922553019356,
+        "precision_5": -0.09999999999999998,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "C",
+      "turn": 2,
+      "snapshot": "T2",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.8077752173065902,
+        "ndcg_5": 0.7779464594904859,
+        "precision_5": 0.7,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.02028120568907421,
+        "ndcg_5": 0.045330839086285546,
+        "precision_5": -0.09999999999999998,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    },
+    {
+      "arm": "C",
+      "turn": 3,
+      "snapshot": "T3",
+      "planned_personas": 2,
+      "available_snapshots": 2,
+      "metrics": {
+        "ndcg_10": 0.8077752173065902,
+        "ndcg_5": 0.7779464594904859,
+        "precision_5": 0.7,
+        "mrr_10": 1.0
+      },
+      "n_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      },
+      "mean_paired_delta_from_T0": {
+        "ndcg_10": 0.02028120568907421,
+        "ndcg_5": 0.045330839086285546,
+        "precision_5": -0.09999999999999998,
+        "mrr_10": 0.0
+      },
+      "n_paired_T0_by_metric": {
+        "ndcg_10": 2,
+        "ndcg_5": 2,
+        "precision_5": 2,
+        "mrr_10": 2
+      },
+      "paired_T0_source_ids_by_metric": {
+        "ndcg_10": [
+          "P01",
+          "P06"
+        ],
+        "ndcg_5": [
+          "P01",
+          "P06"
+        ],
+        "precision_5": [
+          "P01",
+          "P06"
+        ],
+        "mrr_10": [
+          "P01",
+          "P06"
+        ]
+      }
+    }
+  ],
+  "paired_arm_differences": [
+    {
+      "comparison": "B-A",
+      "arm": "B",
+      "reference_arm": "A",
+      "turn": 0,
+      "snapshot": "T0",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": 0.09260520479037743,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8921011862089984,
+              "reference_value": 0.657464164513403,
+              "difference": 0.23463702169559542
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.810385237962916,
+              "reference_value": 0.8598118500777565,
+              "difference": -0.04942661211484056
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": 0.07102090333985694,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.7381941711356501,
+              "reference_value": 0.5825058207625492,
+              "difference": 0.15568835037310091
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.809068375107377,
+              "reference_value": 0.822714918800764,
+              "difference": -0.013646543693387025
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8,
+              "reference_value": 0.8,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "B-A",
+      "arm": "B",
+      "reference_arm": "A",
+      "turn": 1,
+      "snapshot": "T1",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": 0.1172664905562717,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8720366226652034,
+              "reference_value": 0.600905336519061,
+              "difference": 0.27113128614614246
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.961646746323319,
+              "reference_value": 0.9982450513569181,
+              "difference": -0.036598305033599066
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.02466128576589427,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.020064563543794933,
+              "reference_change": -0.056558827994341976,
+              "difference": 0.03649426445054704
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.15126150836040309,
+              "reference_change": 0.1384332012791616,
+              "difference": 0.012828307081241497
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": 0.10108631842415922,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.7126370888430653,
+              "reference_value": 0.5104644519947469,
+              "difference": 0.20217263684831843
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.03006541508430227,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.0255570822925848,
+              "reference_change": -0.07204136876780232,
+              "difference": 0.04648428647521752
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.19093162489262305,
+              "reference_change": 0.17728508119923603,
+              "difference": 0.013646543693387025
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8,
+              "reference_value": 0.8,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.25,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 0.5,
+              "difference": 0.5
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.25,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": -0.5,
+              "difference": 0.5
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "B-A",
+      "arm": "B",
+      "reference_arm": "A",
+      "turn": 2,
+      "snapshot": "T2",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": 0.03361944758545493,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8767104153419074,
+              "reference_value": 0.6853047466401572,
+              "difference": 0.19140566870175024
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8719058855973021,
+              "reference_value": 0.9960726591281425,
+              "difference": -0.12416677353084038
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.058985757204922495,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.015390770867090953,
+              "reference_change": 0.02784058212675422,
+              "difference": -0.043231352993845173
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.06152064763438614,
+              "reference_change": 0.13626080905038596,
+              "difference": -0.07474016141599982
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.03325746448834499,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.7126370888430653,
+              "reference_value": 0.6642249942900601,
+              "difference": 0.048412094553005214
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8850729764703048,
+              "reference_value": 1.0,
+              "difference": -0.1149270235296952
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.10427836782820193,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.0255570822925848,
+              "reference_change": 0.0817191735275109,
+              "difference": -0.1072762558200957
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.07600460136292786,
+              "reference_change": 0.17728508119923603,
+              "difference": -0.10128047983630817
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8,
+              "reference_value": 0.8,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "B-A",
+      "arm": "B",
+      "reference_arm": "A",
+      "turn": 3,
+      "snapshot": "T3",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": 0.03361944758545493,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8767104153419074,
+              "reference_value": 0.6853047466401572,
+              "difference": 0.19140566870175024
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8719058855973021,
+              "reference_value": 0.9960726591281425,
+              "difference": -0.12416677353084038
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.058985757204922495,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.015390770867090953,
+              "reference_change": 0.02784058212675422,
+              "difference": -0.043231352993845173
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.06152064763438614,
+              "reference_change": 0.13626080905038596,
+              "difference": -0.07474016141599982
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.03325746448834499,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.7126370888430653,
+              "reference_value": 0.6642249942900601,
+              "difference": 0.048412094553005214
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8850729764703048,
+              "reference_value": 1.0,
+              "difference": -0.1149270235296952
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.10427836782820193,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.0255570822925848,
+              "reference_change": 0.0817191735275109,
+              "difference": -0.1072762558200957
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.07600460136292786,
+              "reference_change": 0.17728508119923603,
+              "difference": -0.10128047983630817
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.8,
+              "reference_value": 0.8,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-A",
+      "arm": "C",
+      "reference_arm": "A",
+      "turn": 0,
+      "snapshot": "T0",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": 0.028856004321936246,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.7097904116052863,
+              "reference_value": 0.657464164513403,
+              "difference": 0.05232624709188338
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8651976116297456,
+              "reference_value": 0.8598118500777565,
+              "difference": 0.00538576155198911
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": 0.030005250622543833,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.580158264338096,
+              "reference_value": 0.5825058207625492,
+              "difference": -0.0023475564244531677
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8850729764703048,
+              "reference_value": 0.822714918800764,
+              "difference": 0.062358057669540834
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.10000000000000003,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6,
+              "reference_value": 0.8,
+              "difference": -0.20000000000000007
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-A",
+      "arm": "C",
+      "reference_arm": "A",
+      "turn": 1,
+      "snapshot": "T1",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": -0.019005612130702898,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6914056702460469,
+              "reference_value": 0.600905336519061,
+              "difference": 0.09050033372698596
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8697334933685263,
+              "reference_value": 0.9982450513569181,
+              "difference": -0.12851155798839176
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.047861616452639144,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.018384741359239398,
+              "reference_change": -0.056558827994341976,
+              "difference": 0.03817408663510258
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.004535881738780723,
+              "reference_change": 0.1384332012791616,
+              "difference": -0.13389731954038087
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.07141583112336658,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.4825598132777089,
+              "reference_value": 0.5104644519947469,
+              "difference": -0.027904638717037966
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8850729764703048,
+              "reference_value": 1.0,
+              "difference": -0.1149270235296952
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.10142108174591041,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.09759845106038711,
+              "reference_change": -0.07204136876780232,
+              "difference": -0.0255570822925848
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.17728508119923603,
+              "difference": -0.17728508119923603
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.2,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.4,
+              "reference_value": 0.8,
+              "difference": -0.4
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.09999999999999998,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.19999999999999996,
+              "reference_change": 0.0,
+              "difference": -0.19999999999999996
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.25,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 0.5,
+              "difference": 0.5
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.25,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": -0.5,
+              "difference": 0.5
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-A",
+      "arm": "C",
+      "reference_arm": "A",
+      "turn": 2,
+      "snapshot": "T2",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": -0.03291348557755963,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6961842828384002,
+              "reference_value": 0.6853047466401572,
+              "difference": 0.010879536198243
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9193661517747802,
+              "reference_value": 0.9960726591281425,
+              "difference": -0.07670650735336226
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.06176948989949588,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.01360612876688616,
+              "reference_change": 0.02784058212675422,
+              "difference": -0.04144671089364038
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.05416854014503458,
+              "reference_change": 0.13626080905038596,
+              "difference": -0.08209226890535137
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.054166037654544086,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.654127441183686,
+              "reference_value": 0.6642249942900601,
+              "difference": -0.010097553106374058
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9017654777972859,
+              "reference_value": 1.0,
+              "difference": -0.09823452220271411
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.08417128827708792,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.07396917684559001,
+              "reference_change": 0.0817191735275109,
+              "difference": -0.00774999668192089
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.01669250132698108,
+              "reference_change": 0.17728508119923603,
+              "difference": -0.16059257987225495
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.2,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6,
+              "reference_value": 0.8,
+              "difference": -0.20000000000000007
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8,
+              "reference_value": 1.0,
+              "difference": -0.19999999999999996
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.09999999999999998,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": -0.19999999999999996,
+              "reference_change": 0.0,
+              "difference": -0.19999999999999996
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-A",
+      "arm": "C",
+      "reference_arm": "A",
+      "turn": 3,
+      "snapshot": "T3",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": -0.03291348557755963,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6961842828384002,
+              "reference_value": 0.6853047466401572,
+              "difference": 0.010879536198243
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9193661517747802,
+              "reference_value": 0.9960726591281425,
+              "difference": -0.07670650735336226
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.06176948989949588,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.01360612876688616,
+              "reference_change": 0.02784058212675422,
+              "difference": -0.04144671089364038
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.05416854014503458,
+              "reference_change": 0.13626080905038596,
+              "difference": -0.08209226890535137
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.054166037654544086,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.654127441183686,
+              "reference_value": 0.6642249942900601,
+              "difference": -0.010097553106374058
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9017654777972859,
+              "reference_value": 1.0,
+              "difference": -0.09823452220271411
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.08417128827708792,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.07396917684559001,
+              "reference_change": 0.0817191735275109,
+              "difference": -0.00774999668192089
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.01669250132698108,
+              "reference_change": 0.17728508119923603,
+              "difference": -0.16059257987225495
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.2,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6,
+              "reference_value": 0.8,
+              "difference": -0.20000000000000007
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8,
+              "reference_value": 1.0,
+              "difference": -0.19999999999999996
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.09999999999999998,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": -0.19999999999999996,
+              "reference_change": 0.0,
+              "difference": -0.19999999999999996
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-B",
+      "arm": "C",
+      "reference_arm": "B",
+      "turn": 0,
+      "snapshot": "T0",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": -0.06374920046844118,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.7097904116052863,
+              "reference_value": 0.8921011862089984,
+              "difference": -0.18231077460371203
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8651976116297456,
+              "reference_value": 0.810385237962916,
+              "difference": 0.05481237366682967
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.04101565271731311,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.580158264338096,
+              "reference_value": 0.7381941711356501,
+              "difference": -0.15803590679755408
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8850729764703048,
+              "reference_value": 0.809068375107377,
+              "difference": 0.07600460136292786
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.10000000000000003,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6,
+              "reference_value": 0.8,
+              "difference": -0.20000000000000007
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-B",
+      "arm": "C",
+      "reference_arm": "B",
+      "turn": 1,
+      "snapshot": "T1",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": -0.1362721026869746,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6914056702460469,
+              "reference_value": 0.8720366226652034,
+              "difference": -0.1806309524191565
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8697334933685263,
+              "reference_value": 0.961646746323319,
+              "difference": -0.09191325295479269
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.07252290221853341,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.018384741359239398,
+              "reference_change": -0.020064563543794933,
+              "difference": 0.001679822184555535
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.004535881738780723,
+              "reference_change": 0.15126150836040309,
+              "difference": -0.14672562662162236
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.1725021495475258,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.4825598132777089,
+              "reference_value": 0.7126370888430653,
+              "difference": -0.2300772755653564
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8850729764703048,
+              "reference_value": 1.0,
+              "difference": -0.1149270235296952
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.13148649683021268,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.09759845106038711,
+              "reference_change": -0.0255570822925848,
+              "difference": -0.07204136876780232
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.19093162489262305,
+              "difference": -0.19093162489262305
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.2,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.4,
+              "reference_value": 0.8,
+              "difference": -0.4
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.09999999999999998,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.19999999999999996,
+              "reference_change": 0.0,
+              "difference": -0.19999999999999996
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-B",
+      "arm": "C",
+      "reference_arm": "B",
+      "turn": 2,
+      "snapshot": "T2",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": -0.06653293316301456,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6961842828384002,
+              "reference_value": 0.8767104153419074,
+              "difference": -0.18052613250350724
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9193661517747802,
+              "reference_value": 0.8719058855973021,
+              "difference": 0.047460266177478116
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.002783732694573382,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.01360612876688616,
+              "reference_change": -0.015390770867090953,
+              "difference": 0.0017846421002047919
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.05416854014503458,
+              "reference_change": 0.06152064763438614,
+              "difference": -0.007352107489351556
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.020908573166199096,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.654127441183686,
+              "reference_value": 0.7126370888430653,
+              "difference": -0.05850964765937927
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9017654777972859,
+              "reference_value": 0.8850729764703048,
+              "difference": 0.01669250132698108
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.020107079551114015,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.07396917684559001,
+              "reference_change": -0.0255570822925848,
+              "difference": 0.09952625913817481
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.01669250132698108,
+              "reference_change": 0.07600460136292786,
+              "difference": -0.05931210003594678
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.2,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6,
+              "reference_value": 0.8,
+              "difference": -0.20000000000000007
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8,
+              "reference_value": 1.0,
+              "difference": -0.19999999999999996
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.09999999999999998,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": -0.19999999999999996,
+              "reference_change": 0.0,
+              "difference": -0.19999999999999996
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "comparison": "C-B",
+      "arm": "C",
+      "reference_arm": "B",
+      "turn": 3,
+      "snapshot": "T3",
+      "metrics": {
+        "ndcg_10": {
+          "mean_paired_difference": -0.06653293316301456,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6961842828384002,
+              "reference_value": 0.8767104153419074,
+              "difference": -0.18052613250350724
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9193661517747802,
+              "reference_value": 0.8719058855973021,
+              "difference": 0.047460266177478116
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.002783732694573382,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": -0.01360612876688616,
+              "reference_change": -0.015390770867090953,
+              "difference": 0.0017846421002047919
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.05416854014503458,
+              "reference_change": 0.06152064763438614,
+              "difference": -0.007352107489351556
+            }
+          ]
+        },
+        "ndcg_5": {
+          "mean_paired_difference": -0.020908573166199096,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.654127441183686,
+              "reference_value": 0.7126370888430653,
+              "difference": -0.05850964765937927
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.9017654777972859,
+              "reference_value": 0.8850729764703048,
+              "difference": 0.01669250132698108
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.020107079551114015,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.07396917684559001,
+              "reference_change": -0.0255570822925848,
+              "difference": 0.09952625913817481
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.01669250132698108,
+              "reference_change": 0.07600460136292786,
+              "difference": -0.05931210003594678
+            }
+          ]
+        },
+        "precision_5": {
+          "mean_paired_difference": -0.2,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 0.6,
+              "reference_value": 0.8,
+              "difference": -0.20000000000000007
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 0.8,
+              "reference_value": 1.0,
+              "difference": -0.19999999999999996
+            }
+          ],
+          "mean_difference_of_T0_changes": -0.09999999999999998,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": -0.19999999999999996,
+              "reference_change": 0.0,
+              "difference": -0.19999999999999996
+            }
+          ]
+        },
+        "mrr_10": {
+          "mean_paired_difference": 0.0,
+          "n_pairs": 2,
+          "pairs": [
+            {
+              "source_id": "P01",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_value": 1.0,
+              "reference_value": 1.0,
+              "difference": 0.0
+            }
+          ],
+          "mean_difference_of_T0_changes": 0.0,
+          "n_T0_change_pairs": 2,
+          "T0_change_pairs": [
+            {
+              "source_id": "P01",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            },
+            {
+              "source_id": "P06",
+              "arm_change": 0.0,
+              "reference_change": 0.0,
+              "difference": 0.0
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "input_sha256": {
+      "personas.json": "ed18961f58921a79fade7646b663b9b3305ff81b8f438766e08d0e7bec89005a",
+      "manifest.json": "51e6b479ff13a6aeb8e69107d4b654c1b5db278d598cd106bfdd5e59d6412944",
+      "cases/P01-A/T0.json": "7b093b0506d35e872bfd3387fa5ac3f2a2fcc5d143afdfcd1ae1b6bedf04015f",
+      "cases/P01-A/T1.json": "8c233070041bb75739721aab5b479fd1b3f7a239119376576143950853de2a63",
+      "cases/P01-A/T2.json": "a1876d2b467de934b403814ba44e2e0f7fe5300cd9f18f65e8851578e2333442",
+      "cases/P01-A/T3.json": "6f930912802c18cd37a8dc8ecf0f9e9aa7d4dbf404794dc314309364ddadd66e",
+      "cases/P01-B/T0.json": "c4b5c8c8d069b131f01c108c389d1dbf465b596e720df8850112ccf68d98e0d7",
+      "cases/P01-B/T1.json": "a5b1269e012122d7c2ecc1aade756b2cf7f730df39addc25ab439e44d2aa369e",
+      "cases/P01-B/T2.json": "6fbd967d010937222afb0fb008ac74e563cb354bd8b8051a9fe81660f85644f1",
+      "cases/P01-B/T3.json": "0bc985484b3bb04f803931616a3d1abe29a7171092cb5d4d336faa3385e84bc4",
+      "cases/P01-C/T0.json": "66074faef7c80cab62ff85d857b99a7afa574dfcdb7cdeaa5d43639f9d580b5b",
+      "cases/P01-C/T1.json": "fbf11bd821b378678cc51ed75cd10c50f4cdaaddcfa567dbcf4108dac742e70d",
+      "cases/P01-C/T2.json": "8bdf7f29b3c9ea384103a4e0664301e81a062176f118387db3fc273d08da770d",
+      "cases/P01-C/T3.json": "f39ad189a10d0f5ee7faa6ef28050588a1057a4ebb71c072dc3e15578d6c68c2",
+      "cases/P06-A/T0.json": "b7087d04207176707a4f42d905b812e66e1f942ced9c70f9cb27de6197970924",
+      "cases/P06-A/T1.json": "ec748aa3af51689ecfba5b9e58d7fab6771ac28d053b53ed4ac101a08dbd19ae",
+      "cases/P06-A/T2.json": "6635f917bc479dafe7e336d0b6d1c029833206db88f62a28dd4d55a4d813dc99",
+      "cases/P06-A/T3.json": "e53b6f5288aeeb72a2ba70083181cbc65d180f36b8cb866e9656f85259a5ac5f",
+      "cases/P06-B/T0.json": "781e489be37f2490fa0cb0f6728f6188e8268ab674e65f6abec805617eba8f6f",
+      "cases/P06-B/T1.json": "82a8cef5e3ccde2ab27efea87eab305e531e02fe75918cc72694ac822f073e58",
+      "cases/P06-B/T2.json": "66e64e6721329396f4608f17455022eb740544c6ccd8f651fcdfb5bcc0d8236d",
+      "cases/P06-B/T3.json": "813b60898abdb1f4600538eaf84485ddb2c4378038247ed95999e142f7ac6e35",
+      "cases/P06-C/T0.json": "3a3c20b4dfb7c677265b432eb2bf177d8181308ce206bc9d23fe269ec4536744",
+      "cases/P06-C/T1.json": "0d0389f9e0dbf51d388a4234ce4dee3f41713e2b289c79409c0588031a3ddc18",
+      "cases/P06-C/T2.json": "e67892cdb499a4f575fb9552a4a0857539a42037cd921904f851a213cb789156",
+      "cases/P06-C/T3.json": "068c9dc38f7d7b8e1575c9d46ef345631c7e038e6db11477d18998a40dbd1092",
+      "judge-pools/P01.json": "6aabd0b41757364450731b2047273d4e33a2822879a1765d7b8777bd818eccde",
+      "judgments/P01.json": "069f9f872574c75df51fc4343bcb621a487078cc88f8d76b411666bc44ad5515",
+      "judge-pools/P06.json": "1014c73524e52a8b1efcb8472d0184371ad3e5184ee311c8e62dd52bfd2d979f",
+      "judgments/P06.json": "246a2e92e92e2eea250070df460032a9c7d8f55082491144265ec568359501b0"
+    },
+    "analysis_source_sha256": {
+      "summarize.py": "36844b8371a3e3ace244c3c317df2313b0f4680ac18b004c6636fba5f5435cc2",
+      "metrics.py": "f37dabf73d2ee818475aab6c0942fa7b8c8aeba851d958059ba7d49fb1165c7f"
+    }
+  }
+}

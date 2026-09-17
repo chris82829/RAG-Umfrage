@@ -1,76 +1,57 @@
-# Offline-Auswertung der DIANA-Konferenzstudie
+# Forschungsauswertung von DIANA
 
-Die Skripte arbeiten ausschließlich mit lokalen Dateien. Sie greifen weder auf
-den Server noch auf OpenAI zu. Forschungsabhängigkeiten bleiben von der Anwendung
-getrennt. Vom Projektverzeichnis aus:
+Der vollständige Lauf und die erste Übersicht für **0, 1, 2 und 3 Nachrichten**
+stehen im [Ergebnisbericht](persona-study-2026-09-17/RESULTS.md), mit
+[Einzelwerten](persona-study-2026-09-17/run/analysis/report.md) und
+[Grafik](persona-study-2026-09-17/run/analysis/ranking-verlauf.png).
+Alle Zeitpunkte werden gegen das vollständige, unveränderte Persona-Wissen bewertet.
 
-```bash
-python3.12 -m venv research/.venv
-research/.venv/bin/python -m pip install -r research/requirements.txt
-```
+Der neue [deskriptive Zwei-Personen-Pilot](persona-study-2026-09-17/PROTOCOL.md)
+führt **dieselben zwei fiktiven Nutzerinnen Mara Seidel und Nora Peters in
+A, B und C** durch das System. Je Person und Variante entstehen eine initiale
+Suche und drei adaptive Nachrichten: **sechs vollständig ausgeführte Sitzungen, 24
+Ranglistensnapshots, zwei Personen**.
 
-## Primären Vergleich berechnen
+Die kanonischen Eingaben stehen in
+`persona-study-2026-09-17/selected-personas.json`. A nutzt die feste
+Standardberatung. B nutzt für beide Personen unverändert den Top-Berufsberater.
+C verwendet den vorab entworfenen Einstiegscoach für Mara beziehungsweise
+die Umstiegsberatung für Nora. Mara sucht in der Webentwicklung; Nora in
+der nichttechnischen Personaladministration. Innerhalb jeder Person erhalten alle Varianten dasselbe
+initiale Profil und dieselben drei Informationsetappen. Codex passt die
+tatsächliche Formulierung an reale Antworten an und protokolliert sie;
+zusätzliche Fakten sind nicht erlaubt.
 
-In der Verwaltung den Numiqo-CSV-Export **einschließlich unvollständiger Teilnahmen**
-herunterladen. Deutsche oder technische Spaltennamen werden erkannt. Beispiel:
+Codex beurteilt je Person einen gemeinsamen Pool ihrer gefundenen Stellen selbst,
+ohne zusätzliche Simulator- oder Bewertungs-API. nDCG@10, nDCG@5, Precision@5 und
+RR@10 werden je Person/Variante/Zeitpunkt berechnet. MRR@10 mittelt die beiden
+RR@10-Werte je Variante und Zeitpunkt; 24 Snapshots sind keine 24 unabhängigen
+Teilnehmer. Fallzahlen und fehlende Ergebnisse werden offengelegt.
+Die zunächst auf **3 USD** gesetzte Obergrenze wurde nach T1 ausdrücklich vom
+Nutzer auf **4,50 USD insgesamt** angehoben. Originaldateien und Genehmigung
+sind im Lauf unter `amendments/01-budget-authorization` erhalten. Alle 42
+Systemaufrufe sind erfolgreich abgeschlossen; die konservativ nach Standardpreisen
+berechneten Tokenkosten betragen **3,6641125 USD**. Weitere API-Aufrufe sind
+nicht nötig. Die Ergebnisse sind deskriptive
+Hinweise, kein Nachweis allgemeiner Überlegenheit einer Variante.
 
-```bash
-research/.venv/bin/python research/analyze_primary.py /pfad/zur/diana_numiqo.csv --output /pfad/zum/ergebnis.json
-```
+Zwölf Personen und größere Laufpläne wurden zunächst vorbereitet. Diese Umfänge
+sowie zwischenzeitliche kleinere Entwürfe wurden vor bezahlten Aufrufen dieses
+Piloten auf Nutzerwunsch ersetzt. Die Dateien unter
+`persona-study-2026-09-17/personas/` bleiben als **Vorbereitung** erhalten; nur P01
+und P06 werden tatsächlich in den drei Varianten ausgeführt. Die zwei finalen
+Personendokumente, Systemverläufe, Einzelurteile und Metriken werden gemeinsam
+unter `persona-study-2026-09-17/` gespeichert.
 
-Ohne `--output` erscheint JSON im Terminal. Bestehende Ausgabedateien werden nie
-überschrieben. Die Analyse berücksichtigt ausschließlich `diana-abc-v3` /
-`diana-v10` und alle gültigen Primärantworten von 1–10, auch aus Teilantworten.
-Die zufällige Zuteilung entscheidet: C bleibt C, auch bei unveränderter Vorlage.
+Alle bisherigen Forschungs-Evaluationen sowie die bisherigen automatisierten
+Funktionstests wurden am 17.09.2026 auf ausdrücklichen Wunsch aus dem Projekt
+entfernt. Die geprüfte Sicherung liegt außerhalb des Projekts in
+`../DIANA-Archiv/alte-tests-2026-09-17.tar.gz` (bezogen auf das Projektverzeichnis).
+Der unveränderte Entfernungsnachweis steht in
+`persona-study-2026-09-17/old-tests-removed.json`. Historische Resultate werden
+nicht mit dem neuen Lauf vermischt.
 
-Die frühere faire Kohorte V9 wird nur ausdrücklich und getrennt ausgewertet:
-
-```bash
-research/.venv/bin/python research/analyze_primary.py /pfad/zur/diana_numiqo.csv --cohort v9 --output /pfad/zum/ergebnis_v9.json
-```
-
-`--cohort v10` ist die Voreinstellung für `diana-abc-v3` / `diana-v10`.
-`--cohort v9` wählt ausschließlich `diana-abc-v2` / `diana-v9` und deren
-`v9_system_nutzen`- bzw. `v9_system_usefulness`-Spalte. Ein gemeinsamer Export darf
-beide enthalten; die Analyse mischt sie niemals. Ohne Daten der ausdrücklich
-gewählten Kohorte wird kein Ergebnis geschrieben.
-
-Ausgegeben werden Gruppendeskriptivwerte A/B/C, fehlende und ungültige Primärwerte
-sowie **C minus B** für `system_usefulness`: Welch-Test, 95%-Konfidenzintervall und
-Hedges g. IDs und Freitexte erscheinen nicht im Ergebnis. Doppelte Teilnahme-IDs
-innerhalb der Zielkohorte führen zum Abbruch; bei zu kleinen Gruppen oder beidseitig
-fehlender Streuung wird keine künstliche Inferenz ausgegeben. Nicht exportierte,
-gelöschte oder widerrufene Daten kann das Skript nicht rekonstruieren.
-
-Die quasi-metrische Behandlung des 1–10-Einzelitems und die zusätzliche
-Varianzannahme des standardisierten Effekts sind im Skript dokumentiert.
-Analyseplan und Einschränkungen: [STUDY-PROTOCOL.md](../STUDY-PROTOCOL.md).
-
-## Stichprobengröße planen
-
-```bash
-research/.venv/bin/python research/plan_sample_size.py
-research/.venv/bin/python research/plan_sample_size.py --output /pfad/zum/stichprobenplan.json
-```
-
-Die nichtzentrale t-Rechnung verwendet zweiseitig α=0,05, Power 80% und gleiche
-Gruppengrößen. Für angenommene Effekte d=0,30/0,40/0,50 ergeben sich
-176/100/64 gültige Primärantworten je Gruppe. Die 25%-Ausfallreserve wird sowohl
-für die Gesamtzahl als auch separat mit ganzzahliger Rundung je Gruppe ausgewiesen.
-Das Skript legt keine Rekrutierung oder Stoppregel im System fest.
-
-## Synthetische Prüfungen
-
-```bash
-research/.venv/bin/python -m unittest discover -s research -p 'test_analysis.py' -v
-```
-
-Die Tests verwenden ausschließlich künstliche Daten. Ohne Forschungsabhängigkeiten
-werden sie übersprungen; die normalen Backendtests benötigen kein SciPy.
-Forschungsdaten und Ergebnisse außerhalb des Git-Repositories aufbewahren.
-
-## Technischer Ranking-Check
-
-Der [gesonderte Plan](RANKING-EVALUATION-PLAN.md) beschreibt einen späteren Test
-mit konstanten Profilen/Stellen, gezielt geänderten Prioritäten, Wiederholungen
-und unabhängiger Inhaltsprüfung. Er wurde nicht ausgeführt oder terminiert.
+Die separaten Werkzeuge für echte Umfrageantworten bleiben erhalten:
+`analyze_primary.py` berechnet den vorab definierten Nutzerstudienvergleich,
+`plan_sample_size.py` unterstützt die Stichprobenplanung. Abhängigkeiten stehen
+in `requirements.txt`. Beide Skripte arbeiten lokal und führen keine KI-Aufrufe aus.

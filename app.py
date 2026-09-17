@@ -28,6 +28,7 @@ from advisor import AdvisorConfig, resolve_advisor
 from persona_mlds import advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_usage import StudyPersonalityUsage, normalize_selection
 from study_metrics import StudyOperationMetrics
+from study_chat_limit import StudyChatLimit, ChatMessageLimit, ChatReservationExpired, MAX_USER_CHAT_MESSAGES
 from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
 from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
@@ -155,9 +156,8 @@ def welcome_message(result):
     total = len(jobs)
     if resolve_advisor(result.get('advisor'))['neutral']:
         return 'Hallo ich bin dein KI Assistent'
-    # Match the initial visibility policy in frontend/score-visibility.js.
-    visible = sum(type(job.get('match', {}).get('score')) is int
-                  and 70 <= job['match']['score'] <= 100 for job in jobs)
+    # Match the initial visibility policy in frontend/result-visibility.js.
+    visible = min(total, 10)
     if not total:
         overview = 'Ich habe aktuell keine Stellen zur gewählten Stellenart gefunden.'
         invitation = 'Hier kannst du Rückfragen stellen und deine Suche gemeinsam anpassen.'
@@ -166,11 +166,9 @@ def welcome_message(result):
         overview = f'{found} gefunden und bewertet.'
         if visible == total:
             overview += ' Du findest alle links in der Ergebnisübersicht.'
-        elif visible:
-            overview += f' Links siehst du {visible}; die übrigen kannst du einblenden.'
         else:
-            overview += (' Aktuell erreicht keine 70 Punkte. '
-                         'Du kannst die Stellen links trotzdem einblenden.')
+            overview += (f' Links siehst du die ersten {visible}; '
+                         'weitere findest du über „Weitere Stellen anzeigen“.')
         invitation = 'Hier kannst du Rückfragen stellen und deine Suche verfeinern.'
     # Counts stay authoritative; the actual advice leads before the short UI hint.
     return f"Hallo! {overview}\n\n{result['assistant_message']}\n\n{invitation}"
@@ -214,6 +212,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     privacy = PrivacyStore(db_path)
     personality_usage = StudyPersonalityUsage(db_path)
     operation_metrics = StudyOperationMetrics(db_path)
+    chat_limit = StudyChatLimit(db_path)
     notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
     releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
     surveys = SurveyStore(db_path)
@@ -229,7 +228,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     performance_logger.setLevel(logging.INFO)
     language_model = llm or OpenAIService(api_key=app.config['OPENAI_API_KEY'],
                                         performance_logger=performance_logger)
-    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine, personality_usage=personality_usage, operation_metrics=operation_metrics,
+    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine, personality_usage=personality_usage, operation_metrics=operation_metrics, chat_limit=chat_limit,
                           llm_service=language_model, survey_store=surveys, privacy_store=privacy, study_releases=releases)
 
     @contextmanager
@@ -327,7 +326,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         finally:
             operation.close()
 
-    def consent_link(kind, *, selection=None, completed=False, timings=None):
+    def consent_link(kind, *, selection=None, completed=False, timings=None, chat_reservation=None):
         if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return None
         token = consent_token()
@@ -339,6 +338,8 @@ def create_app(config=None, *, retriever=None, llm=None):
             if testing:
                 return
             if kind == 'chat':
+                if chat_reservation and chat_reservation.get('id'):
+                    chat_limit.finish(digest, chat_reservation['id'], db)
                 releases.mark_run(digest, db)
                 record_metrics(db, digest, timings, True)
                 if selection is not None:
@@ -346,6 +347,40 @@ def create_app(config=None, *, retriever=None, llm=None):
             elif not db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (record_id,)).fetchone():
                 releases.capture_response(digest, record_id, db, completed=completed)
         return attach
+
+    def chat_usage(state):
+        session_used = state.get('_user_chat_count', sum(message.get('role') == 'user' for message in state.get('messages', [])))
+        if test_arm():
+            # Only an actual consent for this exact standalone test can bypass
+            # the allowance; the client-supplied header alone is insufficient.
+            privacy.require(consent_token(), request_notice())
+            return dict(limit=None, used=session_used, pending=0, remaining=None)
+        if not app.config['PRIVACY_REQUIRED']:
+            return dict(limit=MAX_USER_CHAT_MESSAGES, used=session_used, pending=0,
+                        remaining=max(0, MAX_USER_CHAT_MESSAGES - session_used))
+        with surveys.connect() as db:
+            db.execute('BEGIN')
+            digest = privacy.require(consent_token(), request_notice(), db)
+            return chat_limit.snapshot(digest, db)
+
+    def limited_chat_operation(operation, reservation, state):
+        try:
+            if test_arm():
+                privacy.require(consent_token(), request_notice())
+            elif app.config['PRIVACY_REQUIRED']:
+                with surveys.connect() as db:
+                    db.execute('BEGIN IMMEDIATE')
+                    digest = privacy.require(consent_token(), request_notice(), db)
+                    reservation['id'] = chat_limit.reserve(digest, db)
+            elif chat_usage(state)['remaining'] == 0:
+                raise ChatMessageLimit(chat_usage(state))
+            return (yield from operation)
+        finally:
+            try:
+                operation.close()
+            finally:
+                if reservation.get('id'):
+                    chat_limit.release(reservation['id'])
 
     @app.before_request
     def require_consent():
@@ -695,10 +730,10 @@ def create_app(config=None, *, retriever=None, llm=None):
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
             result['assistant_message'] = welcome_message(result)
             state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None,
-                     '_experiment_id': assigned.get('experiment_id') if assigned else None, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
+                     '_experiment_id': assigned.get('experiment_id') if assigned else None, '_user_chat_count': 0, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
             session_id = sessions.create(state, before_save=consent_link('chat', selection=selection, timings=timings))
-            return {'session_id': session_id, **public_state(state)}
+            return {'session_id': session_id, **public_state(state), 'chat_usage': chat_usage(state)}
 
         return operation_response(measured_operation(operation(), timings), status=201)
 
@@ -713,7 +748,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         if outdated_neutral_presentation(saved[0]):
             return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
         return jsonify(session_id=session_id, **public_state({**saved[0],
-                       'advisor': saved[0].get('advisor', AdvisorConfig().model_dump())}))
+                       'advisor': saved[0].get('advisor', AdvisorConfig().model_dump())}),
+                       chat_usage=chat_usage(saved[0]))
 
     @app.delete('/api/sessions/<session_id>')
     def delete_session(session_id):
@@ -745,6 +781,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         if error:
             return error
         timings = {'chat': time.monotonic()} if body.message else {}
+        reservation = {}
         def operation():
             advisor = selected_advisor
             applied_selection = selected_selection
@@ -854,11 +891,13 @@ def create_app(config=None, *, retriever=None, llm=None):
             messages.append({'role': 'assistant', 'content': result['assistant_message'],
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
             new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), '_personality_policy': state.get('_personality_policy'),
-                         '_experiment_id': state.get('_experiment_id'), 'messages': messages[-100:]}
-            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection, timings=timings))
-            return {'session_id': body.session_id, **public_state(new_state)}
+                         '_experiment_id': state.get('_experiment_id'), 'messages': messages[-100:],
+                         '_user_chat_count': state.get('_user_chat_count', sum(message.get('role') == 'user' for message in state['messages'])) + int(bool(body.message))}
+            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection, timings=timings, chat_reservation=reservation))
+            return {'session_id': body.session_id, **public_state(new_state), 'chat_usage': chat_usage(new_state)}
 
-        return operation_response(measured_operation(operation(), timings))
+        measured = measured_operation(operation(), timings)
+        return operation_response(limited_chat_operation(measured, reservation, state) if body.message else measured)
 
     @app.errorhandler(ValidationError)
     def bad_input(error):
@@ -875,6 +914,16 @@ def create_app(config=None, *, retriever=None, llm=None):
     @app.errorhandler(ConsentRequired)
     def consent_error(error):
         return error_response({'code': 'consent_required', 'message': 'Bitte prüfe die Datenschutzhinweise und deine Einwilligung. Die Studie muss dafür freigegeben sein.'}, 428)
+
+    @app.errorhandler(ChatMessageLimit)
+    def chat_limit_error(error):
+        return error_response({'code': 'chat_message_limit', 'message': str(error),
+                               'chat_usage': error.usage}, 409)
+
+    @app.errorhandler(ChatReservationExpired)
+    def chat_reservation_expired(error):
+        return error_response({'code': 'chat_reservation_expired',
+                               'message': 'Die Chatantwort hat zu lange gedauert. Deine Nachricht wurde nicht gezählt. Bitte versuche es erneut.'}, 409)
 
     @app.errorhandler(LLMUnavailable)
     def llm_error(error):

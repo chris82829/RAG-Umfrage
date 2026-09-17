@@ -1,0 +1,8 @@
+{
+  "case_id": "P06-C",
+  "turn": 1,
+  "previous_snapshot_sha256": "3a3c20b4dfb7c677265b432eb2bf177d8181308ce206bc9d23fe269ec4536744",
+  "disclosed_stage": 1,
+  "adaptation_note": "Antwortet auf die tatsächliche T0-Rückfrage nach HR-Tagesgeschäft oder Spezialisierung. Nennt ausschließlich die identischen Schwerpunkte und die nachrangige vertriebsorientierte Personalvermittlung aus Etappe 1; keine zusätzlichen Präferenzen oder späteren Fakten. Fordert ausdrücklich eine Neusortierung.",
+  "message": "Zu deiner Rückfrage: Mich interessieren vor allem interne Personaladministration, Mitarbeitendenbetreuung und Onboarding. Vertriebsorientierte Personalvermittlung passt weniger zu meinem Ziel. Bitte sortiere die Teilzeitstellen entsprechend neu."
+}

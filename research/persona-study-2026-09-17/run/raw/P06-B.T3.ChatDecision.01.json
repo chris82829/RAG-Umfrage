@@ -1,0 +1,342 @@
+{
+  "task": "P06-B.T3.ChatDecision.01",
+  "started_utc": "2026-09-17T07:13:11.242467+00:00",
+  "ok": true,
+  "request_sha256": "b72c9ec9bd0c50f9608f58bea2d7924f1bea4fa14c362d5ddd915991c3ffe116",
+  "http_status": 200,
+  "response": {
+    "id": "resp_05af400d4a41fd33016aab9307a66c87d29fe18fc3edd0b6aa",
+    "object": "response",
+    "created_at": 1789629191,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1789629196,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 6000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_05af400d4a41fd33016aab93086cc487d283ca1a5812b2a4df",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"action\":\"answer\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":null,\"clear_max_hours\":false}},\"assistant_message\":\"Ja, als Einstieg wirkt die Stelle an der Technischen Hochschule Augsburg realistisch. Ihre stärkste Verbindung ist die kaufmännische Sachbearbeitung: Das passt direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und dem Erstellen von Vorlagen. Auch MS Office, Excel, Ihre Organisationspraxis und Ihr Onboarding-Projekt stützen den Einstieg, weil die Stelle ausdrücklich administrative Aufgaben und HR-Projekte nennt.\\n\\nDer wichtigste offene Punkt liegt nicht in SAP HCM oder Entgeltabrechnung, denn SAP ist hier nur als Plus genannt und eigenständige Abrechnung wird nicht verlangt. Klären sollten Sie vor allem, wie groß der Anteil von Recruiting und Personalcontrolling im Alltag ist und ob die Einarbeitung für diese Teile konkret aussieht. Ein guter nächster Schritt wäre, in der Bewerbung Ihre sieben Jahre strukturierte Sachbearbeitung plus das Onboarding-Projekt kurz mit Datengenauigkeit, Dokumentation und diskreter Kommunikation zu verbinden.\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "ChatDecision",
+        "schema": {
+          "$defs": {
+            "FilterPatch": {
+              "additionalProperties": false,
+              "properties": {
+                "employment_types": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "werkstudent",
+                          "praktikum",
+                          "vollzeit",
+                          "teilzeit",
+                          "ausbildung",
+                          "trainee",
+                          "abschlussarbeit",
+                          "sonstige"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 8,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Employment Types"
+                },
+                "locations": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 10,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Locations"
+                },
+                "remote": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "onsite",
+                          "hybrid",
+                          "remote",
+                          "unknown"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Remote"
+                },
+                "max_hours": {
+                  "anyOf": [
+                    {
+                      "exclusiveMinimum": 0,
+                      "maximum": 80,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Max Hours"
+                },
+                "clear_max_hours": {
+                  "title": "Clear Max Hours",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "employment_types",
+                "locations",
+                "remote",
+                "max_hours",
+                "clear_max_hours"
+              ],
+              "title": "FilterPatch",
+              "type": "object"
+            },
+            "ProfilePatch": {
+              "additionalProperties": false,
+              "properties": {
+                "query": {
+                  "anyOf": [
+                    {
+                      "maxLength": 3000,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Query"
+                },
+                "skills": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 60,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Skills"
+                },
+                "preferences": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 30,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences"
+                },
+                "filters": {
+                  "$ref": "#/$defs/FilterPatch"
+                }
+              },
+              "required": [
+                "query",
+                "skills",
+                "preferences",
+                "filters"
+              ],
+              "title": "ProfilePatch",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "answer",
+                "rerank",
+                "search"
+              ],
+              "title": "Action",
+              "type": "string"
+            },
+            "profile_patch": {
+              "$ref": "#/$defs/ProfilePatch"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "action",
+            "profile_patch",
+            "assistant_message"
+          ],
+          "title": "ChatDecision",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 33122,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3840
+      },
+      "output_tokens": 258,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 33380
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 33122,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 3840
+    },
+    "output_tokens": 258,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 33380
+  },
+  "result": {
+    "action": "answer",
+    "profile_patch": {
+      "query": null,
+      "skills": null,
+      "preferences": null,
+      "filters": {
+        "employment_types": null,
+        "locations": null,
+        "remote": null,
+        "max_hours": null,
+        "clear_max_hours": false
+      }
+    },
+    "assistant_message": "Ja, als Einstieg wirkt die Stelle an der Technischen Hochschule Augsburg realistisch. Ihre stärkste Verbindung ist die kaufmännische Sachbearbeitung: Das passt direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und dem Erstellen von Vorlagen. Auch MS Office, Excel, Ihre Organisationspraxis und Ihr Onboarding-Projekt stützen den Einstieg, weil die Stelle ausdrücklich administrative Aufgaben und HR-Projekte nennt.\n\nDer wichtigste offene Punkt liegt nicht in SAP HCM oder Entgeltabrechnung, denn SAP ist hier nur als Plus genannt und eigenständige Abrechnung wird nicht verlangt. Klären sollten Sie vor allem, wie groß der Anteil von Recruiting und Personalcontrolling im Alltag ist und ob die Einarbeitung für diese Teile konkret aussieht. Ein guter nächster Schritt wäre, in der Bewerbung Ihre sieben Jahre strukturierte Sachbearbeitung plus das Onboarding-Projekt kurz mit Datengenauigkeit, Dokumentation und diskreter Kommunikation zu verbinden."
+  },
+  "raw_text": "{\"action\":\"answer\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":null,\"clear_max_hours\":false}},\"assistant_message\":\"Ja, als Einstieg wirkt die Stelle an der Technischen Hochschule Augsburg realistisch. Ihre stärkste Verbindung ist die kaufmännische Sachbearbeitung: Das passt direkt zu operativem HR-Tagesgeschäft, Dateneingabe, Dokumentationspflege und dem Erstellen von Vorlagen. Auch MS Office, Excel, Ihre Organisationspraxis und Ihr Onboarding-Projekt stützen den Einstieg, weil die Stelle ausdrücklich administrative Aufgaben und HR-Projekte nennt.\\n\\nDer wichtigste offene Punkt liegt nicht in SAP HCM oder Entgeltabrechnung, denn SAP ist hier nur als Plus genannt und eigenständige Abrechnung wird nicht verlangt. Klären sollten Sie vor allem, wie groß der Anteil von Recruiting und Personalcontrolling im Alltag ist und ob die Einarbeitung für diese Teile konkret aussieht. Ein guter nächster Schritt wäre, in der Bewerbung Ihre sieben Jahre strukturierte Sachbearbeitung plus das Onboarding-Projekt kurz mit Datengenauigkeit, Dokumentation und diskreter Kommunikation zu verbinden.\"}",
+  "finished_utc": "2026-09-17T07:13:16.643338+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 153387,
+    "input_token_bound": 161579,
+    "max_tokens": 6000,
+    "reserved_usd": "0.4939475",
+    "task_id": "P06-B.T3.ChatDecision.01",
+    "post_number": 38,
+    "status": "settled",
+    "charged_usd": "0.086675",
+    "usage": {
+      "input_tokens": 33122,
+      "output_tokens": 258,
+      "total_tokens": 33380
+    },
+    "created_utc": "2026-09-17T07:13:11.239240+00:00",
+    "settled_utc": "2026-09-17T07:13:16.645167+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

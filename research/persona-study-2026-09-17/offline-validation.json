@@ -1,0 +1,20 @@
+{
+  "validated_utc": "2026-09-17T07:02:09.135688+00:00",
+  "purpose": "Runner integration check, not research results",
+  "synthetic_sessions": 6,
+  "snapshots": 24,
+  "mock_provider_responses": 48,
+  "real_provider_requests": 0,
+  "network_disabled": true,
+  "checks": [
+    "A/B/C arm enforcement",
+    "test consent",
+    "private state and ownership restoration",
+    "new search, rerank, answer paths",
+    "three user messages per session",
+    "unchanged ranking for answer",
+    "common job pools",
+    "3 USD / 80 POST budget guard"
+  ],
+  "result": "passed"
+}

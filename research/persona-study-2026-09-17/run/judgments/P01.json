@@ -1,0 +1,251 @@
+{
+  "source_id": "P01",
+  "pool_sha256": "6aabd0b41757364450731b2047273d4e33a2822879a1765d7b8777bd818eccde",
+  "assessor": "Codex",
+  "assessment_notes": [
+    "Alle 23 vollständigen Anzeigen dieses finalen Pools wurden zusammen mit dem eingefrorenen vollständigen Bedarf und der Rubrik gelesen. Keine Rangfolgen, Systemantworten, Scores oder Varianteninformationen wurden für die Bewertung eingesehen.",
+    "Gleiches Urteil je Job-ID für sämtliche zwölf Messpunkte. Inhaltlich ähnliche Synpulse- und Qupe-Anzeigen wurden je eigener ID bewertet und erhalten bei gleichen Kernanforderungen gleiche Stufen; es wurde nicht nachträglich dedupliziert.",
+    "Explizite formale Zugangskonflikte (mindestens viertes Semester beziehungsweise laufender Master) erhalten Stufe 0. Große, aber grundsätzlich erlernbare fachliche Lücken erhalten Stufe 1. Fehlende Profilnachweise allein sind keine bewiesene Unfähigkeit.",
+    "Orte und Stunden sind weich. Erfasste Stundenbereiche sind keine individuelle Vertragszusage; bei abweichender Beschreibung hat der explizite Anzeigentext Vorrang. Unbekannte Sprache, Betreuungsteilnahme oder Fähigkeiten werden nicht positiv erfunden.",
+    "Die Urteile sind eine einzelne KI-Beurteilung ohne menschliche Validierung. Abgrenzungen insbesondere zwischen Stufe 1/2 und 2/3 enthalten Ermessensspielraum. Es wurden keine zusätzlichen Bewertungs-API-Aufrufe ausgeführt."
+  ],
+  "judgments": [
+    {
+      "job_id": "832418",
+      "relevance": 2,
+      "reason": "Planung, Umsetzung und Pflege von Webseiten passen zu Maras kleinem HTML/CSS/JavaScript-Projekt. Die Team-Begleitung ist ausdrücklich zugesagt, Nürnberg passt zum Ortswunsch. Das vierte Semester ist nur als bevorzugter Stand formuliert und schließt ihr zweites Semester nicht aus. Der erfasste Umfang von 15–20 Stunden liegt jedoch über ihren 10–12 Stunden; Designkompetenz über ihr Studienprojekt hinaus ist offen. Deshalb gute fachliche Passung mit einem konkreten zeitlichen Kompromiss, keine vollständig starke Gesamtpassung.",
+      "evidence": [
+        "Planung und Realisierung von Webseiten",
+        "Unser Team begleitet Dich und bringt Dir das kaufmännische, technische und organisatorische Knowhow bei.",
+        "Bestenfalls bist du im 4. Semester",
+        "Kenntnisse in HTML und CSS"
+      ]
+    },
+    {
+      "job_id": "837775",
+      "relevance": 3,
+      "reason": "Die Weiterentwicklung einer Web-Anwendung und Softwaretests passen unmittelbar zum gewünschten Einstieg. Erste Webprojekte reichen als gefordertes Erfahrungsniveau; bestimmte Frontend-/Backend-Sprachen sind mit idealerweise relativiert, sodass fehlende TypeScript- oder Java-Praxis kein belegter Ausschluss ist. Erlangen und der erfasste Bereich ab zehn Wochenstunden passen. Ein Mentoringangebot ist ausdrücklich genannt. Die Teilnahme daran und eine feste tägliche Ansprechperson bleiben zu klären; es wird keine individuelle Betreuungszusage erfunden.",
+      "evidence": [
+        "Du erstellst Softwaretests im Rahmen der Qualitätssicherung",
+        "erste Erfahrungen/Projekte im Bereich der Webentwicklung",
+        "idealerweise mit TypeScript/JavaScript im Frontend und/oder Java im Backend",
+        "Mentoringprogramm » josephine ®« für talentierte Studentinnen"
+      ]
+    },
+    {
+      "job_id": "844821",
+      "relevance": 1,
+      "reason": "Das Frontend-Thema passt grundsätzlich, das erwartete technische Niveau aber deutlich schlechter: TypeScript, Node.js, Angular und DevOps-nahes Arbeiten werden als vorhandene Praxis beschrieben, während Mara nur Grundlagen und ein kleines Webprojekt mitbringt. Kleine Projekte soll sie eigenständig übernehmen; konkrete Einarbeitung wird nicht zugesagt. Augsburg und 15–20 Stunden sind zusätzliche weiche Nachteile. Wegen der erheblichen fachlichen Lücken nur schwache Passung, ohne daraus einen formalen automatischen Ausschluss abzuleiten.",
+      "evidence": [
+        "Du übernimmst kleine Projekte und bearbeitest deine Arbeitspakete eigenständig",
+        "Mit Typescript, Javascript, HTML und CSS bist du ganz in deinem Element",
+        "Du bringst Erfahrungen in Bezug auf Linux, Git, Node.js und Angular mit"
+      ]
+    },
+    {
+      "job_id": "830863",
+      "relevance": 2,
+      "reason": "HTML, CSS und JavaScript werden konkret für Weboberflächen eingesetzt und knüpfen an Maras Studienprojekt an. Es wird erste Erfahrung statt mehrjähriger Berufspraxis verlangt. Vue, TypeScript und die Umsetzung von Figma-Designs sind noch nicht durch ihr Profil belegt, aber das beschriebene Unterstützungsniveau lässt einen fachlich plausiblen Einstieg zu. Deutschlandweite Remote-Arbeit mildert den Ortskonflikt; eine feste Betreuung oder gesicherte 10–12-Stunden-Vereinbarung steht nicht im Text. Daher brauchbare Passung mit offenen Lern- und Rahmenbedingungen.",
+      "evidence": [
+        "Web-UI-Entwicklung mit Javascript / Typescript / HTML; UI-Styling in CSS",
+        "Du bringst erste Erfahrungen mit den erwähnten Technologien mit",
+        "die Möglichkeit, deutschlandweit “remote” zu arbeiten."
+      ]
+    },
+    {
+      "job_id": "849193",
+      "relevance": 1,
+      "reason": "Die Mitwirkung an WordPress-Webdesign ist ein fachlicher Berührungspunkt und persönliches Mentoring ist ausdrücklich angeboten. Der konkret beschriebene Schwerpunkt liegt jedoch auf Texten, Bildern, Social-Media-Inhalten und deren Planung, nicht auf Programmierung oder technischer Webentwicklung. Maras Ziel ist ein Entwicklungsjob; ihre Grundlagen sind hier nur als vorteilhaft genannt. Remote-Möglichkeit und flexible Zeiten kompensieren diese inhaltliche Abweichung nicht. Deshalb angrenzende, aber schwache Passung.",
+      "evidence": [
+        "Gestaltung und Aufbereitung von Texten, Bildern und Multimedia-Inhalten",
+        "Mitwirkung an WordPress-Webdesign-Projekten",
+        "Erstellung und Planung von Social-Media-Posts",
+        "Persönliches Mentoring zur Karriereförderung"
+      ]
+    },
+    {
+      "job_id": "845150",
+      "relevance": 0,
+      "reason": "Frontend-Aufgaben und Mentoren wären inhaltlich interessant. Die Anzeige verlangt jedoch ausdrücklich eine Immatrikulation mindestens im vierten Semester. Mara befindet sich festgelegt im zweiten Semester und erfüllt diese konkrete Zugangsvoraussetzung nicht. Das ist keine bloß fehlende Profilinformation und keine weiche Orts-/Stundenpräferenz. Deshalb nach der vorab festgelegten Rubrik gegenwärtig nicht zugänglich, ungeachtet der sonst günstigen Betreuung.",
+      "evidence": [
+        "Eingeschriebener Student (m/w/d) im mindestens 4. Semester eines relevanten Studiengangs",
+        "Unsere Mentoren finden eine passende Aufgabe für dich"
+      ]
+    },
+    {
+      "job_id": "843131",
+      "relevance": 1,
+      "reason": "Web-Frontend-Entwicklung bietet einen fachlichen Anschluss. Verlangt werden jedoch solide Kenntnisse in Java, Spring, TypeScript und Angular sowie Datenbankgrundlagen; diese Breite ist bei Maras Einsteigerprofil nicht belegt und TypeScript-Projektpraxis fehlt ausdrücklich. Fortlaufende Unterstützung macht daraus noch kein ausdrücklich voraussetzungsloses Einstiegsangebot. Der Text nennt 20 Stunden und den Einzugsbereich Ulm, beides ungünstiger als ihre weichen Wünsche. Insgesamt erhebliche Kompetenzlücken und nur schwache Passung.",
+      "evidence": [
+        "Web-Frontend Entwicklung (Typescript, Javascript, Angular2+, HTML, CSS)",
+        "Solide Programmierkenntnisse in Java, Spring, Typescript und Angular2+",
+        "Basis Kenntnisse mit PostgreSQL, Exasol, SQL, Spark sind erforderlich"
+      ]
+    },
+    {
+      "job_id": "861511",
+      "relevance": 2,
+      "reason": "Konkrete Website-Frontends, JavaScript und Python knüpfen an Maras Kenntnisse an; ausdrücklich 10–20 Stunden und Raum zum Lernen unterstützen einen Einstieg. Nuxt/Vue, TypeScript, CMS-Integration und APIs wären neue Lernfelder. Der Text beschreibt diese Tätigkeiten, nennt aber keine eindeutige Mindest-Berufserfahrung; die als Anforderungen erfasste Passage wiederholt lediglich die Aufgaben. Feste Begleitung ist nicht zugesagt und der Standort liegt außerhalb des Wunschraums. Daher plausible Passung mit Lernbedarf und offenen Rahmenbedingungen, keine unterstellte vollständige Qualifikation.",
+      "evidence": [
+        "Unterstütze unser Team als Werkstudent*in (10-20 Stunden/Woche)",
+        "Du gestaltest und programmierst das Frontend unserer Website",
+        "Du entwickelst Microservices in Python",
+        "viel Raum zum Lernen und Ausprobieren"
+      ]
+    },
+    {
+      "job_id": "843348",
+      "relevance": 2,
+      "reason": "Webanwendungen, Frontend und einsteigerorientiertes Testing passen zu mindestens einem Kernbereich ihres Ziels. Das Angebot verlangt erste Kenntnisse beziehungsweise Interesse und verspricht Unterstützung bei der Weiterentwicklung; fehlende React-Praxis ist damit nicht automatisch ein Ausschluss. REST/GraphQL, umfassendere Git-Nutzung und automatisierte Tests sind allerdings noch nicht belegt. Vor-Ort-Arbeit in Bad Homburg ist ein weicher Ortskonflikt, feste 10–12 Stunden und eine persönliche Ansprechperson sind nicht zugesagt. Die fachliche Anschlussfähigkeit rechtfertigt eine mittlere, keine starke Passung.",
+      "evidence": [
+        "Web- und App-Anwendungen für unsere Kunden",
+        "Erste Kenntnisse in der Fullstack-Entwicklung mit JavaScript",
+        "Grundlagen in der Entwicklung von Schnittstellen (z. B. REST, GraphQL).",
+        "Unterstützung bei der Weiterentwicklung deiner technischen und persönlichen Fähigkeiten."
+      ]
+    },
+    {
+      "job_id": "820065",
+      "relevance": 0,
+      "reason": "HTML/CSS/JavaScript-Aufgaben und umfassende Einarbeitung würden zum Thema passen. Der Studienstand ist jedoch ausdrücklich mit viertem Semester oder höher festgelegt. Mara ist im zweiten Semester; dieser belegte formale Konflikt verhindert nach der Rubrik eine zugängliche Empfehlung. Die darüber hinaus genannte Eigenverantwortung und 15–20 Stunden sind für das Nullurteil nicht ausschlaggebend.",
+      "evidence": [
+        "Student*in im 4. Semester oder höher im Bereich Informatik oder einer ähnlichen Fachrichtung",
+        "eine umfassende Einarbeitung und einen eigenverantwortlichen Handlungsspielraum"
+      ]
+    },
+    {
+      "job_id": "835027",
+      "relevance": 1,
+      "reason": "Die Implementierung von Weboberflächen mit HTML/CSS/JavaScript passt teilweise, und Nürnberg ist günstig. Der Schwerpunkt umfasst jedoch eigenständige UI-Gestaltung, Mockups und Prototypen; fundierte UI-Design- und Toolkenntnisse werden verlangt. Maras einfaches Webprojekt belegt diese Designkompetenz nicht. Das Mentoringangebot ersetzt keinen Nachweis dieser zentralen fachlichen Anforderungen. Daher nur schwache Passung wegen wesentlicher offener Kompetenzen, ohne unbekannte Sprach- oder Designkenntnisse als bewiesene Unfähigkeit darzustellen.",
+      "evidence": [
+        "Du erstellst bei Bedarf Wireframes, Mockups und Prototypen",
+        "Du hast fundierte Kenntnisse im UI-Design und in gängigen Design-Tools"
+      ]
+    },
+    {
+      "job_id": "826611",
+      "relevance": 1,
+      "reason": "Die Web-Frontend-Aufgaben passen zum Suchgebiet, das geforderte Niveau in Java/Spring, TypeScript/Angular und Datenbanken liegt aber deutlich über den belegten Grundlagen. Maras fehlende TypeScript-Projektpraxis wird nicht durch das allgemeine Unterstützungsangebot aufgehoben. Der Text nennt 20 Wochenstunden in Ulm; diese Rahmenbedingungen sind zusätzliche weiche Nachteile. Inhaltlich entspricht die Anzeige dem ähnlich formulierten Synpulse-Angebot, deshalb dieselbe schwache Relevanzstufe.",
+      "evidence": [
+        "Solide Programmierkenntnisse in Java, Spring, Typescript und Angular2+",
+        "Basis Kenntnisse mit PostgreSQL, Exasol, SQL, Spark sind erforderlich",
+        "20 Stunden pro Woche, Einzugsgebiet Ulm und Umgebung"
+      ]
+    },
+    {
+      "job_id": "837416",
+      "relevance": 2,
+      "reason": "Responsive Oberflächen mit HTML/CSS/JavaScript und ausdrücklich erste Web-Erfahrung passen gut zu Maras Studienprojekt. Frameworks und CMS sind nur idealerweise beziehungsweise von Vorteil gefordert; fehlendes React ist deshalb kein Ausschluss. Teamarbeit und Weiterbildung sind genannt, eine konkrete Einarbeitungsperson nicht. Erste KI-Tool-Erfahrung ist zudem offen. Der erfasste Umfang ab 20 Stunden und München sind deutliche, aber weiche Kompromisse. Insgesamt fachlich plausible Passung ohne volle Übereinstimmung mit dem Bedarf.",
+      "evidence": [
+        "Umsetzung von responsiven und performanten User Interfaces mit HTML, CSS und JavaScript",
+        "Erste Erfahrung in der Web-Entwicklung",
+        "Idealerweise erste Kenntnisse in modernen Frameworks wie Vue.js, React oder Laravel.",
+        "Flexible Arbeitszeiten, die sich mit deinem Studium vereinbaren lassen sowie Homeoffice-Möglichkeit"
+      ]
+    },
+    {
+      "job_id": "860555",
+      "relevance": 1,
+      "reason": "Es gibt relevante Web-Frontend-Aufgaben, aber das vorausgesetzte solide Niveau in Java/Spring/TypeScript/Angular und die Datenbankkenntnisse sind mit Maras bisherigem Profil nicht abgedeckt. Kontinuierliche Unterstützung wird angeboten, jedoch keine Ausnahme von diesen fachlichen Voraussetzungen. Ausdrücklich 20 Wochenstunden und ein Bürotag in Ulm passen weniger zu ihren Wünschen. Wie bei den inhaltlich ähnlichen Synpulse-Anzeigen bleibt die Gesamtpassung schwach.",
+      "evidence": [
+        "Solide Programmierkenntnisse in Java, Spring, TypeScript und Angular",
+        "Grundkenntnisse mit PostgreSQL, Exasol, SQL, Spark sind erforderlich",
+        "mit einem Bürotag pro Woche"
+      ]
+    },
+    {
+      "job_id": "824568",
+      "relevance": 3,
+      "reason": "Unter den ausdrücklich angebotenen Aufgaben sind Webentwicklung und Datenbank-Webanwendungen mit Python, HTML, JavaScript und CSS; damit bestehen mehrere direkte Anknüpfungspunkte. Anders als bloße Teamwerbung werden qualifizierte Betreuung und intensive Einarbeitung ausdrücklich zugesagt. Ein Mindestsemester oder bereits vorhandene Frameworkpraxis wird nicht genannt. Mathematik-/Physikniveau und die konkrete Zuordnung zu einem Webprojekt müssen noch geklärt werden; sie werden nicht als erfüllt erfunden. Wertheim liegt außerhalb des Wunschraums, Homeoffice ist aber möglich und 10–12 Stunden werden nicht ausgeschlossen. Die starke Verbindung aus passendem Aufgabenpfad und belegter Einstiegshilfe begründet Stufe 3.",
+      "evidence": [
+        "Datenbank - Web-Anwendungen, Sprachen: Python, SQL, HTML, Javascript, CSS",
+        "eine qualifizierte und fundierte Betreuung",
+        "intensive Einarbeitung und einen intensiven Praxisbezug",
+        "sehr gute Mathematik- und Physik-Kenntnisse",
+        "Home Office-Nutzung"
+      ]
+    },
+    {
+      "job_id": "834695",
+      "relevance": 0,
+      "reason": "Ein laufendes Masterstudium wird ausdrücklich verlangt. Mara ist im zweiten Bachelorsemester und erfüllt diese konkrete Qualifikationsvoraussetzung nicht. Außerdem steht die Entwicklung von KI-Anwendungen im Mittelpunkt, während Frontend-Erfahrung lediglich vorteilhaft ist. Python-Grundlagen und mögliche Remote-Arbeit heben den eindeutigen Studienabschluss-Konflikt nicht auf.",
+      "evidence": [
+        "Laufendes Masterstudium im Bereich Künstliche Intelligenz, Informatik oder einem verwandten Fachgebiet",
+        "Du arbeitest an verschiedenen Usecases und entwickeltst KI-Anwendungen mit Python und der REST-API von OpenAI"
+      ]
+    },
+    {
+      "job_id": "829115",
+      "relevance": 2,
+      "reason": "Die unterstützende Entwicklung eigener Webanwendungen in Nürnberg ist fachlich passend; HTML, CSS, JavaScript, Python und Git schließen an Maras Grundlagen an. Arbeitszeit nach Vereinbarung kann zu 10–12 Stunden passen, ist aber noch keine konkrete Zusage. Verlangte erste React/Angular-, Datenbank- und agile Erfahrung sind nicht belegt; insbesondere React ist ein Lernziel. Da erste statt fortgeschrittener Erfahrung angesprochen wird, bleibt ein plausibler Einstieg mit überschaubaren Lernlücken. Feste Betreuung ist nicht genannt, daher keine starke Gesamtpassung.",
+      "evidence": [
+        "Unterstützung bei der Entwicklung diverser Webapplikationen",
+        "Erste Erfahrungen mit HTML, CSS, Javascript, Python und React/Angular",
+        "Kenntnisse im Umgang mit relationalen Datenbanken",
+        "Arbeitszeit nach Vereinbarung, bis 20 Stunden/Woche"
+      ]
+    },
+    {
+      "job_id": "833009",
+      "relevance": 0,
+      "reason": "Die Anzeige nennt Mentoren und passende Backend-/Frontend-Einblicke, verlangt aber ebenso ausdrücklich mindestens das vierte Semester. Mara studiert im zweiten Semester. Dieser konkrete Zugangskonflikt ist unabhängig von der etwas widersprüchlichen Zusammenfassung zur Corporate Identity und verhindert eine gegenwärtig geeignete Empfehlung. Gleiche zentrale Anforderungen wie beim anderen Qupe-Angebot führen zur gleichen Relevanzstufe.",
+      "evidence": [
+        "Eingeschriebener Student (m/w/d) im mindestens 4. Semester eines relevanten Studiengangs",
+        "Unsere Mentoren finden eine passende Aufgabe für dich"
+      ]
+    },
+    {
+      "job_id": "857135",
+      "relevance": 1,
+      "reason": "Ort Erlangen, ausdrücklich 8–12 Wochenstunden, kleine Programmieraufgaben und schrittweise steigende Aufgaben passen sehr gut zu ihren Rahmenwünschen. Im zentralen technischen Anforderungsblock wird jedoch bereits Frontend-Erfahrung mit React und TypeScript vorausgesetzt; beides ist bei Mara ausdrücklich noch nicht durch Projekte vorhanden. REST-API-Praxis ist zusätzlich offen. Diese Lücken betreffen den Kern der Tätigkeit und nicht nur optionale Vorteile. Daher trotz guter Rahmenbedingungen schwache fachliche Gesamtpassung; Lernbereitschaft wird nicht als bereits vorhandene Framework-Erfahrung gewertet.",
+      "evidence": [
+        "You have experience in frontend development with React and TypeScript",
+        "You have experience working with REST APIs",
+        "as a working student 8 to 12 hours per week",
+        "gradually take on more challenging tasks"
+      ]
+    },
+    {
+      "job_id": "816293",
+      "relevance": 1,
+      "reason": "Das Suchgebiet wird durch Web-Frontend-Entwicklung getroffen. Solide Kenntnisse in Java/Spring/TypeScript/Angular und Datenbankgrundlagen werden aber vorausgesetzt und sind durch Maras Anfängerprofil nicht nachgewiesen. Das Unterstützungsangebot macht diese breite Voraussetzungslücke nicht klein. Der Text nennt 20 Stunden in Ulm; das ist zusätzlich ungünstig, aber kein eigenständiger Ausschluss. Wegen der inhaltlich gleichen Kernanforderungen erhält dieses Synpulse-Angebot dieselbe schwache Bewertung wie seine Varianten.",
+      "evidence": [
+        "Solide Programmierkenntnisse in Java, Spring, Typescript und Angular2+",
+        "Basis Kenntnisse mit PostgreSQL, Exasol, SQL, Spark sind erforderlich",
+        "Individuelle Entwicklungsmöglichkeiten mit kontinuierlicher Unterstützung"
+      ]
+    },
+    {
+      "job_id": "834700",
+      "relevance": 1,
+      "reason": "Erstellung und Erweiterung von Weboberflächen sind ein passender Teilbereich. Der Gesamtauftrag liegt jedoch bei virtuellem Testen, Linux-Echtzeit- und Container-Anwendungen. Erste Cloud-Erfahrung wird vorausgesetzt, während Mara ausdrücklich noch keine Cloud-Infrastruktur-Erfahrung hat; Linux-Praxis ist offen. Eine konkrete Einarbeitung in diese zusätzlichen Gebiete wird nicht versprochen. Flexible Zeiten ändern den nur begrenzten Anschluss ihrer bisherigen Grundlagen nicht.",
+      "evidence": [
+        "Entwicklung von Echtzeitanwendungen unter Linux",
+        "Entwicklung von Container-Applikationen",
+        "Erstellung, Anpassung und Erweiterung von Web-Oberflächen",
+        "Erste Erfahrungen mit Cloud-Technologien"
+      ]
+    },
+    {
+      "job_id": "828195",
+      "relevance": 2,
+      "reason": "Erstellung und Pflege von Websites und Webformularen greifen Maras Webgrundlagen sinnvoll auf. HTML/CSS/JavaScript sind ausdrücklich nur von Vorteil und die Einarbeitung in die städtischen Systeme ist vorgesehen, obwohl erste CMS-Erfahrung offen bleibt. Ein Teil der Arbeit ist Support und selbstständige Kommunikation statt Programmierung; feste persönliche Betreuung wird nicht zugesagt. Erlangen passt, ausdrücklich 15–20 Stunden dagegen nicht zu ihrem Wunschumfang. Die Beschreibung nennt trotz abweichendem strukturiertem Remote-Feld eine Homeoffice-Möglichkeit; daraus wird keine bestimmte Präsenzregel abgeleitet. Insgesamt relevante, aber nicht starke Passung.",
+      "evidence": [
+        "Unterstützung bei der Erstellung und Pflege von Websites und Web-Formularen",
+        "Bereitschaft sich in das CMS (RYVE) und das Online-Formular-System (XIMA Formcycle) der Stadt einzuarbeiten",
+        "Kenntnisse in Web-Technologien (HTML, CSS, JavaScript, JQuery) von Vorteil aber keine Voraussetzung.",
+        "Arbeitszeit: 15 - 20 Std./Wo."
+      ]
+    },
+    {
+      "job_id": "845512",
+      "relevance": 1,
+      "reason": "Webseiten und HTML/CSS-Templates sind ein fachlicher Anknüpfungspunkt und Nürnberg ist günstig. Das umfassendere Aufgabenfeld enthält jedoch Softwarearchitektur, IoT-Protokolle und industrielle Anlagenkonzepte. Sehr gute modellbasierte Entwicklung mit Matlab/Simulink/PLC Coder sowie sehr gute Frontend-Kenntnisse und solide Programmierpraxis werden vorausgesetzt. Dafür liefert Maras kleines Einsteigerprojekt keinen ausreichenden Nachweis. Kollegiale Unterstützung ist genannt, aber kein ausdrücklich auf Anfänger ohne diese Kenntnisse zugeschnittener Einstieg. Daher schwache Passung wegen großer fachlicher Lücken.",
+      "evidence": [
+        "Erstellung von Webseiten und Templates auf Basis von HTML, CSS, Template Engines sowie Skriptsprachen",
+        "Sehr gute Kenntnisse in modellbasierter Softwareentwicklung (Matlab, Simulink, PLC Coder) sowie im Frontend (HTML, CSS, JavaScript/jQuery)",
+        "Solide Kenntnisse in mindestens einer gängigen Programmiersprache"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "case_id": "P01-A",
+    "rankings_changed_T0_T1": true,
+    "rankings_changed_T1_T2": true,
+    "rankings_unchanged_T2_T3": true,
+    "jobs_retained_T0_T3": 20
+  },
+  {
+    "case_id": "P01-B",
+    "rankings_changed_T0_T1": true,
+    "rankings_changed_T1_T2": true,
+    "rankings_unchanged_T2_T3": true,
+    "jobs_retained_T0_T3": 20
+  },
+  {
+    "case_id": "P01-C",
+    "rankings_changed_T0_T1": true,
+    "rankings_changed_T1_T2": true,
+    "rankings_unchanged_T2_T3": true,
+    "jobs_retained_T0_T3": 20
+  },
+  {
+    "case_id": "P06-A",
+    "rankings_changed_T0_T1": true,
+    "rankings_changed_T1_T2": true,
+    "rankings_unchanged_T2_T3": true,
+    "jobs_retained_T0_T3": 20
+  },
+  {
+    "case_id": "P06-B",
+    "rankings_changed_T0_T1": true,
+    "rankings_changed_T1_T2": true,
+    "rankings_unchanged_T2_T3": true,
+    "jobs_retained_T0_T3": 20
+  },
+  {
+    "case_id": "P06-C",
+    "rankings_changed_T0_T1": true,
+    "rankings_changed_T1_T2": true,
+    "rankings_unchanged_T2_T3": true,
+    "jobs_retained_T0_T3": 20
+  }
+]

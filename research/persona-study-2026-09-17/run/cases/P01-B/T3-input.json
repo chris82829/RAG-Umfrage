@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/chat",
+  "body": {
+    "session_id": "m51OPzh9ae4mX3eLug9AGh6g6Zz_V6E9NfttWtlz_Hc",
+    "message": "Die erste Stelle ist jetzt „Werkstudent/Praktikant (w/m/d) - im Bereich der Web-App Entwicklung“ (Job-ID 837775). Warum ist sie für mich vorne? Welche Aufgaben könnte ich schon schaffen, wo brauche ich Einarbeitung, und was sollte ich zu Arbeitszeit und Betreuung noch klären?",
+    "mode": "auto"
+  },
+  "adaptive_message": {
+    "case_id": "P01-B",
+    "turn": 3,
+    "previous_snapshot_sha256": "6fbd967d010937222afb0fb008ac74e563cb354bd8b8051a9fe81660f85644f1",
+    "disclosed_stage": 3,
+    "adaptation_note": "Bezieht sich auf die tatsächlich erste Stelle des vorangehenden Zustands. Reine Passungsrückfrage entsprechend Etappe 3; keine neuen Nutzerfakten oder Suchwünsche.",
+    "message": "Die erste Stelle ist jetzt „Werkstudent/Praktikant (w/m/d) - im Bereich der Web-App Entwicklung“ (Job-ID 837775). Warum ist sie für mich vorne? Welche Aufgaben könnte ich schon schaffen, wo brauche ich Einarbeitung, und was sollte ich zu Arbeitszeit und Betreuung noch klären?"
+  },
+  "started_utc": "2026-09-17T07:13:17.879866+00:00"
+}

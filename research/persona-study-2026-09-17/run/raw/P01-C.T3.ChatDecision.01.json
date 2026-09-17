@@ -1,0 +1,342 @@
+{
+  "task": "P01-C.T3.ChatDecision.01",
+  "started_utc": "2026-09-17T07:13:25.416298+00:00",
+  "ok": true,
+  "request_sha256": "fb307c255b87c7efcd0e3fed762e38dec075a1872cdc97ceff5892dd04fc7175",
+  "http_status": 200,
+  "response": {
+    "id": "resp_0657423239b50137016aab9315b4a887d29e0db17c6ba0ed49",
+    "object": "response",
+    "created_at": 1789629205,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "developer"
+    },
+    "completed_at": 1789629211,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 6000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_0657423239b50137016aab93166c3087d29df260d7a3a926ae",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"action\":\"answer\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":null,\"clear_max_hours\":false}},\"assistant_message\":\"Deine belegte Stärke für diese Fraunhofer-Stelle ist der Web-Einstieg mit HTML, CSS und einfachem JavaScript aus dem Studienprojekt. Genau deshalb steht sie jetzt oben: Sie verbindet Erlangen, einen zu deinem Semester passenden Stundenrahmen von 10 bis 20 Stunden, erste Webprojekterfahrung als Anforderung und ein ausdrücklich genanntes Mentoringprogramm.\\n\\nSchon gut erreichbar wirken für dich die Weiterentwicklung bestehender Systeme in kleinen Beiträgen, Softwaretests in der Qualitätssicherung und Recherche zu neuen Technologien. Dafür bringst du bereits passende Grundlagen in Webentwicklung und Git mit. Einarbeitung brauchst du am ehesten dort, wo der Stack tiefer wird: TypeScript ist nur idealerweise genannt, und Java im Backend ist bei dir nicht belegt. Offen bleibt außerdem, wie viel der Arbeit wirklich Frontend-Web-App ist und wie viel eher Testing oder Recherche.\\n\\nZu Arbeitszeit und Betreuung ist der nächste klare Prüfpunkt: 10 bis 20 Stunden sind genannt, aber nicht, ob 10 bis 12 Stunden während des Semesters regelmäßig problemlos möglich sind. Beim Thema Betreuung ist das Mentoringprogramm ein starkes Signal, aber eine feste Ansprechperson im Alltag wird in der Anzeige nicht ausdrücklich zugesagt.\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "ChatDecision",
+        "schema": {
+          "$defs": {
+            "FilterPatch": {
+              "additionalProperties": false,
+              "properties": {
+                "employment_types": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "werkstudent",
+                          "praktikum",
+                          "vollzeit",
+                          "teilzeit",
+                          "ausbildung",
+                          "trainee",
+                          "abschlussarbeit",
+                          "sonstige"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 8,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Employment Types"
+                },
+                "locations": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 10,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Locations"
+                },
+                "remote": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "enum": [
+                          "onsite",
+                          "hybrid",
+                          "remote",
+                          "unknown"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Remote"
+                },
+                "max_hours": {
+                  "anyOf": [
+                    {
+                      "exclusiveMinimum": 0,
+                      "maximum": 80,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Max Hours"
+                },
+                "clear_max_hours": {
+                  "title": "Clear Max Hours",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "employment_types",
+                "locations",
+                "remote",
+                "max_hours",
+                "clear_max_hours"
+              ],
+              "title": "FilterPatch",
+              "type": "object"
+            },
+            "ProfilePatch": {
+              "additionalProperties": false,
+              "properties": {
+                "query": {
+                  "anyOf": [
+                    {
+                      "maxLength": 3000,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Query"
+                },
+                "skills": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 60,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Skills"
+                },
+                "preferences": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "maxLength": 200,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "maxItems": 30,
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences"
+                },
+                "filters": {
+                  "$ref": "#/$defs/FilterPatch"
+                }
+              },
+              "required": [
+                "query",
+                "skills",
+                "preferences",
+                "filters"
+              ],
+              "title": "ProfilePatch",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "answer",
+                "rerank",
+                "search"
+              ],
+              "title": "Action",
+              "type": "string"
+            },
+            "profile_patch": {
+              "$ref": "#/$defs/ProfilePatch"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "action",
+            "profile_patch",
+            "assistant_message"
+          ],
+          "title": "ChatDecision",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 28803,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3840
+      },
+      "output_tokens": 312,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 29115
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 28803,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 3840
+    },
+    "output_tokens": 312,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 29115
+  },
+  "result": {
+    "action": "answer",
+    "profile_patch": {
+      "query": null,
+      "skills": null,
+      "preferences": null,
+      "filters": {
+        "employment_types": null,
+        "locations": null,
+        "remote": null,
+        "max_hours": null,
+        "clear_max_hours": false
+      }
+    },
+    "assistant_message": "Deine belegte Stärke für diese Fraunhofer-Stelle ist der Web-Einstieg mit HTML, CSS und einfachem JavaScript aus dem Studienprojekt. Genau deshalb steht sie jetzt oben: Sie verbindet Erlangen, einen zu deinem Semester passenden Stundenrahmen von 10 bis 20 Stunden, erste Webprojekterfahrung als Anforderung und ein ausdrücklich genanntes Mentoringprogramm.\n\nSchon gut erreichbar wirken für dich die Weiterentwicklung bestehender Systeme in kleinen Beiträgen, Softwaretests in der Qualitätssicherung und Recherche zu neuen Technologien. Dafür bringst du bereits passende Grundlagen in Webentwicklung und Git mit. Einarbeitung brauchst du am ehesten dort, wo der Stack tiefer wird: TypeScript ist nur idealerweise genannt, und Java im Backend ist bei dir nicht belegt. Offen bleibt außerdem, wie viel der Arbeit wirklich Frontend-Web-App ist und wie viel eher Testing oder Recherche.\n\nZu Arbeitszeit und Betreuung ist der nächste klare Prüfpunkt: 10 bis 20 Stunden sind genannt, aber nicht, ob 10 bis 12 Stunden während des Semesters regelmäßig problemlos möglich sind. Beim Thema Betreuung ist das Mentoringprogramm ein starkes Signal, aber eine feste Ansprechperson im Alltag wird in der Anzeige nicht ausdrücklich zugesagt."
+  },
+  "raw_text": "{\"action\":\"answer\",\"profile_patch\":{\"query\":null,\"skills\":null,\"preferences\":null,\"filters\":{\"employment_types\":null,\"locations\":null,\"remote\":null,\"max_hours\":null,\"clear_max_hours\":false}},\"assistant_message\":\"Deine belegte Stärke für diese Fraunhofer-Stelle ist der Web-Einstieg mit HTML, CSS und einfachem JavaScript aus dem Studienprojekt. Genau deshalb steht sie jetzt oben: Sie verbindet Erlangen, einen zu deinem Semester passenden Stundenrahmen von 10 bis 20 Stunden, erste Webprojekterfahrung als Anforderung und ein ausdrücklich genanntes Mentoringprogramm.\\n\\nSchon gut erreichbar wirken für dich die Weiterentwicklung bestehender Systeme in kleinen Beiträgen, Softwaretests in der Qualitätssicherung und Recherche zu neuen Technologien. Dafür bringst du bereits passende Grundlagen in Webentwicklung und Git mit. Einarbeitung brauchst du am ehesten dort, wo der Stack tiefer wird: TypeScript ist nur idealerweise genannt, und Java im Backend ist bei dir nicht belegt. Offen bleibt außerdem, wie viel der Arbeit wirklich Frontend-Web-App ist und wie viel eher Testing oder Recherche.\\n\\nZu Arbeitszeit und Betreuung ist der nächste klare Prüfpunkt: 10 bis 20 Stunden sind genannt, aber nicht, ob 10 bis 12 Stunden während des Semesters regelmäßig problemlos möglich sind. Beim Thema Betreuung ist das Mentoringprogramm ein starkes Signal, aber eine feste Ansprechperson im Alltag wird in der Anzeige nicht ausdrücklich zugesagt.\"}",
+  "finished_utc": "2026-09-17T07:13:31.347652+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 132306,
+    "input_token_bound": 140498,
+    "max_tokens": 6000,
+    "reserved_usd": "0.441245",
+    "task_id": "P01-C.T3.ChatDecision.01",
+    "post_number": 41,
+    "status": "settled",
+    "charged_usd": "0.0766875",
+    "usage": {
+      "input_tokens": 28803,
+      "output_tokens": 312,
+      "total_tokens": 29115
+    },
+    "created_utc": "2026-09-17T07:13:25.415401+00:00",
+    "settled_utc": "2026-09-17T07:13:31.348541+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

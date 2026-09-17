@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/chat",
+  "body": {
+    "session_id": "EnjZQQrLxsCZ-S7g7rrmkkqxPyr3PsobfX3J0I35ZwU",
+    "message": "Warum steht „Werkstudent*in Softwareentwicklung“ (Job-ID 829115) jetzt ganz oben? Welche Aufgaben könnte ich mit meinen bisherigen Kenntnissen schon schaffen, wo bräuchte ich Einarbeitung, und was ist bei Arbeitszeit und Betreuung noch offen?",
+    "mode": "auto"
+  },
+  "adaptive_message": {
+    "case_id": "P01-A",
+    "turn": 3,
+    "previous_snapshot_sha256": "a1876d2b467de934b403814ba44e2e0f7fe5300cd9f18f65e8851578e2333442",
+    "disclosed_stage": 3,
+    "adaptation_note": "Bezieht sich auf die tatsächlich erste Stelle des vorangehenden Zustands. Reine Passungsrückfrage entsprechend Etappe 3; keine neuen Nutzerfakten oder Suchwünsche.",
+    "message": "Warum steht „Werkstudent*in Softwareentwicklung“ (Job-ID 829115) jetzt ganz oben? Welche Aufgaben könnte ich mit meinen bisherigen Kenntnissen schon schaffen, wo bräuchte ich Einarbeitung, und was ist bei Arbeitszeit und Betreuung noch offen?"
+  },
+  "started_utc": "2026-09-17T07:13:11.206112+00:00"
+}

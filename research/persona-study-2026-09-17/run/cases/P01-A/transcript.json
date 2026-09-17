@@ -1,0 +1,349 @@
+{
+  "case_id": "P01-A",
+  "source_id": "P01",
+  "condition": "A",
+  "advisor": {
+    "mode": "preset",
+    "preset": "standard",
+    "name": "Standardberatung",
+    "description": "",
+    "traits": [],
+    "focus": "ausgewogen"
+  },
+  "messages": [
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Hallo! 20 Stellen gefunden und bewertet. Links siehst du die ersten 10; weitere findest du über „Weitere Stellen anzeigen“.\n\nFür einen ersten Einstieg wirken die Stellen mit klaren Frontend-Aufgaben und belegter Einarbeitung am stimmigsten. Besonders passend sind Anzeigen, die HTML, CSS und JavaScript direkt nutzen und Teamarbeit ausdrücklich nennen. Deutlich anspruchsvoller sind Rollen mit festen Anforderungen an React, Angular, TypeScript, Java, Datenbanken oder Testing. Mehrere Stellen bleiben trotzdem interessant, wenn Lernen und Betreuung klar beschrieben sind.\n\nHier kannst du Rückfragen stellen und deine Suche verfeinern.",
+      "role": "assistant"
+    },
+    {
+      "content": "Du nennst Einarbeitung als wichtigen Punkt. Mir ist besonders wichtig, dass ich eingearbeitet werde und bei Fragen eine feste Ansprechperson habe. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Für deinen Schwerpunkt Einarbeitung wirken vor allem die Stellen stimmig, die Betreuung klar benennen: etwa mit umfassender Einarbeitung, Teambegleitung, Mentoren oder fundierter Betreuung. Fachlich am saubersten bleiben dabei Rollen mit HTML, CSS und JavaScript als Kern. Mehrere technisch spannende Stellen nennen zwar Lernen oder Teamarbeit, aber keine feste Ansprechperson ausdrücklich. Wenn du möchtest, kann ich dir als Nächstes die Anzeigen mit der klarsten Betreuung kurz gegenüberstellen.",
+      "role": "assistant"
+    },
+    {
+      "content": "Du nennst Stellen mit klarer Betreuung. Für die weitere Einordnung ist mir noch wichtig: Während des Semesters möchte ich ungefähr 10 bis 12 Stunden arbeiten, am liebsten in Nürnberg oder Erlangen. React habe ich noch nicht benutzt. Bitte passe die Reihenfolge daran an; die Webentwicklung soll mein Ziel bleiben.",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Für deine neuen Präferenzen wirken vor allem Stellen in Nürnberg oder Erlangen mit 10 bis 12 nahen Stunden und klarer Lernunterstützung stimmiger. Fachlich bleiben Webrollen mit HTML, CSS und JavaScript am saubersten, während Stellen mit React, Angular oder breitem Fullstack-Stack trotz passender Rahmenbedingungen mehr Einstiegslücken haben. Besonders zu prüfen sind jetzt die Kombination aus Ortsnähe, Stundenumfang und ausdrücklich genannter Betreuung.",
+      "role": "assistant"
+    },
+    {
+      "content": "Warum steht „Werkstudent*in Softwareentwicklung“ (Job-ID 829115) jetzt ganz oben? Welche Aufgaben könnte ich mit meinen bisherigen Kenntnissen schon schaffen, wo bräuchte ich Einarbeitung, und was ist bei Arbeitszeit und Betreuung noch offen?",
+      "role": "user"
+    },
+    {
+      "advisor_name": "Standardberatung-KI",
+      "content": "Sie steht jetzt oben, weil mehrere deiner belegten Punkte gleichzeitig passen: Werkstudentenstelle, Nürnberg, Webentwicklung, passende Grundlagen in HTML, CSS, JavaScript, Python und Git sowie ein Stundenrahmen von 10 bis 20 Stunden, der deinen Wunsch von 10 bis 12 Stunden grundsätzlich noch zulässt. Im Vergleich zu anderen nahen Webstellen ist die fachliche Überschneidung breit, auch wenn die Anzeige bei Betreuung nicht so stark ist.\n\nMit deinen bisherigen Kenntnissen wirken vor allem unterstützende Frontend-Aufgaben an Webapplikationen, kleinere JavaScript-Arbeiten, Mitarbeit mit HTML/CSS sowie Git-nahe Teamarbeit realistisch. Einarbeitung bräuchtest du voraussichtlich bei React oder Angular, Backend-Arbeit mit Django oder Spring Boot, relationalen Datenbanken und PostgreSQL sowie bei agiler Entwicklung. Offen bleibt vor allem die Betreuung: Ein gutes Arbeitsklima ist genannt, aber weder eine strukturierte Einarbeitung noch eine feste Ansprechperson werden ausdrücklich zugesagt. Bei der Arbeitszeit ist nur \"nach Vereinbarung, bis 20 Stunden/Woche\" genannt; ob im Semester konkret 10 bis 12 Stunden möglich sind, müsstest du also nachfragen.",
+      "role": "assistant"
+    }
+  ],
+  "operations": [
+    {
+      "turn": 0,
+      "action": "search",
+      "elapsed_seconds": 50.387,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "max_hours": null,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "829115",
+        "820065",
+        "837775",
+        "828195",
+        "837416",
+        "832418",
+        "861511",
+        "830863",
+        "843348",
+        "833009",
+        "824568",
+        "834700",
+        "835027",
+        "845512",
+        "857135",
+        "834695",
+        "860555",
+        "843131",
+        "816293",
+        "826611"
+      ],
+      "scores": [
+        69,
+        69,
+        68,
+        68,
+        67,
+        67,
+        65,
+        65,
+        64,
+        63,
+        62,
+        58,
+        57,
+        57,
+        55,
+        55,
+        54,
+        54,
+        54,
+        54
+      ]
+    },
+    {
+      "turn": 1,
+      "action": "rerank",
+      "elapsed_seconds": 35.682,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "max_hours": null,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben",
+          "Einarbeitung",
+          "Feste Ansprechperson bei Fragen"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "820065",
+        "829115",
+        "837775",
+        "828195",
+        "837416",
+        "832418",
+        "861511",
+        "843348",
+        "830863",
+        "833009",
+        "824568",
+        "835027",
+        "845512",
+        "834700",
+        "860555",
+        "857135",
+        "834695",
+        "843131",
+        "816293",
+        "826611"
+      ],
+      "scores": [
+        70,
+        69,
+        69,
+        69,
+        68,
+        68,
+        64,
+        64,
+        64,
+        64,
+        62,
+        57,
+        57,
+        57,
+        55,
+        55,
+        55,
+        55,
+        55,
+        55
+      ]
+    },
+    {
+      "turn": 2,
+      "action": "rerank",
+      "elapsed_seconds": 34.616,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "max_hours": 12.0,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben",
+          "Einarbeitung",
+          "Feste Ansprechperson bei Fragen"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "829115",
+        "837775",
+        "828195",
+        "832418",
+        "820065",
+        "830863",
+        "833009",
+        "837416",
+        "861511",
+        "835027",
+        "857135",
+        "845512",
+        "843348",
+        "824568",
+        "834700",
+        "834695",
+        "843131",
+        "816293",
+        "826611",
+        "860555"
+      ],
+      "scores": [
+        72,
+        71,
+        68,
+        66,
+        65,
+        63,
+        63,
+        60,
+        60,
+        60,
+        60,
+        59,
+        58,
+        56,
+        52,
+        51,
+        49,
+        49,
+        49,
+        47
+      ]
+    },
+    {
+      "turn": 3,
+      "action": "answer",
+      "elapsed_seconds": 9.525,
+      "profile": {
+        "cv_text": "Informatikstudentin im 2. Semester. Ein Webprojekt im Studium mit HTML, CSS und einfachem JavaScript; grundlegende Python- und Git-Kenntnisse. Noch keine Berufserfahrung.",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [
+            "Nürnberg",
+            "Erlangen"
+          ],
+          "max_hours": 12.0,
+          "remote": []
+        },
+        "preferences": [
+          "Arbeit im Entwicklungsteam",
+          "Praktischer Einstieg ins Berufsleben",
+          "Einarbeitung",
+          "Feste Ansprechperson bei Fragen"
+        ],
+        "query": "Ich studiere Informatik im zweiten Semester und suche eine Werkstudentenstelle in der Webentwicklung. Ich möchte erste praktische Erfahrung sammeln.",
+        "skills": [
+          "Python-Grundlagen",
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ]
+      },
+      "ranking": [
+        "829115",
+        "837775",
+        "828195",
+        "832418",
+        "820065",
+        "830863",
+        "833009",
+        "837416",
+        "861511",
+        "835027",
+        "857135",
+        "845512",
+        "843348",
+        "824568",
+        "834700",
+        "834695",
+        "843131",
+        "816293",
+        "826611",
+        "860555"
+      ],
+      "scores": [
+        72,
+        71,
+        68,
+        66,
+        65,
+        63,
+        63,
+        60,
+        60,
+        60,
+        60,
+        59,
+        58,
+        56,
+        52,
+        51,
+        49,
+        49,
+        49,
+        47
+      ]
+    }
+  ]
+}

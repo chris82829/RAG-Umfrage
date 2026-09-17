@@ -1,0 +1,850 @@
+{
+  "task": "P01-B.T0.RerankingResult.02",
+  "started_utc": "2026-09-17T07:02:42.510103+00:00",
+  "ok": true,
+  "request_sha256": "c3e84a9d95a102fbd6445b76fe7c400f7f534a72d65cfd0a1ed28b0b47369c42",
+  "http_status": 200,
+  "response": {
+    "id": "resp_05fa58c8c15556d4016aab9092d7ac87d2be5618919451467d",
+    "object": "response",
+    "created_at": 1789628562,
+    "status": "completed",
+    "background": false,
+    "billing": {
+      "payer": "openai"
+    },
+    "completed_at": 1789628600,
+    "error": null,
+    "frequency_penalty": 0.0,
+    "incomplete_details": null,
+    "instructions": null,
+    "max_output_tokens": 10000,
+    "max_tool_calls": null,
+    "model": "gpt-5.4-2026-03-05",
+    "moderation": null,
+    "output": [
+      {
+        "id": "msg_05fa58c8c15556d4016aab90939a6c87d2a06323f6e025a9ce",
+        "type": "message",
+        "status": "completed",
+        "content": [
+          {
+            "type": "output_text",
+            "annotations": [],
+            "logprobs": [],
+            "text": "{\"rankings\":[{\"job_id\":\"829115\",\"components\":{\"technical_fit\":72,\"preferences_fit\":80,\"technical_depth\":75,\"learning\":null,\"innovation\":55,\"clarity\":78},\"reasons\":[\"HTML, CSS, JavaScript, Python und Git sind belegt und passen direkt zu Webapps sowie Backend-Unterstützung mit Django.\",\"Für React oder Angular, relationale Datenbanken und agile Entwicklung gibt es im Profil noch keinen belegten Nachweis.\",\"Die Stelle bietet Mitarbeit im Entwicklungsteam und 10 bis 20 Stunden pro Woche, was für einen praktischen Einstieg gut anschlussfähig ist.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"Angular\",\"relationale Datenbanken\",\"agile Softwareentwicklung\"]},{\"job_id\":\"820065\",\"components\":{\"technical_fit\":68,\"preferences_fit\":85,\"technical_depth\":72,\"learning\":88,\"innovation\":70,\"clarity\":80},\"reasons\":[\"Dein Webprojekt mit HTML, CSS und JavaScript passt direkt zu Frontend-Coding und der Neugestaltung einer Website.\",\"Der offene Punkt ist die Anforderung ab dem 4. Semester; außerdem sind PHP oder Node.js im Profil nicht belegt.\",\"Die umfassende Einarbeitung und die Mitgestaltung bei Architektur- und Designentscheidungen sprechen klar für Lernpotenzial im Team.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP\",\"Node.js\"]},{\"job_id\":\"837416\",\"components\":{\"technical_fit\":66,\"preferences_fit\":75,\"technical_depth\":68,\"learning\":82,\"innovation\":84,\"clarity\":74},\"reasons\":[\"HTML, CSS und JavaScript aus deinem Projekt passen gut zur Umsetzung responsiver User Interfaces im Frontend.\",\"Für PHP, MySQL, CMS und Frameworks wie Vue, React oder Laravel gibt es im Profil noch keine belegten Nachweise.\",\"Du wärst direkt in echte Projekte eingebunden, kannst Ideen einbringen und es sind Weiterbildungsmöglichkeiten ausdrücklich genannt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP\",\"MySQL\",\"CMS-Systeme\",\"Vue.js\",\"React\",\"Laravel\"]},{\"job_id\":\"861511\",\"components\":{\"technical_fit\":60,\"preferences_fit\":82,\"technical_depth\":76,\"learning\":85,\"innovation\":65,\"clarity\":86},\"reasons\":[\"JavaScript, Python und Git sind belegt und passen zu Frontend-Aufgaben sowie Python-Microservices in Webprojekten.\",\"Der größte offene Punkt sind mehrere nicht belegte Frameworks und Schnittstellen wie Nuxt, Vue, Node.js, TypeScript, GraphQL und REST.\",\"Viel Raum zum Lernen und Ausprobieren ist ausdrücklich genannt; für den Einstieg hilft das, trotz anspruchsvollem Stack.\"] ,\"matched_skills\":[\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"Nuxt.js\",\"Vue.js\",\"Node.js\",\"TypeScript\",\"GraphQL\",\"RESTful APIs\",\"Headless CMS\"]},{\"job_id\":\"828195\",\"components\":{\"technical_fit\":74,\"preferences_fit\":78,\"technical_depth\":52,\"learning\":76,\"innovation\":62,\"clarity\":79},\"reasons\":[\"HTML, CSS und JavaScript sind belegt und die Anzeige nennt diese Webtechnologien sogar nur als Vorteil, nicht als Muss.\",\"CMS-Erfahrung und Arbeit mit Web-Formularsystemen sind im Profil noch nicht belegt; außerdem hat der Job einen spürbaren Support-Anteil.\",\"Regelmäßige Fortbildungen und die Bereitschaft zur Einarbeitung in CMS und Formularsysteme machen den Einstieg realistisch.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"CMS\",\"JQuery\"]},{\"job_id\":\"830863\",\"components\":{\"technical_fit\":71,\"preferences_fit\":85,\"technical_depth\":70,\"learning\":null,\"innovation\":78,\"clarity\":77},\"reasons\":[\"HTML, CSS und JavaScript sind belegt und passen direkt zur UI-Entwicklung für Web-Anwendungen.\",\"Für TypeScript, Vue 2/3 und Figma gibt es im Profil noch keinen belegten Nachweis.\",\"Die Stelle bietet Mitarbeit an echter Produktentwicklung und ausdrücklich Raum, eigene Ideen einzubringen; Einarbeitung bleibt offen.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Vue 2\",\"Vue 3\",\"Figma\"]},{\"job_id\":\"845512\",\"components\":{\"technical_fit\":52,\"preferences_fit\":84,\"technical_depth\":74,\"learning\":82,\"innovation\":58,\"clarity\":81},\"reasons\":[\"HTML, CSS, JavaScript und Python passen zu Teilen der Webaufgaben, besonders bei Webseiten, Templates und Skripten.\",\"Zentrale Nachweise für Matlab, Simulink, PLC Coder sowie Linux und idealerweise PHP oder XML fehlen im Profil.\",\"Du bekommst laut Anzeige frühe Einblicke, einen eigenen Aufgabenbereich und persönliche Weiterentwicklung, fachlich ist die Stelle aber deutlich breiter als Web.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Matlab\",\"Simulink\",\"PLC Coder\",\"Linux\",\"PHP\",\"XML\"]},{\"job_id\":\"824568\",\"components\":{\"technical_fit\":63,\"preferences_fit\":80,\"technical_depth\":69,\"learning\":92,\"innovation\":72,\"clarity\":57},\"reasons\":[\"HTML, CSS, JavaScript und Python sind belegt und tauchen in den Web- und Datenbank-Webaufgaben direkt auf.\",\"Der Aufgabenmix ist sehr breit; konkrete Zuordnung zu einem Web-Entwicklungsbereich bleibt offen und Frameworks wie Angular oder Spring Boot sind nicht belegt.\",\"Intensive Einarbeitung, fundierte Betreuung und Praxisbezug sind ausdrücklich genannt und stützen einen frühen Einstieg.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Angular\",\"Spring Boot\",\"SQL\"]},{\"job_id\":\"843348\",\"components\":{\"technical_fit\":67,\"preferences_fit\":88,\"technical_depth\":71,\"learning\":84,\"innovation\":63,\"clarity\":83},\"reasons\":[\"Deine JavaScript- und Git-Grundlagen passen zu einem Einstieg in Fullstack-Aufgaben im Entwicklerteam.\",\"Offen sind React, Vue, Node.js, REST oder GraphQL sowie Testing-Frameworks wie Cypress oder Jest.\",\"Die Anzeige verspricht Unterstützung bei der Weiterentwicklung und bindet dich in echte Kundenprojekte und Tests ein.\"] ,\"matched_skills\":[\"JavaScript-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"Vue.js\",\"Node.js\",\"REST\",\"GraphQL\",\"Cypress\",\"Selenium\",\"Jest\",\"Flutter\"]},{\"job_id\":\"834695\",\"components\":{\"technical_fit\":41,\"preferences_fit\":82,\"technical_depth\":64,\"learning\":80,\"innovation\":76,\"clarity\":74},\"reasons\":[\"Python, JavaScript und CSS sind zwar belegt, fachlich liegt die Stelle aber klar bei KI-Anwendungen statt Webentwicklung.\",\"Die Anzeige verlangt ein laufendes Masterstudium sowie REST-API-Erfahrung; beides ist im Profil nicht belegt.\",\"Praktische Erfahrung und Teamunterstützung sind zugesagt, aber für dein aktuelles Web-Ziel ist der Schwerpunkt spürbar verschoben.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"JavaScript-Grundlagen\",\"CSS\"],\"missing_skills\":[\"REST-APIs\"]},{\"job_id\":\"834700\",\"components\":{\"technical_fit\":58,\"preferences_fit\":84,\"technical_depth\":66,\"learning\":70,\"innovation\":55,\"clarity\":78},\"reasons\":[\"Die Stelle nennt Web-Oberflächen und agiles Arbeiten; HTML, CSS und JavaScript liefern dafür eine tragfähige Teilbasis.\",\"Wichtige Nachweise für Linux, Cloud und C/C++/C# fehlen, und der Schwerpunkt liegt zusätzlich auf Echtzeitanwendungen.\",\"Das Entwicklerteam und SCRUM passen zum Wunsch nach praktischer Teamarbeit; ausdrückliche Einarbeitung bleibt offen.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Linux\",\"Cloud-Technologien\",\"C\",\"C++\",\"C#\"]},{\"job_id\":\"833009\",\"components\":{\"technical_fit\":56,\"preferences_fit\":86,\"technical_depth\":67,\"learning\":90,\"innovation\":60,\"clarity\":76},\"reasons\":[\"Python und Git sind belegt und passen zu Entwicklungsarbeit im agilen Team mit verschiedenen Technologien.\",\"REST-Services, CI/CD und Testautomatisierung sind im Profil noch nicht belegt; zusätzlich nennt die Anzeige mindestens das 4. Semester.\",\"Besonders stark ist das Lernumfeld: Mentoren sollen passende Aufgaben nach Kenntnissen auswählen und dich dabei unterstützen.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]},{\"job_id\":\"845150\",\"components\":{\"technical_fit\":56,\"preferences_fit\":86,\"technical_depth\":67,\"learning\":90,\"innovation\":60,\"clarity\":79},\"reasons\":[\"Python und Git sind belegt und geben eine Basis für Backend- oder Teamaufgaben in der Softwareentwicklung.\",\"REST-Services, CI/CD und Testautomatisierung sind nicht belegt; außerdem wird mindestens das 4. Semester genannt.\",\"Die Mentoren-Zusage und die breite Einbindung in Frontend, Backend und Tests machen den nächsten Lernschritt gut greifbar.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]},{\"job_id\":\"860555\",\"components\":{\"technical_fit\":46,\"preferences_fit\":82,\"technical_depth\":73,\"learning\":86,\"innovation\":58,\"clarity\":82},\"reasons\":[\"HTML, CSS, JavaScript und etwas Python berühren Teile der Frontend- und Backend-Aufgaben.\",\"Die Anzeige verlangt solide Kenntnisse in Java, Spring, TypeScript, Angular sowie SQL; diese zentralen Nachweise fehlen im Profil.\",\"Kontinuierliche Unterstützung, Schulungen und Homeoffice-Option helfen beim Lernen, fachlich ist der Einstieg hier aber anspruchsvoll.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\",\"Exasol\"]},{\"job_id\":\"837775\",\"components\":{\"technical_fit\":73,\"preferences_fit\":88,\"technical_depth\":61,\"learning\":86,\"innovation\":74,\"clarity\":76},\"reasons\":[\"Dein erstes Webprojekt passt gut zur geforderten Erfahrung mit Webentwicklung und JavaScript im Frontend.\",\"Java im Backend und Erfahrung mit Softwaretests sind im Profil noch nicht belegt.\",\"Die Stelle bietet Teamarbeit, flexible Zeiten, Seminare und ein Mentoringprogramm; das ist für erste Praxiserfahrung sehr passend.\"] ,\"matched_skills\":[\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Java\",\"Softwaretests\"]},{\"job_id\":\"849193\",\"components\":{\"technical_fit\":50,\"preferences_fit\":72,\"technical_depth\":38,\"learning\":84,\"innovation\":58,\"clarity\":79},\"reasons\":[\"HTML, CSS und etwas JavaScript können dir bei WordPress-Webdesign-Projekten helfen.\",\"Der Schwerpunkt liegt stark auf Content Marketing, Social Media und Schreiben statt auf Webentwicklung im Entwicklerteam.\",\"Persönliches Mentoring ist ausdrücklich genannt; für dein Ziel Webentwicklung wäre der fachliche Praxisbezug aber nur begrenzt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"WordPress\"]},{\"job_id\":\"832418\",\"components\":{\"technical_fit\":69,\"preferences_fit\":87,\"technical_depth\":58,\"learning\":88,\"innovation\":66,\"clarity\":80},\"reasons\":[\"HTML und CSS sind belegt und passen direkt zu Planung, Realisierung und Pflege von Webseiten im E-Commerce-Umfeld.\",\"JavaScript wird im Aufgabenblock nicht klar verlangt, dafür ist ein Gespür für Design wichtig; belegte Webdesign-Praxis bleibt begrenzt.\",\"Das Team begleitet dich ausdrücklich und bringt dir technisches und organisatorisches Know-how bei, was den Einstieg gut stützt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\"],\"missing_skills\":[]},{\"job_id\":\"843131\",\"components\":{\"technical_fit\":46,\"preferences_fit\":82,\"technical_depth\":73,\"learning\":86,\"innovation\":58,\"clarity\":82},\"reasons\":[\"HTML, CSS, JavaScript und etwas Python decken nur Teilaspekte der Frontend- und Backend-Aufgaben ab.\",\"Gefordert sind solide Kenntnisse in Java, Spring, TypeScript, Angular2+ sowie SQL; diese zentralen Nachweise fehlen im Profil.\",\"Kontinuierliche Unterstützung und Schulungen sind positiv, aber fachlich ist die Stelle für einen frühen Web-Einstieg recht anspruchsvoll.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular2+\",\"PostgreSQL\",\"SQL\",\"Spark\",\"Exasol\"]},{\"job_id\":\"844821\",\"components\":{\"technical_fit\":49,\"preferences_fit\":88,\"technical_depth\":72,\"learning\":null,\"innovation\":76,\"clarity\":81},\"reasons\":[\"HTML, CSS, JavaScript und Git passen grundsätzlich zu Frontend-Arbeit im agilen Team.\",\"Node.js, Angular, TypeScript, Linux, DevOps und testgetriebene Entwicklung sind wichtige offene Punkte im Profil.\",\"Die Teamstruktur und kleine Projekte sprechen für Praxiserfahrung; konkrete Einarbeitung oder Betreuung wird jedoch nicht ausdrücklich genannt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Node.js\",\"Angular\",\"Linux\",\"DevOps\",\"testgetriebene Entwicklung\",\"SOLID-Prinzipien\"]},{\"job_id\":\"857135\",\"components\":{\"technical_fit\":54,\"preferences_fit\":90,\"technical_depth\":75,\"learning\":78,\"innovation\":72,\"clarity\":84},\"reasons\":[\"Git und etwas Python sind belegt, und dein Webprojekt zeigt einen Einstieg in Frontend-Aufgaben im Team.\",\"React, TypeScript, REST-APIs und Cypress werden ausdrücklich erwartet und sind im Profil noch nicht belegt.\",\"Die Aufgaben sind klar, klein schrittig und im Forschungsteam angelegt; der nächste Schritt wäre hier ein kleines Frontend-Projekt mit Git und API-Anbindung als Nachweis.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"TypeScript\",\"REST APIs\",\"Cypress\",\"Storybook\"]}],\"assistant_message\":\"Für deinen Wunsch nach einem realistischen Einstieg in die Webentwicklung sind vor allem die Stellen stark, die deine HTML-, CSS- und JavaScript-Basis direkt einsetzen und gleichzeitig Einarbeitung oder Betreuung ausdrücklich nennen. Besonders anschlussfähig wirken die Frontend-nahen Rollen mit klaren Lernangeboten. Der wichtigste Prüfpunkt bleibt fast überall gleich: Werden Frameworks wie React, Angular oder TypeScript schon erwartet, oder kannst du sie dort erst im Team aufbauen?\"}"
+          }
+        ],
+        "phase": "final_answer",
+        "role": "assistant"
+      }
+    ],
+    "parallel_tool_calls": true,
+    "presence_penalty": 0.0,
+    "previous_response_id": null,
+    "prompt_cache_key": null,
+    "prompt_cache_retention": "24h",
+    "reasoning": {
+      "context": "current_turn",
+      "effort": "none",
+      "mode": "standard",
+      "summary": null
+    },
+    "safety_identifier": null,
+    "service_tier": "default",
+    "store": false,
+    "temperature": 1.0,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "description": null,
+        "name": "RerankingResult",
+        "schema": {
+          "$defs": {
+            "RankedJob": {
+              "additionalProperties": false,
+              "properties": {
+                "job_id": {
+                  "minLength": 1,
+                  "title": "Job Id",
+                  "type": "string"
+                },
+                "components": {
+                  "$ref": "#/$defs/ScoreComponents"
+                },
+                "reasons": {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "maxItems": 3,
+                  "minItems": 2,
+                  "title": "Reasons",
+                  "type": "array"
+                },
+                "matched_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Matched Skills",
+                  "type": "array"
+                },
+                "missing_skills": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "title": "Missing Skills",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "job_id",
+                "components",
+                "reasons",
+                "matched_skills",
+                "missing_skills"
+              ],
+              "title": "RankedJob",
+              "type": "object"
+            },
+            "ScoreComponents": {
+              "additionalProperties": false,
+              "properties": {
+                "technical_fit": {
+                  "maximum": 100,
+                  "minimum": 1,
+                  "title": "Technical Fit",
+                  "type": "integer"
+                },
+                "preferences_fit": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Preferences Fit"
+                },
+                "technical_depth": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Technical Depth"
+                },
+                "learning": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Learning"
+                },
+                "innovation": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Innovation"
+                },
+                "clarity": {
+                  "anyOf": [
+                    {
+                      "maximum": 100,
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Clarity"
+                }
+              },
+              "required": [
+                "technical_fit",
+                "preferences_fit",
+                "technical_depth",
+                "learning",
+                "innovation",
+                "clarity"
+              ],
+              "title": "ScoreComponents",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "properties": {
+            "rankings": {
+              "items": {
+                "$ref": "#/$defs/RankedJob"
+              },
+              "maxItems": 20,
+              "minItems": 1,
+              "title": "Rankings",
+              "type": "array"
+            },
+            "assistant_message": {
+              "minLength": 1,
+              "title": "Assistant Message",
+              "type": "string"
+            }
+          },
+          "required": [
+            "rankings",
+            "assistant_message"
+          ],
+          "title": "RerankingResult",
+          "type": "object"
+        },
+        "strict": true
+      },
+      "verbosity": "medium"
+    },
+    "tool_choice": "auto",
+    "tool_usage": {
+      "image_gen": {
+        "input_tokens": 0,
+        "input_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "output_tokens": 0,
+        "output_tokens_details": {
+          "image_tokens": 0,
+          "text_tokens": 0
+        },
+        "total_tokens": 0
+      },
+      "web_search": {
+        "num_requests": 0
+      }
+    },
+    "tools": [],
+    "top_logprobs": 0,
+    "top_p": 0.98,
+    "truncation": "disabled",
+    "usage": {
+      "input_tokens": 23283,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 3840
+      },
+      "output_tokens": 3162,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 26445
+    },
+    "user": null,
+    "metadata": {}
+  },
+  "usage": {
+    "input_tokens": 23283,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 3840
+    },
+    "output_tokens": 3162,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 26445
+  },
+  "result": {
+    "rankings": [
+      {
+        "job_id": "829115",
+        "components": {
+          "technical_fit": 72,
+          "preferences_fit": 80,
+          "technical_depth": 75,
+          "learning": null,
+          "innovation": 55,
+          "clarity": 78
+        },
+        "reasons": [
+          "HTML, CSS, JavaScript, Python und Git sind belegt und passen direkt zu Webapps sowie Backend-Unterstützung mit Django.",
+          "Für React oder Angular, relationale Datenbanken und agile Entwicklung gibt es im Profil noch keinen belegten Nachweis.",
+          "Die Stelle bietet Mitarbeit im Entwicklungsteam und 10 bis 20 Stunden pro Woche, was für einen praktischen Einstieg gut anschlussfähig ist."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "React",
+          "Angular",
+          "relationale Datenbanken",
+          "agile Softwareentwicklung"
+        ]
+      },
+      {
+        "job_id": "820065",
+        "components": {
+          "technical_fit": 68,
+          "preferences_fit": 85,
+          "technical_depth": 72,
+          "learning": 88,
+          "innovation": 70,
+          "clarity": 80
+        },
+        "reasons": [
+          "Dein Webprojekt mit HTML, CSS und JavaScript passt direkt zu Frontend-Coding und der Neugestaltung einer Website.",
+          "Der offene Punkt ist die Anforderung ab dem 4. Semester; außerdem sind PHP oder Node.js im Profil nicht belegt.",
+          "Die umfassende Einarbeitung und die Mitgestaltung bei Architektur- und Designentscheidungen sprechen klar für Lernpotenzial im Team."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "PHP",
+          "Node.js"
+        ]
+      },
+      {
+        "job_id": "837416",
+        "components": {
+          "technical_fit": 66,
+          "preferences_fit": 75,
+          "technical_depth": 68,
+          "learning": 82,
+          "innovation": 84,
+          "clarity": 74
+        },
+        "reasons": [
+          "HTML, CSS und JavaScript aus deinem Projekt passen gut zur Umsetzung responsiver User Interfaces im Frontend.",
+          "Für PHP, MySQL, CMS und Frameworks wie Vue, React oder Laravel gibt es im Profil noch keine belegten Nachweise.",
+          "Du wärst direkt in echte Projekte eingebunden, kannst Ideen einbringen und es sind Weiterbildungsmöglichkeiten ausdrücklich genannt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "PHP",
+          "MySQL",
+          "CMS-Systeme",
+          "Vue.js",
+          "React",
+          "Laravel"
+        ]
+      },
+      {
+        "job_id": "861511",
+        "components": {
+          "technical_fit": 60,
+          "preferences_fit": 82,
+          "technical_depth": 76,
+          "learning": 85,
+          "innovation": 65,
+          "clarity": 86
+        },
+        "reasons": [
+          "JavaScript, Python und Git sind belegt und passen zu Frontend-Aufgaben sowie Python-Microservices in Webprojekten.",
+          "Der größte offene Punkt sind mehrere nicht belegte Frameworks und Schnittstellen wie Nuxt, Vue, Node.js, TypeScript, GraphQL und REST.",
+          "Viel Raum zum Lernen und Ausprobieren ist ausdrücklich genannt; für den Einstieg hilft das, trotz anspruchsvollem Stack."
+        ],
+        "matched_skills": [
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "Nuxt.js",
+          "Vue.js",
+          "Node.js",
+          "TypeScript",
+          "GraphQL",
+          "RESTful APIs",
+          "Headless CMS"
+        ]
+      },
+      {
+        "job_id": "828195",
+        "components": {
+          "technical_fit": 74,
+          "preferences_fit": 78,
+          "technical_depth": 52,
+          "learning": 76,
+          "innovation": 62,
+          "clarity": 79
+        },
+        "reasons": [
+          "HTML, CSS und JavaScript sind belegt und die Anzeige nennt diese Webtechnologien sogar nur als Vorteil, nicht als Muss.",
+          "CMS-Erfahrung und Arbeit mit Web-Formularsystemen sind im Profil noch nicht belegt; außerdem hat der Job einen spürbaren Support-Anteil.",
+          "Regelmäßige Fortbildungen und die Bereitschaft zur Einarbeitung in CMS und Formularsysteme machen den Einstieg realistisch."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "CMS",
+          "JQuery"
+        ]
+      },
+      {
+        "job_id": "830863",
+        "components": {
+          "technical_fit": 71,
+          "preferences_fit": 85,
+          "technical_depth": 70,
+          "learning": null,
+          "innovation": 78,
+          "clarity": 77
+        },
+        "reasons": [
+          "HTML, CSS und JavaScript sind belegt und passen direkt zur UI-Entwicklung für Web-Anwendungen.",
+          "Für TypeScript, Vue 2/3 und Figma gibt es im Profil noch keinen belegten Nachweis.",
+          "Die Stelle bietet Mitarbeit an echter Produktentwicklung und ausdrücklich Raum, eigene Ideen einzubringen; Einarbeitung bleibt offen."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "TypeScript",
+          "Vue 2",
+          "Vue 3",
+          "Figma"
+        ]
+      },
+      {
+        "job_id": "845512",
+        "components": {
+          "technical_fit": 52,
+          "preferences_fit": 84,
+          "technical_depth": 74,
+          "learning": 82,
+          "innovation": 58,
+          "clarity": 81
+        },
+        "reasons": [
+          "HTML, CSS, JavaScript und Python passen zu Teilen der Webaufgaben, besonders bei Webseiten, Templates und Skripten.",
+          "Zentrale Nachweise für Matlab, Simulink, PLC Coder sowie Linux und idealerweise PHP oder XML fehlen im Profil.",
+          "Du bekommst laut Anzeige frühe Einblicke, einen eigenen Aufgabenbereich und persönliche Weiterentwicklung, fachlich ist die Stelle aber deutlich breiter als Web."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Matlab",
+          "Simulink",
+          "PLC Coder",
+          "Linux",
+          "PHP",
+          "XML"
+        ]
+      },
+      {
+        "job_id": "824568",
+        "components": {
+          "technical_fit": 63,
+          "preferences_fit": 80,
+          "technical_depth": 69,
+          "learning": 92,
+          "innovation": 72,
+          "clarity": 57
+        },
+        "reasons": [
+          "HTML, CSS, JavaScript und Python sind belegt und tauchen in den Web- und Datenbank-Webaufgaben direkt auf.",
+          "Der Aufgabenmix ist sehr breit; konkrete Zuordnung zu einem Web-Entwicklungsbereich bleibt offen und Frameworks wie Angular oder Spring Boot sind nicht belegt.",
+          "Intensive Einarbeitung, fundierte Betreuung und Praxisbezug sind ausdrücklich genannt und stützen einen frühen Einstieg."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "TypeScript",
+          "Angular",
+          "Spring Boot",
+          "SQL"
+        ]
+      },
+      {
+        "job_id": "843348",
+        "components": {
+          "technical_fit": 67,
+          "preferences_fit": 88,
+          "technical_depth": 71,
+          "learning": 84,
+          "innovation": 63,
+          "clarity": 83
+        },
+        "reasons": [
+          "Deine JavaScript- und Git-Grundlagen passen zu einem Einstieg in Fullstack-Aufgaben im Entwicklerteam.",
+          "Offen sind React, Vue, Node.js, REST oder GraphQL sowie Testing-Frameworks wie Cypress oder Jest.",
+          "Die Anzeige verspricht Unterstützung bei der Weiterentwicklung und bindet dich in echte Kundenprojekte und Tests ein."
+        ],
+        "matched_skills": [
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "React",
+          "Vue.js",
+          "Node.js",
+          "REST",
+          "GraphQL",
+          "Cypress",
+          "Selenium",
+          "Jest",
+          "Flutter"
+        ]
+      },
+      {
+        "job_id": "834695",
+        "components": {
+          "technical_fit": 41,
+          "preferences_fit": 82,
+          "technical_depth": 64,
+          "learning": 80,
+          "innovation": 76,
+          "clarity": 74
+        },
+        "reasons": [
+          "Python, JavaScript und CSS sind zwar belegt, fachlich liegt die Stelle aber klar bei KI-Anwendungen statt Webentwicklung.",
+          "Die Anzeige verlangt ein laufendes Masterstudium sowie REST-API-Erfahrung; beides ist im Profil nicht belegt.",
+          "Praktische Erfahrung und Teamunterstützung sind zugesagt, aber für dein aktuelles Web-Ziel ist der Schwerpunkt spürbar verschoben."
+        ],
+        "matched_skills": [
+          "Python-Grundlagen",
+          "JavaScript-Grundlagen",
+          "CSS"
+        ],
+        "missing_skills": [
+          "REST-APIs"
+        ]
+      },
+      {
+        "job_id": "834700",
+        "components": {
+          "technical_fit": 58,
+          "preferences_fit": 84,
+          "technical_depth": 66,
+          "learning": 70,
+          "innovation": 55,
+          "clarity": 78
+        },
+        "reasons": [
+          "Die Stelle nennt Web-Oberflächen und agiles Arbeiten; HTML, CSS und JavaScript liefern dafür eine tragfähige Teilbasis.",
+          "Wichtige Nachweise für Linux, Cloud und C/C++/C# fehlen, und der Schwerpunkt liegt zusätzlich auf Echtzeitanwendungen.",
+          "Das Entwicklerteam und SCRUM passen zum Wunsch nach praktischer Teamarbeit; ausdrückliche Einarbeitung bleibt offen."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "Linux",
+          "Cloud-Technologien",
+          "C",
+          "C++",
+          "C#"
+        ]
+      },
+      {
+        "job_id": "833009",
+        "components": {
+          "technical_fit": 56,
+          "preferences_fit": 86,
+          "technical_depth": 67,
+          "learning": 90,
+          "innovation": 60,
+          "clarity": 76
+        },
+        "reasons": [
+          "Python und Git sind belegt und passen zu Entwicklungsarbeit im agilen Team mit verschiedenen Technologien.",
+          "REST-Services, CI/CD und Testautomatisierung sind im Profil noch nicht belegt; zusätzlich nennt die Anzeige mindestens das 4. Semester.",
+          "Besonders stark ist das Lernumfeld: Mentoren sollen passende Aufgaben nach Kenntnissen auswählen und dich dabei unterstützen."
+        ],
+        "matched_skills": [
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "REST-Services",
+          "CI/CD",
+          "Testautomatisierung"
+        ]
+      },
+      {
+        "job_id": "845150",
+        "components": {
+          "technical_fit": 56,
+          "preferences_fit": 86,
+          "technical_depth": 67,
+          "learning": 90,
+          "innovation": 60,
+          "clarity": 79
+        },
+        "reasons": [
+          "Python und Git sind belegt und geben eine Basis für Backend- oder Teamaufgaben in der Softwareentwicklung.",
+          "REST-Services, CI/CD und Testautomatisierung sind nicht belegt; außerdem wird mindestens das 4. Semester genannt.",
+          "Die Mentoren-Zusage und die breite Einbindung in Frontend, Backend und Tests machen den nächsten Lernschritt gut greifbar."
+        ],
+        "matched_skills": [
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "REST-Services",
+          "CI/CD",
+          "Testautomatisierung"
+        ]
+      },
+      {
+        "job_id": "860555",
+        "components": {
+          "technical_fit": 46,
+          "preferences_fit": 82,
+          "technical_depth": 73,
+          "learning": 86,
+          "innovation": 58,
+          "clarity": 82
+        },
+        "reasons": [
+          "HTML, CSS, JavaScript und etwas Python berühren Teile der Frontend- und Backend-Aufgaben.",
+          "Die Anzeige verlangt solide Kenntnisse in Java, Spring, TypeScript, Angular sowie SQL; diese zentralen Nachweise fehlen im Profil.",
+          "Kontinuierliche Unterstützung, Schulungen und Homeoffice-Option helfen beim Lernen, fachlich ist der Einstieg hier aber anspruchsvoll."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java",
+          "Spring",
+          "TypeScript",
+          "Angular",
+          "PostgreSQL",
+          "SQL",
+          "Spark",
+          "Exasol"
+        ]
+      },
+      {
+        "job_id": "837775",
+        "components": {
+          "technical_fit": 73,
+          "preferences_fit": 88,
+          "technical_depth": 61,
+          "learning": 86,
+          "innovation": 74,
+          "clarity": 76
+        },
+        "reasons": [
+          "Dein erstes Webprojekt passt gut zur geforderten Erfahrung mit Webentwicklung und JavaScript im Frontend.",
+          "Java im Backend und Erfahrung mit Softwaretests sind im Profil noch nicht belegt.",
+          "Die Stelle bietet Teamarbeit, flexible Zeiten, Seminare und ein Mentoringprogramm; das ist für erste Praxiserfahrung sehr passend."
+        ],
+        "matched_skills": [
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java",
+          "Softwaretests"
+        ]
+      },
+      {
+        "job_id": "849193",
+        "components": {
+          "technical_fit": 50,
+          "preferences_fit": 72,
+          "technical_depth": 38,
+          "learning": 84,
+          "innovation": 58,
+          "clarity": 79
+        },
+        "reasons": [
+          "HTML, CSS und etwas JavaScript können dir bei WordPress-Webdesign-Projekten helfen.",
+          "Der Schwerpunkt liegt stark auf Content Marketing, Social Media und Schreiben statt auf Webentwicklung im Entwicklerteam.",
+          "Persönliches Mentoring ist ausdrücklich genannt; für dein Ziel Webentwicklung wäre der fachliche Praxisbezug aber nur begrenzt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen"
+        ],
+        "missing_skills": [
+          "WordPress"
+        ]
+      },
+      {
+        "job_id": "832418",
+        "components": {
+          "technical_fit": 69,
+          "preferences_fit": 87,
+          "technical_depth": 58,
+          "learning": 88,
+          "innovation": 66,
+          "clarity": 80
+        },
+        "reasons": [
+          "HTML und CSS sind belegt und passen direkt zu Planung, Realisierung und Pflege von Webseiten im E-Commerce-Umfeld.",
+          "JavaScript wird im Aufgabenblock nicht klar verlangt, dafür ist ein Gespür für Design wichtig; belegte Webdesign-Praxis bleibt begrenzt.",
+          "Das Team begleitet dich ausdrücklich und bringt dir technisches und organisatorisches Know-how bei, was den Einstieg gut stützt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS"
+        ],
+        "missing_skills": []
+      },
+      {
+        "job_id": "843131",
+        "components": {
+          "technical_fit": 46,
+          "preferences_fit": 82,
+          "technical_depth": 73,
+          "learning": 86,
+          "innovation": 58,
+          "clarity": 82
+        },
+        "reasons": [
+          "HTML, CSS, JavaScript und etwas Python decken nur Teilaspekte der Frontend- und Backend-Aufgaben ab.",
+          "Gefordert sind solide Kenntnisse in Java, Spring, TypeScript, Angular2+ sowie SQL; diese zentralen Nachweise fehlen im Profil.",
+          "Kontinuierliche Unterstützung und Schulungen sind positiv, aber fachlich ist die Stelle für einen frühen Web-Einstieg recht anspruchsvoll."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Python-Grundlagen"
+        ],
+        "missing_skills": [
+          "Java",
+          "Spring",
+          "TypeScript",
+          "Angular2+",
+          "PostgreSQL",
+          "SQL",
+          "Spark",
+          "Exasol"
+        ]
+      },
+      {
+        "job_id": "844821",
+        "components": {
+          "technical_fit": 49,
+          "preferences_fit": 88,
+          "technical_depth": 72,
+          "learning": null,
+          "innovation": 76,
+          "clarity": 81
+        },
+        "reasons": [
+          "HTML, CSS, JavaScript und Git passen grundsätzlich zu Frontend-Arbeit im agilen Team.",
+          "Node.js, Angular, TypeScript, Linux, DevOps und testgetriebene Entwicklung sind wichtige offene Punkte im Profil.",
+          "Die Teamstruktur und kleine Projekte sprechen für Praxiserfahrung; konkrete Einarbeitung oder Betreuung wird jedoch nicht ausdrücklich genannt."
+        ],
+        "matched_skills": [
+          "HTML",
+          "CSS",
+          "JavaScript-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "TypeScript",
+          "Node.js",
+          "Angular",
+          "Linux",
+          "DevOps",
+          "testgetriebene Entwicklung",
+          "SOLID-Prinzipien"
+        ]
+      },
+      {
+        "job_id": "857135",
+        "components": {
+          "technical_fit": 54,
+          "preferences_fit": 90,
+          "technical_depth": 75,
+          "learning": 78,
+          "innovation": 72,
+          "clarity": 84
+        },
+        "reasons": [
+          "Git und etwas Python sind belegt, und dein Webprojekt zeigt einen Einstieg in Frontend-Aufgaben im Team.",
+          "React, TypeScript, REST-APIs und Cypress werden ausdrücklich erwartet und sind im Profil noch nicht belegt.",
+          "Die Aufgaben sind klar, klein schrittig und im Forschungsteam angelegt; der nächste Schritt wäre hier ein kleines Frontend-Projekt mit Git und API-Anbindung als Nachweis."
+        ],
+        "matched_skills": [
+          "Python-Grundlagen",
+          "Git-Grundlagen"
+        ],
+        "missing_skills": [
+          "React",
+          "TypeScript",
+          "REST APIs",
+          "Cypress",
+          "Storybook"
+        ]
+      }
+    ],
+    "assistant_message": "Für deinen Wunsch nach einem realistischen Einstieg in die Webentwicklung sind vor allem die Stellen stark, die deine HTML-, CSS- und JavaScript-Basis direkt einsetzen und gleichzeitig Einarbeitung oder Betreuung ausdrücklich nennen. Besonders anschlussfähig wirken die Frontend-nahen Rollen mit klaren Lernangeboten. Der wichtigste Prüfpunkt bleibt fast überall gleich: Werden Frameworks wie React, Angular oder TypeScript schon erwartet, oder kannst du sie dort erst im Team aufbauen?"
+  },
+  "raw_text": "{\"rankings\":[{\"job_id\":\"829115\",\"components\":{\"technical_fit\":72,\"preferences_fit\":80,\"technical_depth\":75,\"learning\":null,\"innovation\":55,\"clarity\":78},\"reasons\":[\"HTML, CSS, JavaScript, Python und Git sind belegt und passen direkt zu Webapps sowie Backend-Unterstützung mit Django.\",\"Für React oder Angular, relationale Datenbanken und agile Entwicklung gibt es im Profil noch keinen belegten Nachweis.\",\"Die Stelle bietet Mitarbeit im Entwicklungsteam und 10 bis 20 Stunden pro Woche, was für einen praktischen Einstieg gut anschlussfähig ist.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"Angular\",\"relationale Datenbanken\",\"agile Softwareentwicklung\"]},{\"job_id\":\"820065\",\"components\":{\"technical_fit\":68,\"preferences_fit\":85,\"technical_depth\":72,\"learning\":88,\"innovation\":70,\"clarity\":80},\"reasons\":[\"Dein Webprojekt mit HTML, CSS und JavaScript passt direkt zu Frontend-Coding und der Neugestaltung einer Website.\",\"Der offene Punkt ist die Anforderung ab dem 4. Semester; außerdem sind PHP oder Node.js im Profil nicht belegt.\",\"Die umfassende Einarbeitung und die Mitgestaltung bei Architektur- und Designentscheidungen sprechen klar für Lernpotenzial im Team.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP\",\"Node.js\"]},{\"job_id\":\"837416\",\"components\":{\"technical_fit\":66,\"preferences_fit\":75,\"technical_depth\":68,\"learning\":82,\"innovation\":84,\"clarity\":74},\"reasons\":[\"HTML, CSS und JavaScript aus deinem Projekt passen gut zur Umsetzung responsiver User Interfaces im Frontend.\",\"Für PHP, MySQL, CMS und Frameworks wie Vue, React oder Laravel gibt es im Profil noch keine belegten Nachweise.\",\"Du wärst direkt in echte Projekte eingebunden, kannst Ideen einbringen und es sind Weiterbildungsmöglichkeiten ausdrücklich genannt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"PHP\",\"MySQL\",\"CMS-Systeme\",\"Vue.js\",\"React\",\"Laravel\"]},{\"job_id\":\"861511\",\"components\":{\"technical_fit\":60,\"preferences_fit\":82,\"technical_depth\":76,\"learning\":85,\"innovation\":65,\"clarity\":86},\"reasons\":[\"JavaScript, Python und Git sind belegt und passen zu Frontend-Aufgaben sowie Python-Microservices in Webprojekten.\",\"Der größte offene Punkt sind mehrere nicht belegte Frameworks und Schnittstellen wie Nuxt, Vue, Node.js, TypeScript, GraphQL und REST.\",\"Viel Raum zum Lernen und Ausprobieren ist ausdrücklich genannt; für den Einstieg hilft das, trotz anspruchsvollem Stack.\"] ,\"matched_skills\":[\"JavaScript-Grundlagen\",\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"Nuxt.js\",\"Vue.js\",\"Node.js\",\"TypeScript\",\"GraphQL\",\"RESTful APIs\",\"Headless CMS\"]},{\"job_id\":\"828195\",\"components\":{\"technical_fit\":74,\"preferences_fit\":78,\"technical_depth\":52,\"learning\":76,\"innovation\":62,\"clarity\":79},\"reasons\":[\"HTML, CSS und JavaScript sind belegt und die Anzeige nennt diese Webtechnologien sogar nur als Vorteil, nicht als Muss.\",\"CMS-Erfahrung und Arbeit mit Web-Formularsystemen sind im Profil noch nicht belegt; außerdem hat der Job einen spürbaren Support-Anteil.\",\"Regelmäßige Fortbildungen und die Bereitschaft zur Einarbeitung in CMS und Formularsysteme machen den Einstieg realistisch.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"CMS\",\"JQuery\"]},{\"job_id\":\"830863\",\"components\":{\"technical_fit\":71,\"preferences_fit\":85,\"technical_depth\":70,\"learning\":null,\"innovation\":78,\"clarity\":77},\"reasons\":[\"HTML, CSS und JavaScript sind belegt und passen direkt zur UI-Entwicklung für Web-Anwendungen.\",\"Für TypeScript, Vue 2/3 und Figma gibt es im Profil noch keinen belegten Nachweis.\",\"Die Stelle bietet Mitarbeit an echter Produktentwicklung und ausdrücklich Raum, eigene Ideen einzubringen; Einarbeitung bleibt offen.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Vue 2\",\"Vue 3\",\"Figma\"]},{\"job_id\":\"845512\",\"components\":{\"technical_fit\":52,\"preferences_fit\":84,\"technical_depth\":74,\"learning\":82,\"innovation\":58,\"clarity\":81},\"reasons\":[\"HTML, CSS, JavaScript und Python passen zu Teilen der Webaufgaben, besonders bei Webseiten, Templates und Skripten.\",\"Zentrale Nachweise für Matlab, Simulink, PLC Coder sowie Linux und idealerweise PHP oder XML fehlen im Profil.\",\"Du bekommst laut Anzeige frühe Einblicke, einen eigenen Aufgabenbereich und persönliche Weiterentwicklung, fachlich ist die Stelle aber deutlich breiter als Web.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Matlab\",\"Simulink\",\"PLC Coder\",\"Linux\",\"PHP\",\"XML\"]},{\"job_id\":\"824568\",\"components\":{\"technical_fit\":63,\"preferences_fit\":80,\"technical_depth\":69,\"learning\":92,\"innovation\":72,\"clarity\":57},\"reasons\":[\"HTML, CSS, JavaScript und Python sind belegt und tauchen in den Web- und Datenbank-Webaufgaben direkt auf.\",\"Der Aufgabenmix ist sehr breit; konkrete Zuordnung zu einem Web-Entwicklungsbereich bleibt offen und Frameworks wie Angular oder Spring Boot sind nicht belegt.\",\"Intensive Einarbeitung, fundierte Betreuung und Praxisbezug sind ausdrücklich genannt und stützen einen frühen Einstieg.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Angular\",\"Spring Boot\",\"SQL\"]},{\"job_id\":\"843348\",\"components\":{\"technical_fit\":67,\"preferences_fit\":88,\"technical_depth\":71,\"learning\":84,\"innovation\":63,\"clarity\":83},\"reasons\":[\"Deine JavaScript- und Git-Grundlagen passen zu einem Einstieg in Fullstack-Aufgaben im Entwicklerteam.\",\"Offen sind React, Vue, Node.js, REST oder GraphQL sowie Testing-Frameworks wie Cypress oder Jest.\",\"Die Anzeige verspricht Unterstützung bei der Weiterentwicklung und bindet dich in echte Kundenprojekte und Tests ein.\"] ,\"matched_skills\":[\"JavaScript-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"Vue.js\",\"Node.js\",\"REST\",\"GraphQL\",\"Cypress\",\"Selenium\",\"Jest\",\"Flutter\"]},{\"job_id\":\"834695\",\"components\":{\"technical_fit\":41,\"preferences_fit\":82,\"technical_depth\":64,\"learning\":80,\"innovation\":76,\"clarity\":74},\"reasons\":[\"Python, JavaScript und CSS sind zwar belegt, fachlich liegt die Stelle aber klar bei KI-Anwendungen statt Webentwicklung.\",\"Die Anzeige verlangt ein laufendes Masterstudium sowie REST-API-Erfahrung; beides ist im Profil nicht belegt.\",\"Praktische Erfahrung und Teamunterstützung sind zugesagt, aber für dein aktuelles Web-Ziel ist der Schwerpunkt spürbar verschoben.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"JavaScript-Grundlagen\",\"CSS\"],\"missing_skills\":[\"REST-APIs\"]},{\"job_id\":\"834700\",\"components\":{\"technical_fit\":58,\"preferences_fit\":84,\"technical_depth\":66,\"learning\":70,\"innovation\":55,\"clarity\":78},\"reasons\":[\"Die Stelle nennt Web-Oberflächen und agiles Arbeiten; HTML, CSS und JavaScript liefern dafür eine tragfähige Teilbasis.\",\"Wichtige Nachweise für Linux, Cloud und C/C++/C# fehlen, und der Schwerpunkt liegt zusätzlich auf Echtzeitanwendungen.\",\"Das Entwicklerteam und SCRUM passen zum Wunsch nach praktischer Teamarbeit; ausdrückliche Einarbeitung bleibt offen.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Linux\",\"Cloud-Technologien\",\"C\",\"C++\",\"C#\"]},{\"job_id\":\"833009\",\"components\":{\"technical_fit\":56,\"preferences_fit\":86,\"technical_depth\":67,\"learning\":90,\"innovation\":60,\"clarity\":76},\"reasons\":[\"Python und Git sind belegt und passen zu Entwicklungsarbeit im agilen Team mit verschiedenen Technologien.\",\"REST-Services, CI/CD und Testautomatisierung sind im Profil noch nicht belegt; zusätzlich nennt die Anzeige mindestens das 4. Semester.\",\"Besonders stark ist das Lernumfeld: Mentoren sollen passende Aufgaben nach Kenntnissen auswählen und dich dabei unterstützen.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]},{\"job_id\":\"845150\",\"components\":{\"technical_fit\":56,\"preferences_fit\":86,\"technical_depth\":67,\"learning\":90,\"innovation\":60,\"clarity\":79},\"reasons\":[\"Python und Git sind belegt und geben eine Basis für Backend- oder Teamaufgaben in der Softwareentwicklung.\",\"REST-Services, CI/CD und Testautomatisierung sind nicht belegt; außerdem wird mindestens das 4. Semester genannt.\",\"Die Mentoren-Zusage und die breite Einbindung in Frontend, Backend und Tests machen den nächsten Lernschritt gut greifbar.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"REST-Services\",\"CI/CD\",\"Testautomatisierung\"]},{\"job_id\":\"860555\",\"components\":{\"technical_fit\":46,\"preferences_fit\":82,\"technical_depth\":73,\"learning\":86,\"innovation\":58,\"clarity\":82},\"reasons\":[\"HTML, CSS, JavaScript und etwas Python berühren Teile der Frontend- und Backend-Aufgaben.\",\"Die Anzeige verlangt solide Kenntnisse in Java, Spring, TypeScript, Angular sowie SQL; diese zentralen Nachweise fehlen im Profil.\",\"Kontinuierliche Unterstützung, Schulungen und Homeoffice-Option helfen beim Lernen, fachlich ist der Einstieg hier aber anspruchsvoll.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular\",\"PostgreSQL\",\"SQL\",\"Spark\",\"Exasol\"]},{\"job_id\":\"837775\",\"components\":{\"technical_fit\":73,\"preferences_fit\":88,\"technical_depth\":61,\"learning\":86,\"innovation\":74,\"clarity\":76},\"reasons\":[\"Dein erstes Webprojekt passt gut zur geforderten Erfahrung mit Webentwicklung und JavaScript im Frontend.\",\"Java im Backend und Erfahrung mit Softwaretests sind im Profil noch nicht belegt.\",\"Die Stelle bietet Teamarbeit, flexible Zeiten, Seminare und ein Mentoringprogramm; das ist für erste Praxiserfahrung sehr passend.\"] ,\"matched_skills\":[\"JavaScript-Grundlagen\"],\"missing_skills\":[\"Java\",\"Softwaretests\"]},{\"job_id\":\"849193\",\"components\":{\"technical_fit\":50,\"preferences_fit\":72,\"technical_depth\":38,\"learning\":84,\"innovation\":58,\"clarity\":79},\"reasons\":[\"HTML, CSS und etwas JavaScript können dir bei WordPress-Webdesign-Projekten helfen.\",\"Der Schwerpunkt liegt stark auf Content Marketing, Social Media und Schreiben statt auf Webentwicklung im Entwicklerteam.\",\"Persönliches Mentoring ist ausdrücklich genannt; für dein Ziel Webentwicklung wäre der fachliche Praxisbezug aber nur begrenzt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\"],\"missing_skills\":[\"WordPress\"]},{\"job_id\":\"832418\",\"components\":{\"technical_fit\":69,\"preferences_fit\":87,\"technical_depth\":58,\"learning\":88,\"innovation\":66,\"clarity\":80},\"reasons\":[\"HTML und CSS sind belegt und passen direkt zu Planung, Realisierung und Pflege von Webseiten im E-Commerce-Umfeld.\",\"JavaScript wird im Aufgabenblock nicht klar verlangt, dafür ist ein Gespür für Design wichtig; belegte Webdesign-Praxis bleibt begrenzt.\",\"Das Team begleitet dich ausdrücklich und bringt dir technisches und organisatorisches Know-how bei, was den Einstieg gut stützt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\"],\"missing_skills\":[]},{\"job_id\":\"843131\",\"components\":{\"technical_fit\":46,\"preferences_fit\":82,\"technical_depth\":73,\"learning\":86,\"innovation\":58,\"clarity\":82},\"reasons\":[\"HTML, CSS, JavaScript und etwas Python decken nur Teilaspekte der Frontend- und Backend-Aufgaben ab.\",\"Gefordert sind solide Kenntnisse in Java, Spring, TypeScript, Angular2+ sowie SQL; diese zentralen Nachweise fehlen im Profil.\",\"Kontinuierliche Unterstützung und Schulungen sind positiv, aber fachlich ist die Stelle für einen frühen Web-Einstieg recht anspruchsvoll.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Python-Grundlagen\"],\"missing_skills\":[\"Java\",\"Spring\",\"TypeScript\",\"Angular2+\",\"PostgreSQL\",\"SQL\",\"Spark\",\"Exasol\"]},{\"job_id\":\"844821\",\"components\":{\"technical_fit\":49,\"preferences_fit\":88,\"technical_depth\":72,\"learning\":null,\"innovation\":76,\"clarity\":81},\"reasons\":[\"HTML, CSS, JavaScript und Git passen grundsätzlich zu Frontend-Arbeit im agilen Team.\",\"Node.js, Angular, TypeScript, Linux, DevOps und testgetriebene Entwicklung sind wichtige offene Punkte im Profil.\",\"Die Teamstruktur und kleine Projekte sprechen für Praxiserfahrung; konkrete Einarbeitung oder Betreuung wird jedoch nicht ausdrücklich genannt.\"] ,\"matched_skills\":[\"HTML\",\"CSS\",\"JavaScript-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"TypeScript\",\"Node.js\",\"Angular\",\"Linux\",\"DevOps\",\"testgetriebene Entwicklung\",\"SOLID-Prinzipien\"]},{\"job_id\":\"857135\",\"components\":{\"technical_fit\":54,\"preferences_fit\":90,\"technical_depth\":75,\"learning\":78,\"innovation\":72,\"clarity\":84},\"reasons\":[\"Git und etwas Python sind belegt, und dein Webprojekt zeigt einen Einstieg in Frontend-Aufgaben im Team.\",\"React, TypeScript, REST-APIs und Cypress werden ausdrücklich erwartet und sind im Profil noch nicht belegt.\",\"Die Aufgaben sind klar, klein schrittig und im Forschungsteam angelegt; der nächste Schritt wäre hier ein kleines Frontend-Projekt mit Git und API-Anbindung als Nachweis.\"] ,\"matched_skills\":[\"Python-Grundlagen\",\"Git-Grundlagen\"],\"missing_skills\":[\"React\",\"TypeScript\",\"REST APIs\",\"Cypress\",\"Storybook\"]}],\"assistant_message\":\"Für deinen Wunsch nach einem realistischen Einstieg in die Webentwicklung sind vor allem die Stellen stark, die deine HTML-, CSS- und JavaScript-Basis direkt einsetzen und gleichzeitig Einarbeitung oder Betreuung ausdrücklich nennen. Besonders anschlussfähig wirken die Frontend-nahen Rollen mit klaren Lernangeboten. Der wichtigste Prüfpunkt bleibt fast überall gleich: Werden Frameworks wie React, Angular oder TypeScript schon erwartet, oder kannst du sie dort erst im Team aufbauen?\"}",
+  "finished_utc": "2026-09-17T07:03:20.694178+00:00",
+  "budget": {
+    "model": "gpt-5.4-2026-03-05",
+    "allocation": "generation",
+    "serialized_input_bytes": 110826,
+    "input_token_bound": 119018,
+    "max_tokens": 10000,
+    "reserved_usd": "0.447545",
+    "task_id": "P01-B.T0.RerankingResult.02",
+    "post_number": 7,
+    "status": "settled",
+    "charged_usd": "0.1056375",
+    "usage": {
+      "input_tokens": 23283,
+      "output_tokens": 3162,
+      "total_tokens": 26445
+    },
+    "created_utc": "2026-09-17T07:02:42.509560+00:00",
+    "settled_utc": "2026-09-17T07:03:20.696236+00:00",
+    "reservation_overrun": false,
+    "accounting_reason": "provider_token_usage"
+  }
+}

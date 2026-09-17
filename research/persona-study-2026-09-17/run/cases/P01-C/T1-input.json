@@ -1,0 +1,17 @@
+{
+  "endpoint": "/api/chat",
+  "body": {
+    "session_id": "gUFSmnk8QOmF42oMtoX407LpkiMyTWIMNvMo3jjKhZU",
+    "message": "Das von dir angesprochene Mentoring ist mir besonders wichtig: Ich möchte eingearbeitet werden und bei Fragen eine feste Ansprechperson haben. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu.",
+    "mode": "auto"
+  },
+  "adaptive_message": {
+    "case_id": "P01-C",
+    "turn": 1,
+    "previous_snapshot_sha256": "66074faef7c80cab62ff85d857b99a7afa574dfcdb7cdeaa5d43639f9d580b5b",
+    "disclosed_stage": 1,
+    "adaptation_note": "Greift das tatsächlich genannte Mentoring auf, ohne spätere Kenntnisgrenzen vorzuziehen.",
+    "message": "Das von dir angesprochene Mentoring ist mir besonders wichtig: Ich möchte eingearbeitet werden und bei Fragen eine feste Ansprechperson haben. Bitte berücksichtige das und sortiere die Webentwicklungsstellen neu."
+  },
+  "started_utc": "2026-09-17T07:08:20.449404+00:00"
+}

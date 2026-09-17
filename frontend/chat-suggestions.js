@@ -1,5 +1,4 @@
 import { labels, remoteLabels } from './profile.js';
-import { MIN_MATCH_SCORE } from './score-visibility.js';
 
 const normalize = value => String(value || '').normalize('NFKC').toLocaleLowerCase('de-DE').replace(/\s+/g, ' ').trim();
 const short = (value, limit) => String(value || '').length > limit ? `${String(value).slice(0, limit - 1)}…` : String(value || '');
@@ -56,7 +55,6 @@ export function buildChatSuggestions(session, visibleJobs = [], { showScores = t
   }
 
   if (!visibleJobs.length) {
-    if (showScores) add('scores:explain', 'Warum sind die Scores niedrig?', 'Warum erreichen die bewerteten Stellen den Mindestscore nicht? Welche Anforderungen oder Profilangaben sind dafür ausschlaggebend?');
     addProfileQuestions();
     return candidates.slice(0, 3);
   }
@@ -73,25 +71,24 @@ export function buildChatSuggestions(session, visibleJobs = [], { showScores = t
   }
 
   // Only employment type excludes jobs. Other suggestions change wishes used
-  // in assessment; they never discard jobs. The basic variant has no public scores,
-  // so its suggestions describe available options without asserting a good match.
-  const goodJobs = showScores ? visibleJobs.filter(job => Number.isInteger(job.match?.score) && job.match.score >= MIN_MATCH_SCORE && job.match.score <= 100) : visibleJobs;
-  if (goodJobs.length) {
+  // in assessment; they never discard jobs. Suggestions describe visible options
+  // without treating a score as proof of a good match.
+  if (visibleJobs.length) {
     const refinements = [];
     const propose = (...args) => refinements.push(args);
-    const types = unique(goodJobs.flatMap(job => job.employment_types || []));
+    const types = unique(visibleJobs.flatMap(job => job.employment_types || []));
     for (const type of types) {
       if (!labels[type] || sameOnly(employment, type) || (employment.length && !employment.includes(type))) continue;
       propose(`filter:employment:${type}`, `Nur ${labels[type]}`, `Bitte zeige mir nur Stellen der Art „${labels[type]}“. Alle anderen Kriterien bleiben erhalten.`,
         text => text.includes('nur ') && mentionsTerm(text, labels[type]));
     }
-    const workModels = unique(goodJobs.map(job => job.remote));
+    const workModels = unique(visibleJobs.map(job => job.remote));
     for (const model of workModels) {
       if (!remoteLabels[model] || model === 'unknown' || sameOnly(remote, model) || (remote.length && !remote.includes(model))) continue;
       propose(`preference:remote:${model}`, `${remoteLabels[model]} bevorzugen`, `Ich wünsche mir bevorzugt das Arbeitsmodell „${remoteLabels[model]}“. Berücksichtige diesen Wunsch bei der Neubewertung der vorhandenen Jobs, ohne andere Arbeitsmodelle auszuschließen. Meine übrigen Angaben bleiben erhalten.`);
     }
     if (filters.max_hours == null) {
-      const hours = unique(goodJobs.map(job => job.hours_max)).filter(value => typeof value === 'number' && Number.isFinite(value) && value > 0 && value <= 80);
+      const hours = unique(visibleJobs.map(job => job.hours_max)).filter(value => typeof value === 'number' && Number.isFinite(value) && value > 0 && value <= 80);
       for (const value of hours) propose(`preference:hours:${value}`, `Bis ${value} Stunden gewünscht`, `Ich wünsche mir höchstens ${value} Wochenstunden. Berücksichtige das als Präferenz bei der Neubewertung der vorhandenen Jobs, ohne Stellen allein wegen ihrer Arbeitszeit auszuschließen. Meine übrigen Angaben bleiben erhalten.`);
     }
     for (const args of refinements) {
