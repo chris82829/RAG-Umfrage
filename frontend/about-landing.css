@@ -11,10 +11,7 @@
 }
 
 .about-landing .about-landing-intro {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  align-items: center;
-  gap: 48px;
+  display: block;
 }
 
 .about-landing .about-project {
@@ -23,11 +20,15 @@
 }
 
 .about-landing .about-project h1 { overflow-wrap: anywhere; }
+.about-landing .about-project-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: center;
+  gap: 48px;
+}
+.about-landing .about-project-copy { min-width: 0; }
 .about-landing .about-launch {
   min-width: 0;
-  align-self: center;
-  position: relative;
-  top: 18px;
 }
 
 .about-landing .about-start-link {
@@ -96,17 +97,16 @@
 }
 
 @media (max-width: 1000px) {
-  .about-landing .about-landing-intro { gap: 32px; }
+  .about-landing .about-project-body { gap: 32px; }
 }
 
 @media (max-width: 850px) {
   .about-page.about-landing { padding: 40px 24px; }
-  .about-landing .about-landing-intro {
+  .about-landing .about-project-body {
     grid-template-columns: minmax(0, 1fr);
     gap: 26px;
   }
   .about-landing .about-launch {
-    top: 0;
     width: 100%;
   }
   .about-landing .about-start-link { min-height: 78px; padding: 18px 22px; }

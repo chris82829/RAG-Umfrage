@@ -17,12 +17,16 @@ export default function AboutPage() {
       <section className="about-project" aria-labelledby="about-title">
         <span className="eyebrow">DAS FORSCHUNGSPROJEKT</span>
         <h1 id="about-title" ref={heading} tabIndex={-1}>Das Forschungsprojekt DIANA</h1>
-        <p>DIANA erforscht, wie sich Such- und Empfehlungssysteme an die Ziele, Fähigkeiten und Wünsche einzelner Menschen anpassen lassen.</p>
-        <p>Das Promotionsvorhaben verbindet die Erfassung persönlicher Angaben mit einem anpassbaren Matching und verständlichen Ergebnissen. Am Beispiel der Jobsuche untersucht es, wie diese Bereiche zusammenwirken und wie Nutzerinnen und Nutzer Empfehlungen im Dialog nachvollziehen und mitgestalten können.</p>
+        <div className="about-project-body">
+          <div className="about-project-copy">
+            <p>DIANA erforscht, wie sich Such- und Empfehlungssysteme an die Ziele, Fähigkeiten und Wünsche einzelner Menschen anpassen lassen.</p>
+            <p>Das Promotionsvorhaben verbindet die Erfassung persönlicher Angaben mit einem anpassbaren Matching und verständlichen Ergebnissen. Am Beispiel der Jobsuche untersucht es, wie diese Bereiche zusammenwirken und wie Nutzerinnen und Nutzer Empfehlungen im Dialog nachvollziehen und mitgestalten können.</p>
+          </div>
+          <div className="about-launch">
+            <a href="/umfrage" className="about-start-link diana-action-motion"><span>Umfrage starten</span><span className="about-start-arrow diana-action-arrow" aria-hidden="true"><ArrowRight size={23} /></span></a>
+          </div>
+        </div>
       </section>
-      <div className="about-launch">
-        <a href="/umfrage" className="about-start-link diana-action-motion"><span>Umfrage starten</span><span className="about-start-arrow diana-action-arrow" aria-hidden="true"><ArrowRight size={23} /></span></a>
-      </div>
       </div>
       <section className="about-person" aria-labelledby="researcher-name">
         <img className="researcher-portrait" src={portrait} alt="Christoph Scharnagl" width="1122" height="1402" />
