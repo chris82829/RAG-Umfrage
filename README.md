@@ -1007,6 +1007,70 @@ ausgeliefert. Der Browser bekommt keinen API-Schlüssel. Quelldateien liegen in
 `frontend/`; nach Änderungen `pnpm build` ausführen. `pnpm dev` startet optional
 einen Vite-Entwicklungsserver auf Port 5173 mit Proxy zum bestehenden Backend.
 
+### Mit VS Code bearbeiten, in Git sichern und auf den Server übertragen
+
+In VS Code den Projektordner
+`/Users/christophscharnagl/Documents/hybrid-job-matching` öffnen. Vor Änderungen
+den Konferenz-Branch aktualisieren:
+
+```bash
+cd /Users/christophscharnagl/Documents/hybrid-job-matching
+git switch konferenzstudie-2026-09-14
+git pull --ff-only
+pnpm install --frozen-lockfile
+```
+
+Nach Änderungen das Frontend neu bauen und den Quellstand auf GitHub sichern:
+
+```bash
+pnpm build
+git status
+git add -A
+git commit -m "Kurze Beschreibung der Änderung"
+git push origin konferenzstudie-2026-09-14
+```
+
+`web-dist/` wird bewusst nicht in Git gespeichert. Deshalb reicht ein `git pull`
+auf dem Server für Frontendänderungen nicht aus. Die gebaute Oberfläche wird
+zusammen mit den Laufzeitdateien aus dem lokalen Projektordner übertragen:
+
+```bash
+tar -czf /tmp/diana-deploy.tar.gz \
+  Dockerfile compose.yaml STUDY-PROTOCOL.md \
+  requirements.txt requirements-server.txt \
+  *.py personas dummy_jobs.json privacy_settings.json \
+  survey_definition*.json web-dist
+
+scp /tmp/diana-deploy.tar.gz \
+  master@ifaiforschung.informatik.fh-nuernberg.de:/tmp/
+
+ssh master@ifaiforschung.informatik.fh-nuernberg.de
+```
+
+Danach auf dem Server eine Sicherung anlegen, das Paket entpacken und den
+vorhandenen Docker-Dienst aktualisieren:
+
+```bash
+cd /home/master/diana-survey
+deployment_stamp=$(date +%Y%m%d-%H%M%S)
+mkdir -p "backups/pre-deploy-$deployment_stamp"
+tar --exclude=.env --exclude=runtime --exclude=backups \
+  -czf "backups/pre-deploy-$deployment_stamp/application.tar.gz" .
+
+tar -xzf /tmp/diana-deploy.tar.gz
+docker compose config --quiet
+docker compose up -d --build
+docker compose ps
+curl http://127.0.0.1:5051/api/health
+unlink /tmp/diana-deploy.tar.gz
+```
+
+Die Serverdatei `.env` und das Verzeichnis `runtime/` dürfen nicht ersetzt oder
+gelöscht werden. Dort liegen Zugangsdaten, Umfrageantworten, Stellenindex und
+Modellcache. Das Laufzeitpaket enthält beide bewusst nicht. Weitere Hinweise,
+Wiederherstellung und Verwaltungszugang stehen in
+[DEPLOYMENT.md](DEPLOYMENT.md).
+
 Die Frontend-Integration verwendet einen statischen Vite-Build mit Flask als
 Server: [Vite Backend Integration](https://vite.dev/guide/backend-integration).
 
