@@ -1,0 +1,557 @@
+{
+  "timestamp": "2026-09-18T09:44:04.796756+00:00",
+  "advisory_version": "ranking-followup-v3",
+  "model": "gpt-5.4-2026-03-05",
+  "reasoning": "none",
+  "calls": 8,
+  "limitation": "Synthetic developmental smoke test, not evidence of ranking quality or reliability.",
+  "profile": {
+    "query": "Werkstudent Datenanalyse",
+    "skills": [
+      "Python",
+      "SQL"
+    ],
+    "preferences": [],
+    "cv_text": "",
+    "filters": {
+      "employment_types": [
+        "werkstudent"
+      ],
+      "locations": [],
+      "remote": [],
+      "max_hours": null
+    }
+  },
+  "jobs": [
+    {
+      "id": "synthetic-pipeline",
+      "title": "Werkstudent Datenpipelines",
+      "company": "Testfirma Pipeline",
+      "tasks": "Datenpipelines mit Python und SQL entwickeln und testen.",
+      "requirements": "Python und SQL.",
+      "benefits": "Feste fachliche Betreuung mit wöchentlichem Mentoring.",
+      "remote": "hybrid",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "hours_min": 16,
+      "hours_max": 20
+    },
+    {
+      "id": "synthetic-model",
+      "title": "Werkstudent Modellierung",
+      "company": "Testfirma Modell",
+      "tasks": "Mit Python und SQL Daten aufbereiten und Vorhersagemodelle trainieren.",
+      "requirements": "Python und SQL.",
+      "benefits": "Eigenständige Verantwortung für ein kleines Modellierungsprojekt.",
+      "remote": "onsite",
+      "employment_types": [
+        "werkstudent"
+      ],
+      "hours_min": 16,
+      "hours_max": 20
+    }
+  ],
+  "results": [
+    {
+      "role": "career",
+      "initial": {
+        "rankings": [
+          {
+            "job_id": "synthetic-pipeline",
+            "components": {
+              "technical_fit": 92,
+              "preferences_fit": null,
+              "technical_depth": 73,
+              "learning": 94,
+              "innovation": null,
+              "clarity": 88
+            },
+            "reasons": [
+              "Python und SQL passen direkt zu den Aufgaben, Datenpipelines damit zu entwickeln und zu testen.",
+              "Feste fachliche Betreuung mit wöchentlichem Mentoring ist für einen Werkstudenten-Einstieg klar belegt.",
+              "Ort ist offen; das Arbeitsmodell ist hybrid und die Stunden liegen bei 16 bis 20 pro Woche."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 84,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 3,
+              "learning": 17,
+              "innovation": 3,
+              "clarity": 2
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL passen direkt zu den Aufgaben, Datenpipelines damit zu entwickeln und zu testen. Feste fachliche Betreuung mit wöchentlichem Mentoring ist für einen Werkstudenten-Einstieg klar belegt. Ort ist offen; das Arbeitsmodell ist hybrid und die Stunden liegen bei 16 bis 20 pro Woche."
+          },
+          {
+            "job_id": "synthetic-model",
+            "components": {
+              "technical_fit": 90,
+              "preferences_fit": null,
+              "technical_depth": 78,
+              "learning": null,
+              "innovation": 76,
+              "clarity": 86
+            },
+            "reasons": [
+              "Python und SQL passen direkt zu den Aufgaben, Daten aufzubereiten und Vorhersagemodelle zu trainieren.",
+              "Ein kleines eigenständiges Modellierungsprojekt spricht für Gestaltungsspielraum; feste Betreuung ist nicht genannt.",
+              "Ort ist offen; das Arbeitsmodell ist vor Ort und die Stunden liegen bei 16 bis 20 pro Woche."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 76,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 3,
+              "learning": 17,
+              "innovation": 3,
+              "clarity": 2
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL passen direkt zu den Aufgaben, Daten aufzubereiten und Vorhersagemodelle zu trainieren. Ein kleines eigenständiges Modellierungsprojekt spricht für Gestaltungsspielraum; feste Betreuung ist nicht genannt. Ort ist offen; das Arbeitsmodell ist vor Ort und die Stunden liegen bei 16 bis 20 pro Woche."
+          }
+        ],
+        "assistant_message": "Für deine Suche nach einer Werkstudentenstelle in der Datenanalyse sind beide Jobs fachlich sehr nah an deinem Profil mit Python und SQL. Der klare Unterschied liegt nicht in den Grundanforderungen, sondern im Lernrahmen: Die Pipeline-Stelle belegt feste Betreuung, die Modellierungsstelle eher frühe Eigenverantwortung. Wenn du dich realistisch für den nächsten Schritt einordnen willst, ist genau das der wichtigste Prüfpunkt. Was ist dir gerade wichtiger: feste fachliche Betreuung oder ein kleines eigenes Modellierungsprojekt?",
+        "assessment_cache": {
+          "version": "explicit-priority-v3",
+          "fingerprint": "02e6d310a08de70368c9f45381f35774be9d13480022d59274103405674a5f7c",
+          "components": {
+            "synthetic-pipeline": {
+              "technical_fit": 92,
+              "preferences_fit": null,
+              "technical_depth": 73,
+              "learning": 94,
+              "innovation": null,
+              "clarity": 88
+            },
+            "synthetic-model": {
+              "technical_fit": 90,
+              "preferences_fit": null,
+              "technical_depth": 78,
+              "learning": null,
+              "innovation": 76,
+              "clarity": 86
+            }
+          }
+        }
+      },
+      "question": "Was ist dir wichtiger: eigenständige Projektverantwortung oder feste fachliche Betreuung?",
+      "reply": "Das Erste.",
+      "decision": {
+        "action": "rerank",
+        "profile_patch": {
+          "query": null,
+          "skills": null,
+          "preferences": [
+            "eigenständige Projektverantwortung"
+          ],
+          "filters": {
+            "employment_types": null,
+            "locations": null,
+            "remote": null,
+            "max_hours": null,
+            "clear_max_hours": false
+          }
+        },
+        "assistant_message": "Verstanden: Eigenständige Projektverantwortung ist dir wichtiger. Das spricht im aktuellen Pool eher für „Werkstudent Modellierung“ bei Testfirma Modell, weil dort ausdrücklich ein eigenes kleines Modellierungsprojekt genannt ist. Fachlich passen beide Stellen mit Python und SQL, aber bei diesem Unterschied setzt die zweite Stelle deinen Wunsch direkter um. Was ist dir als Nächstes wichtiger: eher Datenpipelines entwickeln oder eher Modelle trainieren?"
+      },
+      "updated_profile": {
+        "query": "Werkstudent Datenanalyse",
+        "skills": [
+          "Python",
+          "SQL"
+        ],
+        "preferences": [
+          "eigenständige Projektverantwortung"
+        ],
+        "cv_text": "",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "updated": {
+        "rankings": [
+          {
+            "job_id": "synthetic-pipeline",
+            "components": {
+              "technical_fit": 86,
+              "preferences_fit": 62,
+              "technical_depth": 68,
+              "learning": 92,
+              "innovation": null,
+              "clarity": 84
+            },
+            "reasons": [
+              "Python und SQL passen direkt zu den Aufgaben in Datenpipelines und Tests; fachlich ist das ein klarer Werkstudenten-Einstieg mit belegter Betreuung.",
+              "Wöchentliche fachliche Betreuung ist ausdrücklich genannt und stützt das Lernpotenzial sehr klar.",
+              "Eigenständige Projektverantwortung ist hier nicht belegt; das Arbeitsmodell ist hybrid."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 82,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 3,
+              "learning": 17,
+              "innovation": 3,
+              "clarity": 2
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL passen direkt zu den Aufgaben in Datenpipelines und Tests; fachlich ist das ein klarer Werkstudenten-Einstieg mit belegter Betreuung. Wöchentliche fachliche Betreuung ist ausdrücklich genannt und stützt das Lernpotenzial sehr klar. Eigenständige Projektverantwortung ist hier nicht belegt; das Arbeitsmodell ist hybrid."
+          },
+          {
+            "job_id": "synthetic-model",
+            "components": {
+              "technical_fit": 88,
+              "preferences_fit": 78,
+              "technical_depth": 72,
+              "learning": null,
+              "innovation": 74,
+              "clarity": 86
+            },
+            "reasons": [
+              "Python und SQL passen direkt zu Datenaufbereitung und Modelltraining; dazu ist eigenständige Verantwortung für ein kleines Projekt ausdrücklich genannt.",
+              "Dein Wunsch nach eigenständiger Projektverantwortung wird hier konkret getroffen.",
+              "Betreuung oder Einarbeitung ist nicht angegeben; das Arbeitsmodell ist onsite."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 79,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 3,
+              "learning": 17,
+              "innovation": 3,
+              "clarity": 2
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL passen direkt zu Datenaufbereitung und Modelltraining; dazu ist eigenständige Verantwortung für ein kleines Projekt ausdrücklich genannt. Dein Wunsch nach eigenständiger Projektverantwortung wird hier konkret getroffen. Betreuung oder Einarbeitung ist nicht angegeben; das Arbeitsmodell ist onsite."
+          }
+        ],
+        "assistant_message": "Wenn mit „das Erste“ die erste Frage gemeint war, spricht die zweite Stelle stärker für deinen ausdrücklich genannten Wunsch nach eigenständiger Projektverantwortung. Deine belegten Skills in Python und SQL passen bei beiden. Der klare Unterschied ist: Die erste Stelle bietet feste Betreuung, die zweite nennt ein eigenes kleines Modellierungsprojekt. Wenn du dich bewerben willst, wäre der nächste sinnvolle Schritt, im Anschreiben ein Python/SQL-Beispiel für eigenständige Analysearbeit kurz zu zeigen. Was ist dir für die nächste Sortierung wichtiger: Datenpipelines mit Mentoring oder Modellierung mit eigenem Projekt?",
+        "assessment_cache": {
+          "version": "explicit-priority-v3",
+          "fingerprint": "539aa13e6e54d5aac874eed4fd01ff4186c45093d1864c8fc55c473803ad3e62",
+          "components": {
+            "synthetic-pipeline": {
+              "technical_fit": 86,
+              "preferences_fit": 62,
+              "technical_depth": 68,
+              "learning": 92,
+              "innovation": null,
+              "clarity": 84
+            },
+            "synthetic-model": {
+              "technical_fit": 88,
+              "preferences_fit": 78,
+              "technical_depth": 72,
+              "learning": null,
+              "innovation": 74,
+              "clarity": 86
+            }
+          }
+        }
+      },
+      "edge_message": "Weiß ich noch nicht.",
+      "edge": {
+        "action": "answer",
+        "profile_patch": {
+          "query": null,
+          "skills": null,
+          "preferences": null,
+          "filters": {
+            "employment_types": null,
+            "locations": null,
+            "remote": null,
+            "max_hours": null,
+            "clear_max_hours": false
+          }
+        },
+        "assistant_message": "Alles okay, dann würde ich daraus noch keine Präferenz ableiten. Beide Stellen passen fachlich erst einmal zu deinem aktuellen Profil, weil beide Python und SQL verlangen. Der wichtigste belegte Unterschied bleibt im Moment das Arbeitsmodell und der Aufgabenschwerpunkt: Datenpipelines bei Testfirma Pipeline ist hybrid und nennt feste fachliche Betreuung, Modellierung bei Testfirma Modell ist onsite und betont ein eigenes kleines Projekt. Was ist dir im Moment wichtiger: hybrid arbeiten oder eher das Thema Modellierung?"
+      },
+      "checks": {
+        "initial_question": true,
+        "reply_triggers_rerank": true,
+        "preference_recorded": true,
+        "skills_unchanged": true,
+        "selected_preference_favored": true,
+        "updated_question": true,
+        "edge_case": true
+      }
+    },
+    {
+      "role": "expert",
+      "initial": {
+        "rankings": [
+          {
+            "job_id": "synthetic-pipeline",
+            "components": {
+              "technical_fit": 88,
+              "preferences_fit": null,
+              "technical_depth": 78,
+              "learning": 92,
+              "innovation": null,
+              "clarity": 86
+            },
+            "reasons": [
+              "Python und SQL sind direkt gefordert und werden für den Bau und Test von Datenpipelines eingesetzt; das passt klar zum belegten Profil.",
+              "Die Aufgaben sind konkret beschrieben; fachliche Tiefe liegt hier eher in Datenverarbeitung und Testing als in Modellierung.",
+              "Wöchentliche Betreuung ist ausdrücklich genannt und macht den Einstieg in anspruchsvollere Pipeline-Aufgaben planbarer."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 80,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 17,
+              "learning": 3,
+              "innovation": 2,
+              "clarity": 3
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL sind direkt gefordert und werden für den Bau und Test von Datenpipelines eingesetzt; das passt klar zum belegten Profil. Die Aufgaben sind konkret beschrieben; fachliche Tiefe liegt hier eher in Datenverarbeitung und Testing als in Modellierung. Wöchentliche Betreuung ist ausdrücklich genannt und macht den Einstieg in anspruchsvollere Pipeline-Aufgaben planbarer."
+          },
+          {
+            "job_id": "synthetic-model",
+            "components": {
+              "technical_fit": 82,
+              "preferences_fit": null,
+              "technical_depth": 84,
+              "learning": null,
+              "innovation": 76,
+              "clarity": 84
+            },
+            "reasons": [
+              "Python und SQL sind direkt gefordert und passen zur Datenaufbereitung; für das Trainieren von Vorhersagemodellen ist ML-Erfahrung im Profil aber nicht belegt.",
+              "Die Stelle bietet mit einem eigenen Modellierungsprojekt mehr fachliche Vertiefung in Richtung Modellentwicklung.",
+              "Betreuung wird nicht genannt; offen bleibt daher, wie stark der Einstieg in die Modellierung begleitet wird."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 77,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 17,
+              "learning": 3,
+              "innovation": 2,
+              "clarity": 3
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL sind direkt gefordert und passen zur Datenaufbereitung; für das Trainieren von Vorhersagemodellen ist ML-Erfahrung im Profil aber nicht belegt. Die Stelle bietet mit einem eigenen Modellierungsprojekt mehr fachliche Vertiefung in Richtung Modellentwicklung. Betreuung wird nicht genannt; offen bleibt daher, wie stark der Einstieg in die Modellierung begleitet wird."
+          }
+        ],
+        "assistant_message": "Fachlich ist die Pipeline-Stelle derzeit klarer belegt, weil Python und SQL direkt für konkrete Pipeline- und Testaufgaben eingesetzt werden und zusätzlich feste Betreuung genannt ist. Die Modellierungsstelle wirkt inhaltlich tiefer, aber für das Trainieren von Vorhersagemodellen fehlt im Profil ein ausdrücklicher ML-Nachweis. Was ist dir wichtiger: Datenpipelines entwickeln oder erste Modelle trainieren?",
+        "assessment_cache": {
+          "version": "explicit-priority-v3",
+          "fingerprint": "02e6d310a08de70368c9f45381f35774be9d13480022d59274103405674a5f7c",
+          "components": {
+            "synthetic-pipeline": {
+              "technical_fit": 88,
+              "preferences_fit": null,
+              "technical_depth": 78,
+              "learning": 92,
+              "innovation": null,
+              "clarity": 86
+            },
+            "synthetic-model": {
+              "technical_fit": 82,
+              "preferences_fit": null,
+              "technical_depth": 84,
+              "learning": null,
+              "innovation": 76,
+              "clarity": 84
+            }
+          }
+        }
+      },
+      "question": "Möchtest du lieber Datenpipelines entwickeln oder Vorhersagemodelle trainieren?",
+      "reply": "Lieber Datenpipelines.",
+      "decision": {
+        "action": "rerank",
+        "profile_patch": {
+          "query": null,
+          "skills": null,
+          "preferences": [
+            "Datenpipelines entwickeln"
+          ],
+          "filters": {
+            "employment_types": null,
+            "locations": null,
+            "remote": null,
+            "max_hours": null,
+            "clear_max_hours": false
+          }
+        },
+        "assistant_message": "Verstanden: Ich gewichte Datenpipeline-Aufgaben künftig höher. Im aktuellen Pool spricht das direkt für „Werkstudent Datenpipelines“ bei Testfirma Pipeline, weil dort die Kernaufgabe ausdrücklich Entwicklung und Test von Datenpipelines mit Python und SQL ist; die Modellierungsstelle passt fachlich ebenfalls, aber ihr Schwerpunkt liegt auf Vorhersagemodellen. Ist dir für die Reihenfolge jetzt wichtiger: feste fachliche Betreuung oder eigenständige Projektverantwortung?"
+      },
+      "updated_profile": {
+        "query": "Werkstudent Datenanalyse",
+        "skills": [
+          "Python",
+          "SQL"
+        ],
+        "preferences": [
+          "Datenpipelines entwickeln"
+        ],
+        "cv_text": "",
+        "filters": {
+          "employment_types": [
+            "werkstudent"
+          ],
+          "locations": [],
+          "remote": [],
+          "max_hours": null
+        }
+      },
+      "updated": {
+        "rankings": [
+          {
+            "job_id": "synthetic-pipeline",
+            "components": {
+              "technical_fit": 92,
+              "preferences_fit": 95,
+              "technical_depth": 82,
+              "learning": 88,
+              "innovation": null,
+              "clarity": 90
+            },
+            "reasons": [
+              "Python und SQL sind belegt, und die Aufgabe trifft deinen geäußerten Schwerpunkt Datenpipelines direkt.",
+              "Wöchentliche fachliche Betreuung ist ausdrücklich genannt; das stützt den Einstieg in die konkrete Pipeline-Entwicklung.",
+              "Arbeitsmodell hybrid ist bekannt; Ortsangabe fehlt, daher bleibt die genaue Präferenzpassung dazu offen."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 90,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 17,
+              "learning": 3,
+              "innovation": 2,
+              "clarity": 3
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL sind belegt, und die Aufgabe trifft deinen geäußerten Schwerpunkt Datenpipelines direkt. Wöchentliche fachliche Betreuung ist ausdrücklich genannt; das stützt den Einstieg in die konkrete Pipeline-Entwicklung. Arbeitsmodell hybrid ist bekannt; Ortsangabe fehlt, daher bleibt die genaue Präferenzpassung dazu offen."
+          },
+          {
+            "job_id": "synthetic-model",
+            "components": {
+              "technical_fit": 78,
+              "preferences_fit": 35,
+              "technical_depth": 74,
+              "learning": null,
+              "innovation": 72,
+              "clarity": 86
+            },
+            "reasons": [
+              "Python und SQL passen zur Datenaufbereitung, aber der Schwerpunkt liegt auf Vorhersagemodellen statt auf Datenpipelines.",
+              "Ein eigenes Modellierungsprojekt spricht für fachliche Tiefe und Gestaltungsspielraum, jedoch in einer anderen Vertiefung.",
+              "Arbeitsmodell onsite ist bekannt und weicht vom anderen Angebot ab; Ortsangabe fehlt, daher bleibt der genaue Einfluss offen."
+            ],
+            "matched_skills": [
+              "Python",
+              "SQL"
+            ],
+            "missing_skills": [],
+            "score": 70,
+            "scoring_weights": {
+              "technical_fit": 60,
+              "preferences_fit": 15,
+              "technical_depth": 17,
+              "learning": 3,
+              "innovation": 2,
+              "clarity": 3
+            },
+            "scoring_version": "explicit-priority-v3",
+            "reason": "Python und SQL passen zur Datenaufbereitung, aber der Schwerpunkt liegt auf Vorhersagemodellen statt auf Datenpipelines. Ein eigenes Modellierungsprojekt spricht für fachliche Tiefe und Gestaltungsspielraum, jedoch in einer anderen Vertiefung. Arbeitsmodell onsite ist bekannt und weicht vom anderen Angebot ab; Ortsangabe fehlt, daher bleibt der genaue Einfluss offen."
+          }
+        ],
+        "assistant_message": "Die Pipeline-Stelle passt fachlich klarer, weil sie Python und SQL genau für Datenpipelines einsetzt und damit deinen ausdrücklich genannten Schwerpunkt direkt trifft. Die Modellierungsstelle ist ebenfalls tragfähig, verschiebt den Fokus aber von Pipeline-Bau auf Vorhersagemodelle. Ein zusätzlicher Unterschied ist die belegte Betreuung nur bei der Pipeline-Stelle. Ist dir für die nächste Sortierung wichtiger: feste fachliche Betreuung oder möglichst eigenständige Projektverantwortung?",
+        "assessment_cache": {
+          "version": "explicit-priority-v3",
+          "fingerprint": "3470a90234d45ba9a1b84c6fec01bb02e5a7de8effedb31a283f1ec10093b500",
+          "components": {
+            "synthetic-pipeline": {
+              "technical_fit": 92,
+              "preferences_fit": 95,
+              "technical_depth": 82,
+              "learning": 88,
+              "innovation": null,
+              "clarity": 90
+            },
+            "synthetic-model": {
+              "technical_fit": 78,
+              "preferences_fit": 35,
+              "technical_depth": 74,
+              "learning": null,
+              "innovation": 72,
+              "clarity": 86
+            }
+          }
+        }
+      },
+      "edge_message": "Warum passt die Datenpipeline-Stelle zu mir?",
+      "edge": {
+        "action": "answer",
+        "profile_patch": {
+          "query": null,
+          "skills": null,
+          "preferences": null,
+          "filters": {
+            "employment_types": null,
+            "locations": null,
+            "remote": null,
+            "max_hours": null,
+            "clear_max_hours": false
+          }
+        },
+        "assistant_message": "Sie passt vor allem deshalb zu dir, weil Aufgabe, Suchziel und belegte Kenntnisse direkt zusammenfallen: Die Stelle verlangt Python und SQL und nennt als Kernaufgabe, Datenpipelines mit Python und SQL zu entwickeln und zu testen. Genau diese beiden Kenntnisse stehen in deinem Profil, und deine Präferenz ist bereits auf „Datenpipelines entwickeln“ ausgerichtet. Ein offener Punkt ist nur die Wochenstundenzahl: Angegeben sind 16–20 Stunden, zu deinem gewünschten Umfang gibt es aktuell keine Präferenz im Profil, also ist das weder ein Vorteil noch ein Nachteil."
+      },
+      "checks": {
+        "initial_question": true,
+        "reply_triggers_rerank": true,
+        "preference_recorded": true,
+        "skills_unchanged": true,
+        "selected_preference_favored": true,
+        "updated_question": true,
+        "edge_case": true
+      }
+    }
+  ]
+}

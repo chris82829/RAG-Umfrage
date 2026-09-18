@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily DIANA survey backup (seven-day retention)
+
+[Timer]
+OnCalendar=*-*-* 03:20:00
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

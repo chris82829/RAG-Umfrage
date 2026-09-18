@@ -1,0 +1,30 @@
+{
+    email christoph.scharnagl@th-nuernberg.de
+    default_sni 159.195.48.19
+    admin localhost:2019
+    log {
+        exclude http.log.error
+    }
+}
+
+https://159.195.48.19 {
+    tls {
+        issuer acme {
+            dir https://acme-v02.api.letsencrypt.org/directory
+            profile shortlived
+        }
+    }
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy same-origin
+        -Server
+    }
+    # No access log: URLs can contain temporary participation capabilities.
+    reverse_proxy app:5050 {
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto https
+        flush_interval -1
+    }
+}

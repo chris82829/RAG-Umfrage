@@ -22,7 +22,7 @@ REASONING_EFFORT = "none"
 REQUEST_TIMEOUT_SECONDS = 90.0
 MAX_OUTPUT_TOKENS = 6000
 RERANK_OUTPUT_TOKENS = 10000
-ADVISORY_VERSION = 'evidence-advisory-v2'
+ADVISORY_VERSION = 'ranking-followup-v3'
 MAX_ASSISTANT_MESSAGE_CHARS = 6000
 logger = logging.getLogger(__name__)
 
@@ -270,6 +270,17 @@ Ein in einer Frage erwähnter Ort oder ein Arbeitsmodell ändert noch keine Prä
 Wenn eine Nachricht mehrdeutig ist, wähle answer mit neutralem Patch und stelle
 genau eine kurze Klärungsfrage. Führe keine vermutete Änderung aus. Frühere
 Chatnachrichten erklären nur den Kontext und lösen keine weiteren Änderungen aus.
+Eine eindeutige Antwort auf die zuletzt gestellte Beratungsfrage ist selbst ein
+ausdrücklicher Änderungswunsch: Löse kurze Antworten wie "das Erste", "Remote"
+oder "lieber Datenpipelines" mithilfe genau dieser Frage auf. Übernimm nur die
+bestätigte Präferenz oder ausdrücklich belegte Fähigkeit, nicht beide angebotenen
+Optionen. Präferenzen ergänzen preferences (bisherige, nicht widersprochene Wünsche
+beibehalten) bzw. die passenden filters-Felder und führen zu rerank. Eine ausdrücklich
+neu genannte vorhandene Fähigkeit ergänzt skills und führt zu search. Ein gewünschtes
+Lernziel ist keine vorhandene Fähigkeit. "Weiß ich noch nicht", eine reine Gegenfrage
+oder eine mehrdeutige Antwort lassen das Profil unverändert. Erfinde keine Änderung
+der Persönlichkeitsgewichtung. Berücksichtige ausschließlich die neue Nutzerantwort,
+nicht schon die zuvor vom Assistenten vorgeschlagenen Optionen.
 Ein Umkreis von 15 oder 20 Kilometern lässt sich ohne Entfernungsdaten nicht
 prüfen. Wähle bei einer unklaren Ortspräferenz answer mit neutralem Patch und
 frage kurz nach dem gewünschten Ort. Behaupte weder berechnete Entfernungen noch
@@ -598,8 +609,49 @@ Bevorzuge nicht automatisch die zuerst angezeigte Stelle. Wenn die Belege keine 
 Empfehlung erlauben, erkläre den offenen Punkt. Ein hoher Gesamtscore ersetzt keine Begründung.
 PRIORITÄTEN IM GESPRÄCH:
 Aktuelle ausdrücklich geäußerte Suchwünsche sind maßgeblich. Eine Vorlage darf keine
-ungeäußerten Nutzerziele erfinden. Wenn ein ungeklärter Zielkonflikt die Entscheidung
-verändert, stelle eine konkrete Frage statt einer routinemäßigen Folgeofferte.
+ungeäußerten Nutzerziele erfinden.
+VERBINDLICHE RÜCKFRAGE ZUR STELLENREIHENFOLGE:
+Beantworte zuerst das Anliegen. Beende danach jede Suchansprache und Beratungsantwort
+in assistant_message mit genau einer konkreten Frage an den Nutzer, deren Antwort
+die nächste Sortierung verbessern kann. Das gilt auch nach einer Neusortierung und
+nach einer kurzen Faktenantwort zu einer Stelle. Keine Frage in den Kartenbegründungen.
+1. Prüfe Profil, aktuelle Nachricht und Verlauf: Was ist bereits beantwortet oder
+   ausdrücklich noch unentschieden? Frage das nicht erneut und behalte Antworten bei.
+   Eine übernommene Präferenz im aktuellen Profil ist verbindlich: Nach der
+   Neusortierung nicht wieder mit "Falls du damit ... meinst" relativieren.
+2. Wähle genau die wichtigste noch offene Priorität oder Kenntnis, die zwischen
+   den vorliegenden Stellen unterscheidet. Nutze belegte Unterschiede in Aufgaben,
+   Anforderungen, Betreuung, Arbeitsmodell oder Stunden. Fehlen Unterschiede, frage
+   nach dem wichtigsten noch unbekannten Suchwunsch, ohne Jobmerkmale zu erfinden.
+3. Frage kurz und direkt, möglichst mit zwei konkreten Antwortmöglichkeiten zum
+   selben Kriterium. Verdeutliche bei Bedarf in einem kurzen Satz, warum die Antwort
+   für die Reihenfolge hilft. Keine Doppelfrage, kein Fragebogen, kein allgemeines
+   "Kann ich sonst helfen?" und keine Frage, die nur der Arbeitgeber beantworten kann.
+   Die Optionen müssen dieselbe Dimension betreffen: hybrid oder vor Ort, nicht
+   hybrid oder Modellierung. Bereits geklärte Betreuung/Eigenverantwortung nicht
+   mit einer neuen Aufgabenwahl bündeln. Frage dann nur nach der noch offenen
+   Aufgabe (Datenpipelines oder Modellierung), ohne die alte Priorität erneut
+   zur Wahl zu stellen. Benenne Stellen durch Titel/Unternehmen, nicht ihre Position.
+   Konkreter Gesprächsfall: Die vorige Frage war "Eigenständige Verantwortung oder
+   feste Betreuung?", die Antwort "das Erste", und preferences enthält jetzt
+   "eigenständige Projektverantwortung". Zulässige nächste Frage: "Welche Aufgabe
+   reizt dich mehr: Datenpipelines entwickeln oder Vorhersagemodelle trainieren?"
+   Unzulässig wäre "Modellierung oder feste Betreuung?": Das würde die bereits
+   entschiedene Priorität erneut öffnen und zwei verschiedene Dimensionen mischen.
+   Beispiele nur als Muster, niemals als angebliche Jobfakten: "Was ist dir wichtiger:
+   feste fachliche Betreuung oder eigenständige Projektverantwortung?";
+   "Möchtest du eher Datenpipelines entwickeln oder ML-Modelle trainieren?";
+   "Hast du mit SQL schon eigenständig Daten ausgewertet oder bisher nur im Kurs?"
+4. Frage nach der Suchpriorität des Nutzers, nicht nach einer Änderung der festen
+   Persönlichkeitsgewichte. Die neue Antwort fließt als Profilpräferenz oder belegte
+   Fähigkeit über die Aktionsregeln in den nächsten Abgleich ein. Versprich keine
+   objektiv optimale Reihenfolge und keine Änderung vor der Antwort.
+Ausnahmen: follow_up_allowed=false bedeutet, dass keine Chatnachricht mehr verfügbar
+ist; dann ohne Rückfrage abschließen. Auch bei ausdrücklich abgelehnten Rückfragen,
+reinem Abschied/Smalltalk oder wenn tatsächlich kein nützliches Kriterium mehr offen
+ist, keine künstliche Frage erzwingen. Diese Regel hat Vorrang vor allgemeinen
+Stilbeispielen mit optionalen Rückfragen. Eine erforderliche Klärungsfrage zählt
+bereits als die eine Frage; stelle keine zusätzliche.
 Nutze die Antwort beim nächsten Turn. Ändere das Profil nur bei einem tatsächlichen
 Änderungswunsch gemäß Aktionsregeln; eine Beratungsfrage allein startet keine Suche.
 Der konfigurierte Fokus steuert ergänzende Gewichtung. Bei Fragen nach einem anderen
@@ -922,6 +974,7 @@ class OpenAIService:
         advisor: dict | None = None,
         mode: str = "auto",
         candidate_count: int = 0,
+        follow_up_allowed: bool = True,
         stream: bool = False,
     ):
         """Classify intent, extract an explicit patch, and answer in one call.
@@ -950,6 +1003,7 @@ class OpenAIService:
                 "assistant_preferences": resolved,
                 "mode": _text(mode, 40),
                 "candidate_count": max(0, candidate_count),
+                "follow_up_allowed": follow_up_allowed,
             },
             ChatDecision,
             stream=stream,
@@ -1011,6 +1065,7 @@ class OpenAIService:
                 "profile": profile_data,
                 "assistant_preferences": resolved,
                 "current_message": _text(chat_message, 6000) if chat_message is not None else None,
+                "follow_up_allowed": context.get('follow_up_allowed', True),
                 "conversation_context": {
                     'messages': _conversation_history(context.get('messages') or []),
                     'previous_jobs': _visible_jobs(context.get('jobs') or [], candidates=jobs,

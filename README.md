@@ -11,6 +11,19 @@ Die Varianten unterscheiden sich im Beratungsangebot: feste Standardberatung,
 Vorlagenauswahl oder zusätzliche eigene Gestaltung. Die produktive Konfiguration
 verwendet den separat importierten Stellenbestand; dessen Umfang zeigt das System an.
 
+## Öffentlicher Server ohne VPN
+
+DIANA wird zusätzlich auf dem netcup-Server unter https://159.195.48.19/ betrieben.
+Verwaltung: https://159.195.48.19/verwaltung. Einrichtung, HTTPS-Zertifikate,
+SSH-Zugang, Sicherungen und Updates: [netcup-Betriebsanleitung](deploy/netcup/README.md).
+Die Hochschulinstallation bleibt separat; neue Antworten werden nicht synchronisiert.
+
+Berufsberater und Fachexperte stellen in B/C konkrete Rückfragen zu offenen Kriterien
+für die Stellenreihenfolge. Kurze, eindeutige Antworten werden als Suchpräferenz oder
+belegte Fähigkeit übernommen. Bereits geklärte Punkte sollen nicht erneut abgefragt
+werden; nach der dritten Studiennachricht wird keine weitere Antwort angefordert.
+Entwicklungsprüfung und Grenzen: [Rückfragen-Prüfung](research/development/2026-09-18-ranking-followups/README.md).
+
 ## Aktueller Studienvergleich: A/B/C, Fragebogen V10
 
 Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v3`**, der Fragebogen **`diana-v10`**.

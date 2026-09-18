@@ -30,12 +30,15 @@ class FakeModel:
         self.action = 'answer'
         self.fail = False
         self.fail_stream = False
+        self.follow_up_flags = []
+        self.ranking_follow_up_flags = []
 
     def generate_persona(self, profile):
         return dict(persona_prompt='Fachliche Anforderungen berücksichtigen.',
                     retrieval_query='Python Datenanalyse', opening_message='Hallo!')
 
     def rerank(self, persona, profile, candidates, **kwargs):
+        self.ranking_follow_up_flags.append((kwargs.get('chat_context') or {}).get('follow_up_allowed'))
         return dict(rankings=[dict(job_id=item['job']['id'], score=90-index,
                                   reason='Fachkenntnisse passen.', matched_skills=['Python'], missing_skills=[])
                               for index, item in enumerate(candidates)],
@@ -43,6 +46,7 @@ class FakeModel:
 
     def plan_chat(self, *args, **kwargs):
         self.chat_calls += 1
+        self.follow_up_flags.append(kwargs.get('follow_up_allowed'))
         if self.fail:
             raise LLMUnavailable('Offline-Testfehler')
         return dict(action=self.action, profile_patch={}, assistant_message='Die Python-Kenntnisse passen.')
@@ -127,6 +131,36 @@ class SurveyChatLimitTests(unittest.TestCase):
         restored = restarted.test_client().get('/api/sessions/' + state['session_id'], headers=headers)
         self.assertEqual(restored.json['chat_usage']['remaining'], 0)
         self.assertEqual(self.chat(headers, state).status_code, 409)
+
+    def test_followups_respect_remaining_messages_across_planning_and_ranking(self):
+        for arm in ('B', 'C'):
+            with self.subTest(arm=arm):
+                headers = self.grant(arm)
+                state = self.onboard(headers)
+                self.assertIs(self.model.ranking_follow_up_flags[-1], True)
+                for index, action in enumerate(('answer', 'rerank', 'search')):
+                    self.model.action = action
+                    response = self.chat(headers, state)
+                    self.assertEqual(response.status_code, 200, response.json)
+                    state = response.json
+                    self.assertIs(self.model.follow_up_flags[-1], index < 2)
+                    if action != 'answer':
+                        self.assertIs(self.model.ranking_follow_up_flags[-1], index < 2)
+                # A new search must not invite an answer after the allowance was used.
+                self.onboard(headers)
+                self.assertIs(self.model.ranking_follow_up_flags[-1], False)
+
+    def test_standalone_tests_keep_followups_after_three_messages(self):
+        for arm in ('B', 'C'):
+            headers = self.grant(arm, standalone=True)
+            state = self.onboard(headers)
+            self.model.action = 'rerank'
+            for _ in range(4):
+                response = self.chat(headers, state)
+                self.assertEqual(response.status_code, 200, response.json)
+                state = response.json
+                self.assertIs(self.model.follow_up_flags[-1], True)
+                self.assertIs(self.model.ranking_follow_up_flags[-1], True)
 
     def test_profile_and_search_or_rerank_without_message_do_not_consume_allowance(self):
         headers = self.grant()

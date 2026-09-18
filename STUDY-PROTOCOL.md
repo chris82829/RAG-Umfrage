@@ -1,6 +1,6 @@
 # DIANA: Studienprotokoll für den Konferenzbeitrag
 
-Stand: 14. September 2026. Experiment `diana-abc-v3`, Fragebogen `diana-v10`.
+Stand: 18. September 2026. Experiment `diana-abc-v3`, Fragebogen `diana-v10`.
 Dies ist ein vor der neuen Erhebung erstellter, versionierter **Protokollentwurf**. Er ist noch keine extern registrierte Präregistrierung, kein Ethikvotum und keine Bestätigung einer validierten Skala. Vor der Haupterhebung kognitiv vorprüfen und den endgültigen Stand mit Datum festschreiben.
 
 ## Forschungsfrage und Beitrag
@@ -28,6 +28,12 @@ B und C starten mit dem Top-Berufsberater. Freie Gestaltung ist in C freiwillig.
 Gemeinsame Fehlerkorrekturen gelten für alle aktuellen Gruppen: kein 600-Zeichen-Limit im Ausgabeschema, serverseitige Schutzgrenze von 6.000 Zeichen und Zurückweisung von Fehlerobjekten als Beratungsantwort. Modell-Snapshot, Denkaufwand und Tokenbudgets bleiben gleich. Dies garantiert weder vollständige Modellantworten noch bessere Ergebnisse; die technische Prüfung verwendet simulierte API-Antworten.
 
 Diese Änderungen wurden nach Einsicht in den bisherigen technischen Pilotversuch entwickelt. Dessen Ergebnisse sind Entwicklungsdaten und kein unabhängiger Wirksamkeitsnachweis der neuen Version. Originaldateien bleiben erhalten. Vor einer neuen Erhebung den endgültigen Release festschreiben; Teilnahmen vor und nach diesem Wechsel anhand der gespeicherten `release_id` getrennt auswerten. Gleiche Experiment-/Fragebogennamen allein erlauben kein Pooling über geänderte Interventionen. `advisory_version` und `scoring_version` stehen zusätzlich im Release-Manifest. Details: `research/development/2026-09-14-advisory-v2/README.md`.
+
+### Entwicklungsänderung vom 18. September 2026: gezielte Rückfragen
+
+`ranking-followup-v3` ergänzt B/C um eine konkrete Rückfrage am Ende der Suchansprache und jeder Beratungsantwort. Der Berufsberater klärt offene berufliche Prioritäten; der Fachexperte bevorzugte Tätigkeiten und relevante Kenntnisstände. Die Frage orientiert sich an belegten Unterschieden der Stellen und bereits genannten Wünschen. Eindeutige kurze Antworten werden im Gesprächskontext als Profilpräferenz oder ausdrücklich belegte Fähigkeit übernommen; Unentschlossenheit und Gegenfragen ändern das Profil nicht. Präferenzen führen zur Neubewertung, neue vorhandene Fähigkeiten zur erneuten Suche. Persönlichkeitsgewichte werden dadurch nicht verändert.
+
+Nach Ausschöpfung der drei Studiennachrichten wird keine weitere Rückfrage verlangt; auf den eigenständigen Testseiten gilt dieses Limit nicht. Bereits beantwortete Fragen, ausdrücklich abgelehnte Rückfragen und künstliche Fragen ohne Entscheidungshilfe sollen entfallen. Dies sind Modellinstruktionen und keine Garantie jeder einzelnen Ausgabe. A erhält keine Pflicht zur proaktiven Rückfrage. B gegen A vergleicht damit auch unterschiedliche Gesprächsinitiative; der primäre Vergleich C gegen B bietet in beiden Gruppen dieselbe Rückfragelogik. Modell, Denkaufwand, Bewertungsformel und Fragebogen bleiben unverändert. Der Release speichert die neue `advisory_version` und die geänderten Prompt-/Vorlagen-Hashes. Vorherige Teilnahmen nicht ungeprüft mit diesem Stand zusammenfassen. Technische Stichproben sind Entwicklungsprüfungen, kein Nachweis einer optimalen Rangfolge.
 
 ## Zuteilung und Ablauf
 

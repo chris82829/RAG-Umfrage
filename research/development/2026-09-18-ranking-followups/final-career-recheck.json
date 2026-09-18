@@ -1,0 +1,95 @@
+{
+  "calls": 1,
+  "reason": "Second targeted check after adding a concrete two-turn example; previous failed outputs retained.",
+  "updated": {
+    "rankings": [
+      {
+        "job_id": "synthetic-pipeline",
+        "components": {
+          "technical_fit": 86,
+          "preferences_fit": 55,
+          "technical_depth": 68,
+          "learning": 88,
+          "innovation": null,
+          "clarity": 84
+        },
+        "reasons": [
+          "Python und SQL passen direkt zu den Aufgaben, weil hier Datenpipelines entwickelt und getestet werden.",
+          "Für deinen Wunsch nach eigenständiger Verantwortung ist eher feste Betreuung als Schwerpunkt belegt.",
+          "Wöchentliches Mentoring ist ausdrücklich genannt und macht den Einstieg strukturiert lernbar."
+        ],
+        "matched_skills": [
+          "Python",
+          "SQL"
+        ],
+        "missing_skills": [],
+        "score": 80,
+        "scoring_weights": {
+          "technical_fit": 60,
+          "preferences_fit": 15,
+          "technical_depth": 3,
+          "learning": 17,
+          "innovation": 3,
+          "clarity": 2
+        },
+        "scoring_version": "explicit-priority-v3",
+        "reason": "Python und SQL passen direkt zu den Aufgaben, weil hier Datenpipelines entwickelt und getestet werden. Für deinen Wunsch nach eigenständiger Verantwortung ist eher feste Betreuung als Schwerpunkt belegt. Wöchentliches Mentoring ist ausdrücklich genannt und macht den Einstieg strukturiert lernbar."
+      },
+      {
+        "job_id": "synthetic-model",
+        "components": {
+          "technical_fit": 88,
+          "preferences_fit": 82,
+          "technical_depth": 72,
+          "learning": null,
+          "innovation": 64,
+          "clarity": 86
+        },
+        "reasons": [
+          "Python und SQL passen direkt zu den Aufgaben, weil hier Daten aufbereitet und Vorhersagemodelle trainiert werden.",
+          "Dein Wunsch nach eigenständiger Projektverantwortung ist hier ausdrücklich belegt.",
+          "Betreuung oder Einarbeitung werden nicht genannt; der Lernrahmen bleibt daher offen."
+        ],
+        "matched_skills": [
+          "Python",
+          "SQL"
+        ],
+        "missing_skills": [],
+        "score": 79,
+        "scoring_weights": {
+          "technical_fit": 60,
+          "preferences_fit": 15,
+          "technical_depth": 3,
+          "learning": 17,
+          "innovation": 3,
+          "clarity": 2
+        },
+        "scoring_version": "explicit-priority-v3",
+        "reason": "Python und SQL passen direkt zu den Aufgaben, weil hier Daten aufbereitet und Vorhersagemodelle trainiert werden. Dein Wunsch nach eigenständiger Projektverantwortung ist hier ausdrücklich belegt. Betreuung oder Einarbeitung werden nicht genannt; der Lernrahmen bleibt daher offen."
+      }
+    ],
+    "assistant_message": "Für deinen Wunsch nach eigenständiger Projektverantwortung wirkt die Modellierungsstelle im Moment näher an deinem Ziel, weil sie genau dafür ein kleines eigenes Projekt nennt. Die Pipeline-Stelle ist fachlich ebenfalls stimmig und bietet klar belegtes Mentoring, setzt aber einen anderen Schwerpunkt. Der wichtigste offene Punkt ist daher die Aufgabe selbst: Möchtest du lieber Datenpipelines entwickeln oder eher Vorhersagemodelle trainieren?",
+    "assessment_cache": {
+      "version": "explicit-priority-v3",
+      "fingerprint": "539aa13e6e54d5aac874eed4fd01ff4186c45093d1864c8fc55c473803ad3e62",
+      "components": {
+        "synthetic-pipeline": {
+          "technical_fit": 86,
+          "preferences_fit": 55,
+          "technical_depth": 68,
+          "learning": 88,
+          "innovation": null,
+          "clarity": 84
+        },
+        "synthetic-model": {
+          "technical_fit": 88,
+          "preferences_fit": 82,
+          "technical_depth": 72,
+          "learning": null,
+          "innovation": 64,
+          "clarity": 86
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+name: diana-public
+services:
+  app:
+    image: diana-survey-app:netcup
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    init: true
+    user: "10001:10001"
+    env_file: ../../.env
+    environment:
+      DATABASE_PATH: /data/instance/jobs.sqlite3
+      EMBEDDING_CACHE_DIR: /data/embeddings
+      HF_HOME: /data/huggingface
+      HF_HUB_OFFLINE: "1"
+      SEED_DUMMY_DATA: "false"
+      REQUIRE_COMPLETE_INDEX: "true"
+      E5_DEVICE: cpu
+      E5_BATCH_SIZE: "8"
+      OMP_NUM_THREADS: "4"
+      MKL_NUM_THREADS: "4"
+      TOKENIZERS_PARALLELISM: "false"
+      CORS_ORIGINS: https://159.195.48.19
+    command: ["gunicorn", "--config", "gunicorn.conf.py", "--threads", "16", "proxy_wsgi:create_app()"]
+    volumes:
+      - ../../runtime:/data
+      - ./proxy_wsgi.py:/app/proxy_wsgi.py:ro
+      - ./privacy_settings.json:/app/privacy_settings.json:ro
+    cpus: 6
+    mem_limit: 12g
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5050/api/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+  caddy:
+    image: caddy:2-alpine@sha256:de23def33b17fb5d1290b0f6c2add1d70780e52341896c00a4c8a2a2fe9d355e
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    security_opt: ["no-new-privileges:true"]
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+volumes:
+  caddy_data:
+  caddy_config:

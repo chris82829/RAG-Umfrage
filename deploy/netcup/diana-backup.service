@@ -1,0 +1,8 @@
+[Unit]
+Description=Consistent DIANA survey database backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/diana-survey/deploy/netcup/backup.py
+UMask=0077
+Nice=10

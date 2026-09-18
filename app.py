@@ -382,6 +382,13 @@ def create_app(config=None, *, retriever=None, llm=None):
                 if reservation.get('id'):
                     chat_limit.release(reservation['id'])
 
+    def follow_up_allowed(state, *, message=False, reservation=None):
+        remaining = chat_usage(state)['remaining']
+        # A database reservation already deducts the in-flight message. Without
+        # persisted study consent, deduct it here; standalone tests are unlimited.
+        unreserved_message = int(bool(message) and not (reservation or {}).get('id'))
+        return remaining is None or remaining > unreserved_message
+
     @app.before_request
     def require_consent():
         if request.method == 'OPTIONS':
@@ -727,7 +734,8 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error
         timings = {'search': time.monotonic()}
         def operation():
-            result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor)
+            result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor,
+                chat_context={'follow_up_allowed': follow_up_allowed({'messages': []})})
             result['assistant_message'] = welcome_message(result)
             state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None,
                      '_experiment_id': assigned.get('experiment_id') if assigned else None, '_user_chat_count': 0, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
@@ -786,14 +794,16 @@ def create_app(config=None, *, retriever=None, llm=None):
             advisor = selected_advisor
             applied_selection = selected_selection
             profile = body.profile.model_dump() if body.profile is not None else state['profile']
-            context = {'messages': state['messages'][-12:], 'jobs': public_state({**state, 'advisor': advisor})['jobs'][:20]}
+            context = {'messages': state['messages'][-12:], 'jobs': public_state({**state, 'advisor': advisor})['jobs'][:20],
+                       'follow_up_allowed': follow_up_allowed(state, message=body.message, reservation=reservation)}
             action = 'answer'
             answer = 'Dein Suchprofil ist unverändert. Die bisherigen Empfehlungen bleiben erhalten.'
             if body.message:
                 with timed_phase('chat_plan'):
                     steps = model_steps('plan_chat', profile, context['messages'], body.message,
                                         jobs=context['jobs'], advisor=advisor, mode=body.mode,
-                                        candidate_count=len(state.get('_candidates', [])))
+                                        candidate_count=len(state.get('_candidates', [])),
+                                        follow_up_allowed=context['follow_up_allowed'])
                     try:
                         while True:
                             try:

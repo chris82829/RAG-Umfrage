@@ -1,0 +1,108 @@
+{
+  "base_url": "https://159.195.48.19",
+  "verified_at": "2026-09-18T09:29:27Z",
+  "pages": {
+    "/": 200,
+    "/umfrage": 200,
+    "/suche": 200,
+    "/verwaltung": 200,
+    "/datenschutz": 200,
+    "/test/a": 200,
+    "/test/b": 200,
+    "/test/c": 200
+  },
+  "http_redirect": true,
+  "health": {
+    "embedding_model": "intfloat/multilingual-e5-large-instruct",
+    "jobs": 8537,
+    "openai_configured": true,
+    "openai_model": "gpt-5.4-2026-03-05",
+    "openai_reasoning_effort": "none",
+    "readiness": "Modelle werden erst bei Suche oder warmup geladen.",
+    "status": "ok"
+  },
+  "admin_secure_cookie": true,
+  "admin_total": 32,
+  "analytics_ok": true,
+  "csv_export_bytes": 85138,
+  "study_status": {
+    "can_enable": true,
+    "closed": false,
+    "enabled": true,
+    "updated_at": "2026-09-10T14:21:41.110967+00:00"
+  },
+  "read_only_concurrency": {
+    "requests": 48,
+    "concurrency": 16,
+    "success": 48,
+    "max_seconds": 0.677
+  },
+  "functional_smoke_test": {
+    "search": {
+      "seconds": 52.86,
+      "first_event_seconds": 0.14,
+      "events": {
+        "search_progress": 5,
+        "phase": 1,
+        "assistant_text": 100,
+        "result": 1
+      },
+      "jobs": 20
+    },
+    "chat": {
+      "seconds": 6.72,
+      "first_event_seconds": 1.54,
+      "events": {
+        "assistant_text": 74,
+        "result": 1
+      },
+      "response_characters": 358
+    },
+    "test_consent_withdrawn": true
+  },
+  "image_layers_identical": true,
+  "original_credentials_copied": true,
+  "migrated_database": {
+    "jobs": 8537,
+    "survey_responses": 7,
+    "survey_drafts": 25,
+    "study_assignments": 27,
+    "privacy_consents": 41,
+    "integrity": "ok"
+  },
+  "browser_checks": {
+    "landing": true,
+    "survey_consent": true,
+    "test_c": true,
+    "admin_login": true,
+    "analytics_rendered": true,
+    "console_errors": 0
+  },
+  "tls": {
+    "verified": true,
+    "issuer": {
+      "countryName": "US",
+      "organizationName": "Let's Encrypt",
+      "commonName": "YE1"
+    },
+    "subject_alt_names": [
+      [
+        "IP Address",
+        "159.195.48.19"
+      ]
+    ],
+    "not_before": "Sep 18 08:24:05 2026 GMT",
+    "not_after": "Sep 25 00:24:04 2026 GMT",
+    "automatic_renewal": "Caddy / Lets Encrypt shortlived"
+  },
+  "internal_ports_inaccessible": {
+    "5050": true,
+    "5051": true,
+    "2019": true
+  },
+  "reboot_recovery": {
+    "verified": true,
+    "https_verified_after_reboot": true,
+    "jobs_after_reboot": 8537
+  }
+}
