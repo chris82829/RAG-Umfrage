@@ -23,7 +23,12 @@
 }
 
 .about-landing .about-project h1 { overflow-wrap: anywhere; }
-.about-landing .about-launch { min-width: 0; }
+.about-landing .about-launch {
+  min-width: 0;
+  align-self: center;
+  position: relative;
+  top: 18px;
+}
 
 .about-landing .about-start-link {
   display: flex;
@@ -99,6 +104,10 @@
   .about-landing .about-landing-intro {
     grid-template-columns: minmax(0, 1fr);
     gap: 26px;
+  }
+  .about-landing .about-launch {
+    top: 0;
+    width: 100%;
   }
   .about-landing .about-start-link { min-height: 78px; padding: 18px 22px; }
   .about-landing .about-person { margin-top: 38px; padding-top: 30px; }
