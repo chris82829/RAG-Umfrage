@@ -24,5 +24,5 @@ export function changedAnswers(before, after) {
 export function answerLabel(field, value) {
   if (value == null) return 'Leer / übersprungen';
   if (value === '') return 'Keine Angabe';
-  return [...(field?.options || []), ...(field?.nonresponse || [])].find(([key]) => key === value)?.[1] ?? String(value);
+  return [...(field?.options || []), ...(field?.scale?.labels?.map((label,index)=>[index+1,label]) || []), ...(field?.nonresponse || [])].find(([key]) => key === value)?.[1] ?? String(value);
 }

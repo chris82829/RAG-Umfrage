@@ -54,6 +54,7 @@ QUESTION_NAMES = {
     'match_reasons_usefulness': 'begruendungen_nutzen',
     'personality_clarity': 'ki_wirkung_verstaendnis',
     'personality_clarity_chat': 'ki_wirkung_chat_verstaendnis',
+    'personality_clarity_explanations': 'ki_wirkung_sprachstil_begruendungen_verstaendnis',
     'personality_clarity_search': 'ki_wirkung_rangfolge_verstaendnis',
     'personality_consistency': 'ki_eigenschaften_wiedererkannt',
     'personality_customized': 'ki_selbst_angepasst_selbstauskunft',
@@ -71,6 +72,9 @@ QUESTION_NAMES = {
     'search_refinement': 'suchwuensche_im_chat_geaendert',
     'study_arm': 'studiengruppe_originalcode',
     'study_field': 'studien_fachrichtung_freitext',
+    'usefulness_effective': 'system_nutzen_effektivitaet',
+    'usefulness_speed': 'system_nutzen_geschwindigkeit',
+    'usefulness_overall': 'system_nutzen_gesamturteil',
     'system_usefulness': 'system_nutzen',
     'added_value': 'mehrwert_gegenueber_filterboerse',
     'future_preference': 'ki_beratung_kuenftig_bevorzugt',
@@ -95,7 +99,7 @@ def export_name(technical, columns='readable'):
     if name.endswith('_status'):
         name, suffix = name[:-7], '_antwortstatus'
     # From V6 onward this question specifically concerns clarifying search wishes.
-    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8', 'v9', 'v10', 'v11') else QUESTION_NAMES[name]
+    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8', 'v9', 'v10', 'v11', 'v12') else QUESTION_NAMES[name]
     return f'{prefix}_{base}{suffix}'
 
 

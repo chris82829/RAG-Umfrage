@@ -29,7 +29,7 @@ class StudyReleases:
         files = ['llm_service.py', 'advisor.py', 'retrieval.py', 'schemas.py', 'app.py',
                  'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
-        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'survey_definition_v11.json', 'study_metrics.py', 'study_chat_limit.py', 'system_prompt_store.py', 'test_access.py', 'STUDY-PROTOCOL.md']
+        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'survey_definition_v11.json', 'survey_definition_v12.json', 'survey_migrations.py', 'study_metrics.py', 'study_chat_limit.py', 'system_prompt_store.py', 'test_access.py', 'STUDY-PROTOCOL.md']
         files += ['study_progress.py', 'study_telemetry.py', 'migrations/012_study_telemetry.sql']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
@@ -42,11 +42,13 @@ class StudyReleases:
                         assignment_probabilities={'A':1/3,'B':1/3,'C':1/3},
                         personality_policies={'A':'unprompted','B':'career_fixed','C':'custom_career'},
                         personality_focus_policy={'A':'ausgewogen','B':'lernpotenzial','C':'ausgewogen'},
+                        scoring_focus_policy='fixed balanced weights, regardless of stored personality focus',
+                        questionnaire_version='diana-v12',
                         default_system_prompt_base_sha256={policy:hashlib.sha256(text.encode('utf-8')).hexdigest()
                                                            for policy,text in DEFAULT_SYSTEM_PROMPTS.items()},
                         system_prompts_admin_editable=True,
                         a_empty_prompt_means_no_system_message=True,
-                        system_prompt_snapshot_scope='base prompt frozen per participant for diana-abc-v4; policy, revision and base sha256 are exported without prompt text; C appends the participant-controlled personality at runtime',
+                        system_prompt_snapshot_scope='base prompt frozen per participant for diana-abc-v4/v5; policy, revision and base sha256 are exported without prompt text; C appends the participant-controlled personality at runtime',
                         presentation_policy='ranked_insights',
                         historical_neutral_presentation='random-order-generic-chat-v2',
                         operation_metrics_capture_version=METRICS_CAPTURE_VERSION,

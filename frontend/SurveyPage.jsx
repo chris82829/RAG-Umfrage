@@ -19,11 +19,13 @@ export function SurveyQuestion({ field, value, onChange, busy, error, suggestion
   const hintId = `${field.name}-${id}-hint`;
   const errorId = `${field.name}-${id}-error`;
   const scaleId = `${field.name}-${id}-scale`;
-  const scale = field.scale || surveyScale;
+  const scale = {...surveyScale, ...field.scale};
+  const scores = Array.from({length: scale.max - scale.min + 1}, (_, index) => index + scale.min);
+  const labelled = field.presentation === 'likert';
   const describedBy = [field.hint ? hintId : '', field.kind === 'scale' ? scaleId : '', error ? errorId : ''].filter(Boolean).join(' ') || undefined;
   const inputProps = { onBlur:()=>onCommit?.(field), name: field.name, 'aria-label': field.title, 'aria-invalid': Boolean(error), 'aria-describedby': describedBy, required: !field.optional };
   return <fieldset className={`survey-question${field.kind === 'scale' ? ' survey-rating-card' : ''}${error ? ' has-error' : ''}`} disabled={busy}>
-    <legend>{field.kind === 'scale' && <span className="survey-question-meta"><span>{number ? `${number} · ` : ''}{field.topic || 'Deine Einschätzung'}</span>{Number.isInteger(value) && <span className="survey-answer-mark"><CheckCheck size={14} aria-hidden="true" />{value} / 10</span>}</span>}<span>{field.title}</span>{field.optional && <span className="survey-optional">Optional</span>}</legend>
+    <legend>{field.kind === 'scale' && <span className="survey-question-meta"><span>{number ? `${number} · ` : ''}{field.topic || 'Deine Einschätzung'}</span>{Number.isInteger(value) && <span className="survey-answer-mark"><CheckCheck size={14} aria-hidden="true" />{value} / {scale.max}</span>}</span>}<span>{field.title}</span>{field.optional && <span className="survey-optional">Optional</span>}</legend>
     {field.kind === 'choice' && field.presentation === 'radio' ? <div className="survey-options">
       {field.options.map(([option, label]) => <label key={option} className={`survey-option${value === option ? ' is-selected' : ''}`}>
         <input type="radio" name={field.name} value={option} checked={value === option} onChange={() => onChange(field.name, option)} required={!field.optional} aria-invalid={Boolean(error)} aria-describedby={describedBy} /><span>{label}</span>
@@ -32,13 +34,13 @@ export function SurveyQuestion({ field, value, onChange, busy, error, suggestion
       <option value="" disabled>Bitte wählen</option>
       {field.options.map(([option, label]) => <option key={option} value={option}>{label}</option>)}
     </select> : field.kind === 'scale' ? <>
-      <div className="survey-scale">
-        {Array.from({ length: 10 }, (_, index) => index + 1).map(score => <label key={score} className={`survey-score${value === score ? ' is-selected' : ''}`}>
-          <input type="radio" name={field.name} value={score} checked={value === score} onChange={() => onChange(field.name, score)} required aria-label={`${score}${score === 1 ? ` – ${scale.low}` : score === 10 ? ` – ${scale.high}` : ''}`} aria-invalid={Boolean(error)} aria-describedby={describedBy} />
-          <span>{score}</span>
+      <div className={`survey-scale${labelled ? ' survey-likert' : ''}`}>
+        {scores.map(score => <label key={score} className={`survey-score${value === score ? ' is-selected' : ''}`}>
+          <input type="radio" name={field.name} value={score} checked={value === score} onChange={() => onChange(field.name, score)} required aria-label={`${score} – ${scale.labels?.[score - scale.min] || (score === scale.min ? scale.low : score === scale.max ? scale.high : score)}`} aria-invalid={Boolean(error)} aria-describedby={describedBy} />
+          <span>{score}</span>{labelled && <span className="survey-likert-label">{scale.labels[score - scale.min]}</span>}
         </label>)}
       </div>
-      <div id={scaleId} className="survey-scale-ends"><span>1 · {scale.low}</span><span>10 · {scale.high}</span></div>
+      <div id={scaleId} className="survey-scale-ends"><span>{scale.min} · {scale.low}</span><span>{scale.max} · {scale.high}</span></div>
       {field.nonresponse?.length > 0 && <div className="survey-options survey-nonresponse">{field.nonresponse.map(([option, label]) => <label key={option} className={`survey-option${value === option ? ' is-selected' : ''}`}>
         <input type="radio" name={field.name} value={option} checked={value === option} onChange={() => onChange(field.name, option)} aria-describedby={describedBy} /><span>{label}</span>
       </label>)}</div>}

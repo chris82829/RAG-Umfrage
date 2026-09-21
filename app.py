@@ -32,7 +32,7 @@ from study_metrics import StudyOperationMetrics
 from study_telemetry import register_telemetry
 from study_progress import StudyChatRequired, chat_progress, require_study_chat, has_experience_answers
 from study_chat_limit import StudyChatLimit, ChatMessageLimit, ChatReservationExpired, MAX_USER_CHAT_MESSAGES
-from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
+from study_assignment import StudyAssignments, EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
 from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice, token_hash
@@ -282,7 +282,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         if test_arm():
             return system_prompts.snapshot(policy)
         assigned = assigned or request_assignment()
-        if assigned and assigned.get('experiment_id') == EXPERIMENT_ID:
+        if assigned and assigned.get('experiment_id') in (EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID):
             return system_prompts.participant_snapshot(
                 token_hash(consent_token()), assigned['experiment_id'], policy
             )
@@ -519,7 +519,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             consent_token(),
             on_assign=lambda digest, current, db: system_prompts.participant_snapshot(
                 digest, current['experiment_id'], current['personality_policy'], db=db
-            ) if current.get('experiment_id') == EXPERIMENT_ID else None,
+            ) if current.get('experiment_id') in (EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID) else None,
         )
         with surveys.connect() as db:
             assigned['chat_progress'] = chat_progress(token_hash(consent_token()), db)

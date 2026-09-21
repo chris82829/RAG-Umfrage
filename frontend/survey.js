@@ -1,5 +1,7 @@
 import {consentHeaders} from './privacy.js';
-import definition from '../survey_definition_v11.json' with { type: 'json' };
+import {SURVEY_CHAT_LIMIT} from './chat-limit.js';
+import definition from '../survey_definition_v12.json' with { type: 'json' };
+import definitionV11 from '../survey_definition_v11.json' with { type: 'json' };
 import definitionV10 from '../survey_definition_v10.json' with { type: 'json' };
 import definitionV9 from '../survey_definition_v9.json' with { type: 'json' };
 import definitionV8 from '../survey_definition_v8.json' with { type: 'json' };
@@ -10,8 +12,8 @@ import definitionV4 from '../survey_definition_v4.json' with { type: 'json' };
 
 export const SURVEY_VERSION = definition.version;
 export const SURVEY_STORAGE_KEY = `diana-survey:${SURVEY_VERSION}`;
-const definitions = Object.fromEntries([definition, definitionV10, definitionV9, definitionV8, definitionV7, definitionV6, definitionV5, definitionV4].map(value => [value.version, value]));
-const preparedStudyVersions = ['diana-v9', 'diana-v10', 'diana-v11'];
+const definitions = Object.fromEntries([definition, definitionV11, definitionV10, definitionV9, definitionV8, definitionV7, definitionV6, definitionV5, definitionV4].map(value => [value.version, value]));
+const preparedStudyVersions = ['diana-v9', 'diana-v10', 'diana-v11', 'diana-v12'];
 const waitingNames = ['search_goal', 'personality_customized', 'template_selection_ease', 'personality_setup'];
 const configurations = Object.fromEntries(Object.entries(definitions).map(([version, value]) => {
   const demographics = {...value.demographics, fields:value.demographics.fields.filter(field=>!field.systemProvided)};
@@ -61,7 +63,7 @@ export function surveyErrors(answers, fields = surveyFields) {
   for (const field of visibleFields(fields, answers)) {
     const value = answers[field.name];
     if (field.kind === 'scale') {
-      if ((!Number.isInteger(value) || value < 1 || value > 10) && !field.nonresponse?.some(([code]) => code === value)) errors[field.name] = 'Bitte wähle eine Bewertung oder eine der Antworten darunter.';
+      if ((!Number.isInteger(value) || value < (field.scale?.min || 1) || value > (field.scale?.max || 10)) && !field.nonresponse?.some(([code]) => code === value)) errors[field.name] = 'Bitte wähle eine Bewertung oder eine der Antworten darunter.';
     } else if (field.kind === 'choice') {
       if (!field.options.some(([option]) => option === value)) errors[field.name] = 'Bitte wähle eine Antwort.';
     } else if (typeof value !== 'string' || value.length > field.maxLength || (!field.optional && value.trim().length < (field.minLength || 1))) {
@@ -109,11 +111,15 @@ export function stageGroup(stage, version = SURVEY_VERSION) {
   return stage === 'demographics' ? demographics : surveyCategories.find(group => group.id === stage);
 }
 
+export function hasRequiredStudyChat(state) {
+  return state.chatCompleted === true && Number.isInteger(state.chatCount) && state.chatCount >= SURVEY_CHAT_LIMIT;
+}
+
 // Every next page requires preceding inputs from the assigned questionnaire.
 export function reachableStage(state, target = state.stage) {
   const {surveyStages,demographics,surveyCategories}=surveyConfiguration(state);
   if (!surveyStages.includes(target)) return 'system';
-  if (!state.systemOpened || state.systemCompleted !== true || state.chatCompleted !== true || target === 'system') return 'system';
+  if (!state.systemOpened || state.systemCompleted !== true || !hasRequiredStudyChat(state) || target === 'system') return 'system';
   if (target === 'demographics') return target;
   if (Object.keys(surveyErrors(state.answers, demographics.fields)).length) return 'demographics';
   const index = surveyCategories.findIndex(group => group.id === target);
@@ -127,7 +133,7 @@ export function nextSurveyState(state) {
   const {surveyStages}=surveyConfiguration(state);
   const index = surveyStages.indexOf(state.stage);
   if (index < 0 || index === surveyStages.length - 1) return state;
-  if (state.stage === 'system' && (state.systemCompleted !== true || state.chatCompleted !== true)) return state;
+  if (state.stage === 'system' && (state.systemCompleted !== true || !hasRequiredStudyChat(state))) return state;
   const group = stageGroup(state.stage,state.version);
   if (group && Object.keys(surveyErrors(state.answers, group.fields)).length) return state;
   let nextIndex=index+1;
@@ -138,7 +144,7 @@ export function nextSurveyState(state) {
 
 export function newSurveyState(cryptoSource = globalThis.crypto) {
   const token = () => Array.from(cryptoSource.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join('');
-  return { version: SURVEY_VERSION, submissionId: token(), runId: token(), stage: 'system', systemTaskStarted: false, systemOpened: true, systemCompleted: false, chatCompleted: false, submitted: false, draftRevision:0, waitingAnswered:[], searchGoalSuggestion: '', searchGoalEdited: false, answers: emptyAnswers() };
+  return { version: SURVEY_VERSION, submissionId: token(), runId: token(), stage: 'system', systemTaskStarted: false, systemOpened: true, systemCompleted: false, chatCompleted: false, chatCount: 0, submitted: false, draftRevision:0, waitingAnswered:[], searchGoalSuggestion: '', searchGoalEdited: false, answers: emptyAnswers() };
 }
 
 function sanitizeAnswers(source,version) {
@@ -163,7 +169,7 @@ export function loadSurveyState(storage, fresh = newSurveyState) {
       if(!definitions[state.version]) {
         const answers=emptyAnswers();
         for(const name of [...demographics.fields.map(field=>field.name),'search_goal'])if(state.answers?.[name]!==undefined)answers[name]=state.answers[name];
-        return {...state,version:SURVEY_VERSION,answers:sanitizeAnswers(answers,SURVEY_VERSION),stage:'system',systemOpened:true,systemCompleted:false,chatCompleted:false,
+        return {...state,version:SURVEY_VERSION,answers:sanitizeAnswers(answers,SURVEY_VERSION),stage:'system',systemOpened:true,systemCompleted:false,chatCompleted:false,chatCount:0,
           runId:newSurveyState().runId,waitingAnswered:[],draftRevision:Math.max(Date.now(),(state.draftRevision || 0)+1)};
       }
       const version=state.version;
@@ -189,7 +195,7 @@ export function saveSurveyState(storage, state) {
 export async function submitSurvey(state, { request = globalThis.fetch, signal } = {}) {
   const {surveyFields}=surveyConfiguration(state);
   if (state.systemCompleted !== true) throw new Error('Bitte schließe zuerst die erste Suche mit DIANA ab.');
-  if (state.chatCompleted !== true) throw new Error('Bitte sende zuerst eine eigene Nachricht im DIANA-Chat.');
+  if (!hasRequiredStudyChat(state)) throw new Error('Bitte schließe zuerst drei eigene Nachrichten im DIANA-Chat ab.');
   if (Object.keys(surveyErrors(state.answers,surveyFields)).length) throw new Error('Bitte prüfe deine Antworten.');
   const response = await request('/api/survey-responses', {
     method: 'POST', signal, headers: { ...consentHeaders(), 'Content-Type': 'application/json' },
@@ -221,11 +227,13 @@ export function applyStudyAssignment(state,assignment) {
   if(version!==state.version) {
     const answers=emptyAnswers(version);
     for(const name of [...demographics.fields.map(field=>field.name),'search_goal'])if(state.answers[name]!==undefined)answers[name]=state.answers[name];
-    next={...state,version,answers,stage:'system',systemTaskStarted:false,systemCompleted:false,chatCompleted:false,runId:newSurveyState().runId,waitingAnswered:(state.waitingAnswered || []).filter(name=>[...demographics.fields.map(field=>field.name),'search_goal'].includes(name))};
+    next={...state,version,answers,stage:'system',systemTaskStarted:false,systemCompleted:false,chatCompleted:false,chatCount:0,runId:newSurveyState().runId,waitingAnswered:(state.waitingAnswered || []).filter(name=>[...demographics.fields.map(field=>field.name),'search_goal'].includes(name))};
   }
   const arm=version==='diana-v6' && assignment.experiment_id==='diana-bc-v1'?({A:'B',B:'C'}[assignment.arm] || assignment.arm):assignment.arm;
   const answers=changeSurveyAnswer(next.answers,'study_arm',arm,version);
-  return reviseSurvey(next,{answers,assignment});
+  const progress=assignment.chat_progress;
+  const chatCount=Number.isInteger(progress?.used) && progress.used >= 0 ? progress.used : 0;
+  return reviseSurvey(next,{answers,assignment,chatCount,chatCompleted:progress?.can_proceed===true && chatCount>=SURVEY_CHAT_LIMIT});
 }
 
 // The same preparation precedes the current conference-study system in every arm.

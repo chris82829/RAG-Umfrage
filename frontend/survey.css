@@ -153,3 +153,13 @@
   .survey-page .survey-task { padding: 16px; font-size: 14px; }
   .survey-page .survey-preparation .survey-form-actions { flex-direction: column; align-items: stretch; }
 }
+
+/* V12 agreement items retain all five verbal anchors on desktop and mobile. */
+.survey-page .survey-scale.survey-likert { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.survey-page .survey-likert .survey-score { align-content: center; gap: 5px; padding: 12px 7px; text-align: center; min-height: 92px; }
+.survey-page .survey-likert-label { font-size: 12px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .survey-page .survey-scale.survey-likert { grid-template-columns: 1fr; gap: 7px; }
+  .survey-page .survey-likert .survey-score { display: flex; justify-content: flex-start; gap: 12px; min-height: 48px; padding: 11px 15px; text-align: left; }
+  .survey-page .survey-likert-label { font-size: 14px; }
+}

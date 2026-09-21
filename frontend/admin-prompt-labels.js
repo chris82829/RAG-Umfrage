@@ -5,7 +5,7 @@ export const promptPolicyLabels = {
 };
 
 export function armLabel(arm, version) {
-  if (version === 'diana-v11') return ({A:'A · Basissystem',B:'B · Top-Berufsberater',C:'C · Selbst gestaltbar'}[arm] || arm);
+  if (['diana-v11','diana-v12'].includes(version)) return ({A:'A · Basissystem',B:'B · Top-Berufsberater',C:'C · Selbst gestaltbar'}[arm] || arm);
   return arm === 'A'
     ? (['diana-v9','diana-v10'].includes(version) ? 'A · Standardberatung' : 'A · Basisvariante')
     : ['diana-v8','diana-v9','diana-v10'].includes(version)

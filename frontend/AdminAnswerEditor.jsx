@@ -20,13 +20,13 @@ export default function AdminAnswerEditor({row, busy, error, onCancel, onSave}) 
         const value = answers[field.name];
         if (field.name === 'study_arm') return <div className="admin-locked-answer" key={field.name}><strong>{field.title}</strong><span>{answerLabel(field, value)} · fest zugeordnet</span></div>;
         const options = field.kind === 'scale'
-          ? [...Array.from({length: (field.maximum || 10) - (field.minimum || 1) + 1}, (_, index) => {const n = index + (field.minimum || 1); return [n, String(n)];}), ...(field.nonresponse || [])]
+          ? [...Array.from({length: (field.scale?.max || field.maximum || 10) - (field.scale?.min || field.minimum || 1) + 1}, (_, index) => {const n = index + (field.scale?.min || field.minimum || 1); return [n, field.scale?.labels?.[index] ? `${n} · ${field.scale.labels[index]}` : String(n)];}), ...(field.nonresponse || [])]
           : field.options || [];
         return <label key={field.name}>{field.title}{field.optional ? ' (optional)' : ''}
           {field.kind === 'text'
             ? <textarea value={value ?? ''} onChange={event => change(field.name, event.target.value)} required={required} minLength={required ? field.minLength || 1 : undefined} maxLength={field.maxLength} rows={field.maxLength > 160 ? 3 : 2}/>
             : <select value={value ?? ''} required={required} onChange={event => {const raw = event.target.value; change(field.name, raw === '' ? null : field.kind === 'scale' && /^\d+$/.test(raw) ? Number(raw) : raw);}}><option value="">{completed ? 'Bitte auswählen' : 'Noch nicht beantwortet'}</option>{options.map(([key, text]) => <option key={key} value={key}>{text}</option>)}</select>}
-          {field.kind === 'scale' && field.scale && <small>{field.minimum || 1}: {field.scale.low} · {field.maximum || 10}: {field.scale.high}</small>}
+          {field.kind === 'scale' && field.scale && <small>{field.scale?.min || field.minimum || 1}: {field.scale.low} · {field.scale?.max || field.maximum || 10}: {field.scale.high}</small>}
         </label>;
       })}
       <label className="admin-correction-reason">Grund für die Korrektur<textarea value={reason} onChange={event => setReason(event.target.value)} minLength={3} maxLength={1000} required rows={3} placeholder="Zum Beispiel: dokumentierte Rückmeldung der teilnehmenden Person"/></label>

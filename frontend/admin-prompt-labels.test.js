@@ -4,6 +4,7 @@ import {armLabel,promptPolicyLabels,promptSeriesLabel,promptVersionLabel} from '
 
 test('current A is labelled as Basissystem even when its prompt is configurable',()=>{
   assert.equal(armLabel('A','diana-v11'),'A · Basissystem');
+  assert.equal(armLabel('A','diana-v12'),'A · Basissystem');
   assert.equal(promptPolicyLabels.unprompted,'Basissystem');
 });
 

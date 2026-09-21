@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
-  SURVEY_VERSION, applyStudyAssignment, emptyAnswers, loadSurveyState,
+  SURVEY_VERSION, applyStudyAssignment, emptyAnswers, loadSurveyState, hasRequiredStudyChat, nextSurveyState,
   needsSystemPreparation, newSurveyState, remainingWaitingGroups,
-  restoreServerDraft, startPreparedSystem, surveyConfiguration,
+  restoreServerDraft, startPreparedSystem, surveyConfiguration, surveyErrors, visibleFields,
 } from './survey.js';
 
 const assigned = (version, arm = 'C') => applyStudyAssignment(newSurveyState(), {
@@ -13,7 +13,7 @@ const assigned = (version, arm = 'C') => applyStudyAssignment(newSurveyState(), 
 const names = fields => fields.map(field => field.name);
 
 test('new participants accept the backend V11 assignment in all three arms', () => {
-  assert.equal(SURVEY_VERSION, 'diana-v11');
+  assert.equal(SURVEY_VERSION, 'diana-v12');
   for (const arm of ['A', 'B', 'C']) {
     const state = assigned('diana-v11', arm);
     assert.equal(state.version, 'diana-v11');
@@ -95,4 +95,48 @@ test('earlier questionnaires retain their version-specific preparation and waiti
     assert.equal(assigned(version).version, version);
     assert('search_goal' in emptyAnswers(version));
   }
+});
+
+
+test('V12 matches appendix counts and prepares all six background answers before use', () => {
+  for (const [arm, count] of [['A',17],['B',21],['C',22]]) {
+    const state=assigned('diana-v12',arm);
+    const config=surveyConfiguration(state);
+    assert.equal(visibleFields(config.surveyFields,state.answers).filter(field=>!field.systemProvided).length,count);
+    assert.equal(config.beforeSystemFields.length,6);
+    assert.equal(needsSystemPreparation(state),true);
+    assert(!config.surveyFields.some(field=>['system_usefulness','personalized_search_usefulness','personality_clarity_search'].includes(field.name)));
+    const answers={...state.answers, age_group:'21_24',gender:'not_specified',education:'bachelor',study_field:'',job_portal_experience:'never',ai_chat_experience:'daily'};
+    const started=startPreparedSystem({...state,answers});
+    assert.equal(needsSystemPreparation(started),false);
+    assert.deepEqual(remainingWaitingGroups(started).flatMap(group=>names(group.fields)),['search_goal']);
+  }
+});
+
+test('V12 agreement statements accept exactly 1–5 or the explicit nonresponse', () => {
+  const fields=surveyConfiguration('diana-v12').surveyFields.filter(field=>field.name.startsWith('usefulness_'));
+  assert.deepEqual(names(fields),['usefulness_effective','usefulness_speed','usefulness_overall']);
+  for(const field of fields){
+    assert.equal(field.scale.labels.length,5);
+    for(const value of [1,2,3,4,5,'not_assessable'])assert.deepEqual(surveyErrors({[field.name]:value},[field]),{});
+    for(const value of [0,6,10,null,'not_used',true,2.5])assert(field.name in surveyErrors({[field.name]:value},[field]));
+  }
+  const effort=surveyConfiguration('diana-v12').surveyFields.find(field=>field.name==='search_effort');
+  assert.deepEqual(surveyErrors({search_effort:10},[effort]),{});
+});
+
+
+test('survey navigation uses three completed turns from the assigned server progress', () => {
+  const initial={...newSurveyState(),systemCompleted:true,chatCompleted:true,chatCount:99};
+  for(const used of [0,1,2]){
+    const state=applyStudyAssignment(initial,{arm:'A',questionnaire_version:'diana-v12',chat_progress:{used,required:3,can_proceed:false}});
+    assert.equal(state.chatCount,used);
+    assert.equal(hasRequiredStudyChat(state),false);
+    assert.equal(nextSurveyState(state),state);
+  }
+  const ready=applyStudyAssignment(initial,{arm:'A',questionnaire_version:'diana-v12',chat_progress:{used:3,required:3,can_proceed:true}});
+  assert.equal(hasRequiredStudyChat(ready),true);
+  assert.equal(hasRequiredStudyChat({...ready,chatCompleted:false}),false);
+  assert.equal(hasRequiredStudyChat({...ready,chatCount:2}),false);
+  assert.equal(applyStudyAssignment(initial,{arm:'A',questionnaire_version:'diana-v12'}).chatCount,0);
 });

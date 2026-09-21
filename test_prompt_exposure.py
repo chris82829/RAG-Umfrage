@@ -249,7 +249,7 @@ class PromptExposureAppTests(unittest.TestCase):
         self.assertEqual(rows[0]["system_prompt_base_sha256"], first[2])
         self.assertNotIn(first[3], exported)
         codebook = {item["technical_variable"]: item for item in admin.codebook()}
-        self.assertEqual(codebook["system_prompt_policy"]["versions"], ["diana-v11"])
+        self.assertEqual(codebook["system_prompt_policy"]["versions"], ["diana-v11", "diana-v12"])
         self.assertIn("kein Systemprompt", codebook["system_prompt_policy"]["codes"]["unprompted"])
 
         participation_id = row["participation_id"]

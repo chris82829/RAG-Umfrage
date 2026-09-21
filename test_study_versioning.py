@@ -15,7 +15,7 @@ from survey_store import SURVEY_DEFINITION, SURVEY_VERSION, V10_SURVEY_DEFINITIO
 
 class StudyVersioningTests(unittest.TestCase):
     def test_current_and_previous_policy_names_stay_distinct(self):
-        self.assertEqual(EXPERIMENT_ID, "diana-abc-v4")
+        self.assertEqual(EXPERIMENT_ID, "diana-abc-v5")
         self.assertEqual(
             [personality_policy(EXPERIMENT_ID, arm) for arm in "ABC"],
             ["unprompted", "career_fixed", "custom_career"],
@@ -26,8 +26,8 @@ class StudyVersioningTests(unittest.TestCase):
         )
 
     def test_current_questionnaire_does_not_relabel_v10(self):
-        self.assertEqual(SURVEY_VERSION, "diana-v11")
-        self.assertEqual(SURVEY_DEFINITION["version"], "diana-v11")
+        self.assertEqual(SURVEY_VERSION, "diana-v12")
+        self.assertEqual(SURVEY_DEFINITION["version"], "diana-v12")
         self.assertEqual(V10_SURVEY_DEFINITION["version"], "diana-v10")
         arm = next(
             field

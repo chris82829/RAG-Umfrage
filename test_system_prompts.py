@@ -121,7 +121,7 @@ class PromptPolicyTests(unittest.TestCase):
             self.assertIn("sortieren", prompt)
         self.assertIn("technical_fit 60 %", b_prompt["content"])
         self.assertIn("Sprich sehr direkt und konkret.", c_prompt["content"])
-        self.assertIn('"innovation": 15', c_prompt["content"])
+        self.assertIn('"innovation": 6', c_prompt["content"])
 
     def test_prompt_store_revisions_hashes_and_optimistic_locking(self):
         first = self.store.get()

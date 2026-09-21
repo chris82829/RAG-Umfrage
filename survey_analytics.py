@@ -3,11 +3,11 @@ from collections import Counter
 from copy import deepcopy
 from statistics import mean, median
 
-from survey_store import (SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
+from survey_store import (SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
                           V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, answer_status,
                           QUESTIONS, ADDED_VALUE_LABELS, PREFERENCE_LABELS)
 
-DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
+DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
                V5_SURVEY_DEFINITION, V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION)}
 DEFINITIONS['diana-v2'] = deepcopy(LEGACY_SURVEY_DEFINITION)
 for category in [DEFINITIONS['diana-v2']['demographics'], *DEFINITIONS['diana-v2']['categories']]:
@@ -44,7 +44,7 @@ def summarize(field, rows):
                 values.append(value)
         statuses[status] += 1
     counts = Counter(values)
-    options = [(i, str(i)) for i in range(1, maximum+1)] if field['kind'] == 'scale' else field.get('options', [])
+    options = [(i, field.get('scale', {}).get('labels', [str(n) for n in range(1, maximum+1)])[i-1]) for i in range(1, maximum+1)] if field['kind'] == 'scale' else field.get('options', [])
     return dict(total=len(rows), n=len(values), statuses=dict(statuses),
                 mean=round(mean(values), 3) if values and field['kind'] == 'scale' else None,
                 median=median(values) if values and field['kind'] == 'scale' else None,
@@ -71,7 +71,7 @@ def analytics(rows, version):
         policy = row.get('system_prompt_policy') or ''
         revision = row.get('system_prompt_revision')
         sha256 = row.get('system_prompt_base_sha256') or ''
-        if version == 'diana-v11' and arm and policy and revision not in ('', None) and sha256:
+        if version in ('diana-v11', 'diana-v12') and arm and policy and revision not in ('', None) and sha256:
             return f'{arm}:{policy}:{revision}:{sha256}'
         return arm
     experiments = sorted({cohort_key(r) for r in rows}) or [('', ('undocumented',))]
