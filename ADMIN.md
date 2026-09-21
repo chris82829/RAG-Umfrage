@@ -45,8 +45,10 @@ wiederhergestellt werden.
 
 ## Ergebnisse bearbeiten
 
-- Die Übersicht zeigt Teilnahme-ID, Abgabezeitpunkt und Fragebogenversion.
-- Suche anhand der vom Teilnehmer zugesandten ID oder filtere nach Version.
+- Die Übersicht verwendet automatisch den aktuellen Fragebogen. Eine Auswahl
+  historischer Fragebogenversionen wird nicht mehr angeboten.
+- Suche anhand der vom Teilnehmer zugesandten ID oder filtere nach Studienvariante,
+  Abschlussstatus und exakter Promptfassung.
 - Öffne eine Antwort, um alle Angaben und den zugeordneten Modellstand zu sehen.
 - **Antworten bearbeiten** öffnet die Eingabefelder der ursprünglichen
   Fragebogenversion. Einen Korrekturgrund angeben und **Korrektur speichern**
@@ -83,7 +85,7 @@ sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenba
 ## In Numiqo auswerten
 
 1. In der Verwaltung **CSV für Numiqo** oder **Auswertungspaket** wählen.
-   Beide berücksichtigen den aktuellen ID-, Versions-, Status-, Varianten- und
+   Beide berücksichtigen den aktuellen ID-, Status-, Varianten- und
    Promptfassungsfilter über alle Seiten hinweg.
 2. Unter **Spaltennamen** ist **Deutsch · verständliche Namen** vorausgewählt.
    **Technisch · bisherige Schlüssel** bleibt für vorhandene Auswertungsskripte verfügbar.
@@ -430,3 +432,33 @@ Pool bleibt bei Antworten und Neubewertung stabil. `darstellungs_versionen` in
 CSV und Diagrammkohorten trennt `random-order-generic-chat-v1` von älteren oder
 undokumentierten Ständen. Mehrere während einer Teilnahme genutzte Stände bleiben
 gesondert erkennbar. Ursprüngliche Gruppenzuordnungen werden nicht verändert.
+
+## Nutzungsverhalten und Betrachtungszeit
+
+Unter **Verwaltung → Nutzungsverhalten** (`/verwaltung#nutzungsverhalten`) stehen
+Kennzahlen und ein deskriptiver A/B/C-Vergleich. Eine aufklappbare Teilnahme zeigt
+pro Stellen-ID die sichtbare Begründungszeit in Sekunden, geöffnete Details,
+aufgeklappte Begründungen und beobachtete Rangpositionen. Chatnachrichten kommen
+vom selben erfolgreichen Server-Zähler wie das Drei-Nachrichten-Limit.
+
+Die oben gewählte Auswahl **Nur abgeschlossene / alle / nur unvollständige** gilt
+auch für diese Ansicht und ihre Downloads. Fehlende Messungen erscheinen als
+„Nicht erfasst“, nicht als Nullwert. Eine gemessene sichtbare Begründungsdauer
+belegt keine Aufmerksamkeit. Mehrere zugleich sichtbare Karten können sich
+zeitlich überschneiden; ihre Summe ist keine gesamte Sitzungsdauer.
+
+- **Nutzungsverhalten pro Teilnahme:** Bereits zusammengefasste CSV, eine Zeile je
+  Teilnahme, Sekunden statt Millisekunden. Über `teilnahme_id` mit dem deutschen
+  Antwortexport verknüpfen. Leer bedeutet nicht erfasst.
+- **Nutzungsereignisse als CSV:** Rohereignisse mit UTC-Zeitpunkt, Stellenkennung,
+  Rang und `duration_ms`; über `participation_id` verknüpfen. Für eigene
+  Aggregationen und die Prüfung einzelner Ereignisse.
+
+Die APIs `/api/admin/usage-analytics` und `/api/admin/usage-export` benötigen den
+bestehenden Verwaltungslogin. Starts ohne gespeicherten Antwortentwurf erscheinen
+nicht in der Antwortauswahl. Der Rohdownload enthält keine Chat- oder Profiltexte.
+
+**Alle Teilnahmen löschen** entfernt auch Nutzungsereignisse, Korrekturverläufe
+und offene Chatreservierungen. Gesperrte Einwilligungskennungen verhindern, dass
+alte Browserstände die gelöschten Antworten erneut übertragen. Exporte und
+Datenbanksicherungen müssen zusätzlich bereinigt werden.

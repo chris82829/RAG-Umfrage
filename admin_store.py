@@ -188,7 +188,7 @@ class AdminSurveyData:
             db.execute("UPDATE privacy_consents SET withdrawn_at=COALESCE(withdrawn_at, ?) WHERE purpose='study'", (datetime.now(timezone.utc).isoformat(),))
             # Keep revoked consent identities as tombstones, so old sessions cannot
             # recreate deleted answers. This does not close or pause the study.
-            for table in ('survey_responses', 'survey_drafts', 'survey_response_metadata', 'study_assignments', 'study_runs', 'study_personality_usage', 'study_operation_metrics', 'system_prompt_participant_snapshots'):
+            for table in ('survey_responses', 'survey_drafts', 'survey_response_metadata', 'survey_answer_corrections', 'study_assignments', 'study_runs', 'study_personality_usage', 'study_operation_metrics', 'system_prompt_participant_snapshots', 'track_events', 'study_chat_reservations'):
                 if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
                     db.execute(f'DELETE FROM {table}')
             for table in ('privacy_links', 'privacy_consent_history'):

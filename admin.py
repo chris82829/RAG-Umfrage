@@ -13,6 +13,7 @@ from pydantic import ValidationError
 from admin_store import AdminSurveyData, AdminAnswerCorrection
 from survey_store import SURVEY_DEFINITION, SurveyConflict
 from survey_analytics import analytics
+from telemetry_analytics import telemetry_analysis, telemetry_participant_csv
 from system_prompt_store import PromptConflict
 
 
@@ -107,7 +108,7 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
             return error(str(failure), 400)
         return jsonify(updated)
     def filters():
-        query=request.args.get('q','').strip();version=request.args.get('version','')
+        query=request.args.get('q','').strip();version=request.args.get('version',SURVEY_DEFINITION['version'])
         if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7','diana-v8','diana-v9','diana-v10','diana-v11','diana-v12'):raise ValueError()
         status=request.args.get('status','')
         if status not in ('','completed','in_progress'):raise ValueError()
@@ -162,6 +163,28 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
     @protected
     def deletion_preview():
         return jsonify(data.deletion_preview())
+    @bp.get('/usage-analytics')
+    @protected
+    def usage_analysis():
+        try:query,version,status,arm,prompt=filters()
+        except ValueError:return error('Ungültiger Filter.',400)
+        rows=data.filtered(query,version,status,arm,prompt)
+        with surveys.connect() as db:
+            result=telemetry_analysis(db,rows)
+        return jsonify(result)
+    @bp.get('/usage-export')
+    @protected
+    def usage_export():
+        try:query,version,status,arm,prompt=filters()
+        except ValueError:return error('Ungültiger Filter.',400)
+        rows=data.filtered(query,version,status,arm,prompt)
+        with surveys.connect() as db:
+            content=telemetry_participant_csv(telemetry_analysis(db,rows))
+        response=make_response(content)
+        response.headers['Content-Type']='text/csv; charset=utf-8'
+        response.headers['Content-Disposition']='attachment; filename="diana_nutzungsverhalten.csv"'
+        response.headers['X-Content-Type-Options']='nosniff'
+        return response
     @bp.delete('/responses')
     @protected
     def delete_all():
