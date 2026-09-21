@@ -28,7 +28,7 @@ import {standaloneArm, leavesTestContext} from './test-access.js';
 import {selectionForRequest} from './advisor-selection.js';
 import {consentHeaders} from './privacy.js';
 import { appPath, appSessionStorage, surveyRun } from './app-session.js';
-import { hasChatMessage, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
+import { hasChatMessage, successfulChatCount, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
 import './action-motion.css';
 import { careerAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
 import { PERSONALITY_POLICIES, advisorForPolicy, canCustomizeAdvisor, normalizeSessionForPolicy, policyForArm, restoredAdvisorForPolicy, selectionForPolicy } from './advisor-policy.js';
@@ -218,12 +218,13 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
   const surveyResultsVisible = isSurveyResultsView({ session, page, booting, busy, editor, personalityIntro });
   const surveySearching = busy && searchActive;
   const surveyGoal = searchGoalSuggestion(surveyResultsReady ? session?.profile : surveySearchProfile);
-  const surveyChatCompleted = hasChatMessage(session);
+  const surveyChatCount = successfulChatCount(session);
+  const surveyChatCompleted = surveyChatCount >= 3;
   const surveyAssistantName=operation?.assistantName || advisorAiLabel(session?.advisor || advisor);
-  useEffect(() => reportSurveyProgress(window, surveyResultsReady, { resultsVisible: surveyResultsVisible, searching: surveySearching, searchGoal: surveyGoal, chatCompleted: surveyChatCompleted, assistantName:surveyAssistantName, searchProgress }, () => {
+  useEffect(() => reportSurveyProgress(window, surveyResultsReady, { resultsVisible: surveyResultsVisible, searching: surveySearching, searchGoal: surveyGoal, chatCompleted: surveyChatCompleted, chatCount: surveyChatCount, assistantName:surveyAssistantName, searchProgress }, () => {
     setEditor(null); setMobileView('chat'); setActivity('chat');
     requestAnimationFrame(() => document.getElementById('chat-input')?.focus());
-  }), [surveyResultsReady, surveyResultsVisible, surveySearching, surveyGoal, surveyChatCompleted, surveyAssistantName, searchProgress]);
+  }), [surveyResultsReady, surveyResultsVisible, surveySearching, surveyGoal, surveyChatCompleted, surveyChatCount, surveyAssistantName, searchProgress]);
 
   useEffect(() => {
     const onPopState = () => setPage(currentPage());

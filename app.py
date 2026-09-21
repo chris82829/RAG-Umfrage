@@ -29,6 +29,7 @@ from advisor import AdvisorConfig, resolve_advisor
 from persona_mlds import MLDSError, advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_usage import StudyPersonalityUsage, normalize_selection
 from study_metrics import StudyOperationMetrics
+from study_progress import StudyChatRequired, chat_progress, require_study_chat, has_experience_answers
 from study_chat_limit import StudyChatLimit, ChatMessageLimit, ChatReservationExpired, MAX_USER_CHAT_MESSAGES
 from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
 from test_access import test_notice, TEST_PURPOSES
@@ -367,7 +368,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         finally:
             operation.close()
 
-    def consent_link(kind, *, selection=None, completed=False, timings=None, chat_reservation=None):
+    def consent_link(kind, *, selection=None, completed=False, timings=None, chat_reservation=None, requires_chat=False):
         if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return None
         token = consent_token()
@@ -378,6 +379,8 @@ def create_app(config=None, *, retriever=None, llm=None):
             digest = privacy.require(token, active_notice, db)
             if testing:
                 return
+            if kind == 'survey' and (completed or requires_chat):
+                require_study_chat(digest, db)
             if kind == 'chat':
                 if chat_reservation and chat_reservation.get('id'):
                     chat_limit.finish(digest, chat_reservation['id'], db)
@@ -434,11 +437,11 @@ def create_app(config=None, *, retriever=None, llm=None):
     def require_consent():
         if request.method == 'OPTIONS':
             return
-        if test_arm() and request.endpoint in {'assign_study', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
+        if test_arm() and request.endpoint in {'assign_study', 'proceed_to_survey', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
             raise ConsentRequired()
         if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return
-        if request.endpoint in {'search', 'onboard', 'chat', 'get_session', 'delete_session', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
+        if request.endpoint in {'search', 'onboard', 'chat', 'get_session', 'delete_session', 'proceed_to_survey', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
             privacy.require(consent_token(), request_notice())
             if request.endpoint == 'get_survey_draft' and not privacy.owns(consent_token(), 'survey', request.view_args['submission_id']):
                 return jsonify(draft=None)
@@ -512,7 +515,25 @@ def create_app(config=None, *, retriever=None, llm=None):
                 digest, current['experiment_id'], current['personality_policy'], db=db
             ) if current.get('experiment_id') == EXPERIMENT_ID else None,
         )
+        with surveys.connect() as db:
+            assigned['chat_progress'] = chat_progress(token_hash(consent_token()), db)
         return jsonify(assigned)
+
+    @app.errorhandler(StudyChatRequired)
+    def study_chat_required(failure):
+        return error_response({'code': 'study_chat_required', 'message': str(failure),
+                               'chat_progress': failure.progress}, 403)
+
+    @app.post('/api/proceed_to_survey')
+    def proceed_to_survey():
+        # Never trust a client messageCount/session ID or postMessage flag.
+        with surveys.connect() as db:
+            db.execute('BEGIN')
+            digest = privacy.require(consent_token(), request_notice(), db)
+            if test_arm() or not assignments.get(consent_token()):
+                raise ConsentRequired()
+            progress = require_study_chat(digest, db)
+        return jsonify(status='ok', chat_progress=progress)
 
     @app.put('/api/survey-drafts')
     def save_survey_draft():
@@ -521,7 +542,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error
         try:
             assignments.validate_answers(consent_token(), body.root.version, body.root.answers.model_dump())
-            return jsonify(surveys.save_draft(body.root, before_save=consent_link('survey')))
+            return jsonify(surveys.save_draft(body.root, before_save=consent_link('survey', requires_chat=has_experience_answers(body.root.answers.model_dump()))))
         except ValueError as failure:
             return error_response({'code':'assignment_mismatch','message':str(failure)},400)
         except SurveyConflict as failure:

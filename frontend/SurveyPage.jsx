@@ -79,12 +79,12 @@ export function SystemPreparation({state, onChange, onStart, busy, errors, error
   const fields=surveyConfiguration(state).beforeSystemFields;
   return <main className="survey-main survey-preparation">
     <form className="survey-form" onSubmit={onStart} noValidate>
-      <div className="survey-form-intro"><p className="survey-eyebrow">DIANA AUSPROBIEREN</p><h1>Bevor du loslegst</h1><p>Zwei kurze Angaben zu deiner bisherigen Erfahrung.</p></div>
+      <div className="survey-form-intro"><p className="survey-eyebrow">DIANA AUSPROBIEREN</p><h1>Bevor du loslegst</h1><p>Ein paar kurze Angaben zu dir und deiner bisherigen Erfahrung.</p></div>
       <div className="survey-demographics-grid">{fields.map(field=><SurveyQuestion key={field.name} field={field} value={state.answers[field.name]} onChange={onChange} busy={busy} error={errors[field.name]} />)}</div>
       <div className="survey-task"><h2>Deine Aufgabe</h2><ol>
         <li>Erstelle ein Suchprofil für eine Stelle, die du tatsächlich suchen würdest.</li>
         <li>Sieh dir die vorgeschlagenen Stellen und ihre Begründungen an.</li>
-        <li>Stelle im Chat mindestens eine eigene inhaltliche Frage zu einer Stelle oder deinen Suchwünschen. Du kannst bis zu drei Nachrichten senden.</li>
+        <li>Führe ein kurzes Gespräch mit genau drei eigenen Nachrichten zu den Stellen oder deinen Suchwünschen. Warte jeweils auf die Antwort. Danach geht es zu den Fragen über das System.</li>
       </ol><p>Du kannst deine Suchwünsche anschließend präzisieren. Nutze die angebotenen Einstellungen so, wie sie für dich sinnvoll sind.</p></div>
       {error && <p className="survey-error" role="alert">{error}</p>}
       <div className="survey-form-actions"><AutosaveStatus status={saveStatus} onRetry={onRetry}/><button type="submit" className="survey-primary diana-action-motion" disabled={busy}>{busy?'Wird gespeichert …':'System ausprobieren'}<ArrowRight className="diana-action-arrow" size={18}/></button></div>
@@ -137,7 +137,7 @@ export function ChatRequiredDialog({ onClose }) {
   return <dialog ref={dialog} className="survey-chat-required" aria-labelledby="survey-chat-required-title" aria-describedby="survey-chat-required-description" onCancel={event => { event.preventDefault(); onClose(); }}>
     <MessageCircle size={32} aria-hidden="true" />
     <h2 id="survey-chat-required-title" ref={heading} tabIndex={-1}>Probiere zuerst den Chat aus</h2>
-    <p id="survey-chat-required-description">Sende mindestens eine eigene Nachricht an den Chatbot, bevor du mit der Umfrage fortfährst. Du kannst eine Empfehlung besprechen oder deine Suchwünsche verfeinern.</p>
+    <p id="survey-chat-required-description">Sende drei eigene Nachrichten an den Chatbot und warte jeweils auf die Antwort, bevor du mit der Umfrage fortfährst. Du kannst eine Empfehlung besprechen oder deine Suchwünsche verfeinern.</p>
     <button className="survey-primary diana-action-motion" type="button" onClick={onClose}>Zum Chat<ArrowRight className="diana-action-arrow" size={18} /></button>
   </dialog>;
 }
@@ -221,11 +221,13 @@ export default function SurveyPage({ initial, participationId }) {
         setSearching(context.searching);
         setSearchProgress(context.searchProgress || null);
         setResultsVisible(context.resultsVisible);
+        setState(previous=>({...previous,chatCount:context.chatCount,chatCompleted:context.chatCount>=3}));
         if(context.assistantName)setSearchAssistant(context.assistantName);
         setState(previous => { const next=suggestSearchGoal(previous,context.searchGoal); return next.answers!==previous.answers ? reviseSurvey(next,{}) : next; });
       }
       if (isSurveyChatCompletion(event, frame.current?.contentWindow, window.location.origin, state.runId)) {
-        setState(previous => previous.chatCompleted ? previous : { ...previous, chatCompleted: true });
+        // Only counted, successfully committed replies unlock the UI.
+        // The server checks eligibility again when advancing and saving.
       }
       if (isSurveyCompletion(event, frame.current?.contentWindow, window.location.origin, state.runId)) {
         setState(previous => previous.systemCompleted ? previous : { ...previous, systemCompleted: true });
@@ -286,10 +288,25 @@ export default function SurveyPage({ initial, participationId }) {
     } catch(failure) {setError(failure.message);}
     finally {setBusy(false);}
   }
-  function advance() {
-    if (sending.current || !assignmentReady || !hydrated) return;
-    if (state.stage === 'system' && state.chatCompleted !== true) { setChatRequired(true); return; }
+  async function advance() {
+    if (sending.current || busy || !assignmentReady || !hydrated) return;
     setErrors({}); setError('');
+    if (state.stage === 'system') {
+      if (state.chatCompleted !== true || (state.chatCount || 0)<3) { setChatRequired(true); return; }
+      setBusy(true);
+      try {
+        const response=await fetch('/api/proceed_to_survey',{method:'POST',headers:consentHeaders()});
+        const result=await response.json();
+        if(!response.ok || !result.chat_progress?.can_proceed) {
+          const progress=result.error?.chat_progress;
+          if(progress)setState(previous=>({...previous,chatCount:progress.used,chatCompleted:false}));
+          throw new Error(result.error?.message || 'Die Teilnahme konnte nicht geprüft werden. Bitte versuche es erneut.');
+        }
+        setState(previous=>nextSurveyState({...previous,chatCount:result.chat_progress.used,chatCompleted:true}));
+      } catch(failure) {setError(failure.message);}
+      finally {setBusy(false);}
+      return;
+    }
     setState(previous => nextSurveyState(previous));
   }
   function back() {
@@ -334,7 +351,8 @@ export default function SurveyPage({ initial, participationId }) {
     {systemActive && assignmentReady && preparationRequired && <SystemPreparation state={state} onChange={change} onStart={beginSystem} busy={busy} errors={errors} error={error} saveStatus={saveStatus} onRetry={retrySave}/> }
     {state.systemOpened && assignmentReady && !preparationRequired && <section className="survey-system-view" hidden={!systemActive} aria-label="DIANA ausprobieren">
       <iframe ref={frame} title="DIANA Jobsuche – interaktiv ausprobieren" src={`/suche?embed=survey&run=${state.runId}`} referrerPolicy="same-origin" onLoad={() => { setResultsVisible(false); requestSurveyProgress(frame.current?.contentWindow, window.location.origin, state.runId); }} />
-      {resultsVisible && !searching && !waitingOpen && !chatRequired && state.systemCompleted && <div className="survey-system-actions"><button className="survey-primary diana-action-motion" type="button" onClick={advance} aria-label="Weitere Fragen für die Umfrage beantworten"><span className="survey-continue-long">Weitere Fragen für die Umfrage beantworten</span><span className="survey-continue-short">Weiter zur Umfrage</span><ArrowRight className="diana-action-arrow" size={18}/></button></div>}
+      {resultsVisible && !searching && !waitingOpen && !chatRequired && state.systemCompleted && <div className="survey-system-actions"><button className="survey-primary diana-action-motion" type="button" disabled={busy || !state.chatCompleted || (state.chatCount || 0)<3} onClick={advance} aria-label="Weitere Fragen für die Umfrage beantworten">{(state.chatCount || 0)<3 ? <span>Noch {3-(state.chatCount || 0)} Nachrichten im Chat ({state.chatCount || 0}/3)</span> : <><span className="survey-continue-long">Weitere Fragen für die Umfrage beantworten</span><span className="survey-continue-short">Weiter zur Umfrage</span></>}<ArrowRight className="diana-action-arrow" size={18}/></button></div>}
+      {error && <p className="survey-error" role="alert">{error}</p>}
     </section>}
     <div className="survey-questionnaire" hidden={systemActive || (!state.submitted && (!assignmentReady || !hydrated))}>
       <header className="survey-header"><a href="/" className="survey-brand" aria-label="Über DIANA und Christoph Scharnagl"><span><Compass size={23} strokeWidth={1.7} /></span><strong>DIANA<small>Umfrage</small></strong></a><span className="survey-header-label">{state.submitted ? 'Abgeschlossen' : 'Deine Erfahrung mit dem Suchsystem'}</span></header>

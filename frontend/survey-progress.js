@@ -28,6 +28,11 @@ export function hasSearchResults(session) {
   return Boolean(session && /^[A-Za-z0-9_-]{32,100}$/.test(session.session_id || '') && Array.isArray(session.jobs));
 }
 
+export function successfulChatCount(session) {
+  return hasSearchResults(session) && Number.isInteger(session.chat_usage?.used)
+    && session.chat_usage.used >= 0 ? session.chat_usage.used : 0;
+}
+
 export function hasChatMessage(session) {
   return hasSearchResults(session) && ((Number.isInteger(session.chat_usage?.used) && session.chat_usage.used > 0)
     || (Array.isArray(session.messages)
@@ -45,6 +50,7 @@ export function reportSurveyProgress(host, ready, context, onOpenChat) {
   const announce = () => {
     if (context) host.parent.postMessage({ type: CONTEXT, runId,
       resultsVisible: context.resultsVisible === true,
+      chatCount: Number.isInteger(context.chatCount) && context.chatCount>=0 ? context.chatCount : 0,
       ...(context.searching && readSearchProgress(context.searchProgress) ? {searchProgress:readSearchProgress(context.searchProgress)} : {}),
       ...(typeof context.assistantName==='string'?{assistantName:context.assistantName.slice(0,100)}:{}),
       searching: context.searching === true, searchGoal: typeof context.searchGoal === 'string' ? context.searchGoal.slice(0, 1000) : '' }, host.location.origin);
@@ -66,7 +72,7 @@ export function readSurveySearchContext(event, frameWindow, origin, runId) {
   if (!frameWindow || event.source !== frameWindow || event.origin !== origin
       || data?.type !== CONTEXT || data.runId !== runId || typeof data.searching !== 'boolean'
       || typeof data.searchGoal !== 'string' || data.searchGoal.length > 1000) return null;
-  return { ...(data.searching && readSearchProgress(data.searchProgress) ? {searchProgress:readSearchProgress(data.searchProgress)} : {}), searching: data.searching, resultsVisible: data.resultsVisible === true, searchGoal: data.searchGoal.trim(), ...(typeof data.assistantName==='string' && data.assistantName.length<=100?{assistantName:data.assistantName}:{}) };
+  return { ...(data.searching && readSearchProgress(data.searchProgress) ? {searchProgress:readSearchProgress(data.searchProgress)} : {}), searching: data.searching, resultsVisible: data.resultsVisible === true, chatCount: Number.isInteger(data.chatCount) && data.chatCount>=0 ? data.chatCount : 0, searchGoal: data.searchGoal.trim(), ...(typeof data.assistantName==='string' && data.assistantName.length<=100?{assistantName:data.assistantName}:{}) };
 }
 
 export function requestSurveyProgress(frameWindow, origin, runId) {
