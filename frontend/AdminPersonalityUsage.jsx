@@ -1,7 +1,7 @@
 import React from 'react';
 
 const sources={template:'Unveränderte Vorlage',custom:'Selbst gestaltet',unknown:'Nicht erfasst',not_applicable:'Keine wählbare Persönlichkeit (A)'};
-const templates={career:'Top-Berufsberater',expert:'Fachexperte'};
+const templates={career:'Top-Berufsberater',expert:'Fachexperte (historisch)'};
 const yesNo=value=>value===true?'Ja':value===false?'Nein':'Nicht sicher erfasst';
 export default function AdminPersonalityUsage({usage}) {
   if (!usage?.capture_version) return <p className="admin-footnote">Die tatsächlich verwendete Persönlichkeitsauswahl wurde für diese Teilnahme noch nicht erfasst.</p>;

@@ -2,9 +2,9 @@
 """Offline, prespecified C-versus-B analysis of the DIANA conference trial.
 
 Read the admin Numiqo CSV (German or technical headers), select only
-experiment diana-abc-v3 / questionnaire diana-v10 by default, and include every valid
+experiment diana-abc-v4 / questionnaire diana-v11 by default, and include every valid
 integer system_usefulness answer from 1 through 10, including partial responses.
-The previous fair trial (diana-abc-v2 / diana-v9) requires explicit --cohort v9.
+Earlier trials require an explicit historical cohort selection.
 Versions are never pooled. The assigned arm determines the analysis; actual template/custom use never filters
 participants. The export must include incomplete responses to implement this rule.
 
@@ -40,10 +40,11 @@ import scipy
 from scipy import special, stats
 
 COHORTS = {
+    'v11': ('diana-abc-v4', 'diana-v11'),
     'v10': ('diana-abc-v3', 'diana-v10'),
     'v9': ('diana-abc-v2', 'diana-v9'),
 }
-DEFAULT_COHORT = 'v10'
+DEFAULT_COHORT = 'v11'
 PRIMARY_ITEM = 'system_usefulness'
 ALIASES = {
     'participant': ('teilnahme_id', 'participation_id'),
@@ -124,7 +125,7 @@ def compare_groups(c_values, b_values):
 
 def analyze_csv(path, cohort=DEFAULT_COHORT):
     if cohort not in COHORTS:
-        raise AnalysisError('Unknown cohort. Choose v10 (current) or v9 (historical); pooling is not supported.')
+        raise AnalysisError('Unknown cohort. Choose v11 (current), v10 or v9 (historical); pooling is not supported.')
     experiment, questionnaire = COHORTS[cohort]
     aliases_by_field = {**ALIASES, 'primary': (f'{cohort}_system_nutzen', f'{cohort}_system_usefulness')}
     raw = Path(path).read_bytes()
@@ -204,7 +205,7 @@ def analyze_csv(path, cohort=DEFAULT_COHORT):
             'effect_size': 'Hedges g = exact gamma small-sample correction times mean difference / pooled sample SD. This standardized measure assumes a meaningful common variance scale.',
             'assumptions': 'Independent participants; the 1–10 single item is treated as approximately interval scaled. No claim of a validated multi-item scale.',
             'missing': 'Missing and invalid primary values are excluded without imputation and counted separately by assigned arm.',
-            'scope': 'Exactly one experiment/questionnaire cohort is selected; v9 and v10 are never pooled. Only rows present in this file are known. Export completed and incomplete responses together. Withdrawn, deleted, or unexported participants cannot be reconstructed from this file.',
+            'scope': 'Exactly one experiment/questionnaire cohort is selected; v9, v10 and v11 are never pooled. Only rows present in this file are known. Export completed and incomplete responses together. Withdrawn, deleted, or unexported participants cannot be reconstructed from this file.',
         },
     }
 
@@ -221,7 +222,7 @@ def write_json(data, output=None):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('csv_path', type=Path, help='Local Numiqo admin CSV, including incomplete responses')
-    parser.add_argument('--cohort', choices=tuple(COHORTS), default=DEFAULT_COHORT, help='v10: current abc-v3/v10 (default); v9: historical abc-v2/v9, analyzed separately')
+    parser.add_argument('--cohort', choices=tuple(COHORTS), default=DEFAULT_COHORT, help='v11: current abc-v4/v11 (default); v10 and v9: historical cohorts, analyzed separately')
     parser.add_argument('--output', type=Path, help='New JSON file (existing files are never replaced); default: stdout')
     args = parser.parse_args(argv)
     try:

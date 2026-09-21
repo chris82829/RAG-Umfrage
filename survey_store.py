@@ -19,7 +19,9 @@ V8_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v8
 V8_SURVEY_FIELDS = [field for group in [V8_SURVEY_DEFINITION['demographics'], *V8_SURVEY_DEFINITION['categories']] for field in group['fields']]
 V9_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v9.json').read_text())
 V9_SURVEY_FIELDS = [field for group in [V9_SURVEY_DEFINITION['demographics'], *V9_SURVEY_DEFINITION['categories']] for field in group['fields']]
-SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v10.json').read_text())
+V10_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v10.json').read_text())
+V10_SURVEY_FIELDS = [field for group in [V10_SURVEY_DEFINITION['demographics'], *V10_SURVEY_DEFINITION['categories']] for field in group['fields']]
+SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v11.json').read_text())
 SURVEY_VERSION = SURVEY_DEFINITION['version']
 SURVEY_FIELDS = [field for group in [SURVEY_DEFINITION['demographics'], *SURVEY_DEFINITION['categories']]
                  for field in group['fields']]
@@ -32,7 +34,7 @@ V5_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v5
 V5_SURVEY_FIELDS = [field for group in [V5_SURVEY_DEFINITION['demographics'], *V5_SURVEY_DEFINITION['categories']] for field in group['fields']]
 V6_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v6.json').read_text())
 V6_SURVEY_FIELDS = [field for group in [V6_SURVEY_DEFINITION['demographics'], *V6_SURVEY_DEFINITION['categories']] for field in group['fields']]
-VERSIONED_FIELDS = {'diana-v4': V4_SURVEY_FIELDS, 'diana-v5': V5_SURVEY_FIELDS, 'diana-v6': V6_SURVEY_FIELDS, 'diana-v7': V7_SURVEY_FIELDS, 'diana-v8': V8_SURVEY_FIELDS, 'diana-v9': V9_SURVEY_FIELDS, SURVEY_VERSION: SURVEY_FIELDS}
+VERSIONED_FIELDS = {'diana-v4': V4_SURVEY_FIELDS, 'diana-v5': V5_SURVEY_FIELDS, 'diana-v6': V6_SURVEY_FIELDS, 'diana-v7': V7_SURVEY_FIELDS, 'diana-v8': V8_SURVEY_FIELDS, 'diana-v9': V9_SURVEY_FIELDS, 'diana-v10': V10_SURVEY_FIELDS, SURVEY_VERSION: SURVEY_FIELDS}
 
 MISSING_CODES = {'not_used', 'not_assessable', 'not_specified'}
 
@@ -154,6 +156,8 @@ SurveySubmissionV9 = create_model('SurveySubmissionV9', __base__=ConditionalSurv
 
 SurveySubmissionV10 = create_model('SurveySubmissionV10', __base__=ConditionalSurvey, **_submission_fields('diana-v10'))
 
+SurveySubmissionV11 = create_model('SurveySubmissionV11', __base__=ConditionalSurvey, **_submission_fields('diana-v11'))
+
 def _draft_fields(version, model):
     fields = {}
     for field in VERSIONED_FIELDS[version]:
@@ -172,6 +176,7 @@ DraftAnswersV7 = create_model('DraftAnswersV7', __base__=APIModel, **_draft_fiel
 DraftAnswersV8 = create_model('DraftAnswersV8', __base__=APIModel, **_draft_fields('diana-v8', SurveySubmissionV8))
 DraftAnswersV9 = create_model('DraftAnswersV9', __base__=APIModel, **_draft_fields('diana-v9', SurveySubmissionV9))
 DraftAnswersV10 = create_model('DraftAnswersV10', __base__=APIModel, **_draft_fields('diana-v10', SurveySubmissionV10))
+DraftAnswersV11 = create_model('DraftAnswersV11', __base__=APIModel, **_draft_fields('diana-v11', SurveySubmissionV11))
 WaitingField = Literal['age_group', 'gender', 'education', 'study_field', 'search_goal', 'personality_customized', 'personality_setup', 'template_selection_ease', 'job_portal_experience', 'ai_chat_experience']
 
 
@@ -228,7 +233,12 @@ class SurveyDraftV10(SurveyDraftV9):
     answers: DraftAnswersV10
 
 
-class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV10 | SurveyDraftV9 | SurveyDraftV8 | SurveyDraftV7 | SurveyDraftV6 | SurveyDraftV5 | SurveyDraftV4, Field(discriminator='version')]]):
+class SurveyDraftV11(SurveyDraftV10):
+    version: Literal['diana-v11']
+    answers: DraftAnswersV11
+
+
+class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV11 | SurveyDraftV10 | SurveyDraftV9 | SurveyDraftV8 | SurveyDraftV7 | SurveyDraftV6 | SurveyDraftV5 | SurveyDraftV4, Field(discriminator='version')]]):
     pass
 
 
@@ -236,7 +246,7 @@ class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV10 | SurveyDraftV9 | Su
 SurveyDraft = SurveyDraftV4
 
 
-class SurveyRequest(RootModel[Annotated[SurveySubmissionV10 | SurveySubmissionV9 | SurveySubmissionV8 | SurveySubmissionV7 | SurveySubmissionV6 | SurveySubmissionV5 | SurveySubmissionV4 | SurveySubmission | SurveySubmissionV2 | LegacySurveySubmission,
+class SurveyRequest(RootModel[Annotated[SurveySubmissionV11 | SurveySubmissionV10 | SurveySubmissionV9 | SurveySubmissionV8 | SurveySubmissionV7 | SurveySubmissionV6 | SurveySubmissionV5 | SurveySubmissionV4 | SurveySubmission | SurveySubmissionV2 | LegacySurveySubmission,
                                         Field(discriminator='version')]]):
     """Previously opened v1/v2 forms remain valid; missing new ratings stay blank."""
 

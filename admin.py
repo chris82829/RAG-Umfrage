@@ -1,5 +1,6 @@
 """Password-protected survey administration; opaque cookies plus CSRF protection."""
 import hashlib
+import re
 import secrets
 import threading
 import time
@@ -12,9 +13,10 @@ from pydantic import ValidationError
 from admin_store import AdminSurveyData, AdminAnswerCorrection
 from survey_store import SURVEY_DEFINITION, SurveyConflict
 from survey_analytics import analytics
+from system_prompt_store import PromptConflict
 
 
-def register_admin(app, surveys, privacy, releases, sessions, notice):
+def register_admin(app, surveys, privacy, releases, sessions, notice, system_prompts):
     bp=Blueprint('survey_admin',__name__,url_prefix='/api/admin')
     data=AdminSurveyData(surveys,privacy,releases,sessions)
     app.extensions['admin_data']=data
@@ -85,23 +87,45 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
             return jsonify(privacy.set_study_enabled(body['enabled'], notice))
         except ValueError as failure:
             return error(str(failure), 409)
+
+    @bp.get('/system-prompts')
+    @protected
+    def get_system_prompts():
+        return jsonify(system_prompts.get())
+
+    @bp.put('/system-prompts')
+    @protected
+    def update_system_prompts():
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict) or set(body) != {'revision', 'prompts'}:
+            return error('Bitte alle drei Systemprompt-Felder und ihre Revision vollständig angeben.', 400)
+        try:
+            updated = system_prompts.update(body['revision'], body['prompts'])
+        except PromptConflict as failure:
+            return error(str(failure), 409)
+        except ValueError as failure:
+            return error(str(failure), 400)
+        return jsonify(updated)
     def filters():
         query=request.args.get('q','').strip();version=request.args.get('version','')
-        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7','diana-v8','diana-v9','diana-v10'):raise ValueError()
+        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7','diana-v8','diana-v9','diana-v10','diana-v11'):raise ValueError()
         status=request.args.get('status','')
         if status not in ('','completed','in_progress'):raise ValueError()
         arm=request.args.get('arm','')
         if arm not in ('','A','B','C'):raise ValueError()
-        return query,version,status,arm
+        prompt=request.args.get('prompt','')
+        if prompt and not re.fullmatch(r'(?:unprompted|career_fixed|custom_career):[1-9][0-9]*:[a-f0-9]{64}',prompt):raise ValueError()
+        return query,version,status,arm,prompt
     @bp.get('/responses')
     @protected
     def responses():
         try:
-            query,version,status,arm=filters();page=int(request.args.get('page','1'))
+            query,version,status,arm,prompt=filters();page=int(request.args.get('page','1'))
             if not 1<=page<=100000:raise ValueError()
         except ValueError:return error('Ungültiger Filter.',400)
-        rows=data.filtered(query,version,status,arm);start=(page-1)*25
+        base_rows=data.filtered(query,version,status,arm);rows=data.filtered(query,version,status,arm,prompt);start=(page-1)*25
         return jsonify(total=len(rows),page=page,page_size=25,items=[{k:v for k,v in row.items() if k!='answers'} for row in rows[start:start+25]],
+                       prompt_versions=data.prompt_versions(base_rows),selected_prompt=prompt,
                        definition=SURVEY_DEFINITION,current_release=releases.manifest)
     @bp.get('/responses/<response_id>')
     @protected
@@ -127,9 +151,13 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
     @bp.get('/analytics')
     @protected
     def analysis():
-        try:query,version,status,arm=filters()
+        try:query,version,status,arm,prompt=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        return jsonify(analytics(data.filtered(query,version,status,arm),version))
+        base_rows=data.filtered(query,version,status,arm)
+        result=analytics(data.filtered(query,version,status,arm,prompt),version)
+        result['prompt_versions']=data.prompt_versions(base_rows)
+        result['selected_prompt']=prompt
+        return jsonify(result)
     @bp.get('/deletion-preview')
     @protected
     def deletion_preview():
@@ -154,9 +182,9 @@ def register_admin(app, surveys, privacy, releases, sessions, notice):
     @bp.get('/export')
     @protected
     def export():
-        try:query,version,status,arm=filters()
+        try:query,version,status,arm,prompt=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        rows=data.filtered(query,version,status,arm);kind=request.args.get('format','csv')
+        rows=data.filtered(query,version,status,arm,prompt);kind=request.args.get('format','csv')
         columns=request.args.get('columns','readable')
         if columns not in ('readable','technical'):return error('Unbekannte Spaltenbenennung.',400)
         if kind=='csv':content=data.csv_data(rows,columns=columns);filename='diana_numiqo.csv';mime='text/csv; charset=utf-8'

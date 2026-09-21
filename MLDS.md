@@ -11,7 +11,8 @@ MLDS bedeutet **Meta-Language-defined Structures**. Die zugehörigen MLDSI besch
 ## Dateien und Datenvertrag
 
 - `personas/Personality.mldsi`: externes JSON-Schema mit Feldbeschreibungen und Domänenregeln, erzeugt aus `persona_mlds.personality_schema()`.
-- `personas/career.mlds`, `personas/expert.mlds`: eingebaute Persönlichkeitsschablonen einschließlich UI-Metadaten.
+- `personas/career.mlds`: Ausgangskonfiguration des aktuellen Top-Berufsberaters einschließlich UI-Metadaten.
+- `personas/expert.mlds`: ausschließlich für die unveränderte Rekonstruktion historischer V10-Teilnahmen; in V11 nicht auswählbar.
 - `personas/neutral.mlds`: eingebaute neutrale Konfiguration.
 
 Jedes MLDS-Dokument hat `format: "DIANA-Personality-MLDS"`, `schema_version: 1`, `provenance` und `personality`. Die Herkunft enthält `method: "Meta-Language-defined Structures"`, `reference: "https://doi.org/10.15439/2025F5613"` und `origin` mit einem der Werte `builtin`, `session` oder `legacy`. Bei `builtin` ist `template` mit `id`, `subtitle`, `summary` und `selectable` zwingend erforderlich. Bei `session` und `legacy` muss `template` fehlen oder `null` sein.
@@ -56,7 +57,7 @@ Beispiel ohne Schablonenmetadaten:
 | `personality_schema()` | Liefert das JSON-Schema für `Personality.mldsi`. |
 | `advisor_to_mlds(config, *, origin='session')` | Validiert die Konfiguration und erzeugt ein MLDS-Dictionary; erlaubt ausschließlich `session` oder `legacy` als Herkunft. |
 | `advisor_from_mlds(value)` | Akzeptiert ein Dictionary oder JSON-Text und liefert ein normales, vollständiges `AdvisorConfig`-Dictionary. Liest auch eine rohe Legacy-Konfiguration mit den bestehenden Standardwerten, ohne die Quelle neu zu schreiben. |
-| `load_templates()` | Liefert die Schablonen `career` und `expert` mit UI-Metadaten sowie `advisor` und `mlds`. |
+| `load_templates()` | Liefert intern `career` und `expert`, damit historische Teilnahmen reproduzierbar bleiben. Die aktuelle öffentliche API gibt nur `career` aus. |
 | `load_neutral_advisor()` | Liefert die neutrale `AdvisorConfig`. |
 
 Pydantic bleibt die Validierungsinstanz an der Anwendungsgrenze. Das externe MLDSI-Schema beschreibt dieselben Domänenregeln, einschließlich eindeutiger Eigenschaften und der Mindestanzahl im Modus `custom`. Unbekannte Versionen, fehlende erforderliche MLDS-Felder und doppelte Schlüssel im eingelesenen JSON werden abgewiesen. Fehlerhafte MLDS-Dokumente erhalten keinen Rückfall auf Legacy-Standardwerte. Strukturelle Validierung ersetzt keine inhaltliche Prüfung von Freitext.
@@ -65,7 +66,14 @@ Gespeichert wird die validierte Rohkonfiguration, nicht das Ergebnis von `resolv
 
 ## Nutzungsweg
 
-`GET /api/persona-templates` liefert den MLDS-basierten Katalog. Das Frontend lädt ihn vor dem Onboarding und verwendet seine Schablonen in der Persönlichkeitsauswahl. Der Sitzungszustand enthält die Konfiguration als `advisor_mlds`. Der Chat liest sie mit `advisor_from_mlds()` zurück; nach einem Update wird sie erneut serialisiert. Bestehende Sitzungen mit dem rohen Feld `advisor` bleiben lesbar.
+`GET /api/persona-templates` liefert im aktuellen V11-System ausschließlich die
+Ausgangskonfiguration `career`. Variante B verwendet sie fest. Variante C zeigt
+keine Vorlagenauswahl, sondern ausschließlich die eigene Gestaltung auf dieser
+fachlichen Basis. Variante A besitzt keine Persönlichkeit und keinen
+Rollen-Systemprompt. Der Sitzungszustand enthält die Konfiguration als
+`advisor_mlds`. Der Chat liest sie mit `advisor_from_mlds()` zurück; nach einem
+Update wird sie erneut serialisiert. Bestehende historische Sitzungen mit dem
+rohen Feld `advisor` und der früheren Expertenvorlage bleiben lesbar.
 
 `study_release.py` bezieht `persona_mlds.py` und sämtliche Dateien in `personas/` in den Release-Hash ein. Damit werden Änderungen am Adapter, Schema und Katalog im Release-Fingerabdruck berücksichtigt.
 

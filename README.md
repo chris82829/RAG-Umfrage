@@ -4,11 +4,11 @@ Flask-Prototyp mit Anzeigen aus dem bereitgestellten Export,
 SQLite-Vorfilter, paralleler BM25-/E5-Suche,
 Reciprocal Rank Fusion und GPT-5.4-Reranking mit begründeten Ergebnissen.
 Die React-Webseite enthält ein Suchprofil, Jobkarten und einen persistenten Chat.
-Im aktuellen Konferenzstand V10 zeigen **alle drei Varianten A/B/C** Scores von
+Im aktuellen Konferenzstand V11 zeigen **alle drei Varianten A/B/C** Scores von
 **1 bis 100**, kurze Begründungen und eine nach Score sortierte Ergebnisliste.
-Zunächst sind Stellen ab 70 Punkten sichtbar; weitere lassen sich einblenden.
-Die Varianten unterscheiden sich im Beratungsangebot: feste Standardberatung,
-Vorlagenauswahl oder zusätzliche eigene Gestaltung. Die produktive Konfiguration
+Zunächst sind die ersten zehn Stellen sichtbar; weitere bis zu 20 lassen sich einblenden.
+Die Varianten unterscheiden sich im Beratungsangebot: Basissystem ohne wählbare Persönlichkeit,
+fester Top-Berufsberater oder eigene Gestaltung auf Berufsberater-Basis. Die produktive Konfiguration
 verwendet den separat importierten Stellenbestand; dessen Umfang zeigt das System an.
 
 ## Öffentlicher Server ohne VPN
@@ -18,29 +18,29 @@ Verwaltung: https://159.195.48.19/verwaltung. Einrichtung, HTTPS-Zertifikate,
 SSH-Zugang, Sicherungen und Updates: [netcup-Betriebsanleitung](deploy/netcup/README.md).
 Die Hochschulinstallation bleibt separat; neue Antworten werden nicht synchronisiert.
 
-Berufsberater und Fachexperte stellen in B/C konkrete Rückfragen zu offenen Kriterien
+Der Berufsberater stellt in B/C konkrete Rückfragen zu offenen Kriterien
 für die Stellenreihenfolge. Kurze, eindeutige Antworten werden als Suchpräferenz oder
 belegte Fähigkeit übernommen. Bereits geklärte Punkte sollen nicht erneut abgefragt
 werden; nach der dritten Studiennachricht wird keine weitere Antwort angefordert.
 Entwicklungsprüfung und Grenzen: [Rückfragen-Prüfung](research/development/2026-09-18-ranking-followups/README.md).
 
-## Aktueller Studienvergleich: A/B/C, Fragebogen V10
+## Aktueller Studienvergleich: A/B/C, Fragebogen V11
 
-Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v3`**, der Fragebogen **`diana-v10`**.
+Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v4`**, der Fragebogen **`diana-v11`**.
 
-- **A:** feste sachliche Standardberatung zur Jobsuche ohne wählbare Persönlichkeit; dieselbe Bewertung, Sortierung, Scores und Begründungsboxen wie B/C.
-- **B:** Auswahl zwischen **Top-Berufsberater** und **Fachexperte** mit festen Eigenschaften. Persönliche Rangfolge, Scores und Begründungen; zunächst Stellen ab 70 Punkten, weitere per Button.
-- **C:** dieselben Vorlagen und dieselbe Bewertungs-/Darstellungslogik wie B, zusätzlich **Selbst personalisieren** mit Name, Eigenschaften, Bewertungsschwerpunkt und Freitext.
+- **A:** Das LLM erhält Stellen und Profil standardmäßig ohne Systemprompt; keine Persönlichkeitswahl. In der Verwaltung kann für kontrollierte Vergleichsläufe optional ein eigener A-Basisprompt hinterlegt werden.
+- **B:** Der **Top-Berufsberater** ist fest eingestellt; Gewichtung und Eigenschaften sind nicht veränderbar.
+- **C:** Ausschließlich **Selbst gestalten** mit Name, Eigenschaften, Bewertungsschwerpunkt und Freitext; der RAG-Auftrag des Top-Berufsberaters bildet die feste fachliche Basis.
 
-B und C starten mit dem Top-Berufsberater. Einschränkungen in B werden serverseitig geprüft. Der Vergleich B/C untersucht das zusätzliche Angebot freier Gestaltung; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch bei unveränderter Vorlagennutzung. B/A vergleicht das Angebot einer Vorlagenauswahl mit der festen Standardberatung. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Die faire Ergebnisdarstellung und das Modell sind in A/B/C gleich. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
+Der Vergleich B/C untersucht die zusätzliche Selbstgestaltung gegenüber dem festen Berufsberater; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch wenn sie die vorgeschlagene Ausgangskonfiguration nicht inhaltlich verändern. B/A vergleicht das gesamte RAG-Berufsberaterprompt-Paket mit dem Basissystem und ist kein isolierter Persönlichkeitstest. Im Ausgangsstand ist der A-Prompt leer; jede spätere A-Promptrevision muss getrennt dokumentiert und ausgewertet werden. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
 
 Der frühere A/B/C-Stand vor dem Konferenzumbau ist auf Branch `sicherung-abc-vor-konferenz-2026-09-14` gesichert; seine `diana-abc-v1`-Teilnahmen bleiben bei V8 und den damaligen Bedingungen. Vorherige `diana-ab-*`-Teilnahmen behalten ihr gestaltbares B und ihren historischen Fragebogen. Sie werden nicht in die neue Vorlagen-B-Gruppe umgedeutet. V6 mit ursprünglichen B/C-Codes bleibt ebenfalls separat erhalten. Version und Experimentkennung gemeinsam auswerten; Details: [ADMIN.md](ADMIN.md).
 
 ### Varianten unabhängig von der Umfrage testen
 
-- [/test/a](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/a) – feste Standardberatung
-- [/test/b](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/b) – feste Beratungsvorlagen
-- [/test/c](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/c) – Vorlagen und eigene Gestaltung
+- [/test/a](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/a) – Basissystem mit der aktuellen A-Konfiguration
+- [/test/b](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/b) – fester Top-Berufsberater
+- [/test/c](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/c) – selbst gestaltete Persönlichkeit auf Berufsberater-Basis
 
 Diese Zugänge haben getrennte Einwilligungen und Sitzungen. Sie erzeugen keine Umfrageantworten, keine zufällige Studienzuordnung und keine Nutzungsmetadaten für die Studie. Vorlagenauswahl und tatsächlich angewendete eigene Gestaltung werden dagegen bei regulären Studienteilnahmen separat von der Selbstauskunft dokumentiert. Der Export verwendet verständliche deutsche Spalten mit Codebuch und technischer Spaltenzuordnung.
 
@@ -63,7 +63,7 @@ Auswahl- und Betriebsmetadaten, ohne daraus Such- oder Chattexte abzulegen.
 
 ## Webseite ausprobieren
 
-### Aktueller Ablauf: V10 mit eingebetteter Jobsuche
+### Aktueller Ablauf: V11 mit eingebetteter Jobsuche
 
 Der Einstieg ist die **[Vorstellungsseite](http://127.0.0.1:5050/)** mit
 Forschungsprojekt, Foto und Kontaktdaten. **„Umfrage starten“** führt zu `/umfrage`.
@@ -74,9 +74,9 @@ Nach der Einwilligung und serverseitigen Zuordnung läuft die Teilnahme so ab:
    abgegrenzte Häufigkeitskategorien und „Keine Angabe“. Alle Gruppen sehen dieselbe
    Aufgabe: ein realistisches Suchprofil erstellen, Stellen und Begründungen ansehen
    und mindestens eine eigene inhaltliche Frage im Chat stellen. Die Antworten
-   werden vor **„System ausprobieren“** gespeichert. Eigene Gestaltung in C ist freiwillig.
-2. **DIANA nutzen:** A verwendet die feste Standardberatung. B wählt aus den beiden
-   festen Vorlagen; C kann dieselben Vorlagen nutzen oder zusätzlich selbst gestalten.
+   werden vor **„System ausprobieren“** gespeichert.
+2. **DIANA nutzen:** A verwendet das Basissystem ohne wählbare Persönlichkeit. B nutzt den fest
+   eingestellten Top-Berufsberater; C gestaltet die KI-Persönlichkeit selbst.
    Während einer Suche können im Wartezeit-Dialog demografische Angaben und das
    Suchvorhaben beantwortet werden. **Keine Bewertungen der Einrichtung, Suche
    oder des Chats werden während der Wartezeit erhoben.**
@@ -100,12 +100,12 @@ Nach der Einwilligung und serverseitigen Zuordnung läuft die Teilnahme so ab:
    bei Texteingaben kurz gebündelt. Der Abschluss validiert den vollständigen
    Fragebogen. Die Teilnahme-ID dient unter anderem späteren Löschanfragen.
 
-V10 verwendet 1–10 für graduelle Erfahrungen, Ja/Nein für passende Nutzungsfragen
+V11 verwendet 1–10 für graduelle Erfahrungen, Ja/Nein für passende Nutzungsfragen
 und Freitext für das Suchvorhaben sowie optionales Feedback. „Nicht genutzt“,
 „Kann ich nicht beurteilen“ und „Keine Angabe“ sind eigenständige fehlende Angaben,
 keine niedrigen Bewertungen. Die Frage nach tatsächlicher Selbstgestaltung erscheint
 nur in C; sie bleibt von der automatisch erfassten Nutzung getrennt.
-Fragetexte, Bedingungen und Antwortwerte stehen in `survey_definition_v10.json`.
+Fragetexte, Bedingungen und Antwortwerte stehen in `survey_definition_v11.json`.
 
 Das Suchvorhaben wird aus dem abgeschickten DIANA-Suchprofil als bearbeitbarer
 Vorschlag übernommen. Eigene Änderungen, auch ein bewusst geleertes Feld,
@@ -121,7 +121,7 @@ Serverbestätigungen sichern die gespeicherten Antworten zusätzlich. Auf dem Ha
 werden Skalenwerte in zwei Reihen mit fünf Auswahlflächen dargestellt; die
 Systemansicht berücksichtigt dynamische Bildschirmhöhe und den sicheren unteren Bereich.
 
-### Umfang des gekürzten V10-Fragebogens
+### Umfang des gekürzten V11-Fragebogens
 
 A sieht **15**, B **20** und C **21** Fragen, jeweils einschließlich der beiden
 optionalen Felder Fachrichtung und Feedback. Nicht mitgezählt ist die automatisch
@@ -139,7 +139,7 @@ der Persönlichkeit sowie die Anpassungs-Selbstauskunft in C.
 
 `PUT /api/survey-drafts` speichert den Antwortentwurf mit monotoner Revision.
 `POST /api/survey-responses` validiert ihn beim Abschluss und übernimmt ihn in
-`survey_responses`. Neue Teilnahmen verwenden `diana-v10` und `diana-abc-v3`;
+`survey_responses`. Neue Teilnahmen verwenden `diana-v11` und `diana-abc-v4`;
 fortgesetzte historische Teilnahmen behalten ihren zugewiesenen Stand.
 Wiederholtes Absenden derselben Antworten erzeugt keinen zusätzlichen Datensatz.
 Die Teilnahme-ID ist keine Identitätsprüfung und verhindert nicht jede
@@ -150,10 +150,16 @@ Korrekturen mit Änderungsverlauf, Filter, Löschung, Diagramme und der
 **CSV-Export für Numiqo** bereit. Das Auswertungspaket enthält Codebuch,
 Spaltenzuordnung sowie Modell-/Konfigurationsnachweise. Details: [ADMIN.md](ADMIN.md).
 
+Der zusätzliche Verwaltungs-Tab **Systemprompts** bearbeitet A, B und C getrennt.
+Das A-Feld darf leer bleiben; dann sendet die Anwendung für A keine Systemnachricht.
+Jede Änderung erhält Revision und SHA-256-Prüfsumme. Bereits zugeteilte reguläre
+Teilnahmen behalten ihre unveränderliche Fassung; neue Teilnahmen und neue
+unabhängige Testläufe übernehmen den aktuellen Stand.
+
 Für die geplante Primäranalyse **abgeschlossene und unvollständige Teilnahmen
-zusammen exportieren**: Alle gültigen V10-Primärantworten der neuen Kohorte zählen
-nach Zuteilung, auch bei unveränderter Vorlagennutzung in C. Der Primärvergleich
-ist C minus B beim Einzelitem `system_usefulness` / `v10_system_nutzen`.
+zusammen exportieren**: Alle gültigen V11-Primärantworten der neuen Kohorte zählen
+nach Zuteilung, auch wenn C die vorgeschlagene Ausgangskonfiguration nicht verändert.
+Der Primärvergleich ist C minus B beim Einzelitem `system_usefulness` / `v11_system_nutzen`.
 Protokoll: [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md).
 Offline-Skripte und Aufrufe: [research/README.md](research/README.md).
 Ein späterer technischer Ranking-Check ist als [Plan](research/RANKING-EVALUATION-PLAN.md)
@@ -171,9 +177,12 @@ abgesichert. Forschungsdaten und Exporte unter `instance/` gehören nicht ins Gi
 
 ### Historische Fragebögen und Bedingungen
 
-Diese Angaben beschreiben frühere Studienstände, **nicht den aktuellen V10-Ablauf**:
+Diese Angaben beschreiben frühere Studienstände, **nicht den aktuellen V11-Ablauf**:
 
-- **V9 / `diana-abc-v2`:** Derselbe faire A/B/C-Systemvergleich wie V10, aber der
+- **V10 / `diana-abc-v3`:** A nutzte die feste sachliche Standardberatung, B bot
+  Top-Berufsberater oder Fachexperte und C zusätzlich Selbstgestaltung. Der
+  Fragebogen hatte bereits 15/20/21 Fragen. Antworten bleiben unverändert unter V10.
+- **V9 / `diana-abc-v2`:** Derselbe historische A/B/C-Systemvergleich wie V10, aber der
   längere Fragebogen mit 18/24/25 Fragen. Antworten bleiben unter V9 und werden
   nicht automatisch mit V10 zusammen ausgewertet. V9 liegt unverändert in
   `survey_definition_v9.json`.
@@ -194,7 +203,7 @@ bleiben bei diesem Stand. Abgeschlossene historische Antworten werden nicht
 umgeschrieben. Sehr alte V2/V3-Entwürfe übertragen lediglich persönliche Fakten und
 Suchvorhaben in einen neuen Durchlauf; Bewertungen werden nicht in neue Antworten umgedeutet.
 
-V4 bis V10 erhalten getrennte versionsbezogene Exportspalten. Experimentkennung
+V4 bis V11 erhalten getrennte versionsbezogene Exportspalten. Experimentkennung
 und Fragebogenversion müssen gemeinsam ausgewertet werden. Begleitende
 `_antwortstatus`-Spalten (technisch `_status`) unterscheiden beantwortet, fehlend,
 übersprungen und nicht gestellte Fragen. Ja=1 und Nein=0 sind gültige Antworten;
@@ -656,22 +665,22 @@ erfolgreicher Verarbeitung gespeichert. Parallele Änderungen derselben Sitzung
 liefern bei einem Konflikt HTTP 409. Der Verlauf bleibt im Produktivmodus nur im RAM und überlebt keinen Neustart; maximal 100 Nachrichten werden aufbewahrt, die letzten zwölf dienen
 dem LLM als Gesprächskontext. Für Rückfragen kennt das antwortende GPT außerdem
 alle bis zu 20 bewerteten Karten in ihrer sortierten Reihenfolge samt
-Begründungen, auch für Fragen zu Stellen hinter Rang fünf. Die KI weiß, dass
-Stellen unter 70 zunächst ausgeblendet sein können. Der vollständige Profilzustand
-wird stets übergeben.
+Begründungen, auch für Fragen zu Stellen hinter Rang fünf. Die KI kennt alle bis
+zu 20 bewerteten Stellen, auch wenn zunächst nur die ersten zehn angezeigt werden.
+Der vollständige Profilzustand wird stets übergeben.
 
 ## Persönlichkeiten: aktueller Stand und historische Details
 
-Aktuell startet A mit einer festen sachlichen Standardberatung, B/C mit
-Top-Berufsberater. B kann zur unveränderten Fachexperten-Vorlage wechseln;
-C kann zusätzlich selbst gestalten. Aktuelle Vorlagen stehen als versionierte
-MLDS-Dateien in `personas/`; Beschreibung: [MLDS.md](MLDS.md).
+Aktuell erhält A Profil und Stellen im Basissystem ohne wählbare Persönlichkeit; das A-Promptfeld ist standardmäßig leer. B verwendet fest den
+Top-Berufsberater. C gestaltet die KI-Suchpersönlichkeit selbst; der RAG-Auftrag
+des Top-Berufsberaters bleibt ihre fachliche Basis. Die Ausgangskonfiguration steht
+als versionierte MLDS-Datei in `personas/`; Beschreibung: [MLDS.md](MLDS.md).
 
 ### Historische Presets und frühere Bedienung
 
 Die folgenden Beschreibungen bekannter Personen und ihrer Gewichte betreffen
 historische Presets und frühere Oberflächen. Sie sind keine aktuelle
-Vorlagenauswahl der V10-Studie.
+Auswahl der V11-Studie.
 
 
 Die Oberfläche startet mit einer **eigenen Persönlichkeit** und zeigt alle Felder
@@ -1049,7 +1058,7 @@ zusammen mit den Laufzeitdateien aus dem lokalen Projektordner übertragen:
 
 ```bash
 tar -czf /tmp/diana-deploy.tar.gz \
-  Dockerfile compose.yaml STUDY-PROTOCOL.md \
+  .dockerignore Dockerfile compose.yaml STUDY-PROTOCOL.md \
   requirements.txt requirements-server.txt \
   *.py personas dummy_jobs.json privacy_settings.json \
   survey_definition*.json web-dist
@@ -1147,7 +1156,7 @@ Ein bereits widerrufener Zugang bleibt gesperrt.
 
 ## Direkte Tests ohne Umfrage
 
-`/test/a` öffnet die feste Standardberatung, `/test/b` die Auswahl aus festen Vorlagen und `/test/c` zusätzlich die eigene Gestaltung. Alle drei zeigen Scores und Begründungen entsprechend dem aktuellen V10-System. Die Zugänge benötigen eigene Einwilligungen und halten Chat und Profil nur in temporären Sitzungen. Sie erzeugen weder Studienzuteilungen noch Umfrageantworten oder Einträge in der Studienauswertung. Die Studienfreigabe in der Verwaltung betrifft diese separaten Tests nicht; vollständige Datenschutzeinstellungen sind weiterhin erforderlich. A, B, C und Umfrage haben getrennte Browser- und Serversitzungen.
+`/test/a` öffnet das Basissystem ohne wählbare Persönlichkeit, `/test/b` den festen Top-Berufsberater und `/test/c` die selbst gestaltbare Persönlichkeit auf Berufsberater-Basis. Ein leeres A-Feld im Verwaltungs-Tab bedeutet technisch weiterhin: keine Systemnachricht. Alle drei zeigen Scores und Begründungen entsprechend dem aktuellen V11-System. Die Zugänge benötigen eigene Einwilligungen und halten Chat und Profil nur in temporären Sitzungen. Sie erzeugen weder Studienzuteilungen noch Umfrageantworten oder Einträge in der Studienauswertung. Die Studienfreigabe in der Verwaltung betrifft diese separaten Tests nicht; vollständige Datenschutzeinstellungen sind weiterhin erforderlich. A, B, C und Umfrage haben getrennte Browser- und Serversitzungen.
 
 Eingebaute Persönlichkeiten liegen als versionierte `.mlds`-Dateien in `personas/`. Das Frontend lädt sie aus `/api/persona-templates`; individuelle Konfigurationen werden in der Sitzung als `advisor_mlds` abgelegt. Siehe [MLDS.md](MLDS.md).
 

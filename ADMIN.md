@@ -6,6 +6,25 @@ Die lokal erzeugten Zugangsdaten liegen außerhalb des Repositorys in
 `../DIANA-Verwaltung-Zugang.txt` (nur für den lokalen Benutzer lesbar).
 Diese Datei und `.env` gehören nicht in Git oder in ein Quellcodearchiv.
 
+## Systemprompts
+
+Der Tab **Systemprompts** verwaltet die drei Varianten getrennt. A darf leer
+bleiben; dann wird technisch keine Systemnachricht an das Modell gesendet. Ein
+eingetragener Text wird ausschließlich für A verwendet. B enthält den festen
+Top-Berufsberater, C die fachliche Basis für die anschließend serverseitig
+ergänzte eigene Gestaltung.
+
+Speichern erzeugt eine neue Revision und SHA-256-Prüfsumme. Reguläre Teilnehmende
+behalten die beim ersten Assignment gebundene Fassung, auch wenn der Prompt später
+geändert wird. Neue Teilnahmen und neue Sitzungen unter `/test/a`, `/test/b` oder
+`/test/c` verwenden den dann aktuellen Stand. Der Export enthält nur Policy,
+Revision und Prüfsumme, niemals den Prompttext.
+
+Der Filter **Exakte Promptfassung** grenzt Einzelantworten, Diagramme und Exporte
+auf genau eine Kombination aus Policy, Revision und Basis-SHA-256 ein. Ohne diese
+Auswahl stellt die Verwaltung mehrere Promptfassungen innerhalb derselben Gruppe
+in den Diagrammen getrennt dar und weist sichtbar auf gemischte Fassungen hin.
+
 ## Teilnahme freigeben oder pausieren
 
 Oben in der Verwaltung steht der Bereich **Umfrage freigeben**. Der Button
@@ -64,8 +83,8 @@ sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenba
 ## In Numiqo auswerten
 
 1. In der Verwaltung **CSV für Numiqo** oder **Auswertungspaket** wählen.
-   Beide berücksichtigen den aktuellen ID-, Versions-, Status- und Variantenfilter,
-   über alle Seiten hinweg.
+   Beide berücksichtigen den aktuellen ID-, Versions-, Status-, Varianten- und
+   Promptfassungsfilter über alle Seiten hinweg.
 2. Unter **Spaltennamen** ist **Deutsch · verständliche Namen** vorausgewählt.
    **Technisch · bisherige Schlüssel** bleibt für vorhandene Auswertungsskripte verfügbar.
    Beide Formate enthalten dieselben Werte in derselben Reihenfolge; gespeichert wird
@@ -87,11 +106,11 @@ Beispiele für den Standardexport:
 | `teilnahme_id` | Pseudonyme Teilnahme-ID |
 | `teilnahme_status` | `completed` oder `in_progress` |
 | `studiengruppe` | A, B oder C; Bedeutung zusammen mit Version und Experiment auswerten |
-| `v10_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
-| `v10_score_nutzen` | Nützlichkeit des Scores für den Überblick |
-| `v10_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
-| `v10_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
-| `v10_ki_selbst_angepasst_selbstauskunft` | Antwort des Teilnehmers auf die Anpassungsfrage |
+| `v11_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
+| `v11_score_nutzen` | Nützlichkeit des Scores für den Überblick |
+| `v11_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
+| `v11_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
+| `v11_ki_selbst_angepasst_selbstauskunft` | C-Selbstauskunft zur tatsächlichen Veränderung der vorgeschlagenen Ausgangskonfiguration |
 | `ki_letzte_verwendung` | Automatisch erfasste Herkunft der angewendeten Persönlichkeit |
 
 Spaltennamen sind eindeutig, klein geschrieben und verwenden ausschließlich
@@ -103,25 +122,29 @@ sein historisches Textformat für Auswahlantworten bleibt erhalten. Für numeris
 Numiqo-Auswertungen den Verwaltungsdownload verwenden.
 
 Eine Zeile entspricht einer Teilnahme. Der aktuelle A/B/C-Vergleich verwendet
-Fragebogen V10 und eigene `v10_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1
-und Nein=0. A ist die sachliche Standardberatung; B erlaubt die Auswahl
-unveränderter Vorlagen; C bietet zusätzlich Selbstgestaltung. Gemeinsame Ergebnis-,
+Fragebogen V11 und eigene `v11_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1
+und Nein=0. A ist das Basissystem ohne wählbare KI-Suchpersönlichkeit; sein
+separates Promptfeld ist standardmäßig leer. B verwendet den
+festen Top-Berufsberater; C gestaltet die KI-Persönlichkeit auf derselben Berufsberater-Basis selbst. Gemeinsame Ergebnis-,
 Score- und Begründungsfragen werden allen drei Gruppen gestellt. Die Fragen zur
 Persönlichkeit erhalten B/C; die Selbstauskunft zur eigenen Anpassung nur C.
 Nicht gestellte Fragen bleiben leer mit Status `skipped`.
 
-V10 enthält A: 15, B: 20 und C: 21 sichtbare Fragen, jeweils einschließlich
+V11 enthält A: 15, B: 20 und C: 21 sichtbare Fragen, jeweils einschließlich
 Fachrichtung und Feedback als optionale Felder. Gegenüber V9 entfallen nur
 `search_ease`, `express_search_needs`, `adapt_search_ease`,
-`template_selection_ease` und `personality_setup`. Es gibt in V10 keine separate
-Bewertung der Einfachheit der Vorlagenauswahl oder Selbstgestaltung mehr.
+`template_selection_ease` und `personality_setup`. Es gibt in V11 keine separate
+Bewertung der Einfachheit der Auswahl oder Selbstgestaltung mehr.
 
-`v10_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
-`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v3`
-kennzeichnet diesen Vergleich. Ranking, Scores und Begründungen sind in A/B/C
-vergleichbar implementiert. Tatsächlich beobachtete Vorlagen-/Selbstgestaltungsnutzung
-ist keine vierte randomisierte Gruppe. Eine Person in C kann eine Vorlage
-unverändert nutzen und bleibt in der primären Auswertung dennoch C.
+`v11_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
+`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v4`
+kennzeichnet diesen Vergleich. Tatsächlich beobachtete Konfigurationsherkunft ist
+keine vierte randomisierte Gruppe. Eine Person in C bleibt auch ohne inhaltliche
+Veränderung der vorgeschlagenen Ausgangskonfiguration in der primären Auswertung C.
+
+Historische V10-Antworten behalten `v10_`-Spalten und `diana-abc-v3`: A war die
+feste sachliche Standardberatung, B bot Top-Berufsberater oder Fachexperte und C
+zusätzlich Selbstgestaltung. Diese Kohorte nicht mit V11 zusammenführen.
 
 Historische V9-Antworten behalten `v9_`-Spalten und `diana-abc-v2`. Die
 Systembedingungen waren bereits fair, der Fragebogen aber länger. V9 und V10
@@ -145,7 +168,7 @@ entfällt in den neueren Versionen.
 
 Identische historische V2/V3-Fragen stehen in `v2_v3_`-Spalten, die vier zusätzlichen
 V3-Nützlichkeitsfragen in `v3_`-Spalten und V1-Antworten in `v1_`-Spalten.
-Spätere Versionen bleiben separat in `v4_` bis `v10_`.
+Spätere Versionen bleiben separat in `v4_` bis `v11_`.
 Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
 Das Codebuch enthält den vollständigen Originalwortlaut, Antwortcodes und Originalcodes,
 Skalenenden, fehlende Werte, Filterführung und Bewertungsrichtung. Die Aufwandsfrage ist
@@ -186,15 +209,15 @@ verändert wurden. Die entsprechende Ja/Nein-Frage bleibt separat bestehen.
 aktiven Studienbestands, unabhängig von den Filtern der Einzelantworten. Je
 Experimentkennung und Gruppe werden zugeteilte Personen, Personen mit gespeicherten
 Antworten, abgeschlossene Personen und Personen mit einem gültigen Primärwert
-der jeweiligen Kohorte gezählt (aktuell V10/v3, historische V9/v2 getrennt). Jede zugeteilte Einwilligungskennung zählt höchstens einmal; bereits
+der jeweiligen Kohorte gezählt (aktuell V11/v4, historische V10/v3 und V9/v2 getrennt). Jede zugeteilte Einwilligungskennung zählt höchstens einmal; bereits
 beantwortete Primärfragen aus unvollständigen Umfragen zählen als gültiger Wert.
 Antwortversionen und ursprünglicher Gruppenbuchstabe sind dokumentiert. Frühere
 Experimente werden nicht vermischt. Widerrufene oder gelöschte Teilnahmen fehlen;
 die Datei ist deshalb ein aktueller Bestandsbericht und kein vollständiger
-Rekrutierungsverlauf. Die aktuelle primäre Auswertung verwendet `v10_system_nutzen`.
+Rekrutierungsverlauf. Die aktuelle primäre Auswertung verwendet `v11_system_nutzen`.
 Für sie abgeschlossene und unvollständige Antworten gemeinsam exportieren.
-Das Offline-Skript wählt standardmäßig V10/`diana-abc-v3`; V9/`diana-abc-v2`
-wird nur mit explizitem `--cohort v9` separat ausgewertet.
+Das Offline-Skript muss auf V11/`diana-abc-v4` eingestellt werden; V10/`diana-abc-v3`
+und V9/`diana-abc-v2` werden separat ausgewertet.
 Aufrufe: [research/README.md](research/README.md).
 
 ### Automatische Herkunft der KI-Persönlichkeit
@@ -204,6 +227,9 @@ Diese Metadaten ergänzen die Selbstauskunft, ohne sie zu überschreiben.
 wenn dessen Werte zufällig einer Vorlage entsprechen. Es beweist nicht, dass
 Eigenschaften oder Gewichte inhaltlich verändert wurden. Die weiterhin erhobene
 Ja/Nein-Selbstauskunft zur Anpassung ist daher kein identisches Duplikat dieser Daten:
+
+In V11 ist für B regulär `template`/`career` und für C `custom` zu erwarten; der
+Fachexperten-Code bleibt ausschließlich für historische Datensätze lesbar.
 
 
 - `ki_erste_verwendung` / `ki_letzte_verwendung`: `template` (unveränderte Vorlage),
@@ -337,7 +363,7 @@ und erfasste Systemstände gemeinsam prüfen; Ergebnisse nicht ungeprüft zusamm
 Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
 bei 1–10-Bewertungen außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
 farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
-Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V10/abgeschlossen;
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V11/abgeschlossen;
 ältere Antworten lassen sich mit dem Fragebogenfilter auswählen.
 Fragebogenversionen und Experimentkennungen werden nicht zusammengefasst.
 Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene

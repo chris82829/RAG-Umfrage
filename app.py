@@ -19,7 +19,8 @@ from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException
 
 from data_store import JobStore
-from llm_service import MODEL, REASONING_EFFORT, LLMUnavailable, OpenAIService, PersonaResult
+from llm_service import (MODEL, REASONING_EFFORT, LLMUnavailable, OpenAIService,
+                         PersonaResult, unprompted_persona)
 from retrieval import EmbeddingUnavailable, HybridRetriever
 from schemas import ChatInput, Profile, SearchInput
 from session_store import SessionConflict, SessionStore, EphemeralSessionStore
@@ -32,14 +33,15 @@ from study_chat_limit import StudyChatLimit, ChatMessageLimit, ChatReservationEx
 from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
 from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest
-from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice
+from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice, token_hash
 from study_release import StudyReleases
+from system_prompt_store import SystemPromptStore
 from admin import register_admin
 
 BASE_DIR = Path(__file__).resolve().parent
 MATCHING_POLICY_VERSION = 'employment-only-v1'
 # Bump when persona instructions or its output contract change incompatibly.
-PERSONA_CACHE_VERSION = 'search-persona-v1'
+PERSONA_CACHE_VERSION = 'search-persona-v2'
 NEUTRAL_PRESENTATION_VERSION = 'random-order-generic-chat-v2'
 
 
@@ -60,11 +62,12 @@ def outdated_neutral_presentation(state):
             and state.get('_presentation_version') != NEUTRAL_PRESENTATION_VERSION)
 
 
-def persona_fingerprint(profile):
+def persona_fingerprint(profile, prompt_policy=None):
     """Fingerprint all applicant inputs; only the owning session stores this value."""
     canonical = json.dumps(Profile.model_validate(profile).model_dump(mode='json'),
                            sort_keys=True, ensure_ascii=False, separators=(',', ':'), allow_nan=False)
-    return f'{PERSONA_CACHE_VERSION}:{hashlib.sha256(canonical.encode()).hexdigest()}'
+    policy = prompt_policy or 'legacy'
+    return f'{PERSONA_CACHE_VERSION}:{policy}:{hashlib.sha256(canonical.encode()).hexdigest()}'
 
 
 def reusable_persona(persona, saved_fingerprint, current_fingerprint):
@@ -160,7 +163,6 @@ def welcome_message(result):
     visible = min(total, 10)
     if not total:
         overview = 'Ich habe aktuell keine Stellen zur gewählten Stellenart gefunden.'
-        invitation = 'Hier kannst du Rückfragen stellen und deine Suche gemeinsam anpassen.'
     else:
         found = 'Eine Stelle' if total == 1 else f'{total} Stellen'
         overview = f'{found} gefunden und bewertet.'
@@ -169,9 +171,8 @@ def welcome_message(result):
         else:
             overview += (f' Links siehst du die ersten {visible}; '
                          'weitere findest du über „Weitere Stellen anzeigen“.')
-        invitation = 'Hier kannst du Rückfragen stellen und deine Suche verfeinern.'
-    # Counts stay authoritative; the actual advice leads before the short UI hint.
-    return f"Hallo! {overview}\n\n{result['assistant_message']}\n\n{invitation}"
+    # Counts stay authoritative; the model's concrete advice/question is the conclusion.
+    return f"Hallo! {overview}\n\n{result['assistant_message']}"
 
 
 def create_app(config=None, *, retriever=None, llm=None):
@@ -213,6 +214,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     personality_usage = StudyPersonalityUsage(db_path)
     operation_metrics = StudyOperationMetrics(db_path)
     chat_limit = StudyChatLimit(db_path)
+    system_prompts = SystemPromptStore(db_path)
     notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
     releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
     surveys = SurveyStore(db_path)
@@ -220,7 +222,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     personality_templates = load_templates()
     neutral_personality = load_neutral_advisor()
     app.extensions['study_assignments'] = assignments
-    register_admin(app, surveys, privacy, releases, sessions, notice)
+    register_admin(app, surveys, privacy, releases, sessions, notice, system_prompts)
     engine = retriever or HybridRetriever(
         cache_dir=project_path(app.config['EMBEDDING_CACHE_DIR']),
         device=app.config['E5_DEVICE'], batch_size=app.config['E5_BATCH_SIZE'])
@@ -228,7 +230,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     performance_logger.setLevel(logging.INFO)
     language_model = llm or OpenAIService(api_key=app.config['OPENAI_API_KEY'],
                                         performance_logger=performance_logger)
-    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine, personality_usage=personality_usage, operation_metrics=operation_metrics, chat_limit=chat_limit,
+    app.extensions.update(job_store=store, chat_store=sessions, retriever=engine, personality_usage=personality_usage, operation_metrics=operation_metrics, chat_limit=chat_limit, system_prompt_store=system_prompts,
                           llm_service=language_model, survey_store=surveys, privacy_store=privacy, study_releases=releases)
 
     @contextmanager
@@ -268,14 +270,43 @@ def create_app(config=None, *, retriever=None, llm=None):
         assigned = request_assignment()
         return assigned['personality_policy'] if assigned else None
 
+    def prompt_snapshot(policy, assigned=None):
+        if policy not in ('unprompted', 'career_fixed', 'custom_career'):
+            return None
+        # Standalone test URLs intentionally pick up the current prompt when a
+        # new session starts.  Real v4 assignments are instead bound once to an
+        # immutable participant snapshot, so a later admin edit cannot change
+        # their treatment halfway through the study.
+        if test_arm():
+            return system_prompts.snapshot(policy)
+        assigned = assigned or request_assignment()
+        if assigned and assigned.get('experiment_id') == EXPERIMENT_ID:
+            return system_prompts.participant_snapshot(
+                token_hash(consent_token()), assigned['experiment_id'], policy
+            )
+        return None
+
     def request_advisor(requested):
         policy = request_policy()
         return advisor_for_policy(requested, policy) if policy else requested
 
     def checked_selection(advisor, selection):
         try:
-            if request_policy() == 'templates':
-                marker = selection.model_dump() if hasattr(selection, 'model_dump') else selection
+            policy = request_policy()
+            marker = selection.model_dump() if hasattr(selection, 'model_dump') else selection
+            if policy == 'career_fixed':
+                if marker is not None and marker != {'source':'template', 'template_id':'career'}:
+                    raise ValueError('In dieser Variante ist der Top-Berufsberater fest eingestellt.')
+                selection = {'source':'template', 'template_id':'career'}
+            elif policy == 'custom_career':
+                if marker is not None and marker != {'source':'custom', 'template_id':None}:
+                    raise ValueError('In dieser Variante wird die KI-Persönlichkeit selbst gestaltet.')
+                selection = {'source':'custom', 'template_id':None}
+            elif policy == 'unprompted':
+                if marker not in (None, {'source':'not_applicable', 'template_id':None}):
+                    raise ValueError('In dieser Variante gibt es keine KI-Persönlichkeit.')
+                selection = None
+            elif policy == 'templates':
                 if marker is not None and marker.get('source') != 'template':
                     raise ValueError('In dieser Variante kannst du ausschließlich unveränderte Vorlagen auswählen.')
                 # In immutable B the server knows the only permitted actual source.
@@ -294,8 +325,8 @@ def create_app(config=None, *, retriever=None, llm=None):
             return True
         # Old direct B test sessions had an editable persona. They cannot be
         # resumed in the new template-only B condition after deployment.
-        if assigned and assigned['personality_policy'] == 'templates':
-            return state.get('_personality_policy') != 'templates'
+        if assigned and assigned['personality_policy'] in ('templates', 'unprompted', 'career_fixed', 'custom_career'):
+            return state.get('_personality_policy') != assigned['personality_policy']
         return False
 
     def record_metrics(db, digest, timings, success):
@@ -465,7 +496,13 @@ def create_app(config=None, *, retriever=None, llm=None):
 
     @app.post('/api/study-assignment')
     def assign_study():
-        return jsonify(assignments.assign(consent_token()))
+        assigned = assignments.assign(
+            consent_token(),
+            on_assign=lambda digest, current, db: system_prompts.participant_snapshot(
+                digest, current['experiment_id'], current['personality_policy'], db=db
+            ) if current.get('experiment_id') == EXPERIMENT_ID else None,
+        )
+        return jsonify(assigned)
 
     @app.put('/api/survey-drafts')
     def save_survey_draft():
@@ -509,7 +546,8 @@ def create_app(config=None, *, retriever=None, llm=None):
 
     @app.get('/api/persona-templates')
     def persona_templates():
-        return jsonify(templates=personality_templates, default='career', format='DIANA-Personality-MLDS', schema_version=1)
+        return jsonify(templates={'career': personality_templates['career']}, default='career',
+                       format='DIANA-Personality-MLDS', schema_version=1)
 
     @app.get('/api/index-status')
     def index_status():
@@ -599,11 +637,13 @@ def create_app(config=None, *, retriever=None, llm=None):
         return getattr(language_model, method)(*args, **kwargs)
 
     def rank_candidate_steps(profile, persona, candidates, filtered_count, advisor,
-                        chat_message=None, chat_context=None, assessment_cache=None, ordering_seed=None):
+                        chat_message=None, chat_context=None, assessment_cache=None,
+                        ordering_seed=None, prompt_policy=None, system_prompt=None):
         with timed_phase('rerank'):
             steps = model_steps('rerank', persona or {}, profile, candidates,
                                 advisor=advisor, chat_message=chat_message,
-                                chat_context=chat_context, assessment_cache=assessment_cache)
+                                chat_context=chat_context, assessment_cache=assessment_cache,
+                                prompt_policy=prompt_policy, system_prompt=system_prompt)
             try:
                 while True:
                     try:
@@ -640,7 +680,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         return result
 
     def match_steps(profile, persona=None, chat_message=None, chat_context=None, advisor=None,
-                    saved_persona_fingerprint=None):
+                    saved_persona_fingerprint=None, prompt_policy=None, system_prompt=None):
         advisor = AdvisorConfig.model_validate(advisor or {}).model_dump()
         # Only employment type excludes jobs. The legacy filters container also
         # holds soft location, work-model and hours wishes for the LLM.
@@ -664,10 +704,12 @@ def create_app(config=None, *, retriever=None, llm=None):
         yield {'type': 'phase', 'phase': 'search'}
         yield {'type': 'search_progress', 'stage': 'loaded', 'job_count': len(jobs)}
         yield {'type': 'search_progress', 'stage': 'profiling', 'job_count': len(jobs)}
-        current_fingerprint = persona_fingerprint(profile)
+        current_fingerprint = persona_fingerprint(profile, prompt_policy)
         cache_hit = reusable_persona(persona, saved_persona_fingerprint, current_fingerprint)
         with timed_phase('persona', cache_hit=cache_hit):
-            if not cache_hit:
+            if prompt_policy in ('unprompted', 'career_fixed', 'custom_career'):
+                persona = unprompted_persona(profile)
+            elif not cache_hit:
                 persona = language_model.generate_persona(profile)
         # Include literal skills to preserve BM25 keywords even if the persona paraphrases them.
         # Skills and the distilled query must precede verbose free text for E5's
@@ -680,7 +722,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         yield {'type': 'search_progress', 'stage': 'ranking',
                'job_count': len(jobs), 'candidate_count': len(candidates)}
         ranked = yield from rank_candidate_steps(profile, persona, candidates, len(jobs), advisor,
-                                   chat_message, {**(chat_context or {}), 'scope': 'new_search'})
+                                   chat_message, {**(chat_context or {}), 'scope': 'new_search'},
+                                   prompt_policy=prompt_policy, system_prompt=system_prompt)
         yield {'type': 'search_progress', 'stage': 'finalizing',
                'job_count': len(jobs), 'candidate_count': len(candidates)}
         return {**ranked,
@@ -709,7 +752,10 @@ def create_app(config=None, *, retriever=None, llm=None):
             return error
         timings = {'search': time.monotonic()}
         try:
-            result = {**match(body.profile.model_dump(), advisor=advisor), 'advisor_selection':selection}
+            policy = request_policy()
+            result = {**match(body.profile.model_dump(), advisor=advisor,
+                              prompt_policy=policy, system_prompt=prompt_snapshot(policy)),
+                      'advisor_selection':selection}
             if app.config['PRIVACY_REQUIRED'] and not test_arm():
                 with surveys.connect() as db:
                     db.execute('BEGIN IMMEDIATE')
@@ -728,6 +774,8 @@ def create_app(config=None, *, retriever=None, llm=None):
         if error:
             return error
         assigned = request_assignment()
+        policy = assigned['personality_policy'] if assigned else None
+        frozen_prompt = prompt_snapshot(policy, assigned)
         search_advisor = request_advisor(body.advisor.model_dump())
         selection, error = checked_selection(search_advisor, body.advisor_selection)
         if error:
@@ -735,9 +783,10 @@ def create_app(config=None, *, retriever=None, llm=None):
         timings = {'search': time.monotonic()}
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor,
-                chat_context={'follow_up_allowed': follow_up_allowed({'messages': []})})
+                chat_context={'follow_up_allowed': follow_up_allowed({'messages': []})},
+                prompt_policy=policy, system_prompt=frozen_prompt)
             result['assistant_message'] = welcome_message(result)
-            state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None,
+            state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None, '_system_prompt_snapshot': frozen_prompt,
                      '_experiment_id': assigned.get('experiment_id') if assigned else None, '_user_chat_count': 0, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}
             session_id = sessions.create(state, before_save=consent_link('chat', selection=selection, timings=timings))
@@ -781,6 +830,10 @@ def create_app(config=None, *, retriever=None, llm=None):
         assigned = request_assignment()
         if incompatible_session(state, assigned):
             return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
+        policy = state.get('_personality_policy') or (assigned['personality_policy'] if assigned else None)
+        frozen_prompt = state.get('_system_prompt_snapshot')
+        if frozen_prompt is None and policy in ('unprompted', 'career_fixed', 'custom_career'):
+            frozen_prompt = prompt_snapshot(policy, assigned)
         previous_advisor = request_advisor(advisor_from_mlds(state.get('advisor_mlds', state.get('advisor', {}))))
         selected_advisor = request_advisor(body.advisor.model_dump() if body.advisor is not None else previous_advisor)
         previous_selection = normalize_selection(previous_advisor, state.get('advisor_selection'))
@@ -803,7 +856,8 @@ def create_app(config=None, *, retriever=None, llm=None):
                     steps = model_steps('plan_chat', profile, context['messages'], body.message,
                                         jobs=context['jobs'], advisor=advisor, mode=body.mode,
                                         candidate_count=len(state.get('_candidates', [])),
-                                        follow_up_allowed=context['follow_up_allowed'])
+                                        follow_up_allowed=context['follow_up_allowed'],
+                                        prompt_policy=policy, system_prompt=frozen_prompt)
                     try:
                         while True:
                             try:
@@ -880,7 +934,8 @@ def create_app(config=None, *, retriever=None, llm=None):
                 result = yield from match_steps(
                     profile, chat_message=body.message or 'Erkläre kurz die neue Auswahl.',
                     chat_context=context, advisor=advisor, persona=state.get('persona'),
-                    saved_persona_fingerprint=state.get('_persona_fingerprint'))
+                    saved_persona_fingerprint=state.get('_persona_fingerprint'),
+                    prompt_policy=policy, system_prompt=frozen_prompt)
             elif action == 'rerank':
                 timings['rerank'] = time.monotonic()
                 result = yield from rank_candidate_steps(profile, state.get('persona'), state['_candidates'],
@@ -888,7 +943,8 @@ def create_app(config=None, *, retriever=None, llm=None):
                                          body.message or 'Bewerte die vorhandene Auswahl neu und erkläre sie kurz.',
                                          {**context, 'scope': 'existing_candidates'},
                                          assessment_cache=state.get('_assessment_cache'),
-                                         ordering_seed=state.get('_ordering_seed'))
+                                         ordering_seed=state.get('_ordering_seed'),
+                                         prompt_policy=policy, system_prompt=frozen_prompt)
                 # The retained persona was generated for its original profile.
                 # Never label it with the profile just used for soft reranking.
                 if '_persona_fingerprint' in state:
@@ -900,7 +956,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             messages = state['messages'] + ([{'role': 'user', 'content': body.message}] if body.message else [])
             messages.append({'role': 'assistant', 'content': result['assistant_message'],
                              'advisor_name': resolve_advisor(result['advisor'])['name']})
-            new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), '_personality_policy': state.get('_personality_policy'),
+            new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), '_personality_policy': state.get('_personality_policy'), '_system_prompt_snapshot': frozen_prompt,
                          '_experiment_id': state.get('_experiment_id'), 'messages': messages[-100:],
                          '_user_chat_count': state.get('_user_chat_count', sum(message.get('role') == 'user' for message in state['messages'])) + int(bool(body.message))}
             sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection, timings=timings, chat_reservation=reservation))

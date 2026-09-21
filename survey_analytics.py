@@ -66,12 +66,38 @@ def analytics(rows, version):
     rows = [r for r in rows if r['survey_version'] == version]
     def cohort_key(row):
         return (row.get('experiment_id') or '', tuple(row.get('presentation_versions') or ['undocumented']))
+    def series_key(row):
+        arm = row.get('study_arm') or ''
+        policy = row.get('system_prompt_policy') or ''
+        revision = row.get('system_prompt_revision')
+        sha256 = row.get('system_prompt_base_sha256') or ''
+        if version == 'diana-v11' and arm and policy and revision not in ('', None) and sha256:
+            return f'{arm}:{policy}:{revision}:{sha256}'
+        return arm
     experiments = sorted({cohort_key(r) for r in rows}) or [('', ('undocumented',))]
     for experiment, presentation in experiments:
         members = [r for r in rows if cohort_key(r) == (experiment, presentation)]
         arms = sorted({r['study_arm'] for r in members if r['study_arm']})
+        series = {}
+        for row in members:
+            key = series_key(row)
+            if not key:
+                continue
+            entry = series.setdefault(key, dict(
+                arm=row['study_arm'],
+                policy=row.get('system_prompt_policy') or '',
+                revision=row.get('system_prompt_revision', ''),
+                sha256=row.get('system_prompt_base_sha256') or '',
+                count=0,
+            ))
+            entry['count'] += 1
+        mixed_prompt_arms = sorted(
+            arm for arm in arms
+            if len({series_key(row) for row in members if row.get('study_arm') == arm}) > 1
+        )
         cohort = dict(experiment_id=experiment, presentation_versions=list(presentation), total=len(members),
-                      arms={arm: sum(r['study_arm']==arm for r in members) for arm in arms}, categories=[])
+                      arms={arm: sum(r['study_arm']==arm for r in members) for arm in arms},
+                      series=series, mixed_prompt_arms=mixed_prompt_arms, categories=[])
         for category in [definition['demographics'], *definition['categories']]:
             questions = []
             for field in category['fields']:
@@ -81,7 +107,8 @@ def analytics(rows, version):
                                       scale=field.get('scale', definition.get('scale', {})),
                                       reverse=field['name']=='search_effort', visible_if=field.get('visibleIf'),
                                       overall=summarize(field, members),
-                                      groups={arm: summarize(field, [r for r in members if r['study_arm']==arm]) for arm in arms}))
+                                      groups={key: summarize(field, [r for r in members if series_key(r)==key])
+                                              for key in series}))
             cohort['categories'].append(dict(title=category['title'], questions=questions))
         result['cohorts'].append(cohort)
     return result

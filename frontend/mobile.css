@@ -50,7 +50,6 @@
   .advisor-intro-heading { flex-wrap:wrap; gap:4px; }
   .advisor-title { width:100%; justify-content:space-between; }
   .advisor-intro-heading h3 { font-size:19px; }
-  .advisor-template-field { margin-left:auto; }
   .field-pair { grid-template-columns:minmax(0,1fr); }
   .jobs-panel { padding-inline:12px; }
   .job-card { padding-inline:16px; }

@@ -25,12 +25,13 @@ import SurveyPage from './SurveyPage.jsx';
 import AdminPage from './AdminPage.jsx';
 import PrivacyGate from './PrivacyGate.jsx';
 import {standaloneArm, leavesTestContext} from './test-access.js';
-import {templateSelection, selectionForRequest} from './advisor-selection.js';
+import {selectionForRequest} from './advisor-selection.js';
 import {consentHeaders} from './privacy.js';
 import { appPath, appSessionStorage, surveyRun } from './app-session.js';
 import { hasChatMessage, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
 import './action-motion.css';
-import { neutralAdvisor, standardAdvisor, defaultAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
+import { careerAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
+import { PERSONALITY_POLICIES, advisorForPolicy, canCustomizeAdvisor, normalizeSessionForPolicy, policyForArm, restoredAdvisorForPolicy, selectionForPolicy } from './advisor-policy.js';
 
 import { installMobileViewport, shouldSendOnEnter } from './mobile-viewport.js';
 import './mobile.css';
@@ -57,9 +58,9 @@ async function api(path, body) {
   return data;
 }
 
-function SearchIntro({ neutral = false, allowCustom = true, onSelect, activeStep, completedSteps, busy }) {
+function SearchIntro({ showPersonalityStep = false, onSelect, activeStep, completedSteps, busy }) {
   return <div className="search-intro">
-    <JourneyGuide allowCustom={allowCustom} neutral={neutral} activeStep={activeStep} completedSteps={completedSteps} busy={busy} hasSession={false} onSelect={onSelect} />
+    <JourneyGuide showPersonalityStep={showPersonalityStep} activeStep={activeStep} completedSteps={completedSteps} busy={busy} hasSession={false} onSelect={onSelect} />
   </div>;
 }
 
@@ -139,7 +140,7 @@ export function MoreResults({ expanded, busy, onToggle }) {
   </div>;
 }
 
-export function ProfileForm({ neutral = false, allowCustom = true, form, setForm, onSubmit, busy, ready, advisor, setAdvisor, step, onNext, onBack, onExplainAdvisor, templates, advisorSelection, editMode = false }) {
+export function ProfileForm({ showPersonalityStep = false, form, setForm, onSubmit, busy, ready, advisor, setAdvisor, step, onNext, onBack, onExplainAdvisor, editMode = false }) {
   const assistantName = advisorAiLabel(advisor);
   const update = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const heading = useRef(null);
@@ -147,7 +148,7 @@ export function ProfileForm({ neutral = false, allowCustom = true, form, setForm
     heading.current?.closest('.profile-scroll')?.scrollTo({ top: 0 });
     heading.current?.focus({ preventScroll: true });
   }, [step, editMode]);
-  return <form className="profile-form" onSubmit={!editMode && step === 1 && !neutral ? onNext : onSubmit}>
+  return <form className="profile-form" onSubmit={!editMode && step === 1 && showPersonalityStep ? onNext : onSubmit}>
     {editMode || step === 1 ? <>
     <div className={`profile-intro${editMode ? '' : ' profile-intro--compact'}`}><span className="step-label">DEIN SUCHPROFIL</span><div className="profile-intro-row"><h2 ref={heading} tabIndex={-1}>{editMode ? 'Dein Profil bearbeiten' : 'Was passt zu dir?'}</h2>{!editMode && <button type="button" className="example-button" aria-label="Mit Beispielprofil ausprobieren" title="Mit Beispielprofil ausprobieren" onClick={() => setForm({ ...exampleForm })} disabled={busy}>Beispielprofil<ArrowUpRight size={14} aria-hidden="true" /></button>}</div>{editMode && <p>Passe deine Angaben an. Dein Chat bleibt erhalten.</p>}</div>
     <label>Was möchtest du machen?<textarea value={form.query} onChange={e => update('query', e.target.value)} maxLength={3000} rows={3} placeholder="Zum Beispiel: Ich suche einen Einstieg in Data Science …" disabled={busy} /></label>
@@ -160,9 +161,9 @@ export function ProfileForm({ neutral = false, allowCustom = true, form, setForm
       <fieldset disabled={busy}><legend>Bevorzugtes Arbeitsmodell</legend><div className="choice-group">{Object.entries(remoteLabels).map(([value, label]) => <label className={`choice ${form.remote.includes(value) ? 'selected' : ''}`} key={value}><input type="checkbox" checked={form.remote.includes(value)} onChange={() => update('remote', form.remote.includes(value) ? form.remote.filter(x => x !== value) : [...form.remote, value])} />{form.remote.includes(value) && <Check size={13} />}{label}</label>)}</div><p className="field-hint">Mehrere Wünsche sind möglich. Ohne Auswahl bevorzugst du kein Arbeitsmodell.</p></fieldset><label>Gewünschte Wochenstunden, höchstens<input type="number" min="1" max="80" step="0.5" value={form.hours} onChange={e => update('hours', e.target.value)} placeholder="Pro Woche" disabled={busy} /><span className="field-hint">Ein Wunsch für die Bewertung, keine feste Obergrenze für die Suche.</span></label>
       <label>Ausbildung, Erfahrung oder Lebenslauf <span className="optional">optional</span><textarea value={form.cv} onChange={e => update('cv', e.target.value)} maxLength={16000} rows={4} placeholder="Zum Beispiel Studium, Ausbildung, Projekte und bisherige Berufserfahrung." disabled={busy} /><span className="field-hint">Hilft {assistantName}, deine Erfahrung und die fachliche Passung einzuschätzen.</span></label>
     </div></details>
-    {editMode ? <><div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy}>{busy ? 'Profil wird angewendet …' : 'Profil anwenden'}<ArrowRight size={18} /></button></div><p className="privacy-note">Geänderte Wünsche und Erfahrung fließen in die Neubewertung ein. Suchziel, Fähigkeiten oder Stellenart starten eine neue Suche.</p></> : <button type="submit" className="primary-button diana-action-motion" disabled={busy || (neutral && !ready)}>{neutral ? 'Passende Jobs finden' : 'Weiter zur Persönlichkeit'}<ArrowRight className="diana-action-arrow" size={18} /></button>}
+    {editMode ? <><div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy}>{busy ? 'Profil wird angewendet …' : 'Profil anwenden'}<ArrowRight size={18} /></button></div><p className="privacy-note">Geänderte Wünsche und Erfahrung fließen in die Neubewertung ein. Suchziel, Fähigkeiten oder Stellenart starten eine neue Suche.</p></> : <button type="submit" className="primary-button diana-action-motion" disabled={busy || (!showPersonalityStep && !ready)}>{showPersonalityStep ? 'Weiter zur Persönlichkeit' : 'Passende Jobs finden'}<ArrowRight className="diana-action-arrow" size={18} /></button>}
     </> : <>
-    <AdvisorPicker allowCustom={allowCustom} templates={templates} selection={advisorSelection} value={advisor} onChange={setAdvisor} disabled={busy} headingRef={heading} onExplain={onExplainAdvisor} />
+    <AdvisorPicker value={advisor} onChange={setAdvisor} disabled={busy} headingRef={heading} onExplain={onExplainAdvisor} />
     <div className="onboarding-actions"><button type="button" className="back-button" onClick={onBack} disabled={busy}>Zurück</button>
     <button type="submit" className="primary-button diana-action-motion" disabled={busy || !ready}>{!ready ? 'Suchindex wird vorbereitet …' : busy ? 'Deine Suche wird ausgewertet …' : 'Passende Jobs finden'}{!busy && ready && <ArrowRight className="diana-action-arrow" size={18} />}</button></div>
     <p className="privacy-note">Dein Profil und ausgewählte Stellen werden zur KI-Auswertung an OpenAI übermittelt.</p>
@@ -170,12 +171,10 @@ export function ProfileForm({ neutral = false, allowCustom = true, form, setForm
   </form>;
 }
 
-export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'standard' : studyArm === 'B' ? 'templates' : 'configurable', presentationPolicy = 'ranked_insights'}) {
-  const neutral=studyArm==='A';
+export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm), presentationPolicy = 'ranked_insights'}) {
+  const showPersonalityStep=canCustomizeAdvisor(personalityPolicy);
   const chatOptions = { testPage: Boolean(standaloneArm()) };
-  const allowCustom=personalityPolicy==='configurable';
   const showInsights=presentationPolicy==='ranked_insights';
-  const fixedAdvisor=personalityPolicy==='standard' ? standardAdvisor : neutralAdvisor;
   const [page, setPage] = useState(currentPage);
   const [catalog, setCatalog] = useState([]);
   const [total, setTotal] = useState(0);
@@ -187,9 +186,8 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   const [onboardingStarted, setOnboardingStarted] = useState(false);
   const [personalityIntro, setPersonalityIntro] = useState(null);
   const personalityIntroSeen = useRef(false);
-  const [advisor, setAdvisor] = useState(neutral ? {...fixedAdvisor} : { ...defaultAdvisor });
-  const [templates, setTemplates] = useState(undefined);
-  const [advisorSelection, setAdvisorSelection] = useState(neutral ? null : templateSelection('career'));
+  const [careerBase, setCareerBase] = useState({...careerAdvisor,traits:[...careerAdvisor.traits]});
+  const [advisor, setAdvisor] = useState(()=>advisorForPolicy(personalityPolicy));
   const [editor, setEditor] = useState(null);
   const [operation, setOperation] = useState(null);
   const [booting, setBooting] = useState(true);
@@ -252,14 +250,15 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
       try {
         const [jobs, index, personas] = await Promise.all([api('/jobs'), api('/index-status'), api('/persona-templates')]);
         if (!alive) return;
-        setCatalog(jobs.jobs); setTotal(jobs.total); setIndexState(index); setTemplates(personas.templates);
-        if (!neutral) { setAdvisor(personas.templates[personas.default].advisor); setAdvisorSelection(templateSelection(personas.default)); }
+        const reviewedCareer=personas.templates?.career?.advisor || careerAdvisor;
+        setCatalog(jobs.jobs); setTotal(jobs.total); setIndexState(index); setCareerBase(reviewedCareer);
+        setAdvisor(advisorForPolicy(personalityPolicy,reviewedCareer));
         let saved;
         saved = sessionStorageAccess.read();
         if (saved && /^[A-Za-z0-9_-]{32,100}$/.test(saved)) {
           try {
-            const data = await api(`/sessions/${saved}`);
-            if (alive) { setSession(data); setForm(fromProfile(data.profile)); setAdvisor(data.advisor || { ...defaultAdvisor }); setAdvisorSelection(data.advisor_selection || null); setMobileView('chat'); setActivity('chat'); setCompletedSteps(data.messages.some(message => message.role === 'user') ? [1, 2, 3, 4] : [1, 2, 3]); }
+            const data = normalizeSessionForPolicy(personalityPolicy,await api(`/sessions/${saved}`),reviewedCareer);
+            if (alive) { setSession(data); setForm(fromProfile(data.profile)); setAdvisor(restoredAdvisorForPolicy(personalityPolicy,data,reviewedCareer)); setMobileView('chat'); setActivity('chat'); setCompletedSteps(data.messages.some(message => message.role === 'user') ? [1, 2, 3, 4] : [1, 2, 3]); }
           } catch (e) { if (e.status === 404) remember(null); else throw e; }
         }
       } catch { if (alive) setError('Die Verbindung zum Backend ist unterbrochen. Bitte lade die Seite erneut.'); }
@@ -285,11 +284,11 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     let active = true;
     const timer = window.setInterval(() => {
       api(`/sessions/${session.session_id}`).then(latest => {
-        if (active) setSession(current => current?.session_id === latest.session_id ? latest : current);
+        if (active) setSession(current => current?.session_id === latest.session_id ? normalizeSessionForPolicy(personalityPolicy,latest,careerBase) : current);
       }).catch(() => {});
     }, 3000);
     return () => { active = false; window.clearInterval(timer); };
-  }, [busy, session?.session_id, chatAccess.blocked, chatAccess.pending, chatAccess.exhausted]);
+  }, [busy, session?.session_id, chatAccess.blocked, chatAccess.pending, chatAccess.exhausted, personalityPolicy, careerBase]);
 
   function markSteps(...steps) {
     setCompletedSteps(previous => {
@@ -298,10 +297,11 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     });
   }
   function syncSession(result, preserveProfile = false, preserveAdvisor = false) {
-    setSession(result);
-    if (!preserveProfile && !editorDrafts.current.profile) setForm(fromProfile(result.profile));
-    if (!preserveAdvisor && !editorDrafts.current.advisor) { setAdvisor(result.advisor || { ...defaultAdvisor }); setAdvisorSelection(result.advisor_selection || null); }
-    remember(result.session_id);
+    const normalized=normalizeSessionForPolicy(personalityPolicy,result,careerBase);
+    setSession(normalized);
+    if (!preserveProfile && !editorDrafts.current.profile) setForm(fromProfile(normalized.profile));
+    if (!preserveAdvisor && !editorDrafts.current.advisor) setAdvisor(restoredAdvisorForPolicy(personalityPolicy,normalized,careerBase));
+    remember(normalized.session_id);
   }
   async function run(body, endpoint, kind = 'chat') {
     if (sending.current) return;
@@ -321,7 +321,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
         (kind === 'profile' && !applied) || (kind !== 'profile' && editor === 'profile'),
         (kind === 'advisor' && !applied) || (kind !== 'advisor' && editor === 'advisor'));
       if (applied) {
-        if (kind === 'onboard') markSteps(1, 2);
+        if (kind === 'onboard') markSteps(1, ...(showPersonalityStep ? [2] : []));
         if (kind === 'profile') markSteps(1);
         if (kind === 'advisor') markSteps(2);
         if (kind === 'chat') markSteps(3, 4);
@@ -362,7 +362,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
             accept(latest); setError('Die Antwort ist nachträglich angekommen. Dein Verlauf wurde aktualisiert.');
             return;
           }
-        } catch (restoreError) { if (restoreError.status === 404) { remember(null); setSession(null); setEditor(null); setOnboardingStep(1); setOnboardingStarted(false); setMobileView('jobs'); editorDrafts.current = { profile: false, advisor: false }; setActivity('results'); setCompletedSteps([]); } }
+        } catch (restoreError) { if (restoreError.status === 404) { remember(null); setSession(null); setAdvisor(advisorForPolicy(personalityPolicy,careerBase)); setEditor(null); setOnboardingStep(1); setOnboardingStarted(false); setMobileView('jobs'); editorDrafts.current = { profile: false, advisor: false }; setActivity('results'); setCompletedSteps([]); } }
       }
       setError(e.code === 'chat_message_limit' && e.chatUsage ? ''
         : e.status === 409 && e.code !== 'chat_reservation_expired' ? 'Dein Chat wurde zwischenzeitlich geändert. Der aktuelle Verlauf ist geladen; deine Eingabe bleibt erhalten.'
@@ -378,6 +378,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     if (booting || busy) return;
     try {
       makeProfile(form); setError(''); markSteps(1);
+      if (!showPersonalityStep) { startSearch(event); return; }
       if (personalityIntroSeen.current) setOnboardingStep(2);
       else setPersonalityIntro('onboarding');
     } catch (e) { setError(e.message); }
@@ -390,7 +391,11 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   function startSearch(event) {
     event.preventDefault();
     if (booting || busy || !indexReady) return;
-    try { const body = { profile: makeProfile(form), advisor: neutral ? {...fixedAdvisor} : validateAdvisor(editableAdvisor(advisor)), advisor_selection: neutral ? undefined : selectionForRequest(advisorSelection) }; markSteps(1, 2); void run(body, '/onboard', 'onboard'); } catch (e) { setError(e.message); }
+    try {
+      const selectedAdvisor=showPersonalityStep ? validateAdvisor(editableAdvisor(advisor)) : advisorForPolicy(personalityPolicy,careerBase);
+      const body = { profile: makeProfile(form), advisor:selectedAdvisor, advisor_selection:selectionForRequest(selectionForPolicy(personalityPolicy)) };
+      markSteps(1,...(showPersonalityStep?[2]:[])); void run(body, '/onboard', 'onboard');
+    } catch (e) { setError(e.message); }
   }
   function sendMessage(event) {
     event.preventDefault();
@@ -405,13 +410,13 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   }
   function applyAdvisor(event) {
     event.preventDefault();
-    if (!session || busy || !candidatePool(session).canRerank) return;
-    try { void run({ session_id: session.session_id, advisor: neutral ? {...fixedAdvisor} : validateAdvisor(editableAdvisor(advisor)), advisor_selection: neutral ? undefined : selectionForRequest(advisorSelection), mode: 'rerank' }, '/chat', 'advisor'); } catch (e) { setError(e.message); }
+    if (!showPersonalityStep || !session || busy || !candidatePool(session).canRerank) return;
+    try { void run({ session_id: session.session_id, advisor:validateAdvisor(editableAdvisor(advisor)), advisor_selection:selectionForRequest(selectionForPolicy(personalityPolicy)), mode: 'rerank' }, '/chat', 'advisor'); } catch (e) { setError(e.message); }
   }
   function cancelEditor() {
     if (busy) return;
     if (editor === 'profile') { setForm(fromProfile(session.profile)); editorDrafts.current.profile = false; }
-    if (editor === 'advisor') { setAdvisor(session.advisor || { ...defaultAdvisor }); setAdvisorSelection(session.advisor_selection || null); editorDrafts.current.advisor = false; }
+    if (editor === 'advisor') { setAdvisor(restoredAdvisorForPolicy(personalityPolicy,session,careerBase)); editorDrafts.current.advisor = false; }
     setEditor(null); setError('');
   }
   function editProfileDraft(value) {
@@ -419,20 +424,20 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     setForm(value);
   }
   function chooseAdvisor(value, selection) {
-    setAdvisor(value); setAdvisorSelection(selection || templateSelection(''));
+    setAdvisor(value);
   }
   function editAdvisorDraft(value, selection) {
     editorDrafts.current.advisor = true;
     chooseAdvisor(value, selection);
   }
   function openEditor(next) {
-    if (!session || busy || (neutral && next==='advisor')) return;
+    if (!session || busy || (!showPersonalityStep && next==='advisor')) return;
     if (!editor && activity === 'results') markSteps(3);
     if (editor === next && mobileView === 'jobs') { setMobileView('chat'); return; }
     if (editor === next) { cancelEditor(); return; }
     if (!editorDrafts.current[next]) {
       if (next === 'profile') setForm(fromProfile(session.profile));
-      if (next === 'advisor') { setAdvisor(session.advisor || { ...defaultAdvisor }); setAdvisorSelection(session.advisor_selection || null); }
+      if (next === 'advisor') setAdvisor(restoredAdvisorForPolicy(personalityPolicy,session,careerBase));
     }
     setEditor(next); setError(''); setMobileView('chat');
   }
@@ -449,7 +454,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     else setMobileView('chat');
   }
   function visitJourneyStep(step) {
-    if(neutral && step===2)return;
+    if(!showPersonalityStep && step===2)return;
     if (!canVisitJourneyStep(step, { hasSession: !!session, activeStep, busy, booting })) return;
     if (!session && !onboardingStarted) {
       document.getElementById('start-onboarding')?.focus();
@@ -497,7 +502,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
   function reset() {
     if (busy) return;
     personalityIntroSeen.current = false; setPersonalityIntro(null);
-    generation.current++; remember(null); setSession(null); setRevealedResults(null); setOnboardingStep(1); setOnboardingStarted(false); setDraft(''); setPending(''); setError(''); setEditor(null); setMobileView('jobs'); setActivity('results'); setCompletedSteps([]); editorDrafts.current = { profile: false, advisor: false };
+    generation.current++; remember(null); setSession(null); setAdvisor(advisorForPolicy(personalityPolicy,careerBase)); setRevealedResults(null); setOnboardingStep(1); setOnboardingStarted(false); setDraft(''); setPending(''); setError(''); setEditor(null); setMobileView('jobs'); setActivity('results'); setCompletedSteps([]); editorDrafts.current = { profile: false, advisor: false };
   }
   function navigate(nextPage, event) {
     if (event && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
@@ -552,7 +557,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
     <header className={`topbar${showHeaderJourney ? ' topbar--with-journey' : ''}`}>
       <div className="topbar-inner">
         {isEmbeddedSurvey ? <div className="brand"><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></div> : <a href="/" className="brand" aria-label="DIANA Startseite" onClick={event => navigate('about', event)}><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></a>}
-        {showHeaderJourney && <div className="topbar-journey"><JourneyGuide allowCustom={allowCustom} neutral={neutral} iconOnly activeStep={activeStep} completedSteps={completedSteps} busy={busy || booting} hasSession={!!session} /></div>}
+        {showHeaderJourney && <div className="topbar-journey"><JourneyGuide showPersonalityStep={showPersonalityStep} iconOnly activeStep={activeStep} completedSteps={completedSteps} busy={busy || booting} hasSession={!!session} /></div>}
         <div className="local-status"><i aria-hidden="true" />{allDemo ? `${total} fiktive Beispielstellen` : `${total.toLocaleString('de-DE')} Stellenanzeigen`}</div>
       </div>
     </header>
@@ -572,7 +577,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
           </div>
           {additionalCount > 0 && <MoreResults expanded={showAllResults} busy={busy} onToggle={toggleMoreResults} />}
           {allDemo && <p className="catalog-note">Zum Ausprobieren: Diese Anzeigen und Unternehmen sind fiktiv.</p>}
-        </> : <SearchIntro allowCustom={allowCustom} neutral={neutral} busy={busy || booting} activeStep={activeStep} completedSteps={completedSteps} onSelect={visitJourneyStep} />}
+        </> : <SearchIntro showPersonalityStep={showPersonalityStep} busy={busy || booting} activeStep={activeStep} completedSteps={completedSteps} onSelect={visitJourneyStep} />}
       </section>
       <div className="split-handle" {...chatLayout.separatorProps}><GripVertical size={17} aria-hidden="true" /></div>
       <aside id="diana-chat" className="assistant-panel" aria-label={session ? `Chat mit ${assistantName}` : 'Persönlicher Jobberater'} onPointerDownCapture={() => { if (session && !editor && !busy && !booting) { setActivity('chat'); markSteps(3); } }} onFocusCapture={() => { if (session && !editor && !busy && !booting) { setActivity('chat'); markSteps(3); } }}>
@@ -580,7 +585,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
         {session && <AssistantActionArea key={session.session_id} feedback={!busy ? feedback : ''}>
           <div className="assistant-actions" role="group" aria-label="Aktionen für deine Jobsuche">
             <button type="button" className="rerank-button mobile-edit-action" onClick={() => selectAssistantView('profile')} disabled={busy || booting}><SlidersHorizontal size={16} aria-hidden="true"/><span>Suchprofil bearbeiten</span></button>
-            {!neutral && <button type="button" className="rerank-button mobile-edit-action" onClick={() => selectAssistantView('advisor')} disabled={busy || booting}><Compass size={16} aria-hidden="true"/><span>Persönlichkeit ändern</span></button>}
+            {showPersonalityStep && <button type="button" className="rerank-button mobile-edit-action" onClick={() => selectAssistantView('advisor')} disabled={busy || booting}><Compass size={16} aria-hidden="true"/><span>Persönlichkeit ändern</span></button>}
             <button type="button" className="rerank-button" onClick={rerankJobs} disabled={busy || booting || !!editor || !pool.canRerank}><RotateCcw size={16} aria-hidden="true" /><span>{pool.count} Jobs neu sortieren</span></button>
             <button type="button" className="rerank-button" onClick={reset} disabled={busy || booting} title="Neue Suche mit deinem Profil"><RotateCcw size={14} aria-hidden="true" /><span>Neu starten</span></button>
           </div>
@@ -589,7 +594,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
         </AssistantActionArea>}
         {error && <div className="error-banner" role="alert">{error}</div>}
         {indexState?.required && !indexReady && <p className="index-chat-status" role="status">Suchindex: {indexState.completed.toLocaleString('de-DE')} von {indexState.total.toLocaleString('de-DE')} Anzeigen vorbereitet. {session ? 'Fragen und das Bewerten gespeicherter Jobs bleiben möglich. Neue Suchen sind nach Abschluss verfügbar.' : 'Deine Suche ist nach Abschluss verfügbar.'}</p>}
-        {!session ? <div className="profile-scroll"><ProfileForm allowCustom={allowCustom} templates={templates} advisorSelection={advisorSelection} neutral={neutral} form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={chooseAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} onExplainAdvisor={() => setPersonalityIntro('help')} /></div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm neutral={neutral} editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' && !neutral ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker allowCustom={allowCustom} templates={templates} selection={advisorSelection} value={advisor} onChange={editAdvisorDraft} disabled={busy} onExplain={() => setPersonalityIntro('help')} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
+        {!session ? <div className="profile-scroll"><ProfileForm showPersonalityStep={showPersonalityStep} form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={chooseAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} onExplainAdvisor={() => setPersonalityIntro('help')} /></div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' && showPersonalityStep ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker value={advisor} onChange={editAdvisorDraft} disabled={busy} onExplain={() => setPersonalityIntro('help')} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
           <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite" onScroll={event => { const feed = event.currentTarget; followChat.current = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80; }}>{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><ChatMessageText text={pending} assistant={false} /></div>}{busy && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="message-bubble" aria-busy="true">{streamingText ? <div className="message-text streaming-text">{streamingText}</div> : <div className="chat-typing"><span className="sr-only">{progressLabel}</span><span aria-hidden="true"><i /><i /><i /></span></div>}</div></div>}<div ref={messagesEnd} /></div>
           <div className="chat-bottom">{!chatAccess.blocked && chatSuggestions.length > 0 && <details className="chat-examples"><summary>Vorschläge für deinen nächsten Schritt</summary><div className="suggestions">{chatSuggestions.map(suggestion => <button key={suggestion.id} disabled={busy} onClick={() => { setDraft(suggestion.message); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><Plus size={13} />{suggestion.label}</button>)}</div></details>}
             {!chatAccess.blocked && !pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum erneuten Bewerten sind gerade keine gespeicherten Jobs verfügbar.'} Du kannst im Chat um eine neue Suche bitten.</p>}
@@ -605,7 +610,7 @@ export function App({studyArm = 'B', personalityPolicy = studyArm === 'A' ? 'sta
       </aside>
     </main>
 
-  </div>{page === 'about' && <AboutPage />}<PersonalityIntroDialog allowCustom={allowCustom} open={!neutral && personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={!isEmbeddedSurvey && busy && searchActive && page === 'search'} assistantName={pendingAssistantName} progress={searchProgress} /></>;
+  </div>{page === 'about' && <AboutPage />}<PersonalityIntroDialog open={showPersonalityStep && personalityIntro !== null && page === 'search'} onboarding={personalityIntro === 'onboarding'} onContinue={continuePersonalityIntro} onClose={() => setPersonalityIntro(null)} /><SearchLoadingDialog open={!isEmbeddedSurvey && busy && searchActive && page === 'search'} assistantName={pendingAssistantName} progress={searchProgress} /></>;
 }
 
 export function AssignedSearch() {
@@ -614,7 +619,7 @@ export function AssignedSearch() {
     let active=true;const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);
     fetch('/api/study-assignment',{method:'POST',headers:consentHeaders(),signal:controller.signal}).then(async response=>{
       if(!response.ok)throw new Error('Der Systemtest konnte nicht vorbereitet werden.');
-      const value=await response.json();if(!['A','B','C'].includes(value.arm) || !['generic','standard','templates','configurable'].includes(value.personality_policy) || !['ranked_insights','legacy_neutral'].includes(value.presentation_policy))throw new Error('Studienzuordnung fehlt.');
+      const value=await response.json();if(!['A','B','C'].includes(value.arm) || !PERSONALITY_POLICIES.includes(value.personality_policy) || !['ranked_insights','legacy_neutral'].includes(value.presentation_policy))throw new Error('Studienzuordnung fehlt.');
       if(active){setAssignment(value);setError('');}
     }).catch(()=>{if(active)setError('Der Systemtest konnte nicht vorbereitet werden. Bitte versuche es erneut.');}).finally(()=>clearTimeout(timeout));
     return()=>{active=false;clearTimeout(timeout);controller.abort();};

@@ -17,7 +17,7 @@ def test_notice(base, arm):
         'Zweck und Freiwilligkeit': 'Dieser freiwillige Test dient dem Ausprobieren von DIANA außerhalb der wissenschaftlichen Umfrage. '
             'Es erfolgt keine zufällige Studienzuteilung. Der Test erzeugt keine Umfrageantwort und wird nicht in die Studienauswertung aufgenommen. '
             'Rechtsgrundlage für die Verarbeitung ist deine Einwilligung nach Art. 6 Abs. 1 Buchst. a DSGVO.',
-        'Studienvarianten': f'Du testest gezielt Variante {arm}. A bietet eine feste sachliche Standardberatung. In B wählst du eine unveränderbare Vorlage (Top-Berufsberater oder Fachexperte). In C kannst du dieselben Vorlagen wählen und die Suchpersönlichkeit zusätzlich selbst gestalten. '
+        'Studienvarianten': f'Du testest gezielt Variante {arm}. A ist das Basissystem ohne wählbare KI-Suchpersönlichkeit. B verwendet einen fest eingestellten Top-Berufsberater. In C gestaltest du die KI-Suchpersönlichkeit auf derselben Berufsberater-Basis selbst. '
             'Alle drei Varianten bieten sortierte Stellen, Scores, Begründungen und Chatfunktionen. Die drei Testseiten und die Umfrage verwenden getrennte Einwilligungen und Suchsitzungen.',
         'Welche Daten werden verarbeitet?': 'Suchprofil, optionaler Lebenslauftext, KI-Persönlichkeit und Chatnachrichten werden nur vorübergehend '
             'im Arbeitsspeicher verarbeitet. Die Sitzung verfällt nach einer Stunde ohne neue Such- oder Chataktion oder beim Serverneustart. '

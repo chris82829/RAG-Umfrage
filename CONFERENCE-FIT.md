@@ -1,18 +1,18 @@
-# Konferenzeinordnung DIANA · 14. September 2026
+# Konferenzeinordnung DIANA · 21. September 2026
 
 DIANA ist aus meiner Einschätzung ein geeigneter Ausgangspunkt für einen wissenschaftlichen Demo- oder Posterbeitrag. Für ein Full Paper sind ein klar abgegrenzter neuer Beitrag, eine nachvollziehbare Evaluation und die Einordnung gegenüber verwandten Systemen entscheidend. Ein funktionsfähiges System oder eine große Teilnehmerzahl allein garantiert keine Annahme.
 
 ## Aktueller Vergleich für die Konferenz
 
-Die neue Erhebung `diana-abc-v3` / Fragebogen V10 vergleicht faire Bedingungen mit gleicher technischer Such- und Bewertungsgrundlage:
+Die neue Erhebung `diana-abc-v4` / Fragebogen V11 vergleicht drei klar versionierte Bedingungen auf derselben technischen Such- und Bewertungsgrundlage:
 
-- A: feste, kompetente und sachliche Standardberatung.
-- B: Auswahl zwischen Top-Berufsberater und Fachexperte, Eigenschaften unveränderbar.
-- C: dieselben Vorlagen plus freie Gestaltung.
+- A: Basissystem ohne wählbare KI-Suchpersönlichkeit. Das A-Promptfeld ist im dokumentierten Ausgangsstand leer; eine abweichende Revision muss als eigene Behandlungsfassung ausgewertet werden.
+- B: Ein fester Top-Berufsberater mit RAG-Auftrag; Eigenschaften und Gewichtung sind nicht veränderbar.
+- C: freie Gestaltung auf derselben Berufsberater- und RAG-Basis.
 
-Alle zeigen Scores, Begründungen und nach Bewertung sortierte Stellen mit derselben 70er-Anzeigeschwelle. Die faire Standardberatung wurde bereits mit V9 eingeführt. V10 behält diese Systembedingungen und verkürzt ausschließlich den Fragebogen. Frühere Bedingungen und Daten bleiben als historische Versionen erhalten; insbesondere V9/`diana-abc-v2` wird nicht still mit V10/`diana-abc-v3` gepoolt.
+Alle zeigen Scores, Begründungen und nach Bewertung sortierte Stellen; zunächst erscheinen zehn, weitere bis zu 20 lassen sich einblenden. Es gibt keine Mindestscore-Schwelle für die Anzeige. Frühere Bedingungen und Daten bleiben als historische Versionen erhalten; insbesondere V9/`diana-abc-v2` und V10/`diana-abc-v3` werden nicht mit V11/`diana-abc-v4` gepoolt.
 
-Primär wird C gegen B verglichen: Welchen zusätzlichen Nutzen bietet die Möglichkeit der freien Gestaltung? Sekundär B gegen A: Welchen Nutzen bietet das Angebot einer Vorlagenauswahl? Auch in C nicht selbst gestaltende Personen gehören gemäß ihrer Zuteilung zu C. Tatsächliche Nutzungsuntergruppen bleiben explorativ.
+Primär wird C gegen B verglichen: Welchen zusätzlichen wahrgenommenen Nutzen und Aufwand bietet die Möglichkeit der freien Gestaltung gegenüber demselben festen Berufsberater? Sekundär wird B gegen A als Gesamtpaketvergleich ausgewertet. Da sich dabei Rollenprofil, RAG-Auftrag und Gesprächsinitiative gemeinsam ändern, ist B gegen A kein isolierter Nachweis eines Persönlichkeitseffekts. Auch in C Personen ohne tatsächliche Änderung der vorgeschlagenen Ausgangskonfiguration gehören gemäß ihrer Zuteilung zu C. Tatsächliche Nutzungsuntergruppen bleiben explorativ.
 
 Deine frühere Filter-/Stichwortumfrage ist wertvolle Motivation, kein zeitgleicher randomisierter Kontrollarm. Die beiden Foliensätze einschließlich offener Zahlenwidersprüche sind in [PRIOR-STUDIES.md](PRIOR-STUDIES.md) eingeordnet. Die aktuelle Erhebung behauptet deshalb keinen neuen kausalen Vergleich Chat gegen reine Stichwortsuche.
 

@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 from privacy import token_hash
 from advisor import AdvisorConfig
 
-EXPERIMENT_ID = 'diana-abc-v3'
+EXPERIMENT_ID = 'diana-abc-v4'
+PREVIOUS_CONFERENCE_EXPERIMENT_ID = 'diana-abc-v3'
 PREVIOUS_FAIR_EXPERIMENT_ID = 'diana-abc-v2'
 PREVIOUS_ABC_EXPERIMENT_ID = 'diana-abc-v1'
 AB_EXPERIMENT_ID = 'diana-ab-v2'
@@ -15,11 +16,13 @@ CURRENT_TO_LEGACY_ARM = {current: legacy for legacy, current in LEGACY_TO_CURREN
 
 
 def personality_policy(experiment_id, arm):
+    if experiment_id == EXPERIMENT_ID:
+        return {'A': 'unprompted', 'B': 'career_fixed', 'C': 'custom_career'}[arm]
     if arm == 'A':
-        return 'standard' if experiment_id in (EXPERIMENT_ID, PREVIOUS_FAIR_EXPERIMENT_ID) else 'generic'
+        return 'standard' if experiment_id in (PREVIOUS_CONFERENCE_EXPERIMENT_ID, PREVIOUS_FAIR_EXPERIMENT_ID) else 'generic'
     # Historical B participants had the full editor. Never silently change the
     # treatment associated with an existing assignment.
-    return 'templates' if experiment_id in (EXPERIMENT_ID, PREVIOUS_FAIR_EXPERIMENT_ID, PREVIOUS_ABC_EXPERIMENT_ID) and arm == 'B' else 'configurable'
+    return 'templates' if experiment_id in (PREVIOUS_CONFERENCE_EXPERIMENT_ID, PREVIOUS_FAIR_EXPERIMENT_ID, PREVIOUS_ABC_EXPERIMENT_ID) and arm == 'B' else 'configurable'
 
 
 def presentation_policy(experiment_id, arm):
@@ -31,6 +34,33 @@ class PersonalityPolicyError(ValueError):
 
 
 def advisor_for_policy(requested, policy):
+    if policy == 'unprompted':
+        # The fixed balanced configuration preserves the scoring weights. The LLM
+        # layer applies A's separately versioned prompt, which is empty by default.
+        from persona_mlds import load_standard_advisor
+        return load_standard_advisor()
+    if policy in ('career_fixed', 'custom_career'):
+        from persona_mlds import load_templates
+        career = load_templates()['career']['advisor']
+        if requested == AdvisorConfig().model_dump() or (requested.get('mode', 'preset') == 'preset' and requested.get('preset') in ('neutral', 'standard')):
+            return dict(career)
+        if policy == 'career_fixed':
+            if requested == career:
+                return dict(career)
+            raise PersonalityPolicyError('In dieser Variante ist der Top-Berufsberater fest eingestellt.')
+        # C accepts only an actually self-designed configuration. Old cached
+        # frontends may still submit one of the former preset personalities;
+        # normalize every such preset to the reviewed career starting point so a
+        # stale client cannot silently reintroduce a removed treatment. The
+        # ``preset`` field is irrelevant in custom mode, but canonicalizing it
+        # keeps the stored MLDS representation stable and auditable.
+        if requested.get('mode') == 'preset':
+            return dict(career)
+        if requested.get('mode') != 'custom':
+            raise PersonalityPolicyError(
+                'In dieser Variante muss die KI-Suchpersönlichkeit selbst gestaltet werden.'
+            )
+        return {**requested, 'mode': 'custom', 'preset': 'diana'}
     if policy == 'standard':
         from persona_mlds import load_standard_advisor
         return load_standard_advisor()
@@ -89,7 +119,8 @@ class StudyAssignments:
                     personality_policy=personality_policy(row['experiment_id'], arm),
                     presentation_policy=presentation_policy(row['experiment_id'], arm),
                     questionnaire_arm=row['arm'] if row['experiment_id'] == LEGACY_EXPERIMENT_ID else arm,
-                    questionnaire_version=('diana-v10' if row['experiment_id'] == EXPERIMENT_ID else
+                    questionnaire_version=('diana-v11' if row['experiment_id'] == EXPERIMENT_ID else
+                                           'diana-v10' if row['experiment_id'] == PREVIOUS_CONFERENCE_EXPERIMENT_ID else
                                            'diana-v9' if row['experiment_id'] == PREVIOUS_FAIR_EXPERIMENT_ID else
                                            'diana-v8' if row['experiment_id'] == PREVIOUS_ABC_EXPERIMENT_ID else
                                            'diana-v6' if row['experiment_id'] == LEGACY_EXPERIMENT_ID else 'diana-v7'))
@@ -101,17 +132,21 @@ class StudyAssignments:
             row = db.execute('SELECT * FROM study_assignments WHERE token_hash=?', (token_hash(token),)).fetchone()
             return self.public(row)
 
-    def assign(self, token):
+    def assign(self, token, *, on_assign=None):
         with self.surveys.connect() as db:
             db.execute('BEGIN IMMEDIATE')
             digest = self.privacy.require(token, self.notice, db)
             old = db.execute('SELECT * FROM study_assignments WHERE token_hash=?', (digest,)).fetchone()
             if old:
-                return self.public(old)
-            prior = bool(db.execute("SELECT 1 FROM privacy_links WHERE token_hash=? AND kind='chat' LIMIT 1", (digest,)).fetchone())
-            db.execute('INSERT INTO study_assignments VALUES (?, ?, ?, ?, ?)',
-                       (digest, EXPERIMENT_ID, secrets.choice(('A', 'B', 'C')), datetime.now(timezone.utc).isoformat(), int(prior)))
-            return self.public(db.execute('SELECT * FROM study_assignments WHERE token_hash=?', (digest,)).fetchone())
+                assigned = self.public(old)
+            else:
+                prior = bool(db.execute("SELECT 1 FROM privacy_links WHERE token_hash=? AND kind='chat' LIMIT 1", (digest,)).fetchone())
+                db.execute('INSERT INTO study_assignments VALUES (?, ?, ?, ?, ?)',
+                           (digest, EXPERIMENT_ID, secrets.choice(('A', 'B', 'C')), datetime.now(timezone.utc).isoformat(), int(prior)))
+                assigned = self.public(db.execute('SELECT * FROM study_assignments WHERE token_hash=?', (digest,)).fetchone())
+            if on_assign is not None:
+                on_assign(digest, assigned, db)
+            return assigned
 
     def advisor(self, token, requested):
         assigned = self.get(token)
@@ -120,13 +155,14 @@ class StudyAssignments:
     def validate_answers(self, token, version, answers):
         assigned = self.get(token)
         if assigned:
-            allowed = ({'diana-v10'} if assigned['experiment_id'] == EXPERIMENT_ID else
+            allowed = ({'diana-v11'} if assigned['experiment_id'] == EXPERIMENT_ID else
+                       {'diana-v10'} if assigned['experiment_id'] == PREVIOUS_CONFERENCE_EXPERIMENT_ID else
                        {'diana-v9'} if assigned['experiment_id'] == PREVIOUS_FAIR_EXPERIMENT_ID else
                        {'diana-v8'} if assigned['experiment_id'] == PREVIOUS_ABC_EXPERIMENT_ID else
                        {'diana-v6', 'diana-v7'} if assigned['experiment_id'] == LEGACY_EXPERIMENT_ID else {'diana-v7'})
             if version not in allowed:
                 raise ValueError('Der Fragebogen passt nicht zu deiner Studienzuordnung. Bitte lade die Umfrage neu.')
-        elif version not in ('diana-v6', 'diana-v7', 'diana-v8', 'diana-v9', 'diana-v10'):
+        elif version not in ('diana-v6', 'diana-v7', 'diana-v8', 'diana-v9', 'diana-v10', 'diana-v11'):
             return
         expected_arm = assigned['arm'] if assigned else None
         if version == 'diana-v6':

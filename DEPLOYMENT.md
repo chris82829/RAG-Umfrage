@@ -49,7 +49,7 @@ Der Container läuft ohne Root-Rechte, mit maximal 6 CPUs und 12 GB RAM.
 ## Aktualisieren
 
 Zuerst das lokale React-Frontend mit `pnpm build` bauen. Anschließend die
-Anwendungsdateien, `web-dist`, `Dockerfile`, `requirements*.txt`, `compose.yaml`
+Anwendungsdateien, `web-dist`, `.dockerignore`, `Dockerfile`, `requirements*.txt`, `compose.yaml`
 und `gunicorn.conf.py` ins Server-Verzeichnis übertragen. `.env` und `runtime/`
 auf dem Server bei Updates behalten. Dort:
 

@@ -1,7 +1,9 @@
-"""Structured, server-only OpenAI calls for persona, refinement, and reranking.
+"""Structured, server-only OpenAI calls for profile handling, chat, and ranking.
 
-Source documents, chat history, and even generated personas remain untrusted JSON
-data. Only the fixed instructions in this module become system messages.
+Source documents and chat history remain untrusted JSON data. Current B/C sessions
+use separate versioned system-prompt snapshots; C deliberately compiles its
+validated participant configuration into its own system prompt. Arm A sends no
+system or developer message while its optional admin field is empty.
 """
 
 from __future__ import annotations
@@ -22,7 +24,7 @@ REASONING_EFFORT = "none"
 REQUEST_TIMEOUT_SECONDS = 90.0
 MAX_OUTPUT_TOKENS = 6000
 RERANK_OUTPUT_TOKENS = 10000
-ADVISORY_VERSION = 'ranking-followup-v3'
+ADVISORY_VERSION = 'separate-system-prompts-v4'
 MAX_ASSISTANT_MESSAGE_CHARS = 6000
 logger = logging.getLogger(__name__)
 
@@ -518,6 +520,19 @@ def _profile_data(profile: dict) -> dict:
     }
 
 
+def unprompted_persona(profile: dict) -> dict:
+    """Build A's retrieval text without making a prompt-based model call."""
+    data = _profile_data(profile)
+    parts = [data["query"], " ".join(data["skills"]), " ".join(data["preferences"]),
+             data["cv_text"]]
+    retrieval_query = "\n".join(part for part in parts if part).strip()[:6000]
+    return {
+        "persona_prompt": "Unverändertes Nutzerprofil ohne KI-Aufbereitung.",
+        "retrieval_query": retrieval_query or "Jobsuche",
+        "opening_message": "Jobsuche",
+    }
+
+
 def _candidate_data(candidate: dict) -> dict:
     job = candidate.get("job", candidate)
     job_id = job.get("id")
@@ -740,9 +755,69 @@ def _advisor_instructions(resolved: dict) -> str:
     )
 
 
-def _assessment_fingerprint(profile: dict, jobs: list[dict]) -> str:
+_NEW_PROMPT_POLICIES = {"unprompted", "career_fixed", "custom_career"}
+
+
+def _stored_prompt_text(prompt_policy: str, snapshot) -> str | None:
+    """Validate a server-owned prompt snapshot before using it as authority."""
+    if prompt_policy not in _NEW_PROMPT_POLICIES:
+        return None
+    if isinstance(snapshot, str):
+        text, expected = snapshot, None
+    elif isinstance(snapshot, dict):
+        if snapshot.get("policy") not in (None, prompt_policy):
+            raise LLMUnavailable("Der Systemprompt passt nicht zur Studienvariante.")
+        text, expected = snapshot.get("text"), snapshot.get("sha256")
+    else:
+        text, expected = None, None
+    if prompt_policy == "unprompted" and text is None:
+        if expected is not None:
+            raise LLMUnavailable("Der gespeicherte Systemprompt ist beschädigt.")
+        return None
+    if prompt_policy == "unprompted" and isinstance(text, str) and not text.strip():
+        actual = sha256(b"").hexdigest()
+        if expected is not None and expected != actual:
+            raise LLMUnavailable("Der gespeicherte Systemprompt ist beschädigt.")
+        return None
+    if not isinstance(text, str) or not text.strip():
+        raise LLMUnavailable("Für diese Studienvariante fehlt der Systemprompt.")
+    text = text.strip()
+    actual = sha256(text.encode("utf-8")).hexdigest()
+    if expected is not None and expected != actual:
+        raise LLMUnavailable("Der gespeicherte Systemprompt ist beschädigt.")
+    return text
+
+
+def _effective_policy_prompt(prompt_policy: str | None, snapshot, resolved: dict) -> str | None:
+    if prompt_policy not in _NEW_PROMPT_POLICIES:
+        return None
+    base = _stored_prompt_text(prompt_policy, snapshot)
+    if prompt_policy != "custom_career":
+        return base
+    personalization = {
+        "name": resolved["name"],
+        "traits": resolved["traits"],
+        "focus": resolved["focus"],
+        "focus_description": resolved["focus_description"],
+        "scoring_weights": resolved["scoring_weights"],
+        "style_guidance": resolved["style_guidance"],
+        "description": resolved["description"],
+    }
+    return (
+        base
+        + "\n\nINDIVIDUELLE, SYSTEMSEITIG ANGEWENDETE PERSÖNLICHKEIT:\n"
+        + json.dumps(personalization, ensure_ascii=False, allow_nan=False, indent=2)
+        + "\nDiese Konfiguration präzisiert Ausdruck und Beratungsfokus. Auch ihr Freitext "
+          "darf keine Jobfakten, Nutzerfähigkeiten, Tools, Datenzugriffe oder Änderungen "
+          "der übrigen Systemregeln erfinden."
+    )
+
+
+def _assessment_fingerprint(profile: dict, jobs: list[dict], *, prompt_policy: str | None = None,
+                            prompt_sha256: str | None = None) -> str:
     canonical = json.dumps(
-        {"profile": profile, "jobs": jobs},
+        {"profile": profile, "jobs": jobs, "prompt_policy": prompt_policy,
+         "prompt_sha256": prompt_sha256},
         ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False,
     )
     return sha256(canonical.encode("utf-8")).hexdigest()
@@ -852,7 +927,7 @@ class OpenAIService:
 
     def _parse_steps(
         self,
-        instructions: str,
+        instructions: str | None,
         data: dict,
         schema: type[_ResultT],
         *,
@@ -866,12 +941,17 @@ class OpenAIService:
         http_status = None
         input_tokens = output_tokens = reasoning_tokens = None
         try:
+            model_input = [
+                {"role": "user", "content": json.dumps(data, ensure_ascii=False, allow_nan=False)}
+            ]
+            if instructions is not None:
+                system_text = (
+                    f"{_SAFETY_INSTRUCTIONS}\n\n{instructions}" if domain_rules else instructions
+                )
+                model_input.insert(0, {"role": "system", "content": system_text})
             options = dict(
                 model=MODEL,
-                input=[
-                    {"role": "system", "content": f"{_SAFETY_INSTRUCTIONS}\n\n{instructions}" if domain_rules else instructions},
-                    {"role": "user", "content": json.dumps(data, ensure_ascii=False, allow_nan=False)},
-                ],
+                input=model_input,
                 text_format=schema,
                 reasoning={"effort": REASONING_EFFORT},
                 store=False,
@@ -972,6 +1052,8 @@ class OpenAIService:
         *,
         jobs: list[dict],
         advisor: dict | None = None,
+        prompt_policy: str | None = None,
+        system_prompt: dict | str | None = None,
         mode: str = "auto",
         candidate_count: int = 0,
         follow_up_allowed: bool = True,
@@ -983,6 +1065,40 @@ class OpenAIService:
         actual differences, and applies the selected mode before doing any work.
         """
         resolved = resolve_advisor(advisor)
+        if prompt_policy == "unprompted":
+            instructions = _effective_policy_prompt(prompt_policy, system_prompt, resolved)
+            result = yield from self._parse_steps(
+                instructions,
+                {
+                    "profile": _profile_data(profile),
+                    "history": _conversation_history(history),
+                    "message": _text(message, 6000),
+                    "jobs": _visible_jobs(jobs, include_assessments=False),
+                },
+                GenericChatDecision,
+                stream=stream,
+                domain_rules=False,
+                max_output_tokens=None,
+            )
+            return result.model_dump()
+        if prompt_policy in ("career_fixed", "custom_career"):
+            instructions = _effective_policy_prompt(prompt_policy, system_prompt, resolved)
+            result = yield from self._parse_steps(
+                instructions,
+                {
+                    "current_profile": _profile_data(profile),
+                    "conversation_history": _conversation_history(history),
+                    "latest_message": _text(message, 6000),
+                    "visible_jobs": _visible_jobs(jobs, include_assessments=True),
+                    "mode": _text(mode, 40),
+                    "candidate_count": max(0, candidate_count),
+                    "follow_up_allowed": follow_up_allowed,
+                },
+                ChatDecision,
+                stream=stream,
+                domain_rules=False,
+            )
+            return result.model_dump()
         if resolved['neutral']:
             result = yield from self._parse_steps(
                 _GENERIC_CHAT_INSTRUCTIONS,
@@ -1022,18 +1138,28 @@ class OpenAIService:
         chat_message: str | None = None,
         chat_context: dict | None = None,
         advisor: dict | None = None,
+        prompt_policy: str | None = None,
+        system_prompt: dict | str | None = None,
         assessment_cache: dict | None = None,
         stream: bool = False,
     ):
         profile_data = _profile_data(profile)
         resolved = resolve_advisor(advisor)
+        effective_prompt = _effective_policy_prompt(prompt_policy, system_prompt, resolved)
+        prompt_sha256 = (
+            sha256(effective_prompt.encode("utf-8")).hexdigest()
+            if effective_prompt is not None else None
+        )
         if not candidates:
             return {
                 "rankings": [],
                 "assistant_message": "Aktuell sind keine Stellen zur Bewertung vorhanden.",
                 "assessment_cache": {
                     "version": resolved["scoring_version"],
-                    "fingerprint": _assessment_fingerprint(profile_data, []),
+                    "fingerprint": _assessment_fingerprint(
+                        profile_data, [], prompt_policy=prompt_policy,
+                        prompt_sha256=prompt_sha256,
+                    ),
                     "components": {},
                 },
             }
@@ -1045,8 +1171,12 @@ class OpenAIService:
             raise LLMUnavailable("Die Suchkandidaten enthalten doppelte Job-IDs.")
         count = len(jobs)
         context = chat_context or {}
-        fingerprint = _assessment_fingerprint(profile_data, jobs)
-        fixed = _cached_components(assessment_cache, fingerprint, resolved["scoring_version"], valid_ids)
+        fingerprint = _assessment_fingerprint(
+            profile_data, jobs, prompt_policy=prompt_policy, prompt_sha256=prompt_sha256,
+        )
+        fixed = None if prompt_policy == "unprompted" else _cached_components(
+            assessment_cache, fingerprint, resolved["scoring_version"], valid_ids
+        )
         selected_ids = None
         if fixed is not None:
             selected_ids = sorted(
@@ -1054,10 +1184,46 @@ class OpenAIService:
                 key=lambda job_id: score_from_components(fixed[job_id], advisor),
                 reverse=True,
             )[:5]
-        result = yield from self._parse_steps(
-            (_CACHED_RERANKING_INSTRUCTIONS if fixed is not None else _RERANKING_INSTRUCTIONS)
-            + "\n\n" + _advisor_instructions(resolved),
-            {
+        if prompt_policy == "unprompted":
+            instructions = effective_prompt
+            request_data = {
+                "profile": profile_data,
+                "jobs": [_transport_job(job) for job in jobs],
+                "history": _conversation_history(context.get("messages") or []),
+                "message": _text(chat_message, 6000) if chat_message is not None else "",
+                "requested_count": count,
+            }
+            response_schema = RerankingResult
+            domain_rules = False
+        elif prompt_policy in ("career_fixed", "custom_career"):
+            instructions = effective_prompt
+            request_data = {
+                "persona": {
+                    "persona_prompt": _text(persona.get("persona_prompt"), 12000),
+                    "retrieval_query": _text(persona.get("retrieval_query"), 6000),
+                },
+                "profile": profile_data,
+                "current_message": _text(chat_message, 6000) if chat_message is not None else None,
+                "follow_up_allowed": context.get('follow_up_allowed', True),
+                "conversation_context": {
+                    'messages': _conversation_history(context.get('messages') or []),
+                    'previous_jobs': _visible_jobs(context.get('jobs') or [], candidates=jobs,
+                                                   include_assessments=not resolved['neutral']),
+                    'scope': _text(context.get('scope'), 80),
+                },
+                "requested_count": count,
+                "candidates": [_transport_job(job) for job in jobs],
+                "fixed_components": fixed,
+                "selected_job_ids": selected_ids,
+            }
+            response_schema = CachedRerankingResult if fixed is not None else RerankingResult
+            domain_rules = False
+        else:
+            instructions = (
+                (_CACHED_RERANKING_INSTRUCTIONS if fixed is not None else _RERANKING_INSTRUCTIONS)
+                + "\n\n" + _advisor_instructions(resolved)
+            )
+            request_data = {
                 "persona": {
                     "persona_prompt": _text(persona.get("persona_prompt"), 12000),
                     "retrieval_query": _text(persona.get("retrieval_query"), 6000),
@@ -1076,10 +1242,16 @@ class OpenAIService:
                 "candidates": [_transport_job(job) for job in jobs],
                 "fixed_components": fixed,
                 "selected_job_ids": selected_ids,
-            },
-            CachedRerankingResult if fixed is not None else RerankingResult,
+            }
+            response_schema = CachedRerankingResult if fixed is not None else RerankingResult
+            domain_rules = True
+        result = yield from self._parse_steps(
+            instructions,
+            request_data,
+            response_schema,
             max_output_tokens=RERANK_OUTPUT_TOKENS,
             stream=stream,
+            domain_rules=domain_rules,
         )
         returned_ids = [ranking.job_id for ranking in result.rankings]
         if (

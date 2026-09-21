@@ -1,11 +1,11 @@
 // Selection records a UI choice, never guesses it from a name or text contents.
 export function templateSelection(key) {
-  return key ? {source:'template',template_id:key} : {source:'custom',template_id:null};
+  return key === 'career' ? {source:'template',template_id:'career'} : {source:'custom',template_id:null};
 }
 
 export function selectionForRequest(selection) {
   if (selection?.source === 'custom') return {source:'custom',template_id:null};
-  if (selection?.source === 'template' && ['career','expert'].includes(selection.template_id)) return {...selection};
+  if (selection?.source === 'template' && selection.template_id === 'career') return {...selection};
   return undefined;
 }
 

@@ -16,6 +16,9 @@ META_TITLES = {
     'experiment_id': ('experiment_id', 'Kennung des Experiments; gemeinsam mit Fragebogenversion auswerten'),
     'assigned_at_utc': ('zugeteilt_am_utc', 'Zeitpunkt der ursprünglichen Gruppenzuteilung (UTC)'),
     'prior_exposure': ('vorherige_systemnutzung', 'Suchsitzung bereits vor der ursprünglichen Gruppenzuteilung vorhanden'),
+    'system_prompt_policy': ('systemprompt_variante', 'Unveränderlich zugeordnete Systemprompt-Variante; bei historischen Teilnahmen leer'),
+    'system_prompt_revision': ('systemprompt_revision', 'Revision der unveränderlich zugeordneten Promptfassung; zusammen mit Variante und SHA-256 auswerten'),
+    'system_prompt_base_sha256': ('systemprompt_basis_sha256', 'SHA-256-Prüfsumme des unveränderlich zugeordneten Basis-Systemprompts; bei C enthält sie nicht die anschließend ergänzte selbst gestaltete Persönlichkeit; bei leerem A-Prompt ist dies die Prüfsumme des leeren Textes'),
     'presentation_versions': ('darstellungs_versionen', 'Versionen der Ergebnisdarstellung während der Teilnahme'),
     'correction_count': ('antwortkorrekturen_anzahl', 'Anzahl gespeicherter Verwaltungskorrekturen'),
     'last_corrected_at_utc': ('zuletzt_korrigiert_am_utc', 'Zeitpunkt der letzten Verwaltungskorrektur (UTC)'),
@@ -92,7 +95,7 @@ def export_name(technical, columns='readable'):
     if name.endswith('_status'):
         name, suffix = name[:-7], '_antwortstatus'
     # From V6 onward this question specifically concerns clarifying search wishes.
-    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8', 'v9', 'v10') else QUESTION_NAMES[name]
+    base = 'chat_hilfe_suchwuensche' if name == 'chat_helpfulness' and prefix in ('v6', 'v7', 'v8', 'v9', 'v10', 'v11') else QUESTION_NAMES[name]
     return f'{prefix}_{base}{suffix}'
 
 

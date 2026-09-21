@@ -11,13 +11,12 @@ const steps = [
   { number: 4, title: 'Besprechen & verfeinern', shortTitle: 'Chat & Suche', Icon: MessagesSquare, description: 'Fragen stellen und deine Suche anpassen.' },
 ];
 
-export default function JourneyGuide({ neutral = false, allowCustom = true, activeStep = 1, completedSteps = [], compact = false, iconOnly = false, busy = false, hasSession = false, onSelect }) {
+export default function JourneyGuide({ showPersonalityStep = false, activeStep = 1, completedSteps = [], compact = false, iconOnly = false, busy = false, hasSession = false, onSelect }) {
   const Container = iconOnly ? 'section' : 'nav';
   const Step = iconOnly ? 'div' : 'button';
   return <Container className={`journey-guide ${iconOnly ? 'journey-guide--icons' : compact ? 'journey-guide--compact' : 'journey-guide--expanded'}`} aria-label="Schritte deiner Jobsuche" aria-busy={busy}>
     <ol className="journey-list" role="list">
-      {steps.filter(step=>!neutral || step.number!==2).map(({ number, title, shortTitle, Icon, description },index) => {
-        if (number === 2 && !allowCustom) { title = 'Persönlichkeit wählen'; description = 'Wähle eine Beratungsvorlage für Bewertung und Gespräch.'; }
+      {steps.filter(step=>showPersonalityStep || step.number!==2).map(({ number, title, shortTitle, Icon, description },index) => {
         const displayNumber=index+1;
         const active = activeStep === number;
         const complete = completedSteps.includes(number);

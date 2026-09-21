@@ -1,8 +1,8 @@
 # Öffentliche DIANA-Installation bei netcup
 
 Seit 18.09.2026 auf `159.195.48.19`, Verzeichnis `/opt/diana-survey`.
-Ausgangspunkt ist die tatsächlich laufende Hochschulinstallation mit
-`DEPLOYED_COMMIT=1f75d03`. Anwendung, gebautes Frontend, Docker-Image,
+Der jeweils ausgerollte Git-Stand steht auf dem Server in `DEPLOYED_COMMIT`.
+Anwendung, gebautes Frontend, Docker-Image,
 Modellcache und eine konsistente SQLite-Kopie werden übernommen.
 Die alte Installation wird nicht ersetzt. Beide Datenbanken sind danach
 unabhängig; neue Antworten werden nicht zwischen den Servern synchronisiert.
