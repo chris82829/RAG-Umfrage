@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ArrowRight, ArrowUp, ArrowUpRight, Check, ChevronDown, Clock3, Compass, GripVertical, MapPin, MessageCircle, Plus, RotateCcw, Search, SlidersHorizontal } from 'lucide-react';
 import { emptyForm, exampleForm, fromProfile, labels, makeProfile, profileSummary, remoteLabels } from './profile.js';
@@ -9,6 +9,7 @@ import './chat-bubbles.css';
 import useChatResize from './useChatResize.js';
 import { messagePreview } from './chat-layout.js';
 import { actionFeedback, candidatePool, canSendChat, pendingFeedback, profileChangeAction, recoveredSubmission, submittedChangeApplied } from './chat-actions.js';
+import {sendStudyEvent, observeJustification} from './telemetry.js';
 import { chatAllowance } from './chat-limit.js';
 import { INITIAL_RESULT_COUNT, resultVisibilityKey, resultVisibility } from './result-visibility.js';
 import { buildChatSuggestions } from './chat-suggestions.js';
@@ -28,7 +29,7 @@ import {standaloneArm, leavesTestContext} from './test-access.js';
 import {selectionForRequest} from './advisor-selection.js';
 import {consentHeaders} from './privacy.js';
 import { appPath, appSessionStorage, surveyRun } from './app-session.js';
-import { hasChatMessage, successfulChatCount, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
+import { successfulChatCount, hasSearchResults, isSurveyResultsView, reportSurveyProgress, searchGoalSuggestion } from './survey-progress.js';
 import './action-motion.css';
 import { careerAdvisor, advisorAiLabel, advisorScoreLabel, editableAdvisor, validateAdvisor } from './advisor.js';
 import { PERSONALITY_POLICIES, advisorForPolicy, canCustomizeAdvisor, normalizeSessionForPolicy, policyForArm, restoredAdvisorForPolicy, selectionForPolicy } from './advisor-policy.js';
@@ -64,7 +65,7 @@ function SearchIntro({ showPersonalityStep = false, onSelect, activeStep, comple
   </div>;
 }
 
-function MoreMatchReasons({ reasons, matchedSkills }) {
+function MoreMatchReasons({ reasons, matchedSkills, onExpand }) {
   const [expanded, setExpanded] = useState(false);
   const contentId = useId();
   return <div className="reason-more">
@@ -72,7 +73,7 @@ function MoreMatchReasons({ reasons, matchedSkills }) {
       {reasons.length > 1 && <ul className="reason-bullets">{reasons.slice(1).map((reason, i) => <li key={i}>{reason}</li>)}</ul>}
       {matchedSkills.length > 0 && <div className="skills-list">{matchedSkills.map(skill => <span key={skill}><Check size={13} aria-hidden="true" />{skill}</span>)}</div>}
     </div>
-    <button type="button" className="reason-more-toggle" aria-expanded={expanded} aria-controls={contentId} onClick={() => setExpanded(value => !value)}>
+    <button type="button" className="reason-more-toggle" aria-expanded={expanded} aria-controls={contentId} onClick={() => { if(!expanded)onExpand?.(); setExpanded(!expanded); }}>
       {expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}<ChevronDown size={16} aria-hidden="true" />
     </button>
   </div>;
@@ -94,10 +95,19 @@ function AssistantActionArea({ feedback, children }) {
   </div>;
 }
 
-export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, assistantName, onAsk, busy, chatBlocked = false }) {
+export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, assistantName, onAsk, busy, chatBlocked = false, onTelemetry }) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const detailsId = useId();
   const match = showInsights ? job.match : null;
+  const justification = useRef(null);
+  useEffect(()=> {
+    if(!match || !onTelemetry)return;
+    return observeJustification(justification.current, {
+      isActive:()=>!busy,
+      onDuration:duration_ms=>onTelemetry('dwell_justification',{job_id:job.id,rank:index+1,duration_ms}),
+    });
+  },[job.id,index,busy,Boolean(match),onTelemetry]);
+
   const reasons = (match?.reasons?.length ? match.reasons : [match?.reason]).filter(reason => typeof reason === 'string' && reason.trim());
   const matchedSkills = match?.matched_skills || [];
   const demo = demoIds.has(job.id);
@@ -110,14 +120,14 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
     <h3 tabIndex={-1}>{job.title}</h3>
     <div className="job-meta"><span><MapPin size={15} />{job.location || 'Ort offen'}</span><span><Clock3 size={15} />{hours}</span></div>
     <div className="tags"><span className="tag">{remoteLabels[job.remote]}</span>{job.professional_fields.slice(0, 2).map(x => <span className="tag neutral" key={x}>{x}</span>)}</div>
-    {match ? <div className="match-reason">
+    {match ? <div className="match-reason" ref={justification}>
       <span className="reason-title"><CompassAvatar className="inline-compass" />Warum das passen könnte</span>
       {reasons.length > 0 && <ul className="reason-bullets"><li>{reasons[0]}</li></ul>}
-      {(reasons.length > 1 || matchedSkills.length > 0) && <MoreMatchReasons key={JSON.stringify([match.score, reasons, matchedSkills])} reasons={reasons} matchedSkills={matchedSkills} />}
+      {(reasons.length > 1 || matchedSkills.length > 0) && <MoreMatchReasons key={JSON.stringify([match.score, reasons, matchedSkills])} reasons={reasons} matchedSkills={matchedSkills} onExpand={()=>onTelemetry?.('job_expand',{job_id:job.id,rank:index+1})} />}
     </div> : <p className="job-summary">{job.summary || job.tasks}</p>}
     <div className="job-card-footer">
       <div className="job-card-actions">
-        <button type="button" className="job-action-details" aria-label="Stellendetails" aria-expanded={detailsExpanded} aria-controls={detailsId} onClick={() => setDetailsExpanded(value => !value)}>
+        <button type="button" className="job-action-details" aria-label="Stellendetails" aria-expanded={detailsExpanded} aria-controls={detailsId} onClick={() => { if(!detailsExpanded)onTelemetry?.('job_detail',{job_id:job.id,rank:index+1}); setDetailsExpanded(!detailsExpanded); }}>
           <span className="job-details-label-full" aria-hidden="true">Stellendetails</span><span className="job-details-label-compact" aria-hidden="true">Details</span><ChevronDown size={16} aria-hidden="true" />
         </button>
         {ranked && <button type="button" className="job-action-chat" disabled={busy} aria-label={chatBlocked ? 'Chat ansehen' : `Mit ${assistantName} besprechen`} title={chatBlocked ? 'Chat ansehen' : `Mit ${assistantName} besprechen`} onClick={() => onAsk(job)}>
@@ -213,6 +223,11 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
   // Only explicit cancellation or a successful save discards that draft.
   const editorDrafts = useRef({ profile: false, advisor: false });
   const chatLayout = useChatResize(workspace, !session);
+
+  const recordJobEvent = useCallback((eventType,metadata)=> {
+    if(surveyRun(window.location.search) && session?.session_id)
+      void sendStudyEvent(session.session_id,eventType,metadata);
+  },[session?.session_id]);
 
   const surveyResultsReady = !booting && !busy && hasSearchResults(session);
   const surveyResultsVisible = isSurveyResultsView({ session, page, booting, busy, editor, personalityIntro });
@@ -573,7 +588,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
         {error && (showWelcome || mobileView === 'jobs') && <div className={`error-banner${showWelcome ? '' : ' journey-mobile-error'}`} role="alert">{error}</div>}
         {booting ? <div className="empty-state" role="status"><span className="spinner" /><p>Deine Jobsuche wird geladen …</p></div> : session ? <>
           <div id="ranked-jobs" className="jobs-list" aria-busy={busy}>
-            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={showInsights} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} chatBlocked={chatAccess.blocked} />)}
+            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={showInsights} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} chatBlocked={chatAccess.blocked} onTelemetry={recordJobEvent} />)}
             {!jobs.length && <div className="empty-state"><Search size={34} strokeWidth={1.3} /><h2>Hier ist noch Platz für deinen Match.</h2><p>{profileInfo.hardFilters.length && !pool.refreshRequired ? 'Aktuell gibt es keine Stellen zur gewählten Stellenart. Du kannst im Suchprofil oder Chat weitere Stellenarten einbeziehen.' : 'Aktuell liegen keine Stellenempfehlungen vor. Prüfe dein Suchprofil oder starte eine neue Suche.'}</p><button className="text-button" disabled={busy} onClick={() => { setDraft(profileInfo.hardFilters.length ? 'Welche Stellenarten sind aktuell ausgewählt und welche weiteren kommen für mich infrage?' : 'Welche Angaben sind aktuell in meinem Suchprofil gespeichert?'); showChat(); }}>Suchprofil im Chat besprechen <ArrowRight size={15} /></button></div>}
           </div>
           {additionalCount > 0 && <MoreResults expanded={showAllResults} busy={busy} onToggle={toggleMoreResults} />}

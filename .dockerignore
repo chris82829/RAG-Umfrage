@@ -26,3 +26,7 @@
 !survey_definition_v9.json
 !survey_definition_v10.json
 !survey_definition_v11.json
+
+!migrations/
+!migrations/**
+!survey_definition_v12.json

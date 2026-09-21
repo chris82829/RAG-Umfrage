@@ -193,4 +193,18 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
         response=make_response(content);response.headers['Content-Type']=mime
         response.headers['Content-Disposition']=f'attachment; filename="{filename}"'
         response.headers['X-Content-Type-Options']='nosniff';return response
+    @bp.get('/telemetry-export')
+    @protected
+    def export_telemetry():
+        from study_telemetry import telemetry_csv
+        try:query,version,status,arm,prompt=filters()
+        except ValueError:return error('Ungültiger Filter.',400)
+        participants={row['participation_id'] for row in data.filtered(query,version,status,arm,prompt)}
+        with surveys.connect() as db:
+            content=telemetry_csv(db, participation_ids=participants)
+        response=make_response(content)
+        response.headers['Content-Type']='text/csv; charset=utf-8'
+        response.headers['Content-Disposition']='attachment; filename="diana_nutzungsereignisse.csv"'
+        response.headers['X-Content-Type-Options']='nosniff'
+        return response
     app.register_blueprint(bp)

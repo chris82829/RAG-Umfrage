@@ -29,6 +29,7 @@ from advisor import AdvisorConfig, resolve_advisor
 from persona_mlds import MLDSError, advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_usage import StudyPersonalityUsage, normalize_selection
 from study_metrics import StudyOperationMetrics
+from study_telemetry import register_telemetry
 from study_progress import StudyChatRequired, chat_progress, require_study_chat, has_experience_answers
 from study_chat_limit import StudyChatLimit, ChatMessageLimit, ChatReservationExpired, MAX_USER_CHAT_MESSAGES
 from study_assignment import StudyAssignments, EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
@@ -386,6 +387,8 @@ def create_app(config=None, *, retriever=None, llm=None):
                     chat_limit.finish(digest, chat_reservation['id'], db)
                 releases.mark_run(digest, db)
                 record_metrics(db, digest, timings, True)
+                if (timings or {}).get('chat') is not None:
+                    telemetry.record_chat_turn(digest, record_id, db)
                 if selection is not None:
                     personality_usage.mark_applied(digest, selection, db)
             elif not db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (record_id,)).fetchone():
@@ -432,6 +435,9 @@ def create_app(config=None, *, retriever=None, llm=None):
         # persisted study consent, deduct it here; standalone tests are unlimited.
         unreserved_message = int(bool(message) and not (reservation or {}).get('id'))
         return remaining is None or remaining > unreserved_message
+
+    telemetry = register_telemetry(app, privacy, surveys, sessions,
+                                   request_notice, consent_token, test_arm)
 
     @app.before_request
     def require_consent():

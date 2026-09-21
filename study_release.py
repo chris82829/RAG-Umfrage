@@ -13,7 +13,9 @@ from study_usage import CAPTURE_VERSION, usage_snapshot
 from study_metrics import METRICS_CAPTURE_VERSION, metrics_snapshot
 from study_chat_limit import MAX_USER_CHAT_MESSAGES
 from study_assignment import EXPERIMENT_ID
-from advisor import SCORING_VERSION
+from advisor import SCORING_VERSION, SCORING_WEIGHTS
+from study_progress import MIN_USER_CHAT_MESSAGES
+from study_telemetry import CAPTURE_VERSION as TELEMETRY_CAPTURE_VERSION
 from system_prompt_store import DEFAULT_SYSTEM_PROMPTS
 
 
@@ -28,6 +30,7 @@ class StudyReleases:
                  'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
         files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'survey_definition_v11.json', 'study_metrics.py', 'study_chat_limit.py', 'system_prompt_store.py', 'test_access.py', 'STUDY-PROTOCOL.md']
+        files += ['study_progress.py', 'study_telemetry.py', 'migrations/012_study_telemetry.sql']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}
@@ -54,7 +57,9 @@ class StudyReleases:
                         test_max_user_chat_messages=None,
                         chat_max_characters=MAX_ASSISTANT_MESSAGE_CHARS,
                         chat_schema_max_characters=None, advisory_version=ADVISORY_VERSION,
-                        scoring_version=SCORING_VERSION,
+                        scoring_version=SCORING_VERSION, scoring_weights=dict(SCORING_WEIGHTS),
+                        min_user_chat_messages=MIN_USER_CHAT_MESSAGES,
+                        telemetry_capture_version=TELEMETRY_CAPTURE_VERSION,
                         response_store=False, max_output_tokens=MAX_OUTPUT_TOKENS,
                         rerank_output_tokens=RERANK_OUTPUT_TOKENS, embedding_model=MODEL_ID,
                         embedding_revision=MODEL_REVISION, embedding_preprocessing=CACHE_VERSION,
