@@ -103,3 +103,22 @@ vollständig beurteilten Top-10-Listen für nDCG@10 oder Precision@10.
 
 Weitere Dokumentation: [README](README.md), [Verwaltung](ADMIN.md),
 [Protokollentwurf](STUDY-PROTOCOL.md), [historische Forschung](research/README.md).
+
+## Technische Prüfung vor Veröffentlichung
+
+Am 21. September 2026 erfolgreich geprüft:
+
+- 97 Backend-Testausführungen im vollständigen Testlauf; anschließend alle 13
+  Telemetrietests einschließlich eines zusätzlich ergänzten Tests gegen falsche
+  Rangpositionen. Keine kostenpflichtigen Modellaufrufe.
+- 10 Tests der Relevanzwerkzeuge mit synthetischen Daten und 31 Frontendtests.
+- Produktionsbuild des React-Frontends.
+- Vollständige Browserdurchläufe mit einem simulierten Modell bei 390 × 844 Pixeln
+  (Gruppe B) und 1440 × 1000 Pixeln (Gruppe A): Einwilligung, Hintergrundfragen,
+  Suche, drei erfolgreiche Chatnachrichten, gesperrter/vorgeschalteter Übergang,
+  fünfstufige Nutzenitems und abschließende Speicherung. Keine JavaScript-Fehler
+  oder horizontalen Überläufe. Die Fragezahlen aller drei Gruppen sind zusätzlich
+  durch automatisierte Tests abgesichert.
+
+Diese Prüfungen belegen technische Abläufe. Sie ersetzen weder einen Pretest mit
+Teilnehmenden noch menschliche Relevanzurteile oder eine Validierung der Skala.

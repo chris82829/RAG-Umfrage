@@ -107,6 +107,20 @@ class StudyTelemetryTests(unittest.TestCase):
         self.assertEqual(self.post().status_code, 409)
         self.assertEqual(len(self.rows()), 0)
 
+    def test_known_job_at_wrong_rank_is_rejected_until_actual_rank_matches(self):
+        event = self.event()
+        # The second result exists, but claiming the first position would
+        # misattribute exposure after a rerank or from a stale browser view.
+        event['metadata']['job_id'] = '456'
+        response = self.post(event)
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.json['error']['code'], 'telemetry_ranking_changed')
+        self.assertEqual(len(self.rows()), 0)
+        event['metadata']['rank'] = 2
+        self.assertEqual(self.post(event).json, {'status': 'recorded'})
+        self.assertEqual(len(self.rows()), 1)
+        self.assertEqual(json.loads(self.rows()[0]['metadata']), {'job_id': '456', 'rank': 2})
+
     def test_standalone_scope_does_not_create_study_events_or_bypass_consent(self):
         headers = {**self.headers, 'X-Diana-Test': 'A'}
         self.assertEqual(self.post(headers=headers).status_code, 428)
