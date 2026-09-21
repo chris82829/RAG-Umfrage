@@ -45,26 +45,20 @@ FOCUS_DESCRIPTIONS = {
     'innovation': 'Achte ergänzend auf belegte Gestaltungsmöglichkeiten, neue Ideen und fachübergreifende Aufgaben.',
 }
 
-# All personas use the same evidence scale. Only the supplemental priorities
-# change; applicant skills and explicitly stated wishes retain fixed weights.
-SCORING_VERSION = 'explicit-priority-v3'
-DIMENSIONS = ('technical_fit', 'preferences_fit', 'technical_depth',
-              'learning', 'innovation', 'clarity')
+# One scoring rule for every study arm and personality. Integer percentages
+# preserve the established exact rounding; historical results retain their version.
+SCORING_VERSION = 'fixed-balanced-v4'
+SCORING_WEIGHTS = {
+    'technical_fit': 60, 'preferences_fit': 15, 'technical_depth': 7,
+    'learning': 6, 'innovation': 6, 'clarity': 6,
+}
+DIMENSIONS = tuple(SCORING_WEIGHTS)
 SUPPLEMENTAL = DIMENSIONS[2:]
-PRESET_PRIORITIES = {
-    'standard': (7, 6, 6, 6),
-    'neutral': (7, 6, 6, 6),
-    'diana': (7, 6, 6, 6),
-    'steve': (5, 5, 15, 0),
-    'angela': (8, 2, 0, 15),
-    'guenther': (3, 17, 3, 2),
-}
-FOCUS_PRIORITIES = {
-    'ausgewogen': (7, 6, 6, 6),
-    'fachliche_tiefe': (17, 3, 2, 3),
-    'lernpotenzial': (3, 17, 3, 2),
-    'innovation': (5, 5, 15, 0),
-}
+# Compatibility names for historical configurations; no focus-specific overrides.
+PRESET_PRIORITIES = {name: tuple(SCORING_WEIGHTS[key] for key in SUPPLEMENTAL)
+                     for name in PRESETS}
+FOCUS_PRIORITIES = {name: tuple(SCORING_WEIGHTS[key] for key in SUPPLEMENTAL)
+                   for name in FOCUS_DESCRIPTIONS}
 TRAIT_STYLE = {
     'analytisch': 'Wähle den entscheidenden Beleg aus und leite daraus eine präzise Einschätzung ab. Unterscheide belegte Passung und offene Informationen ausdrücklich, statt nur alle Skills aufzuzählen.',
     'direkt': 'Beginne eine Beratungsantwort mit deinem Urteil in einem kurzen Satz. Danach kurze, aktive Sätze: stärkster Grund, gegebenenfalls ein konkreter Prüfpunkt. Keine lange Einleitung, kein vorsichtiges Drumherum bei klaren Belegen.',
@@ -115,14 +109,8 @@ def _custom_expression(traits: list[str]) -> str:
 
 
 def _scoring_weights(config: AdvisorConfig) -> dict[str, int]:
-    if config.mode == 'preset':
-        priorities = PRESET_PRIORITIES[config.preset]
-    else:
-        # Users choose the ranking priority explicitly. A request for an empathic
-        # or critical tone must not silently reorder otherwise identical jobs.
-        priorities = FOCUS_PRIORITIES[config.focus]
-    return {'technical_fit': 60, 'preferences_fit': 15,
-            **dict(zip(SUPPLEMENTAL, priorities))}
+    # Return a copy so caller metadata cannot mutate the global scoring rule.
+    return dict(SCORING_WEIGHTS)
 
 
 def normalize_advisor_name(name: str) -> str:
