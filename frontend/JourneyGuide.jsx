@@ -6,7 +6,7 @@ import { canVisitJourneyStep } from './journey-state.js';
 
 const steps = [
   { number: 1, title: 'Profil erstellen', shortTitle: 'Profil', Icon: UserRound, description: 'Suchziel, Fähigkeiten und Wünsche eintragen.' },
-  { number: 2, title: 'Persönlichkeit gestalten', shortTitle: 'Persönlichkeit', Icon: Compass, description: 'Bestimme, was bei Stellen zählt und wie die KI mit dir spricht.' },
+  { number: 2, title: 'Persönlichkeit gestalten', shortTitle: 'Persönlichkeit', Icon: Compass, description: 'Gestalte, wie die KI mit dir spricht und Empfehlungen erklärt.' },
   { number: 3, title: 'Ergebnisse ansehen', shortTitle: 'Ergebnisse', Icon: BriefcaseBusiness, description: 'Passung und Begründungen vergleichen.' },
   { number: 4, title: 'Besprechen & verfeinern', shortTitle: 'Chat & Suche', Icon: MessagesSquare, description: 'Fragen stellen und deine Suche anpassen.' },
 ];

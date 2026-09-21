@@ -10,6 +10,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from app import create_app
+from persona_mlds import advisor_to_mlds
 from privacy import token_hash
 from system_prompt_store import DEFAULT_SYSTEM_PROMPTS, SystemPromptStore
 
@@ -474,9 +475,68 @@ class PromptExposureAppTests(unittest.TestCase):
         self.assertEqual(advisor["mode"], "custom")
         self.assertEqual(advisor["preset"], "diana")
         self.assertEqual(advisor["name"], "Top-Berufsberater")
+        self.assertEqual(advisor["focus"], "ausgewogen")
         self.assertEqual(response.get_json()["advisor_selection"], {
             "source": "custom", "template_id": None,
         })
+
+    def test_c_rejects_cached_rankings_with_a_former_or_invalid_focus(self):
+        _, headers = self.consent()
+        with patch("study_assignment.secrets.choice", return_value="C"):
+            self.assertEqual(
+                self.client.post("/api/study-assignment", headers=headers).status_code, 200,
+            )
+        response = self.client.post("/api/onboard", headers=headers, json={
+            "profile": {"query": "Python", "skills": ["Python"], "filters": {}},
+        })
+        self.assertEqual(response.status_code, 201, response.get_json())
+        session_id = response.get_json()["session_id"]
+        sessions = self.app.extensions["chat_store"]
+        balanced_state, _ = sessions.get(session_id)
+        self.assertEqual(
+            self.client.get(f"/api/sessions/{session_id}", headers=headers).status_code, 200,
+        )
+        for key in ("advisor", "advisor_mlds"):
+            for focus in ("lernpotenzial", "innovation", "fachliche_tiefe", "obsolete"):
+                with self.subTest(key=key, focus=focus):
+                    stale_advisor = {**balanced_state["advisor"], "focus": focus}
+                    cached = (stale_advisor if key == "advisor" else {
+                        **advisor_to_mlds(balanced_state["advisor"]),
+                        "personality": stale_advisor,
+                    })
+                    _, version = sessions.get(session_id)
+                    sessions.update(session_id, {**balanced_state, key: cached}, version)
+                    restored = self.client.get(f"/api/sessions/{session_id}", headers=headers)
+                    self.assertEqual(restored.status_code, 404, restored.get_json())
+                    self.assertIn("Suche neu", restored.get_json()["error"]["message"])
+                    continued = self.client.post("/api/chat", headers=headers, json={
+                        "session_id": session_id, "message": "Was bedeutet die Bewertung?",
+                    })
+                    self.assertEqual(continued.status_code, 404, continued.get_json())
+
+    def test_b_and_historical_c_can_restore_their_original_focus(self):
+        for arm, experiment in (("B", "diana-abc-v4"), ("C", "diana-abc-v3")):
+            with self.subTest(arm=arm, experiment=experiment):
+                token, headers = self.consent()
+                with patch("study_assignment.secrets.choice", return_value=arm):
+                    self.assertEqual(
+                        self.client.post("/api/study-assignment", headers=headers).status_code, 200,
+                    )
+                if experiment != "diana-abc-v4":
+                    with sqlite3.connect(self.db_path) as db:
+                        db.execute("UPDATE study_assignments SET experiment_id=? WHERE token_hash=?",
+                                   (experiment, token_hash(token)))
+                response = self.client.post("/api/onboard", headers=headers, json={
+                    "profile": {"query": "Python", "skills": ["Python"], "filters": {}},
+                    **({"advisor": {"mode": "custom", "focus": "lernpotenzial"}}
+                       if arm == "C" else {}),
+                })
+                self.assertEqual(response.status_code, 201, response.get_json())
+                self.assertEqual(response.get_json()["advisor"]["focus"], "lernpotenzial")
+                session_id = response.get_json()["session_id"]
+                restored = self.client.get(f"/api/sessions/{session_id}", headers=headers)
+                self.assertEqual(restored.status_code, 200, restored.get_json())
+                self.assertEqual(restored.get_json()["advisor"]["focus"], "lernpotenzial")
 
 
 if __name__ == "__main__":

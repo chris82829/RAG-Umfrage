@@ -31,7 +31,7 @@ test('only the reviewed career template remains active', () => {
   assert.equal(selectionForRequest({ source: 'template', template_id: 'expert' }), undefined);
 });
 
-test('A uses the baseline policy, B is fixed, and C starts from a clean career copy', () => {
+test('A uses the baseline policy, B is fixed, and C starts with balanced search', () => {
   const reviewedCareer = {
     ...careerAdvisor,
     traits: [...careerAdvisor.traits],
@@ -45,7 +45,8 @@ test('A uses the baseline policy, B is fixed, and C starts from a clean career c
   assert.equal(custom.name, reviewedCareer.name);
   assert.deepEqual(custom.traits, reviewedCareer.traits);
   assert.notEqual(custom.traits, reviewedCareer.traits);
-  assert.equal(custom.focus, reviewedCareer.focus);
+  assert.equal(custom.focus, 'ausgewogen');
+  assert.equal(reviewedCareer.focus, 'lernpotenzial');
   assert.equal(custom.description, '');
 });
 
@@ -62,6 +63,7 @@ test('restoring a session cannot revive retired templates in B or C', () => {
   const custom = normalizeSessionForPolicy('custom_career', oldExpertSession, careerAdvisor);
   assert.equal(custom.advisor.name, 'Top-Berufsberater');
   assert.equal(custom.advisor.description, '');
+  assert.equal(custom.advisor.focus, 'ausgewogen');
   assert.deepEqual(custom.advisor_selection, { source: 'custom', template_id: null });
 });
 
@@ -80,9 +82,19 @@ test('C restores a genuinely self-designed advisor', () => {
   assert.deepEqual(restoredAdvisorForPolicy('custom_career', saved, careerAdvisor), {
     ...saved.advisor,
     preset: 'diana',
+    focus: 'ausgewogen',
   });
   assert.deepEqual(normalizeSessionForPolicy('custom_career', saved, careerAdvisor), {
     ...saved,
-    advisor: {...saved.advisor, preset: 'diana'},
+    advisor: {...saved.advisor, preset: 'diana', focus: 'ausgewogen'},
   });
+});
+
+test('C normalizes every saved focus without changing personal writing preferences', () => {
+  for (const focus of ['ausgewogen', 'fachliche_tiefe', 'lernpotenzial', 'innovation']) {
+    const advisor = {...careerAdvisor, name:'Meine KI', traits:['direkt'], description:'Bitte knapp antworten.', focus};
+    const saved = {advisor, advisor_selection:{source:'custom',template_id:null}};
+    assert.deepEqual(restoredAdvisorForPolicy('custom_career', saved), {...advisor, focus:'ausgewogen'});
+    assert.equal(saved.advisor.focus, focus);
+  }
 });

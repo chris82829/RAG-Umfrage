@@ -21,14 +21,14 @@ export default function PersonalityIntroDialog({ open, onboarding = false, onCon
   return <dialog ref={dialog} className="personality-intro-dialog" aria-labelledby={`${id}-title`} aria-describedby={`${id}-description`} onCancel={event => { event.preventDefault(); closeThen(onClose); }}>
     <button type="button" className="personality-intro-close" aria-label="Erklärung schließen" onClick={() => closeThen(onClose)}><X size={19} aria-hidden="true" /></button>
     <h2 ref={heading} id={`${id}-title`} tabIndex={-1}>KI-Suchpersönlichkeit</h2>
-    <p id={`${id}-description`} className="personality-intro-description">Dein Profil beschreibt, was zu dir passt. Du gestaltest zusätzlich, worauf deine KI bei den Stellen achtet und wie sie mit dir spricht. Die fachliche Passung zählt weiterhin am stärksten.</p>
+    <p id={`${id}-description`} className="personality-intro-description">Dein Profil beschreibt, was zu dir passt. Du gestaltest, wie deine KI mit dir spricht und Empfehlungen erklärt. Die Suche bleibt ausgewogen; die fachliche Passung zählt am stärksten.</p>
     <div className="personality-flow">
       <div className="personality-flow-source"><Compass size={22} aria-hidden="true" /><span>KI-Suchpersönlichkeit</span></div>
       <div className="personality-flow-branches" aria-hidden="true"><ArrowDown size={19} /><ArrowDown size={19} /></div>
       <div className="personality-effects">
       <section className="personality-effect personality-effect-search">
         <span className="personality-effect-icon"><ArrowDownWideNarrow size={22} aria-hidden="true" /></span>
-        <div><h3>Jobs bewerten & sortieren</h3><p>Dein Nutzerprofil und deine KI-Persönlichkeit bestimmen gemeinsam die Bewertung und Reihenfolge der Jobs.</p></div>
+        <div><h3>Ausgewogen suchen</h3><p>Dein Profil und deine Jobwünsche bestimmen die Passung. Die Gewichtung bleibt ausgewogen, unabhängig von den gewählten Gesprächseigenschaften.</p></div>
       </section>
       <section className="personality-effect personality-effect-chat">
         <span className="personality-effect-icon"><MessagesSquare size={22} aria-hidden="true" /></span>

@@ -9,7 +9,7 @@ Welchen zusätzlichen wahrgenommenen Nutzen und Aufwand verursacht eine **selbst
 
 Primärer Vergleich: **C gegen B**. Sekundär: B gegen A als Vergleich des vollständigen RAG-Berufsberaterprompts mit dem Basissystem ohne wählbare KI-Suchpersönlichkeit. Im freigegebenen Ausgangsstand ist das A-Promptfeld leer. Wird es administrativ geändert, muss diese Promptrevision als eigene Behandlungsfassung ausgewertet werden. Dieser sekundäre Vergleich isoliert keinen Persönlichkeitseffekt: Aufgabenanweisung, Gesprächsinitiative und Rollenprofil unterscheiden sich gemeinsam. Nicht behaupten, diese Erhebung belege Chat gegenüber klassischer Filter-/Stichwortsuche.
 
-Der angestrebte Beitrag ist die Verbindung benutzerdefinierter Bewertungsschwerpunkte und Gesprächsführung in einer Jobsuche, einschließlich beobachteter Nutzung der Gestaltungsmöglichkeit. Neuheit gegenüber verwandten Conversational-Recommender-Arbeiten muss im Paper ausgearbeitet werden; allein der Einsatz eines LLM oder eine große Stichprobe ist kein Neuheitsnachweis.
+Der angestrebte Beitrag ist die selbst gestaltete Gesprächsführung und Erklärung von Empfehlungen in einer Jobsuche, einschließlich beobachteter Nutzung der Gestaltungsmöglichkeit. C sucht seit der Änderung vom 21. September fest ausgewogen. Neuheit gegenüber verwandten Conversational-Recommender-Arbeiten muss im Paper ausgearbeitet werden; allein der Einsatz eines LLM oder eine große Stichprobe ist kein Neuheitsnachweis.
 
 ## Bedingungen
 
@@ -17,9 +17,24 @@ Der angestrebte Beitrag ist die Verbindung benutzerdefinierter Bewertungsschwerp
 | --- | --- | --- |
 | A | Basissystem; standardmäßig kein Systemprompt, optional separat versionierter A-Prompt | Suchprofil und Suchwünsche; keine wählbare Persönlichkeit |
 | B | Fester Top-Berufsberater mit RAG-Auftrag | Suchprofil und Suchwünsche; Beratung nicht veränderbar |
-| C | Selbst gestaltete Beratung auf derselben Berufsberater-Basis | Name, Eigenschaften, Bewertungsschwerpunkt und Hinweise selbst gestalten |
+| C | Selbst gestaltete Beratung auf derselben Berufsberater-Basis; Suchfokus fest ausgewogen | Name, Gesprächseigenschaften und Hinweise selbst gestalten; keine Auswahl des Suchfokus |
 
 B verwendet ausschließlich den Top-Berufsberater; C beginnt mit dessen fachlichem RAG-Auftrag und gestaltet die sichtbare KI-Konfiguration selbst. Alle Gruppen verwenden dasselbe Modell-Snapshot, denselben Denkaufwand, Datenbestand, BM25/E5/RRF und Top-20-Pool. Scores, Begründungen und Score-Sortierung sind überall vorhanden. Zunächst erscheinen die ersten zehn Stellen; die übrigen bis zu 20 lassen sich mit „Weitere Stellen anzeigen“ öffnen. Es gibt keine Mindestscore-Schwelle. In der vorgesehenen Ausgangsfassung ist A bewusst leer und erhält damit keine Rollen- oder Beratungsanweisung; eine administrativ geänderte A-Fassung bildet eine getrennt zu berichtende Promptrevision. Daraus entstehende Qualitäts- und Fehlerratenunterschiede gehören zum sekundär untersuchten Gesamtpaket.
+
+### Entwicklungsänderung vom 21. September 2026: C sucht fest ausgewogen
+
+Die Auswahl des zusätzlichen Suchziels entfällt in C beim Einrichten und Bearbeiten.
+Der Server setzt für `custom_career` immer `focus=ausgewogen`, auch bei alten
+Voreinstellungen oder abweichenden Client-Eingaben. Name, Gesprächseigenschaften
+und eigene Hinweise bleiben gestaltbar. Die Gewichte lauten 60 % Fachpassung,
+15 % Profilpräferenzen und 7/6/6/6 % für fachliche Tiefe, Lernen, Innovation und
+Klarheit. Suchwünsche im Profil oder Gespräch werden weiterhin berücksichtigt.
+
+B bleibt beim festen Berufsberater mit Lernpotenzial-Gewichtung. C–B vergleicht
+damit weiterhin unterschiedliche Beratungspakete, nicht ausschließlich einen
+Gesprächsstil. Der neue Release-Hash und `personality_focus_policy` dokumentieren
+die Änderung; frühere Teilnahmen mit frei wählbarem C-Fokus nicht ungeprüft poolen.
+Der Fragebogen wird durch diese Änderung nicht automatisch angepasst.
 
 ### Entwicklungsänderung vom 14. September 2026: Beratung v2
 

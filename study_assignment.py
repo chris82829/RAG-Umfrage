@@ -42,6 +42,11 @@ def advisor_for_policy(requested, policy):
     if policy in ('career_fixed', 'custom_career'):
         from persona_mlds import load_templates
         career = load_templates()['career']['advisor']
+        if policy == 'custom_career':
+            # Current C edits the personality only. Keep its ranking weights
+            # balanced even when the starting template or a cached client asks
+            # for another focus; B and historical templates retain their focus.
+            career = {**career, 'focus': 'ausgewogen'}
         if requested == AdvisorConfig().model_dump() or (requested.get('mode', 'preset') == 'preset' and requested.get('preset') in ('neutral', 'standard')):
             return dict(career)
         if policy == 'career_fixed':
@@ -60,7 +65,7 @@ def advisor_for_policy(requested, policy):
             raise PersonalityPolicyError(
                 'In dieser Variante muss die KI-Suchpersönlichkeit selbst gestaltet werden.'
             )
-        return {**requested, 'mode': 'custom', 'preset': 'diana'}
+        return {**requested, 'mode': 'custom', 'preset': 'diana', 'focus': 'ausgewogen'}
     if policy == 'standard':
         from persona_mlds import load_standard_advisor
         return load_standard_advisor()

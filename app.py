@@ -26,7 +26,7 @@ from schemas import ChatInput, Profile, SearchInput
 from session_store import SessionConflict, SessionStore, EphemeralSessionStore
 from index_state import read_progress, write_progress
 from advisor import AdvisorConfig, resolve_advisor
-from persona_mlds import advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
+from persona_mlds import MLDSError, advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_usage import StudyPersonalityUsage, normalize_selection
 from study_metrics import StudyOperationMetrics
 from study_chat_limit import StudyChatLimit, ChatMessageLimit, ChatReservationExpired, MAX_USER_CHAT_MESSAGES
@@ -326,7 +326,17 @@ def create_app(config=None, *, retriever=None, llm=None):
         # Old direct B test sessions had an editable persona. They cannot be
         # resumed in the new template-only B condition after deployment.
         if assigned and assigned['personality_policy'] in ('templates', 'unprompted', 'career_fixed', 'custom_career'):
-            return state.get('_personality_policy') != assigned['personality_policy']
+            if state.get('_personality_policy') != assigned['personality_policy']:
+                return True
+        if assigned and assigned['personality_policy'] == 'custom_career':
+            # Normalizing only the advisor would retain results ranked under a
+            # former focus. Require a new search before resuming those sessions.
+            try:
+                for key in ('advisor', 'advisor_mlds'):
+                    if key in state and advisor_from_mlds(state[key])['focus'] != 'ausgewogen':
+                        return True
+            except MLDSError:
+                return True
         return False
 
     def record_metrics(db, digest, timings, success):
@@ -801,7 +811,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             return jsonify(error={'code': 'not_found', 'message': 'Chat nicht gefunden.'}), 404
         assigned = request_assignment()
         if incompatible_session(saved[0], assigned):
-            return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
+            return error_response({'code':'not_found','message':'Bitte starte deine Suche neu.'},404)
         if outdated_neutral_presentation(saved[0]):
             return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
         return jsonify(session_id=session_id, **public_state({**saved[0],
@@ -825,11 +835,11 @@ def create_app(config=None, *, retriever=None, llm=None):
         if not saved:
             return error_response({'code': 'not_found', 'message': 'Chat nicht gefunden.'}, 404)
         state, version = saved
-        if outdated_neutral_presentation(state):
-            return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
         assigned = request_assignment()
         if incompatible_session(state, assigned):
-            return error_response({'code':'not_found','message':'Bitte starte deinen Systemtest neu.'},404)
+            return error_response({'code':'not_found','message':'Bitte starte deine Suche neu.'},404)
+        if outdated_neutral_presentation(state):
+            return error_response({'code':'not_found','message':'Die einfache Studienvariante wurde geändert. Bitte starte deine Suche neu.'},404)
         policy = state.get('_personality_policy') or (assigned['personality_policy'] if assigned else None)
         frozen_prompt = state.get('_system_prompt_snapshot')
         if frozen_prompt is None and policy in ('unprompted', 'career_fixed', 'custom_career'):

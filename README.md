@@ -30,7 +30,7 @@ Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A,
 
 - **A:** Das LLM erhält Stellen und Profil standardmäßig ohne Systemprompt; keine Persönlichkeitswahl. In der Verwaltung kann für kontrollierte Vergleichsläufe optional ein eigener A-Basisprompt hinterlegt werden.
 - **B:** Der **Top-Berufsberater** ist fest eingestellt; Gewichtung und Eigenschaften sind nicht veränderbar.
-- **C:** Ausschließlich **Selbst gestalten** mit Name, Eigenschaften, Bewertungsschwerpunkt und Freitext; der RAG-Auftrag des Top-Berufsberaters bildet die feste fachliche Basis.
+- **C:** Ausschließlich **Selbst gestalten** mit Name, Gesprächseigenschaften und Freitext; der RAG-Auftrag des Top-Berufsberaters bildet die feste fachliche Basis. C sucht immer **ausgewogen**; eine Auswahl des zusätzlichen Suchziels gibt es nicht mehr. Die ausgewogene Gewichtung wird auch serverseitig erzwungen.
 
 Der Vergleich B/C untersucht die zusätzliche Selbstgestaltung gegenüber dem festen Berufsberater; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch wenn sie die vorgeschlagene Ausgangskonfiguration nicht inhaltlich verändern. B/A vergleicht das gesamte RAG-Berufsberaterprompt-Paket mit dem Basissystem und ist kein isolierter Persönlichkeitstest. Im Ausgangsstand ist der A-Prompt leer; jede spätere A-Promptrevision muss getrennt dokumentiert und ausgewertet werden. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
 
@@ -364,7 +364,7 @@ Antwort. Grundlage: [OpenAI Structured Outputs mit Streaming](https://developers
 1. **Schritt 1 – Dein Profil:** „Beispielprofil“ neben „Was passt zu dir?“ wählen oder
    eigene Angaben eintragen, dann „Weiter zur Persönlichkeit“.
 2. **Schritt 2 – Persönlichkeit:** Nach einer kurzen Erklärung mit Grafik die eigene
-   KI-Beratung gestalten: Name, Bewertungsschwerpunkt, Gesprächseigenschaften und
+   KI-Beratung gestalten: Name, Gesprächseigenschaften und
    optionale eigene Hinweise. Die drei Vorlagen **Steve Jobs**, **Angela Merkel**
    und **Günther Jauch** stehen im kompakten Dropdown „Vorlage“ rechts neben „KI-Suchpersönlichkeit“ und füllen alle Felder aus; alles bleibt bearbeitbar. Das Namensfeld steht platzsparend neben „Name“. Das kleine Info-Icon neben der Überschrift öffnet die Erklärung mit Grafik.
 3. **Schritt 3 – Ergebnisse:** „Passende Jobs finden“ starten; die KI-Auswertung

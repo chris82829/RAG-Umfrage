@@ -19,7 +19,7 @@ export function advisorForPolicy(policy, reviewedCareer=careerAdvisor) {
   if (policy === 'unprompted') return cloneAdvisor(standardAdvisor);
   const base=editableAdvisor(reviewedCareer);
   if (policy === 'career_fixed') return cloneAdvisor(base);
-  if (policy === 'custom_career') return {...cloneAdvisor(base),mode:'custom',preset:'diana',description:''};
+  if (policy === 'custom_career') return {...cloneAdvisor(base),mode:'custom',preset:'diana',focus:'ausgewogen',description:''};
   throw new Error('Unbekannte Beratungsvariante.');
 }
 
@@ -32,7 +32,7 @@ export function selectionForPolicy(policy) {
 export function restoredAdvisorForPolicy(policy, session, reviewedCareer=careerAdvisor) {
   if (policy !== 'custom_career') return advisorForPolicy(policy, reviewedCareer);
   if (session?.advisor_selection?.source !== 'custom') return advisorForPolicy(policy, reviewedCareer);
-  return editableAdvisor(session.advisor || advisorForPolicy(policy, reviewedCareer));
+  return {...editableAdvisor(session.advisor || advisorForPolicy(policy, reviewedCareer)),focus:'ausgewogen'};
 }
 
 export function normalizeSessionForPolicy(policy, session, reviewedCareer=careerAdvisor) {

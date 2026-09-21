@@ -8,7 +8,7 @@ Die neue Erhebung `diana-abc-v4` / Fragebogen V11 vergleicht drei klar versionie
 
 - A: Basissystem ohne wählbare KI-Suchpersönlichkeit. Das A-Promptfeld ist im dokumentierten Ausgangsstand leer; eine abweichende Revision muss als eigene Behandlungsfassung ausgewertet werden.
 - B: Ein fester Top-Berufsberater mit RAG-Auftrag; Eigenschaften und Gewichtung sind nicht veränderbar.
-- C: freie Gestaltung auf derselben Berufsberater- und RAG-Basis.
+- C: freie Gestaltung von Name, Gesprächseigenschaften und Hinweisen auf derselben Berufsberater- und RAG-Basis; der Suchfokus ist seit dem 21. September fest ausgewogen und nicht mehr wählbar.
 
 Alle zeigen Scores, Begründungen und nach Bewertung sortierte Stellen; zunächst erscheinen zehn, weitere bis zu 20 lassen sich einblenden. Es gibt keine Mindestscore-Schwelle für die Anzeige. Frühere Bedingungen und Daten bleiben als historische Versionen erhalten; insbesondere V9/`diana-abc-v2` und V10/`diana-abc-v3` werden nicht mit V11/`diana-abc-v4` gepoolt.
 

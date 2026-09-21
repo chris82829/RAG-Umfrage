@@ -38,6 +38,7 @@ class StudyReleases:
                         experiment_id=EXPERIMENT_ID,
                         assignment_probabilities={'A':1/3,'B':1/3,'C':1/3},
                         personality_policies={'A':'unprompted','B':'career_fixed','C':'custom_career'},
+                        personality_focus_policy={'A':'ausgewogen','B':'lernpotenzial','C':'ausgewogen'},
                         default_system_prompt_base_sha256={policy:hashlib.sha256(text.encode('utf-8')).hexdigest()
                                                            for policy,text in DEFAULT_SYSTEM_PROMPTS.items()},
                         system_prompts_admin_editable=True,
