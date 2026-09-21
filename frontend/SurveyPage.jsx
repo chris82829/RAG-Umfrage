@@ -223,7 +223,7 @@ export default function SurveyPage({ initial, participationId }) {
         setSearching(context.searching);
         setSearchProgress(context.searchProgress || null);
         setResultsVisible(context.resultsVisible);
-        setState(previous=>({...previous,chatCount:context.chatCount,chatCompleted:context.chatCount>=3}));
+        setState(previous=>{ const count=Math.max(previous.chatCount || 0,context.chatCount); return {...previous,chatCount:count,chatCompleted:count>=3}; });
         if(context.assistantName)setSearchAssistant(context.assistantName);
         setState(previous => { const next=suggestSearchGoal(previous,context.searchGoal); return next.answers!==previous.answers ? reviseSurvey(next,{}) : next; });
       }

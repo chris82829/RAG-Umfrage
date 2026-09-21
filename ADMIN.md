@@ -106,11 +106,14 @@ Beispiele für den Standardexport:
 | `teilnahme_id` | Pseudonyme Teilnahme-ID |
 | `teilnahme_status` | `completed` oder `in_progress` |
 | `studiengruppe` | A, B oder C; Bedeutung zusammen mit Version und Experiment auswerten |
-| `v11_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
-| `v11_score_nutzen` | Nützlichkeit des Scores für den Überblick |
-| `v11_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
-| `v11_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
-| `v11_ki_selbst_angepasst_selbstauskunft` | C-Selbstauskunft zur tatsächlichen Veränderung der vorgeschlagenen Ausgangskonfiguration |
+| `v12_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
+| `v12_score_nutzen` | Nützlichkeit des Scores für den Überblick |
+| `v12_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
+| `v12_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
+| `v12_ki_selbst_angepasst_selbstauskunft` | C-Selbstauskunft zur tatsächlichen Veränderung der vorgeschlagenen Ausgangskonfiguration |
+| `v12_system_nutzen_effektivitaet` | Effektivität der Stellensuche, Zustimmung 1–5 |
+| `v12_system_nutzen_geschwindigkeit` | Passende Stellen schneller finden, Zustimmung 1–5 |
+| `v12_system_nutzen_gesamturteil` | Gesamtnützlichkeit, Zustimmung 1–5 |
 | `ki_letzte_verwendung` | Automatisch erfasste Herkunft der angewendeten Persönlichkeit |
 
 Spaltennamen sind eindeutig, klein geschrieben und verwenden ausschließlich
@@ -121,26 +124,37 @@ technischen Namen. Das gilt für CSV und ZIP. Der geschützte serverseitige
 sein historisches Textformat für Auswahlantworten bleibt erhalten. Für numerische
 Numiqo-Auswertungen den Verwaltungsdownload verwenden.
 
-Eine Zeile entspricht einer Teilnahme. Der aktuelle A/B/C-Vergleich verwendet
-Fragebogen V11 und eigene `v11_`-Spalten. Bewertungen reichen von 1 bis 10; Ja=1
-und Nein=0. A ist das Basissystem ohne wählbare KI-Suchpersönlichkeit; sein
-separates Promptfeld ist standardmäßig leer. B verwendet den
-festen Top-Berufsberater; C gestaltet die KI-Persönlichkeit auf derselben Berufsberater-Basis selbst. Gemeinsame Ergebnis-,
-Score- und Begründungsfragen werden allen drei Gruppen gestellt. Die Fragen zur
-Persönlichkeit erhalten B/C; die Selbstauskunft zur eigenen Anpassung nur C.
-Nicht gestellte Fragen bleiben leer mit Status `skipped`.
+Eine Zeile entspricht einer Teilnahme. Der aktuelle Vergleich ist
+**`diana-abc-v5` / `diana-v12`**, mit eigenen `v12_`-Spalten. A/B/C sehen
+**17/21/22 Fragen** inklusive optionaler Fachrichtung und Feedback. Die drei
+Nutzen-Aussagen haben Werte 1–5 mit den Ankern „Stimme gar nicht zu“ bis „Stimme
+voll zu“, die anderen Bewertungsfragen bleiben 1–10. Ja=1 und Nein=0.
 
-V11 enthält A: 15, B: 20 und C: 21 sichtbare Fragen, jeweils einschließlich
-Fachrichtung und Feedback als optionale Felder. Gegenüber V9 entfallen nur
-`search_ease`, `express_search_needs`, `adapt_search_ease`,
-`template_selection_ease` und `personality_setup`. Es gibt in V11 keine separate
-Bewertung der Einfachheit der Auswahl oder Selbstgestaltung mehr.
+A hat keine wählbare Persönlichkeit; sein separates Promptfeld ist standardmäßig
+leer. B nutzt den festen Top-Berufsberater, C dessen selbst gestaltbare Variante.
+Alle verwenden gleiche Scoring-Gewichte 60/15/7/6/6/6. Unterschiedliche Prompts
+können trotzdem unterschiedliche Teilbewertungen und Rankings erzeugen.
+`v12_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; `studiengruppe`
+enthält direkt den Buchstaben. Alle zufällig C zugeteilten Teilnahmen bleiben C,
+auch ohne inhaltliche Änderung der Ausgangskonfiguration.
 
-`v11_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; die Metadatenspalte
-`studiengruppe` enthält direkt A, B oder C. `experiment_id=diana-abc-v4`
-kennzeichnet diesen Vergleich. Tatsächlich beobachtete Konfigurationsherkunft ist
-keine vierte randomisierte Gruppe. Eine Person in C bleibt auch ohne inhaltliche
-Veränderung der vorgeschlagenen Ausgangskonfiguration in der primären Auswertung C.
+V12 erhebt keine Bewertungsschwerpunkte mehr. Die frühere Rangfolgenfrage wird
+nicht umbenannt oder überschrieben: die neue Frage zur Formulierung der Begründungen
+steht in `v12_ki_wirkung_sprachstil_begruendungen_verstaendnis` (technisch
+`v12_personality_clarity_explanations`). Alte Antwortfelder sind seit V12 deprecated
+und bleiben in den jeweiligen historischen Versionen erhalten. Nicht gestellte
+Fragen bleiben leer mit Status `skipped`.
+
+Die Startmigration `survey_migrations.py` ergänzt drei generierte INTEGER-Spalten
+für V12-Nutzenwerte in Antworten und Entwürfen. Sie werden aus den versionierten
+JSON-Antworten abgeleitet und folgen damit auch Verwaltungskorrekturen automatisch.
+Der Bereich 1–5 wird geprüft; fehlende und nicht beurteilbare Werte bleiben NULL.
+Die Migration ist wiederholt ausführbar und löscht keine historischen Daten.
+Standalone: `python survey_migrations.py /pfad/zur/datenbank.sqlite3`.
+
+Historische V11-Antworten behalten `v11_`-Spalten und `diana-abc-v4`, einschließlich
+des 1–10-Einzelitems `system_usefulness`, der früheren Rangfolgenfrage und der
+Bewertungsschwerpunkte. Sie werden nicht in die neue Skala überführt.
 
 Historische V10-Antworten behalten `v10_`-Spalten und `diana-abc-v3`: A war die
 feste sachliche Standardberatung, B bot Top-Berufsberater oder Fachexperte und C
@@ -168,7 +182,7 @@ entfällt in den neueren Versionen.
 
 Identische historische V2/V3-Fragen stehen in `v2_v3_`-Spalten, die vier zusätzlichen
 V3-Nützlichkeitsfragen in `v3_`-Spalten und V1-Antworten in `v1_`-Spalten.
-Spätere Versionen bleiben separat in `v4_` bis `v11_`.
+Spätere Versionen bleiben separat in `v4_` bis `v12_`.
 Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
 Das Codebuch enthält den vollständigen Originalwortlaut, Antwortcodes und Originalcodes,
 Skalenenden, fehlende Werte, Filterführung und Bewertungsrichtung. Die Aufwandsfrage ist
@@ -179,8 +193,8 @@ Formelähnlicher Freitext erhält ein vorangestelltes Apostroph zum Schutz beim
 
 ### Aggregierte Nutzung und Laufzeiten
 
-Seit V9 werden abgeschlossene Serveroperationen als Summen erfasst. Keine Rohtexte,
-IP-Adressen, Gerätekennungen oder einzelnen Ereignisse werden dafür gespeichert.
+Seit V9 werden abgeschlossene Serveroperationen als Summen erfasst. Für diese Summen werden keine Rohtexte, IP-Adressen oder Gerätekennungen gespeichert.
+V12 ergänzt davon getrennte Interaktionsereignisse, wie unten beschrieben.
 
 | Spalten | Bedeutung |
 | --- | --- |
@@ -203,22 +217,46 @@ diese Messwerte.
 Die Operationszähler belegen außerdem nicht zuverlässig, ob Suchwünsche im Chat
 verändert wurden. Die entsprechende Ja/Nein-Frage bleibt separat bestehen.
 
-### Teilnahmefluss im Auswertungspaket
+### Einzelereignisse ab V12
 
-`teilnahmefluss.csv` enthält **ungefilterte** aggregierte Fallzahlen des aktuell
-aktiven Studienbestands, unabhängig von den Filtern der Einzelantworten. Je
-Experimentkennung und Gruppe werden zugeteilte Personen, Personen mit gespeicherten
-Antworten, abgeschlossene Personen und Personen mit einem gültigen Primärwert
-der jeweiligen Kohorte gezählt (aktuell V11/v4, historische V10/v3 und V9/v2 getrennt). Jede zugeteilte Einwilligungskennung zählt höchstens einmal; bereits
-beantwortete Primärfragen aus unvollständigen Umfragen zählen als gültiger Wert.
-Antwortversionen und ursprünglicher Gruppenbuchstabe sind dokumentiert. Frühere
-Experimente werden nicht vermischt. Widerrufene oder gelöschte Teilnahmen fehlen;
-die Datei ist deshalb ein aktueller Bestandsbericht und kein vollständiger
-Rekrutierungsverlauf. Die aktuelle primäre Auswertung verwendet `v11_system_nutzen`.
-Für sie abgeschlossene und unvollständige Antworten gemeinsam exportieren.
-Das Offline-Skript muss auf V11/`diana-abc-v4` eingestellt werden; V10/`diana-abc-v3`
-und V9/`diana-abc-v2` werden separat ausgewertet.
-Aufrufe: [research/README.md](research/README.md).
+**Nutzungsereignisse als CSV** lädt `diana_nutzungsereignisse.csv` herunter.
+Der Download verwendet dieselben ID-, Versions-, Status-, Gruppen- und Promptfilter
+wie der Antwortexport. Eine Zeile ist ein Ereignis, keine Teilnahme; über
+`participation_id` mit `teilnahme_id` aus dem Antwortexport verbinden. Der Endpoint
+`/api/admin/telemetry-export` verlangt denselben Verwaltungszugang.
+
+Ereignisse sind sichtbare Begründungsintervalle, Aufklappen, Stellendetails und
+erfolgreiche Chatdurchgänge. Nicht sichtbare Tabs/Ansichten pausieren die Messung;
+fehlende Ereignisse sind kein sicherer Nichtnutzungsnachweis. Überlappende Intervalle
+nicht zur Sitzungsdauer addieren. Details, Metadaten und Löschwege:
+[STUDY-TELEMETRY.md](STUDY-TELEMETRY.md). Separate Testseiten schreiben keine
+Studienereignisse. Historische Zeiträume werden nicht rückwirkend aufgefüllt.
+
+### Teilnahmefluss und vorläufiger V12-Endpunkt
+
+`teilnahmefluss.csv` enthält **ungefilterte** aggregierte Zahlen des aktiven
+Studienbestands, unabhängig vom Filter der Einzelantworten. Eine zugeteilte
+Einwilligungskennung zählt höchstens einmal. Experiment, ursprüngliche Gruppe,
+zugeteilte/abgeschlossene Teilnahmen und Antwortversionen bleiben getrennt.
+Widerrufene/gelöschte Fälle fehlen; dies ist ein Bestandsbericht, kein vollständiger
+Rekrutierungsverlauf.
+
+`primaerwert_v12_vollstaendig_anzahl` zählt Personen mit **drei numerischen Antworten
+1–5** in den neuen Nutzenitems, auch bei insgesamt unvollständiger Umfrage.
+Historische gültige V9/V10/V11-Einzelitems haben eigene Zähler. Für die geplante
+V12-Auswertung abgeschlossene und unvollständige Antworten gemeinsam exportieren.
+Vorgesehen ist vorläufig das Mittel aus genau drei gültigen Items; bei einem
+fehlenden Item bleibt der Endpunkt fehlend. Die Verwaltung zeigt Einzelitems und
+berechnet diesen Mittelwert nicht automatisch. Das Instrument ist eine angepasste,
+noch nicht validierte Operationalisierung.
+
+**`research/analyze_primary.py` unterstützt V12 nicht.** Es bleibt ein Werkzeug
+für die historischen V9–V11-Einzelitems. V12-Items nicht in alte Spalten umbenennen
+oder 1–5-Werte als 1–10-Werte behandeln. Analyseentscheidung und Stichprobenplanung
+vor der Haupterhebung festschreiben: [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md).
+Die separate [Relevanzprüfung](research/human_relevance/README.md) bereitet
+menschliche Urteile vor; echte aktuelle Urteile und Forschungsergebnisse liegen
+dafür noch nicht vor.
 
 ### Automatische Herkunft der KI-Persönlichkeit
 
@@ -228,7 +266,7 @@ wenn dessen Werte zufällig einer Vorlage entsprechen. Es beweist nicht, dass
 Eigenschaften oder Gewichte inhaltlich verändert wurden. Die weiterhin erhobene
 Ja/Nein-Selbstauskunft zur Anpassung ist daher kein identisches Duplikat dieser Daten:
 
-In V11 ist für B regulär `template`/`career` und für C `custom` zu erwarten; der
+In V11/V12 ist für B regulär `template`/`career` und für C `custom` zu erwarten; der
 Fachexperten-Code bleibt ausschließlich für historische Datensätze lesbar.
 
 
@@ -361,9 +399,9 @@ und erfasste Systemstände gemeinsam prüfen; Ergebnisse nicht ungeprüft zusamm
 ## Diagramme und Einzelantworten
 
 Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
-bei 1–10-Bewertungen außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
+bei numerischen Bewertungen (1–5 beziehungsweise 1–10) außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
 farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
-Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V11/abgeschlossen;
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V12/abgeschlossen;
 ältere Antworten lassen sich mit dem Fragebogenfilter auswählen.
 Fragebogenversionen und Experimentkennungen werden nicht zusammengefasst.
 Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene

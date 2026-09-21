@@ -119,6 +119,10 @@ def register_telemetry(app, privacy, surveys, sessions, request_notice, consent_
             # or a client-supplied description that could contain personal text.
             if not any(str(job.get('id')) == event.metadata.job_id for job in jobs):
                 return jsonify(error={'code': 'telemetry_job_unknown', 'message': 'Die Stelle gehört nicht zur aktuellen Suche.'}), 400
+            rank = event.metadata.rank
+            if rank > len(jobs) or str(jobs[rank - 1].get('id')) != event.metadata.job_id:
+                return jsonify(error={'code': 'telemetry_ranking_changed',
+                    'message': 'Die Rangfolge hat sich inzwischen geändert.'}), 409
             status = telemetry.record_event(digest, event, db)
         return jsonify(status=status), 429 if status == 'limit' else 200
 

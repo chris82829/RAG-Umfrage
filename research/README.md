@@ -1,5 +1,22 @@
 # Forschungsauswertung von DIANA
 
+## Aktueller Stand V12
+
+Die folgenden Pilotberichte bleiben historische Entwicklungsdaten und wurden
+nicht unter `diana-abc-v5` / `diana-v12` erhoben. Die neue
+[menschliche Relevanzprüfung](human_relevance/README.md) besteht derzeit aus
+Export-/Auswertungswerkzeugen ohne aktuelle Systemausgaben und ohne menschliche
+Ratergebnisse. Ihre mitgelieferten Demonstrationswerte sind synthetische Testdaten.
+
+**`analyze_primary.py` ist nicht für V12 geeignet:** Das Skript unterstützt nur
+V9/V10/V11 und deren 1–10-Einzelitem `system_usefulness`; sein Standard bleibt die
+historische V11-Kohorte. Nicht durch Umbenennen von V12-Spalten umgehen.
+Für den vorläufigen V12-Mittelwert aus drei vollständigen 1–5-Items ist ein separat
+zu prüfendes Auswerteskript erforderlich. [Protokollentwurf](../STUDY-PROTOCOL.md)
+und [V12-Änderungen](../V12-CHANGES.md) beschreiben den neuen Stand.
+
+## Historische Forschungsläufe
+
 Der vollständige Lauf und die erste Übersicht für **0, 1, 2 und 3 Nachrichten**
 stehen im [Ergebnisbericht](persona-study-2026-09-17/RESULTS.md), mit
 [Einzelwerten](persona-study-2026-09-17/run/analysis/report.md) und
@@ -52,6 +69,6 @@ Der unveränderte Entfernungsnachweis steht in
 nicht mit dem neuen Lauf vermischt.
 
 Die separaten Werkzeuge für echte Umfrageantworten bleiben erhalten:
-`analyze_primary.py` berechnet den vorab definierten Nutzerstudienvergleich,
+`analyze_primary.py` berechnet den historischen V9–V11-Nutzerstudienvergleich,
 `plan_sample_size.py` unterstützt die Stichprobenplanung. Abhängigkeiten stehen
 in `requirements.txt`. Beide Skripte arbeiten lokal und führen keine KI-Aufrufe aus.
