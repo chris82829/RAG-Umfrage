@@ -14,6 +14,12 @@ Welchen zusätzlichen wahrgenommenen Nutzen und Aufwand verursacht eine selbst g
 
 Alle Gruppen verwenden denselben Modell-Snapshot, Stellenbestand, BM25/E5/RRF-Retrieval, Top-20-Pool und dieselbe numerische Bewertungsformel (60/15/7/6/6/6 Prozent: fachliche Passung, Profilpräferenzen, fachliche Tiefe, Lernen/Entwicklung, Gestaltung/Innovation, Klarheit). Scores und Begründungen werden in allen Gruppen gezeigt; zuerst zehn Stellen, anschließend auf Wunsch bis zu 20. Keine Mindestscore-Schwelle.
 
+Seit dem 22.09.2026 ist der aktive Snapshot `gpt-5.4-nano-2026-03-17`, weiterhin mit
+`reasoning.effort=none`. Dies gilt für A/B/C und die separaten Testseiten. Der vorherige
+Stand mit `gpt-5.4-2026-03-05` bleibt in Git und historischen Release-Metadaten erhalten;
+seine Messwerte sind kein Qualitäts- oder Laufzeitnachweis für Nano. Der Modellwechsel
+erzeugt einen neuen Systemstand und muss bei der späteren Auswertung berücksichtigt werden.
+
 Gleiche numerische Gewichte erzwingen keine identischen Teilbewertungen, Rankings oder Antwortzeiten. Die Prompts beeinflussen die generative Bewertung; aktualisierte Suchangaben können den Pool oder dessen Reihenfolge verändern. B gegen A ist ein **Paketvergleich** aus Berufsberatungsauftrag, RAG-Instruktion und Gesprächsinitiative. C gegen B untersucht das Angebot zusätzlicher Selbstgestaltung. Wer C zugeteilt wurde, bleibt C, auch wenn nichts geändert wurde. Ein Vergleich innerhalb C nach tatsächlich berichteter Anpassung ist durch Selbstselektion verzerrt. Die frühere Filter-/Stichwortsuchbefragung ist Kontext, kein zeitgleich randomisierter Kontrollarm.
 
 Die tatsächlichen numerischen Gewichte werden je Bewertung separat vom Prompttext protokolliert. Ein bekannter überholter B-Prompt mit abweichenden Prozentzahlen wird für neue Promptfassungen bereinigt; alte unveränderliche Teilnahmesnapshots bleiben historische Fassungen. Das Erfassungsfeld allein beweist keine richtige Promptfassung: zusätzlich werden Promptrevision und -Hash dokumentiert und der aktive Prompt auf widersprüchliche Gewichtung geprüft.

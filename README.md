@@ -861,17 +861,19 @@ OpenAI wird serverseitig über die Responses API mit Pydantic Structured Outputs
 `store=False`, 90 Sekunden Timeout, einem Retry und begrenzter Ausgabelänge
 aufgerufen. Das Ausgabelimit beträgt 10.000 Tokens für bis zu 20 vollständige
 Bewertungen, sonst 6.000; der Chattext bleibt auf 900 Zeichen begrenzt.
-Alle OpenAI-Aufrufe verwenden den festen Snapshot **`gpt-5.4-2026-03-05`**.
+Alle aktuellen OpenAI-Aufrufe verwenden seit dem 22.09.2026 den festen Snapshot
+**`gpt-5.4-nano-2026-03-17`** (GPT-5.4 nano), einheitlich in A, B und C
+sowie auf den Testseiten. Historische Messungen mit GPT-5.4 bleiben als solche erhalten.
 Der Modellname wird nicht automatisch auf einen anderen Snapshot umgestellt.
 Neue Teilnahmen werden dem verwendeten Systemstand zugeordnet; alte Antworten
 ohne Nachweis bleiben als unbekannt gekennzeichnet. Details: [ADMIN.md](ADMIN.md).
-[GPT-5.4](https://developers.openai.com/api/docs/models/gpt-5.4),
+[GPT-5.4 nano](https://developers.openai.com/api/docs/models/gpt-5.4-nano),
 [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
 
 Alle KI-Aufrufe verwenden jetzt zentral **`reasoning.effort=none`**: neue fachliche
 Bewertungen, Persona-Erzeugung, Profilverfeinerung, Chatplanung sowie Begründungen
 aus bereits gespeicherten Teilbewertungen. Diese Einstellung wird von
-[GPT-5.4 offiziell unterstützt](https://developers.openai.com/api/docs/models/gpt-5.4).
+[GPT-5.4 nano offiziell unterstützt](https://developers.openai.com/api/docs/models/gpt-5.4-nano).
 Die bisherigen Werte `medium` und `low` werden nicht mehr gesetzt. Die Scores
 werden bei gültigen gespeicherten Teilbewertungen weiterhin aus dem Cache berechnet.
 Structured Outputs, Streaming, alle 20 Bewertungen, die Begründungen und die

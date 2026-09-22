@@ -19,7 +19,7 @@ from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
 
 
-MODEL = "gpt-5.4-2026-03-05"
+MODEL = "gpt-5.4-nano-2026-03-17"
 REASONING_EFFORT = "none"
 REQUEST_TIMEOUT_SECONDS = 90.0
 MAX_OUTPUT_TOKENS = 6000
