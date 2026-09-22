@@ -13,7 +13,7 @@ from pathlib import Path
 
 import click
 from dotenv import load_dotenv
-from flask import Flask, Response, jsonify, request, send_from_directory, stream_with_context
+from flask import Flask, Response, g, jsonify, request, send_from_directory, stream_with_context
 from flask_cors import CORS
 from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException
@@ -29,10 +29,11 @@ from advisor import AdvisorConfig, resolve_advisor
 from persona_mlds import MLDSError, advisor_to_mlds, advisor_from_mlds, load_templates, load_neutral_advisor
 from study_usage import StudyPersonalityUsage, normalize_selection
 from study_metrics import StudyOperationMetrics
+from study_context import StudyContext, context_snapshot
 from study_telemetry import register_telemetry
 from study_progress import StudyChatRequired, chat_progress, require_study_chat, has_experience_answers
 from study_chat_limit import StudyChatLimit, ChatMessageLimit, ChatReservationExpired, MAX_USER_CHAT_MESSAGES
-from study_assignment import StudyAssignments, EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID, PREVIOUS_QUESTIONNAIRE_EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
+from study_assignment import StudyAssignments, EXPERIMENT_ID, PREVIOUS_FRAMEWORK_EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID, PREVIOUS_QUESTIONNAIRE_EXPERIMENT_ID, personality_policy, presentation_policy, advisor_for_policy, PersonalityPolicyError
 from test_access import test_notice, TEST_PURPOSES
 from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraftRequest, SURVEY_VERSION
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice, token_hash
@@ -215,6 +216,8 @@ def create_app(config=None, *, retriever=None, llm=None):
     privacy = PrivacyStore(db_path)
     personality_usage = StudyPersonalityUsage(db_path)
     operation_metrics = StudyOperationMetrics(db_path)
+    study_context = StudyContext(db_path)
+    app.extensions['study_context'] = study_context
     chat_limit = StudyChatLimit(db_path)
     system_prompts = SystemPromptStore(db_path)
     notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
@@ -242,6 +245,8 @@ def create_app(config=None, *, retriever=None, llm=None):
             yield
         except Exception:
             status = 'error'
+            if not getattr(g, 'study_error_stage', None):
+                g.study_error_stage = phase
             raise
         finally:
             performance_logger.info(json.dumps({
@@ -282,7 +287,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         if test_arm():
             return system_prompts.snapshot(policy)
         assigned = assigned or request_assignment()
-        if assigned and assigned.get('experiment_id') in (EXPERIMENT_ID, PREVIOUS_QUESTIONNAIRE_EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID):
+        if assigned and assigned.get('experiment_id') in (EXPERIMENT_ID, PREVIOUS_FRAMEWORK_EXPERIMENT_ID, PREVIOUS_QUESTIONNAIRE_EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID):
             return system_prompts.participant_snapshot(
                 token_hash(consent_token()), assigned['experiment_id'], policy
             )
@@ -341,13 +346,40 @@ def create_app(config=None, *, retriever=None, llm=None):
                 return True
         return False
 
-    def record_metrics(db, digest, timings, success):
+    def operation_id():
+        if not getattr(g, 'study_operation_id', None):
+            g.study_operation_id = secrets.token_hex(16)
+        return g.study_operation_id
+
+    def advance_study(step):
+        if app.config['PRIVACY_REQUIRED'] and not test_arm():
+            with surveys.connect() as db:
+                db.execute('BEGIN IMMEDIATE')
+                digest = privacy.require(consent_token(), request_notice(), db)
+                study_context.advance(digest, step, db)
+
+    def diagnostic_code(failure):
+        for failure_type, code in ((LLMUnavailable, 'llm_unavailable'),
+                (EmbeddingUnavailable, 'embedding_unavailable'),
+                (SessionConflict, 'session_conflict'),
+                (ChatReservationExpired, 'chat_reservation_expired'),
+                (ConsentRequired, 'consent_required'),
+                (ValidationError, 'validation_error'),
+                (GeneratorExit, 'client_disconnected'), (HTTPException, 'http_error')):
+            if isinstance(failure, failure_type):
+                return code
+        return 'internal_error'
+
+    def record_metrics(db, digest, timings, success, failure=None):
         now = time.monotonic()
         for operation, started in (timings or {}).items():
             operation_metrics.record_operation(digest, operation, success,
-                max(0, round((now - started) * 1000)), db)
+                max(0, round((now - started) * 1000)), db,
+                error_code=diagnostic_code(failure) if not success else None,
+                error_stage=getattr(g, 'study_error_stage', operation),
+                operation_id=operation_id())
 
-    def failed_metrics(timings):
+    def failed_metrics(timings, failure=None):
         if not timings or not app.config['PRIVACY_REQUIRED'] or test_arm():
             return
         # Diagnostics must not replace the actual request error or resurrect a
@@ -356,15 +388,15 @@ def create_app(config=None, *, retriever=None, llm=None):
             with surveys.connect() as db:
                 db.execute('BEGIN IMMEDIATE')
                 digest = privacy.require(consent_token(), request_notice(), db)
-                record_metrics(db, digest, timings, False)
+                record_metrics(db, digest, timings, False, failure)
         except Exception:
             app.logger.warning('Operation statistics could not be recorded.')
 
     def measured_operation(operation, timings):
         try:
             return (yield from operation)
-        except (Exception, GeneratorExit):
-            failed_metrics(timings)
+        except (Exception, GeneratorExit) as failure:
+            failed_metrics(timings, failure)
             raise
         finally:
             operation.close()
@@ -387,11 +419,16 @@ def create_app(config=None, *, retriever=None, llm=None):
                     chat_limit.finish(digest, chat_reservation['id'], db)
                 releases.mark_run(digest, db)
                 record_metrics(db, digest, timings, True)
+                if (timings or {}).get('search') is not None:
+                    study_context.advance(digest, 'first_search', db)
                 if (timings or {}).get('chat') is not None:
                     telemetry.record_chat_turn(digest, record_id, db)
+                    study_context.advance(digest, 'chat', db)
                 if selection is not None:
                     personality_usage.mark_applied(digest, selection, db)
             elif not db.execute('SELECT 1 FROM survey_responses WHERE submission_id=?', (record_id,)).fetchone():
+                if completed or requires_chat:
+                    study_context.advance(digest, 'questionnaire_completed' if completed else 'questionnaire_started', db)
                 releases.capture_response(digest, record_id, db, completed=completed)
         return attach
 
@@ -480,8 +517,32 @@ def create_app(config=None, *, retriever=None, llm=None):
         if error:
             return error
         active_notice = request_notice()
+        had_receipt = privacy.receipt(body.token) is not None
         privacy.accept(body, active_notice)
+        if active_notice.get('purpose', 'study') == 'study' and not had_receipt:
+            with surveys.connect() as db:
+                db.execute('BEGIN IMMEDIATE')
+                digest = privacy.require(body.token, active_notice, db)
+                assigned = db.execute('SELECT experiment_id FROM study_assignments WHERE token_hash=?', (digest,)).fetchone()
+                if not assigned or assigned[0] == EXPERIMENT_ID:
+                    study_context.enroll(digest, db, experiment_id=EXPERIMENT_ID, questionnaire_version=SURVEY_VERSION)
         return jsonify(accepted=True, version=active_notice['version'], receipt=privacy.receipt(body.token))
+
+    @app.route('/api/study-context', methods=['GET', 'PUT'])
+    def participant_study_context():
+        with surveys.connect() as db:
+            db.execute('BEGIN IMMEDIATE' if request.method == 'PUT' else 'BEGIN')
+            digest = privacy.require(consent_token(), request_notice(), db)
+            if test_arm():
+                return jsonify(status='ignored_test', study_context={})
+            if request.method == 'PUT':
+                payload = request.get_json(silent=True)
+                if (not isinstance(payload, dict) or set(payload) != {'viewport_class'}
+                        or payload['viewport_class'] not in ('mobile', 'desktop')):
+                    return error_response({'code':'validation_error',
+                        'message':'Nur die Darstellungsart mobile oder desktop ist zulässig.'}, 400)
+                study_context.viewport(digest, payload['viewport_class'], db)
+            return jsonify(study_context=context_snapshot(digest, db))
 
     @app.delete('/api/privacy/consent')
     def withdraw_consent():
@@ -519,10 +580,11 @@ def create_app(config=None, *, retriever=None, llm=None):
             consent_token(),
             on_assign=lambda digest, current, db: system_prompts.participant_snapshot(
                 digest, current['experiment_id'], current['personality_policy'], db=db
-            ) if current.get('experiment_id') in (EXPERIMENT_ID, PREVIOUS_QUESTIONNAIRE_EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID) else None,
+            ) if current.get('experiment_id') in (EXPERIMENT_ID, PREVIOUS_FRAMEWORK_EXPERIMENT_ID, PREVIOUS_QUESTIONNAIRE_EXPERIMENT_ID, PREVIOUS_PERSONALITY_EXPERIMENT_ID) else None,
         )
         with surveys.connect() as db:
             assigned['chat_progress'] = chat_progress(token_hash(consent_token()), db)
+            assigned['study_context'] = context_snapshot(token_hash(consent_token()), db)
         return jsonify(assigned)
 
     @app.errorhandler(StudyChatRequired)
@@ -539,6 +601,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             if test_arm() or not assignments.get(consent_token()):
                 raise ConsentRequired()
             progress = require_study_chat(digest, db)
+            study_context.advance(digest, 'questionnaire_started', db)
         return jsonify(status='ok', chat_progress=progress)
 
     @app.put('/api/survey-drafts')
@@ -699,6 +762,14 @@ def create_app(config=None, *, retriever=None, llm=None):
                         yield {'type': 'assistant_text', 'text': event['data']['assistant_message']}
             finally:
                 steps.close()
+        # Evidence comes from the actual numerical scoring function, never from
+        # the persona prompt or a frontend claim. It is stored per calculation.
+        scoring = reranked.get('_scoring_metadata')
+        if scoring and app.config['PRIVACY_REQUIRED'] and not test_arm():
+            with surveys.connect() as db:
+                db.execute('BEGIN IMMEDIATE')
+                digest = privacy.require(consent_token(), request_notice(), db)
+                study_context.record_scoring(digest, scoring, operation_id(), db)
         lookup = {item['job']['id']: item for item in candidates}
         cards = []
         for result in reranked['rankings']:
@@ -794,6 +865,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         selection, error = checked_selection(advisor, body.advisor_selection)
         if error:
             return error
+        advance_study('profile')
         timings = {'search': time.monotonic()}
         try:
             policy = request_policy()
@@ -807,8 +879,9 @@ def create_app(config=None, *, retriever=None, llm=None):
                     releases.mark_run(digest, db)
                     personality_usage.mark_applied(digest, selection, db)
                     record_metrics(db, digest, timings, True)
-        except Exception:
-            failed_metrics(timings)
+                    study_context.advance(digest, 'first_search', db)
+        except Exception as failure:
+            failed_metrics(timings, failure)
             raise
         return jsonify(public_state(result))
 
@@ -824,6 +897,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         selection, error = checked_selection(search_advisor, body.advisor_selection)
         if error:
             return error
+        advance_study('profile')
         timings = {'search': time.monotonic()}
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor,

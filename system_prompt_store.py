@@ -66,7 +66,7 @@ anhand belegten Gestaltungsspielraums; clarity anhand konkreter Aufgaben und
 Erwartungen. Fehlende Belege in ergänzenden Komponenten sind null. Gründe müssen
 kurz, konkret und faktentreu sein. Bereits gelieferte fixed_components bleiben
 unverändert. Die feste Gewichtung lautet: technical_fit 60 %, preferences_fit
-15 %, technical_depth 3 %, learning 17 %, innovation 3 %, clarity 2 %.
+15 %, technical_depth 7 %, learning 6 %, innovation 6 %, clarity 6 %.
 """.strip(),
     "custom_career": """
 Du bist eine selbst gestaltbare KI-Suchpersönlichkeit mit der fachlichen Grundlage
@@ -129,6 +129,19 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+
+def validate_scoring_weights(text: str) -> None:
+    """Reject explicit numeric component weights contradicting the server rule.
+
+    This is a structural consistency check, not an interpretation of arbitrary
+    natural-language instructions. The calculation is always server controlled.
+    """
+    from advisor import SCORING_WEIGHTS
+    for key, actual in SCORING_WEIGHTS.items():
+        for value in re.findall(r"\b" + re.escape(key) + r"\s*(?:[:=]\s*)?(\d+(?:[.,]\d+)?)\s*%", text):
+            if float(value.replace(',', '.')) != actual:
+                raise ValueError(f"Die Gewichtung für {key} muss {actual} % betragen. Die Studiengewichte sind fest.")
+
 def _validated_text(policy: str, value) -> str:
     if not isinstance(value, str):
         raise ValueError("Der Systemprompt muss Text sein.")
@@ -138,12 +151,14 @@ def _validated_text(policy: str, value) -> str:
             raise ValueError(
                 f"Der A-Systemprompt darf höchstens {MAX_PROMPT_CHARS} Zeichen lang sein."
             )
+        validate_scoring_weights(value)
         return value
     if not MIN_PROMPT_CHARS <= len(value) <= MAX_PROMPT_CHARS:
         raise ValueError(
             f"Jeder Systemprompt muss zwischen {MIN_PROMPT_CHARS} und "
             f"{MAX_PROMPT_CHARS} Zeichen lang sein."
         )
+    validate_scoring_weights(value)
     return value
 
 
@@ -186,6 +201,17 @@ class SystemPromptStore:
                     "INSERT OR IGNORE INTO system_prompts VALUES (?, ?, 1, ?, ?)",
                     (policy, text, _sha256(text), now),
                 )
+            # Repair only the exact known obsolete B-weight sentence, keeping all
+            # administrator edits and immutable participant snapshots untouched.
+            old = "15 %, technical_depth 3 %, learning 17 %, innovation 3 %, clarity 2 %."
+            new = "15 %, technical_depth 7 %, learning 6 %, innovation 6 %, clarity 6 %."
+            saved = db.execute("SELECT text FROM system_prompts WHERE policy='career_fixed'").fetchone()[0]
+            if old in saved:
+                corrected = saved.replace(old, new)
+                db.execute("UPDATE system_prompts SET text=?, revision=revision+1, sha256=?, updated_at=? WHERE policy='career_fixed'",
+                           (corrected, _sha256(corrected), now))
+                db.execute("UPDATE system_prompt_state SET revision=revision+1 WHERE singleton=1")
+
 
     def _read(self, db) -> dict:
         global_revision = db.execute(

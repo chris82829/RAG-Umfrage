@@ -25,7 +25,9 @@ V11_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v
 V11_SURVEY_FIELDS = [field for group in [V11_SURVEY_DEFINITION['demographics'], *V11_SURVEY_DEFINITION['categories']] for field in group['fields']]
 V12_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v12.json').read_text())
 V12_SURVEY_FIELDS = [field for group in [V12_SURVEY_DEFINITION['demographics'], *V12_SURVEY_DEFINITION['categories']] for field in group['fields']]
-SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v13.json').read_text())
+V13_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v13.json').read_text())
+V13_SURVEY_FIELDS = [field for group in [V13_SURVEY_DEFINITION['demographics'], *V13_SURVEY_DEFINITION['categories']] for field in group['fields']]
+SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v14.json').read_text())
 SURVEY_VERSION = SURVEY_DEFINITION['version']
 SURVEY_FIELDS = [field for group in [SURVEY_DEFINITION['demographics'], *SURVEY_DEFINITION['categories']]
                  for field in group['fields']]
@@ -38,7 +40,7 @@ V5_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v5
 V5_SURVEY_FIELDS = [field for group in [V5_SURVEY_DEFINITION['demographics'], *V5_SURVEY_DEFINITION['categories']] for field in group['fields']]
 V6_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v6.json').read_text())
 V6_SURVEY_FIELDS = [field for group in [V6_SURVEY_DEFINITION['demographics'], *V6_SURVEY_DEFINITION['categories']] for field in group['fields']]
-VERSIONED_FIELDS = {'diana-v4': V4_SURVEY_FIELDS, 'diana-v5': V5_SURVEY_FIELDS, 'diana-v6': V6_SURVEY_FIELDS, 'diana-v7': V7_SURVEY_FIELDS, 'diana-v8': V8_SURVEY_FIELDS, 'diana-v9': V9_SURVEY_FIELDS, 'diana-v10': V10_SURVEY_FIELDS, 'diana-v11': V11_SURVEY_FIELDS, 'diana-v12': V12_SURVEY_FIELDS, SURVEY_VERSION: SURVEY_FIELDS}
+VERSIONED_FIELDS = {'diana-v4': V4_SURVEY_FIELDS, 'diana-v5': V5_SURVEY_FIELDS, 'diana-v6': V6_SURVEY_FIELDS, 'diana-v7': V7_SURVEY_FIELDS, 'diana-v8': V8_SURVEY_FIELDS, 'diana-v9': V9_SURVEY_FIELDS, 'diana-v10': V10_SURVEY_FIELDS, 'diana-v11': V11_SURVEY_FIELDS, 'diana-v12': V12_SURVEY_FIELDS, 'diana-v13': V13_SURVEY_FIELDS, SURVEY_VERSION: SURVEY_FIELDS}
 
 MISSING_CODES = {'not_used', 'not_assessable', 'not_specified'}
 
@@ -167,6 +169,8 @@ SurveySubmissionV12 = create_model('SurveySubmissionV12', __base__=ConditionalSu
 
 SurveySubmissionV13 = create_model('SurveySubmissionV13', __base__=ConditionalSurvey, **_submission_fields('diana-v13'))
 
+SurveySubmissionV14 = create_model('SurveySubmissionV14', __base__=ConditionalSurvey, **_submission_fields('diana-v14'))
+
 def _draft_fields(version, model):
     fields = {}
     for field in VERSIONED_FIELDS[version]:
@@ -188,7 +192,8 @@ DraftAnswersV10 = create_model('DraftAnswersV10', __base__=APIModel, **_draft_fi
 DraftAnswersV11 = create_model('DraftAnswersV11', __base__=APIModel, **_draft_fields('diana-v11', SurveySubmissionV11))
 DraftAnswersV12 = create_model('DraftAnswersV12', __base__=APIModel, **_draft_fields('diana-v12', SurveySubmissionV12))
 DraftAnswersV13 = create_model('DraftAnswersV13', __base__=APIModel, **_draft_fields('diana-v13', SurveySubmissionV13))
-WaitingField = Literal['age_group', 'gender', 'education', 'study_field', 'search_goal', 'personality_customized', 'personality_setup', 'template_selection_ease', 'job_portal_experience', 'ai_chat_experience']
+DraftAnswersV14 = create_model('DraftAnswersV14', __base__=APIModel, **_draft_fields('diana-v14', SurveySubmissionV14))
+WaitingField = Literal['previous_participation', 'age_group', 'gender', 'education', 'study_field', 'search_goal', 'personality_customized', 'personality_setup', 'template_selection_ease', 'job_portal_experience', 'ai_chat_experience']
 
 
 class SurveyDraftV4(APIModel):
@@ -233,7 +238,7 @@ class SurveyDraftV9(SurveyDraftV4):
 
     @model_validator(mode='after')
     def waiting_questions_are_factual(self):
-        allowed = {field['name'] for field in V9_SURVEY_DEFINITION['demographics']['fields']} | {'search_goal'}
+        allowed = {field['name'] for field in VERSIONED_FIELDS[self.version] if field.get('beforeSystem')} | {field['name'] for field in V9_SURVEY_DEFINITION['demographics']['fields']} | {'search_goal'}
         if not set(self.waiting_answered) <= allowed:
             raise ValueError('Während der Wartezeit sind nur Sachangaben vorgesehen.')
         return self
@@ -260,13 +265,18 @@ class SurveyDraftV13(SurveyDraftV12):
 
     @model_validator(mode='after')
     def active_waiting_fields_only(self):
-        allowed={field['name'] for field in SURVEY_FIELDS if field.get('beforeSystem')} | {'search_goal'}
+        allowed={field['name'] for field in VERSIONED_FIELDS[self.version] if field.get('beforeSystem')} | {'search_goal'}
         if not set(self.waiting_answered) <= allowed:
             raise ValueError('Veraltete Angaben für die Wartezeit sind nicht mehr verfügbar.')
         return self
 
 
-class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV13 | SurveyDraftV12 | SurveyDraftV11 | SurveyDraftV10 | SurveyDraftV9 | SurveyDraftV8 | SurveyDraftV7 | SurveyDraftV6 | SurveyDraftV5 | SurveyDraftV4, Field(discriminator='version')]]):
+class SurveyDraftV14(SurveyDraftV13):
+    version: Literal['diana-v14']
+    answers: DraftAnswersV14
+
+
+class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV14 | SurveyDraftV13 | SurveyDraftV12 | SurveyDraftV11 | SurveyDraftV10 | SurveyDraftV9 | SurveyDraftV8 | SurveyDraftV7 | SurveyDraftV6 | SurveyDraftV5 | SurveyDraftV4, Field(discriminator='version')]]):
     pass
 
 
@@ -274,7 +284,7 @@ class SurveyDraftRequest(RootModel[Annotated[SurveyDraftV13 | SurveyDraftV12 | S
 SurveyDraft = SurveyDraftV4
 
 
-class SurveyRequest(RootModel[Annotated[SurveySubmissionV13 | SurveySubmissionV12 | SurveySubmissionV11 | SurveySubmissionV10 | SurveySubmissionV9 | SurveySubmissionV8 | SurveySubmissionV7 | SurveySubmissionV6 | SurveySubmissionV5 | SurveySubmissionV4 | SurveySubmission | SurveySubmissionV2 | LegacySurveySubmission,
+class SurveyRequest(RootModel[Annotated[SurveySubmissionV14 | SurveySubmissionV13 | SurveySubmissionV12 | SurveySubmissionV11 | SurveySubmissionV10 | SurveySubmissionV9 | SurveySubmissionV8 | SurveySubmissionV7 | SurveySubmissionV6 | SurveySubmissionV5 | SurveySubmissionV4 | SurveySubmission | SurveySubmissionV2 | LegacySurveySubmission,
                                         Field(discriminator='version')]]):
     """Historical parsers remain available offline; HTTP routes accept only SURVEY_VERSION."""
 
@@ -304,9 +314,10 @@ class SurveyStore:
                 id INTEGER PRIMARY KEY AUTOINCREMENT, submission_id TEXT NOT NULL,
                 corrected_at TEXT NOT NULL, reason TEXT NOT NULL, actor TEXT NOT NULL,
                 response_status TEXT NOT NULL, before_json TEXT NOT NULL, after_json TEXT NOT NULL)''')
-            from survey_migrations import migrate_v12, migrate_v13
+            from survey_migrations import migrate_v12, migrate_v13, migrate_v14
             migrate_v12(db)
             migrate_v13(db)
+            migrate_v14(db)
             db.execute('CREATE INDEX IF NOT EXISTS survey_corrections_response ON survey_answer_corrections(submission_id, id)')
             # Follow every deletion path, including withdrawal and retention cleanup.
             # Promoting a draft retains its history because the completed row exists.
@@ -386,8 +397,8 @@ class SurveyStore:
         from survey_analytics import construct_value
         constructs=SURVEY_DEFINITION.get('constructs', [])
         columns_list=['participation_id','submitted_at_utc','survey_version',
-            *[column for field in SURVEY_FIELDS for column in ('v13_'+field['name'],'v13_'+field['name']+'_status')],
-            *['v13_'+item['id']+'_mean' for item in constructs]]
+            *[column for field in SURVEY_FIELDS for column in ('v14_'+field['name'],'v14_'+field['name']+'_status')],
+            *['v14_'+item['id']+'_mean' for item in constructs]]
         writer=csv.writer(stream,delimiter=';');writer.writerow(export_headers(columns_list,columns))
         with self.connect() as db:
             has_links=db.execute("SELECT 1 FROM sqlite_master WHERE name='privacy_links'").fetchone()

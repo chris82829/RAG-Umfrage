@@ -89,6 +89,73 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
         except ValueError as failure:
             return error(str(failure), 409)
 
+    @bp.get('/study-context')
+    @protected
+    def study_context_config():
+        return jsonify(app.extensions['study_context'].config())
+
+    @bp.put('/study-context')
+    @protected
+    def update_study_context_config():
+        body=request.get_json(silent=True)
+        if not isinstance(body,dict) or set(body)!={'study_wave','recruitment_batch','revision'}:
+            return error('Bitte Studienphase, Versandzeitpunkt und Konfigurationsrevision angeben.',400)
+        try:
+            return jsonify(app.extensions['study_context'].configure(**body))
+        except ValueError as failure:
+            return error(str(failure),409)
+
+    @bp.get('/study-metadata')
+    @protected
+    def study_metadata():
+        try:query,version,status,arm,prompt,wave=filters()
+        except ValueError:return error('Ungültiger Filter.',400)
+        from study_context import metadata_analysis
+        with surveys.connect() as db:
+            result=metadata_analysis(db,version=version,wave=wave or None,arm=arm or None)
+        result['filter_scope']='Aktuelle Fragebogenversion, Studienphase und Gruppe; inklusive Teilnahmen ohne Antworten. Such-, Antwortstatus- und Promptfilter werden hier nicht angewandt.'
+        return jsonify(result)
+
+    @bp.get('/study-metadata-export')
+    @protected
+    def study_metadata_export():
+        try:query,version,status,arm,prompt,wave=filters()
+        except ValueError:return error('Ungültiger Filter.',400)
+        import io,json,zipfile
+        from study_context import metadata_analysis,scoring_csv
+        from study_metrics import operation_events_csv
+        with surveys.connect() as db:
+            summary=metadata_analysis(db,version=version,wave=wave or None,arm=arm or None)
+            identifiers={row['participation_id'] for row in summary['participants']}
+            buffer=io.BytesIO()
+            with zipfile.ZipFile(buffer,'w',zipfile.ZIP_DEFLATED) as archive:
+                archive.writestr('study_metadata.json',json.dumps(summary,ensure_ascii=False,indent=2))
+                archive.writestr('scoring_calls.csv',scoring_csv(db,identifiers))
+                archive.writestr('operation_events.csv',operation_events_csv(db,identifiers))
+                archive.writestr('README.txt','V14 Studienmetadaten inklusive Einwilligungen ohne Antworten. Filter: Version, Studienphase und Gruppe. Keine Filterung nach Antwortstatus, Suchtext oder Prompt. Pseudonymisierte Daten. Sichtbarkeit ist kein Nachweis des Lesens; ein noch nicht abgeschlossener Ablauf kann noch aktiv sein.')
+        response=make_response(buffer.getvalue())
+        response.headers['Content-Type']='application/zip'
+        response.headers['Content-Disposition']='attachment; filename="diana_studienmetadaten.zip"'
+        return response
+
+    @bp.get('/study-analysis')
+    @protected
+    def study_analysis():
+        # Explicit on-demand analysis only. Never run this on each dashboard poll.
+        try:query,version,status,arm,prompt,wave=filters()
+        except ValueError:return error('Ungültiger Filter.',400)
+        from research.v14.analyze import analyze_rows
+        # Tests use all current arms with endpoint-wise completeness. Display filters must not silently
+        # change the planned contrast, population, or multiplicity family.
+        result=analyze_rows(data.filtered(version=version))
+        scope='Für Hauptvergleiche nur main; Anzeigefilter ändern diesen Analyseumfang nicht.'
+        result['warning']=(
+            'Vorläufige Auswertung: Der Analyseplan ist noch als Entwurf gekennzeichnet. Keine abgeschlossene Präregistrierung. '
+            if result['plan_status']=='draft' else
+            'Versionierter Analyseplan: Angaben zum Einfrieren sind dokumentiert, aber nicht unabhängig verifiziert. '
+        ) + scope
+        return jsonify(result)
+
     @bp.get('/system-prompts')
     @protected
     def get_system_prompts():
@@ -116,15 +183,18 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
         if arm not in ('','A','B','C'):raise ValueError()
         prompt=request.args.get('prompt','')
         if prompt and not re.fullmatch(r'(?:unprompted|career_fixed|custom_career):[1-9][0-9]*:[a-f0-9]{64}',prompt):raise ValueError()
-        return query,version,status,arm,prompt
+        wave=request.args.get('study_wave','')
+        if wave=='all':wave=''
+        if wave not in ('','pretest','main'):raise ValueError()
+        return query,version,status,arm,prompt,wave
     @bp.get('/responses')
     @protected
     def responses():
         try:
-            query,version,status,arm,prompt=filters();page=int(request.args.get('page','1'))
+            query,version,status,arm,prompt,wave=filters();page=int(request.args.get('page','1'))
             if not 1<=page<=100000:raise ValueError()
         except ValueError:return error('Ungültiger Filter.',400)
-        base_rows=data.filtered(query,version,status,arm);rows=data.filtered(query,version,status,arm,prompt);start=(page-1)*25
+        base_rows=data.filtered(query,version,status,arm,study_wave=wave);rows=data.filtered(query,version,status,arm,prompt,wave);start=(page-1)*25
         return jsonify(total=len(rows),page=page,page_size=25,items=[{k:v for k,v in row.items() if k!='answers'} for row in rows[start:start+25]],
                        prompt_versions=data.prompt_versions(base_rows),selected_prompt=prompt,
                        definition=SURVEY_DEFINITION,current_release=releases.manifest)
@@ -155,10 +225,10 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
     @bp.get('/analytics')
     @protected
     def analysis():
-        try:query,version,status,arm,prompt=filters()
+        try:query,version,status,arm,prompt,wave=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        base_rows=data.filtered(query,version,status,arm)
-        result=analytics(data.filtered(query,version,status,arm,prompt),version)
+        base_rows=data.filtered(query,version,status,arm,study_wave=wave)
+        result=analytics(data.filtered(query,version,status,arm,prompt,wave),version)
         result['prompt_versions']=data.prompt_versions(base_rows)
         result['selected_prompt']=prompt
         return jsonify(result)
@@ -169,18 +239,18 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
     @bp.get('/usage-analytics')
     @protected
     def usage_analysis():
-        try:query,version,status,arm,prompt=filters()
+        try:query,version,status,arm,prompt,wave=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        rows=data.filtered(query,version,status,arm,prompt)
+        rows=data.filtered(query,version,status,arm,prompt,wave)
         with surveys.connect() as db:
             result=telemetry_analysis(db,rows)
         return jsonify(result)
     @bp.get('/usage-export')
     @protected
     def usage_export():
-        try:query,version,status,arm,prompt=filters()
+        try:query,version,status,arm,prompt,wave=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        rows=data.filtered(query,version,status,arm,prompt)
+        rows=data.filtered(query,version,status,arm,prompt,wave)
         with surveys.connect() as db:
             content=telemetry_participant_csv(telemetry_analysis(db,rows))
         response=make_response(content)
@@ -208,13 +278,13 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
     @bp.get('/export')
     @protected
     def export():
-        try:query,version,status,arm,prompt=filters()
+        try:query,version,status,arm,prompt,wave=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        rows=data.filtered(query,version,status,arm,prompt);kind=request.args.get('format','csv')
+        rows=data.filtered(query,version,status,arm,prompt,wave);kind=request.args.get('format','csv')
         columns=request.args.get('columns','readable')
         if columns not in ('readable','technical'):return error('Unbekannte Spaltenbenennung.',400)
         if kind=='csv':content=data.csv_data(rows,columns=columns);filename='diana_numiqo.csv';mime='text/csv; charset=utf-8'
-        elif kind=='zip':content=data.package(rows,columns=columns);filename='diana_auswertung.zip';mime='application/zip'
+        elif kind=='zip':content=data.package(rows,columns=columns,study_wave=wave);filename='diana_auswertung.zip';mime='application/zip'
         else:return error('Unbekanntes Exportformat.',400)
         response=make_response(content);response.headers['Content-Type']=mime
         response.headers['Content-Disposition']=f'attachment; filename="{filename}"'
@@ -223,9 +293,9 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
     @protected
     def export_telemetry():
         from study_telemetry import telemetry_csv
-        try:query,version,status,arm,prompt=filters()
+        try:query,version,status,arm,prompt,wave=filters()
         except ValueError:return error('Ungültiger Filter.',400)
-        participants={row['participation_id'] for row in data.filtered(query,version,status,arm,prompt)}
+        participants={row['participation_id'] for row in data.filtered(query,version,status,arm,prompt,wave)}
         with surveys.connect() as db:
             content=telemetry_csv(db, participation_ids=participants)
         response=make_response(content)

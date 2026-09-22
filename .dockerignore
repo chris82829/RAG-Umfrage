@@ -31,3 +31,13 @@
 !migrations/**
 !survey_definition_v12.json
 !survey_definition_v13.json
+
+!survey_definition_v14.json
+!research/
+!research/v14/
+!research/v14/**
+!V14-METHODS.md
+!requirements-analysis.txt
+
+**/__pycache__/
+**/*.pyc

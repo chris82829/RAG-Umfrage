@@ -13,7 +13,7 @@ const assigned = (arm = 'C', extra = {}) => applyStudyAssignment(newSurveyState(
 });
 const names = fields => fields.map(field => field.name);
 const prepare = state => startPreparedSystem({...state, answers:{...state.answers,
-  education:'bachelor',study_field:'',job_portal_experience:'weekly',ai_chat_experience:'daily',
+  previous_participation:'no',education:'bachelor',study_field:'',job_portal_experience:'weekly',ai_chat_experience:'daily',
 }});
 const memoryStorage = entries => {
   const values = new Map(entries);
@@ -24,9 +24,9 @@ const retired = ['age_group','gender','system_usefulness','usefulness_effective'
   'usefulness_overall','search_effort','personalized_search_usefulness','personality_clarity_search',
   'personality_clarity_explanations','template_selection_ease','personality_setup'];
 
-test('V13 is the only active questionnaire and has the required arm-specific counts', () => {
-  assert.equal(SURVEY_VERSION, 'diana-v13');
-  for(const [arm,count] of [['A',22],['B',22],['C',23]]) {
+test('V14 is the only active questionnaire and has the required arm-specific counts', () => {
+  assert.equal(SURVEY_VERSION, 'diana-v14');
+  for(const [arm,count] of [['A',26],['B',26],['C',27]]) {
     const state=assigned(arm), config=surveyConfiguration(state);
     assert.equal(state.version,SURVEY_VERSION);
     assert.equal(visibleFields(config.surveyFields,state.answers).filter(field=>!field.systemProvided).length,count);
@@ -34,16 +34,16 @@ test('V13 is the only active questionnaire and has the required arm-specific cou
     assert.equal(visibleFields(config.surveyFields,state.answers).some(field=>field.name==='personality_customized'),arm==='C');
     assert.equal(needsSystemPreparation(state),true);
   }
-  for(const version of ['diana-v4','diana-v11','diana-v12','diana-v99']) {
+  for(const version of ['diana-v4','diana-v11','diana-v12','diana-v13','diana-v99']) {
     assert.throws(()=>surveyConfiguration(version),/Fragebogenversion ist nicht verfügbar/);
     assert.throws(()=>assigned('A',{questionnaire_version:version}),/Fragebogenversion ist nicht verfügbar/);
   }
   assert.throws(()=>assigned('A',{questionnaire_version:undefined}),/Fragebogenversion ist nicht verfügbar/);
 });
 
-test('four background answers precede use; only search context can be answered while waiting', () => {
+test('screening and four background answers precede use; only search context can be answered while waiting', () => {
   const state=assigned('B'), config=surveyConfiguration(state);
-  assert.deepEqual(names(config.beforeSystemFields),['education','study_field','job_portal_experience','ai_chat_experience']);
+  assert.deepEqual(names(config.beforeSystemFields),['previous_participation','education','study_field','job_portal_experience','ai_chat_experience']);
   assert.equal(startPreparedSystem(state),state);
   const started=prepare(state);
   assert.equal(started.systemTaskStarted,true);
@@ -53,7 +53,7 @@ test('four background answers precede use; only search context can be answered w
   assert.equal(needsSystemPreparation({...started,systemTaskStarted:false}),false);
 });
 
-test('browser restore removes retired keys and never migrates old answers into V13', () => {
+test('browser restore removes retired keys and never migrates old answers into V14', () => {
   const old={...newSurveyState(),version:'diana-v12',submitted:true,answers:{system_usefulness:10,education:'master'}};
   const storage=memoryStorage([['diana-survey:diana-v12',JSON.stringify(old)],['unrelated','keep']]);
   const state=loadSurveyState(storage);
@@ -70,7 +70,7 @@ test('browser restore removes retired keys and never migrates old answers into V
   assert.equal(storage.getItem(SURVEY_STORAGE_KEY),null);
 });
 
-test('V13 browser and server resume preserve preparation but sanitize unknown/hidden answers', () => {
+test('V14 browser and server resume preserve preparation but sanitize unknown/hidden answers', () => {
   const initial=assigned('B'), prepared=prepare(initial);
   const storage=memoryStorage([]);
   saveSurveyState(storage,{...prepared,answers:{...prepared.answers,system_usefulness:10,personality_customized:'yes'}});
@@ -90,10 +90,10 @@ test('V13 browser and server resume preserve preparation but sanitize unknown/hi
   assert.equal(restoreServerDraft(initial,{version:SURVEY_VERSION,completed:true}).submitted,true);
 });
 
-test('all sixteen rating items have seven full anchors and accept only 1–7 or explicit nonresponse', () => {
+test('all nineteen rating items have seven full anchors and accept only 1–7 or explicit nonresponse', () => {
   const fields=surveyConfiguration().surveyFields.filter(field=>field.kind==='scale');
-  assert.equal(fields.length,16);
-  assert.equal(fields.filter(field=>field.framework==='DIANA').length,2);
+  assert.equal(fields.length,19);
+  assert.equal(fields.filter(field=>field.framework==='DIANA').length,3);
   for(const field of fields) {
     assert.equal(field.presentation,'likert');
     assert.equal(field.scale.min,1);
@@ -156,7 +156,7 @@ test('autosave sends only active answer fields and serializes new ratings after 
   assert.equal(saved[1].answers.usefulness_find_easy,7);
 });
 
-test('complete V13 submission exports neither retired answers nor framework/source metadata', async () => {
+test('complete V14 submission exports neither retired answers nor framework/source metadata', async () => {
   const state={...assigned('C'),systemCompleted:true,chatCompleted:true,chatCount:3};
   for(const field of surveyConfiguration().surveyFields) {
     if(field.systemProvided)continue;
@@ -174,3 +174,23 @@ test('complete V13 submission exports neither retired answers nor framework/sour
   assert(!Object.hasOwn(sent,'system_usefulness'));
   assert(!Object.hasOwn(sent,'framework'));
 });
+
+test('V14 inserts screening, trust and manipulation checks without changing retained wording', async()=>{
+  const {default:old}=await import('../survey_definition_v13.json',{with:{type:'json'}});
+  const original=[old.demographics,...old.categories].flatMap(group=>group.fields);
+  const current=surveyConfiguration().surveyFields;
+  for(const field of original)assert.equal(current.find(item=>item.name===field.name)?.title,field.title);
+  const sequence=names(current);
+  assert(sequence.indexOf('previous_participation')<sequence.indexOf('education'));
+  assert(sequence.indexOf('trust_fit')>sequence.indexOf('usefulness_suggestions'));
+  assert(sequence.indexOf('trust_credibility')<sequence.indexOf('dialogue_understanding'));
+  assert(sequence.indexOf('perceived_character')>sequence.indexOf('dialogue_attentiveness'));
+  assert(sequence.indexOf('perceived_character')<sequence.indexOf('control_preferences'));
+  const state=assigned('A');
+  for(const name of ['trust_fit','trust_credibility','perceived_character']) {
+    const field=current.find(item=>item.name===name);
+    assert.equal(fieldVisibleForTest(field,state.answers),true);
+    assert(name in surveyErrors({...state.answers,[name]:null},[field]));
+  }
+});
+function fieldVisibleForTest(field,answers){return visibleFields([field],answers).length===1;}

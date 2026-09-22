@@ -2,6 +2,7 @@ import React, { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCheck, Compass, LoaderCircle, MessageCircle, X } from 'lucide-react';
 import { SURVEY_VERSION, needsSystemPreparation, startPreparedSystem, surveyConfiguration, applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, submitSurvey, surveyErrors, surveyScale, suggestSearchGoal } from './survey.js';
 import './survey.css';
+import {installStudyViewportCapture} from './study-context.js';
 import SearchLoadingDialog from './SearchLoadingDialog.jsx';
 import {createSurveyAutosave} from './survey-autosave.js';
 import {consentHeaders} from './privacy.js';
@@ -198,6 +199,10 @@ export default function SurveyPage({ initial, participationId }) {
     })().catch(failure=>{if(!cancelled)setError(failure.message);}).finally(()=>clearTimeout(timeout));
     return()=>{cancelled=true;clearTimeout(timeout);controller.abort();};
   },[state.submissionId,assignmentAttempt]);
+  useEffect(() => {
+    if (!assignmentReady || state.submitted) return;
+    return installStudyViewportCapture(window);
+  }, [assignmentReady, state.submitted]);
   useEffect(()=>{
     if(!hydrated || state.submitted)return;
     autosave.current.enqueue(state);

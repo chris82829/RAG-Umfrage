@@ -3,7 +3,7 @@ from study_chat_limit import StudyChatLimit, MAX_USER_CHAT_MESSAGES
 
 MIN_USER_CHAT_MESSAGES = MAX_USER_CHAT_MESSAGES
 PRE_CHAT_FIELDS = frozenset({'study_arm', 'age_group', 'gender', 'education',
-    'study_field', 'job_portal_experience', 'ai_chat_experience', 'search_goal'})
+    'study_field', 'previous_participation', 'job_portal_experience', 'ai_chat_experience', 'search_goal'})
 
 class StudyChatRequired(Exception):
     def __init__(self, progress):

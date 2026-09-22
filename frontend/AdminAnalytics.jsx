@@ -34,7 +34,7 @@ function ConstructSummary({construct, seriesMeta, version}) {
  const series=Object.keys(construct.groups||{}).length?Object.entries(construct.groups):[['Gesamt',construct.overall]];
  return <article className="analysis-question analysis-construct">
   <h3>{construct.title}</h3>
-  <p className="admin-small">{construct.role==='primary'?'Primärer Endpunkt':'Sekundärer Endpunkt'} · Mittelwert aus {construct.items.length} Aussagen · Skala {construct.min}–{construct.max}</p>
+  <p className="admin-small">{construct.role==='primary'?'Primärer Endpunkt':construct.role==='secondary'?'Sekundärer Endpunkt':'Exploratives Konstrukt'} · Mittelwert aus {construct.items.length} Aussagen · Skala {construct.min}–{construct.max}</p>
   <p className="analysis-construct-total">Gesamt: <strong>{format(construct.overall.mean)}</strong> · n = {construct.overall.n} · {construct.overall.missing} ohne vollständige Bewertung</p>
   <div className="analysis-means">{series.map(([key,result])=>{
    const meta=seriesMeta[key]||{arm:key};
@@ -62,8 +62,8 @@ export default function AdminAnalytics({data,loading,error,onSelect}){
  {cohort.mixed_prompt_arms?.length>0&&<p className="admin-prompt-warning" role="status"><strong>Mehrere Promptfassungen erkannt:</strong> Variante {cohort.mixed_prompt_arms.join(', ')} wird in den Diagrammen getrennt nach Revision und Basis-SHA dargestellt. Bei C bezeichnet sie den Berufsberater-Basisprompt; die selbst gestaltete Persönlichkeit wird dynamisch ergänzt. Mit dem Promptfilter kannst du eine exakte Basisfassung isolieren.</p>}
  <p className="admin-small">A: Basissystem ohne wählbare KI-Suchpersönlichkeit. B: fester Top-Berufsberater. C: selbst gestaltbare Persönlichkeit auf Basis einer eigenen Systemanweisung. Alle Varianten verwenden Ranking, Scores und Begründungen.</p>
  {cohort.constructs?.length>0 && <section className="analysis-constructs" aria-label="Zusammenfassung der Konstrukte">
-  <h3 className="analysis-category-title">Nutzen, Kontrolle und Nachvollziehbarkeit</h3>
-  <p className="admin-small">Je Teilnahme zählt der Mittelwert einer Itemgruppe nur dann, wenn alle zugehörigen Aussagen numerisch beantwortet wurden. „Kann ich nicht beurteilen“ und fehlende Antworten werden nicht als 0 gewertet. Die drei Itemgruppen bleiben getrennt; diese Adaptation ist keine eigenständig validierte deutsche Gesamtskala.</p>
+  <h3 className="analysis-category-title">Nutzen, Vertrauen, Kontrolle und Nachvollziehbarkeit</h3>
+  <p className="admin-small">Je Teilnahme zählt der Mittelwert einer Itemgruppe nur dann, wenn alle zugehörigen Aussagen numerisch beantwortet wurden. „Kann ich nicht beurteilen“ und fehlende Antworten werden nicht als 0 gewertet. Die vier Itemgruppen bleiben getrennt; diese Adaptation ist keine eigenständig validierte deutsche Gesamtskala.</p>
   <div className="analysis-grid">{cohort.constructs.map(construct=><ConstructSummary key={construct.id} construct={construct} seriesMeta={series} version={data.version}/>)}</div>
  </section>}
  {cohort.categories.filter(item=>!selected||item.title===selected).map(item=><section key={item.title}><h3 className="analysis-category-title">{item.title}</h3><div className="analysis-grid">{item.questions.map(question=><QuestionChart key={question.name} question={question} onSelect={onSelect} seriesMeta={series} version={data.version}/>)}</div></section>)}

@@ -1,0 +1,25 @@
+{
+  "plan_id": "diana-v14-analysis-plan-1",
+  "status": "draft",
+  "questionnaire_version": "diana-v14",
+  "analysis_version": "diana-v14-analysis-1",
+  "frozen_at_utc": null,
+  "freeze_git_commit": null,
+  "external_registration_url": null,
+  "main_recruitment_start_utc": null,
+  "main_recruitment_end_utc": null,
+  "smallest_effect_of_interest_d": null,
+  "expected_dropout_fraction": null,
+  "planned_valid_participants_per_arm": null,
+  "alpha": 0.05,
+  "power": 0.8,
+  "stop_rule": "Fixed recruitment end date, independent of interim p-values; no automatic closure by this file.",
+  "primary": {"id": "H1", "construct": "usefulness", "first": "C", "second": "B", "test": "two-sided Welch t-test"},
+  "secondary_holm_family": [
+    {"id": "S1", "construct": "control", "first": "C", "second": "B"},
+    {"id": "S2", "construct": "transparency", "first": "C", "second": "B"},
+    {"id": "S3", "construct": "usefulness", "first": "B", "second": "A"}
+  ],
+  "references": ["STUDY-PROTOCOL.md", "V14-METHODS.md", "survey_definition_v14.json"],
+  "note": "A recorded freeze date and commit are provenance declarations, not independent verification of preregistration. Retain Git history; never backdate this plan."
+}

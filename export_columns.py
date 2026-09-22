@@ -34,6 +34,15 @@ META_TITLES = {
     'personality_last_selection_changed_at_utc': ('ki_auswahl_geaendert_am_utc', 'Zeitpunkt des zuletzt erfassten Auswahlwechsels bzw. der ersten Anwendung (UTC)'),
 }
 
+META_TITLES.update({
+    'study_wave': ('studienphase','Bei Einwilligung festgeschriebene Phase: pretest oder main; fehlend bedeutet unbekannt'),
+    'recruitment_batch': ('versandwelle_utc','Konfigurierter UTC-Zeitpunkt der zugehörigen Einladungswelle'),
+    'viewport_class': ('ansicht_ersterfasst','Erste erfasste UI-Darstellung mobile/desktop; keine Gerätekennung'),
+    'viewport_class_last': ('ansicht_zuletzt','Letzte erfasste UI-Darstellung; mobile bis einschließlich 850 CSS-Pixel'),
+    'furthest_step_reached': ('weitester_studienschritt','Weitester serverseitig belegter Studienschritt, monoton'),
+    'context_config_revision': ('studienphase_revision','Unveränderliche Kontextrevision bei Einwilligung'),
+})
+
 META_TITLES['operations_capture_version'] = ('nutzung_erfassungsversion', 'Version der serverseitigen Erfassung aggregierter Nutzungsoperationen')
 for _kind, _label, _prefix in [('search', 'Suche über den Stellenbestand', 'suchen'), ('rerank', 'Neusortierung bestehender Ergebnisse', 'neusortierungen'), ('chat', 'Nutzer-Chatnachricht', 'chatnachrichten')]:
     META_TITLES[f'operations_successful_{_kind}_count'] = (f'{_prefix}_erfolgreich_anzahl', f'Anzahl erfolgreich abgeschlossener Operationen: {_label}')
@@ -80,7 +89,7 @@ QUESTION_NAMES = {
     'future_preference': 'ki_beratung_kuenftig_bevorzugt',
 }
 
-QUESTION_NAMES.update({'usefulness_ideal': 'nutzen_passende_stelle', 'usefulness_find_easy': 'nutzen_einfacher_finden', 'usefulness_suggestions': 'nutzen_vorschlaege', 'dialogue_understanding': 'dialog_verstaendnis', 'dialogue_response_quality': 'dialog_antwortqualitaet', 'dialogue_attentiveness': 'dialog_aufmerksamkeit', 'control_preferences': 'kontrolle_praeferenzen', 'control_recommendations': 'kontrolle_empfehlungen', 'control_adjustment': 'kontrolle_anpassung', 'transparency_why': 'transparenz_empfehlungsgrund', 'transparency_assessment': 'transparenz_bewertung', 'transparency_fit': 'transparenz_passung', 'overall_satisfaction': 'gesamtzufriedenheit', 'intention_reuse': 'wiederverwendungsabsicht', 'study_effort': 'zusatz_suchaufwand', 'study_style_control': 'zusatz_beratungsstil_steuerbarkeit', 'usefulness_mean': 'nutzen_mittelwert', 'control_mean': 'kontrolle_mittelwert', 'transparency_mean': 'transparenz_mittelwert'})
+QUESTION_NAMES.update({'previous_participation':'fruehere_teilnahme_selbstauskunft','trust_fit':'vertrauen_passung','trust_credibility':'vertrauen_glaubwuerdigkeit','perceived_character':'manipulationscheck_beratungscharakter','trust_mean':'vertrauen_mittelwert','usefulness_ideal': 'nutzen_passende_stelle', 'usefulness_find_easy': 'nutzen_einfacher_finden', 'usefulness_suggestions': 'nutzen_vorschlaege', 'dialogue_understanding': 'dialog_verstaendnis', 'dialogue_response_quality': 'dialog_antwortqualitaet', 'dialogue_attentiveness': 'dialog_aufmerksamkeit', 'control_preferences': 'kontrolle_praeferenzen', 'control_recommendations': 'kontrolle_empfehlungen', 'control_adjustment': 'kontrolle_anpassung', 'transparency_why': 'transparenz_empfehlungsgrund', 'transparency_assessment': 'transparenz_bewertung', 'transparency_fit': 'transparenz_passung', 'overall_satisfaction': 'gesamtzufriedenheit', 'intention_reuse': 'wiederverwendungsabsicht', 'study_effort': 'zusatz_suchaufwand', 'study_style_control': 'zusatz_beratungsstil_steuerbarkeit', 'usefulness_mean': 'nutzen_mittelwert', 'control_mean': 'kontrolle_mittelwert', 'transparency_mean': 'transparenz_mittelwert'})
 
 
 def validate_columns(columns):

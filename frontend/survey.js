@@ -1,6 +1,6 @@
 import {consentHeaders} from './privacy.js';
 import {SURVEY_CHAT_LIMIT} from './chat-limit.js';
-import definition from '../survey_definition_v13.json' with { type: 'json' };
+import definition from '../survey_definition_v14.json' with { type: 'json' };
 
 export const SURVEY_VERSION = definition.version;
 export const SURVEY_STORAGE_KEY = `diana-survey:${SURVEY_VERSION}`;

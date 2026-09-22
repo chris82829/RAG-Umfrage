@@ -101,7 +101,7 @@ sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenba
    vollständiger Frage und Fragebogenversion. `study_manifest.json` dokumentiert
    zusätzlich die gewählte Spaltenbenennung.
 
-Der aktuelle Fragebogen ist ausschließlich **`diana-v13`**, Experiment **`diana-abc-v6`**.
+Der aktuelle Fragebogen ist ausschließlich **`diana-v14`**, Experiment **`diana-abc-v7`**.
 Die Verwaltung bietet keine Auswahl früherer Fragebögen. Auch die Antwort-CSV und
 das Codebuch enthalten nur die neuen Fragefelder; alte Antworten werden nicht
 migriert. Einträge alter Browserfassungen werden beim Schreiben zurückgewiesen.
@@ -111,25 +111,27 @@ migriert. Einträge alter Browserfassungen werden beim Schreiben zurückgewiesen
 | `teilnahme_id` | Verbindung zwischen Antworten und Nutzungsereignissen |
 | `teilnahme_status` | `completed` oder `in_progress` |
 | `studiengruppe` | A, B oder C |
-| `v13_nutzen_passende_stelle` | Nutzenitem zur idealen Stelle |
-| `v13_nutzen_einfacher_finden` | Nutzenitem zum einfachen Finden |
-| `v13_nutzen_vorschlaege` | Nutzenitem zu guten Vorschlägen |
-| `v13_nutzen_mittelwert` | Mittel aus genau drei gültigen Nutzenitems |
-| `v13_kontrolle_mittelwert` | Mittel aus genau drei gültigen Suchkontrollitems |
-| `v13_transparenz_mittelwert` | Mittel aus genau drei gültigen Transparenzitems |
-| `v13_zusatz_suchaufwand` | Gesamter subjektiver Nutzungsaufwand; hoch = mehr Aufwand |
-| `v13_zusatz_beratungsstil_steuerbarkeit` | Wahrgenommene Gestaltbarkeit des Sprachstils |
+| `v14_nutzen_passende_stelle` | Nutzenitem zur idealen Stelle |
+| `v14_nutzen_einfacher_finden` | Nutzenitem zum einfachen Finden |
+| `v14_nutzen_vorschlaege` | Nutzenitem zu guten Vorschlägen |
+| `v14_nutzen_mittelwert` | Mittel aus genau drei gültigen Nutzenitems |
+| `v14_kontrolle_mittelwert` | Mittel aus genau drei gültigen Suchkontrollitems |
+| `v14_transparenz_mittelwert` | Mittel aus genau drei gültigen Transparenzitems |
+| `v14_vertrauen_mittelwert` | Mittel aus beiden gültigen Vertrauensitems |
+| `v14_manipulationscheck_beratungscharakter` | Wahrgenommener Charakter, eigenes Einzelitem |
+| `v14_fruehere_teilnahme_selbstauskunft` | Ja/Nein/Unsicher zur früheren Studienteilnahme |
+| `v14_zusatz_suchaufwand` | Gesamter subjektiver Nutzungsaufwand; hoch = mehr Aufwand |
+| `v14_zusatz_beratungsstil_steuerbarkeit` | Wahrgenommene Gestaltbarkeit des Sprachstils |
 
 Alle Bewertungen verwenden **1–7**. „Kann ich nicht beurteilen“ bleibt leer und
 wird durch die zugehörige `_antwortstatus`-Spalte erklärt. Mittelwerte werden nur
-bei drei vollständigen numerischen Antworten berechnet, niemals aus weniger
-Items. Die drei Dialogeinzelitems bilden keine gemeinsame Skala; es gibt keinen
+bei vollständigen numerischen Antworten berechnet: Nutzen/Kontrolle/Transparenz je drei, Vertrauen beide Items. Niemals aus weniger Items. Die drei Dialogeinzelitems bilden keine gemeinsame Skala; es gibt keinen
 Gesamtscore über den Fragebogen. Das Codebuch kennzeichnet Framework, Konstrukt,
 Fundstelle, DOI, Anpassung, Wertebereich, Antwortcodes und Richtung. Hoher Aufwand
 wird nicht automatisch umgepolt. Die rechnerischen Konstruktmittelwerte sind keine
 Bestätigung psychometrischer Validität.
 
-A/B sehen 22 Fragen, C 23, inklusive freiwilliger Fachrichtung und Feedback.
+A/B sehen 26 Fragen, C 27, inklusive freiwilliger Fachrichtung und Feedback.
 Gemeinsame Fragen sind in allen Gruppen identisch. Nur die Selbstauskunft zur
 Veränderung der Beratungseinstellungen erscheint in C. Alter und Geschlecht
 werden nicht erhoben. Die Zuordnung bleibt A/B/C, auch wenn C nichts verändert.
@@ -141,10 +143,9 @@ ist `columns=readable`. Beide Exporte enthalten dieselben Werte. Die
 und Semikolon. Formelähnlicher Freitext wird beim Export mit Apostroph abgesichert.
 
 `survey_migrations.py` ergänzt generierte INTEGER-Spalten für die neuen
-V13-Bewertungen aus dem Antwort-JSON. Der Bereich 1–7 wird geprüft; fehlende oder
+V14-Bewertungen aus dem Antwort-JSON. Der Bereich 1–7 wird geprüft; fehlende oder
 nicht beurteilbare Werte bleiben NULL. Wiederholter Start ist möglich; die
-Migration selbst ist keine Datenlöschung. Der beauftragte Datenreset wird
-separat auf den bestehenden Installationen durchgeführt.
+Migration selbst ist keine Datenlöschung. Beim Wechsel zu V14 bleiben vorhandene historische Antworten und Entwürfe getrennt erhalten.
 
 ### Aggregierte Nutzung und Laufzeiten
 
@@ -153,7 +154,7 @@ V12 ergänzt davon getrennte Interaktionsereignisse, wie unten beschrieben.
 
 | Spalten | Bedeutung |
 | --- | --- |
-| `nutzung_erfassungsversion` | 0 = nicht erfasst; 1 = aktuelle Erfassung |
+| `nutzung_erfassungsversion` | 0 = nicht erfasst; 1 = historische Summen; 2 = Summen plus separate Operationsdiagnostik |
 | `suchen_erfolgreich_anzahl`, `suchen_fehlgeschlagen_anzahl` | Tatsächlich abgeschlossene Suchversuche |
 | `neusortierungen_erfolgreich_anzahl`, `neusortierungen_fehlgeschlagen_anzahl` | Tatsächliche Neubewertungen bestehender Ergebnisse |
 | `chatnachrichten_erfolgreich_anzahl`, `chatnachrichten_fehlgeschlagen_anzahl` | Eigene Nutzeranfragen mit Erfolg oder Fehler |
@@ -186,9 +187,9 @@ nicht zur Sitzungsdauer addieren. Details, Metadaten und Löschwege:
 [STUDY-TELEMETRY.md](STUDY-TELEMETRY.md). Separate Testseiten schreiben keine
 Studienereignisse. Historische Zeiträume werden nicht rückwirkend aufgefüllt.
 
-### Teilnahmefluss und Konstrukte in V13
+### Teilnahmefluss und Konstrukte in V14
 
-`teilnahmefluss.csv` enthält ungefilterte aggregierte Zahlen des aktiven V13-
+`teilnahmefluss.csv` enthält ungefilterte aggregierte Zahlen des aktiven V14-
 Studienbestands. Zuordnungen, Abschlüsse und vollständige Nutzen-, Kontroll- und
 Transparenzwerte bleiben getrennt. Das ist ein Bestandsbericht, kein vollständiger
 Rekrutierungsverlauf nach Löschungen/Widerrufen.
@@ -198,7 +199,7 @@ vollständigen Nutzenantworten exportieren. Der Statusfilter gilt für Diagramme
 Einzelantworten und die Antwort-/Nutzungsdownloads. Fehlende Antworten bleiben
 fehlend; keine Daten anderer Fragebogenversionen hinzunehmen.
 
-`research/analyze_primary.py` ist ein historisches Werkzeug, kein V13-Analysetool.
+`research/analyze_primary.py` ist ein historisches Werkzeug, kein V14-Analysetool.
 Der neue Export liefert alle Einzelitems und die drei vollständigen Skalenmittel.
 Pretest, psychometrische Prüfung, Fallzahl und inferenzstatistischer Analyseplan
 sind vor der Haupterhebung festzulegen; siehe [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md).
@@ -211,7 +212,7 @@ wenn dessen Werte zufällig einer Vorlage entsprechen. Es beweist nicht, dass
 Eigenschaften oder Gewichte inhaltlich verändert wurden. Die weiterhin erhobene
 Ja/Nein-Selbstauskunft zur Anpassung ist daher kein identisches Duplikat dieser Daten:
 
-In V13 ist für B regulär `template`/`career` und für C `custom` zu erwarten; der
+In V14 ist für B regulär `template`/`career` und für C `custom` zu erwarten; der
 Fachexperten-Code bleibt ausschließlich für historische Datensätze lesbar.
 
 
@@ -298,7 +299,7 @@ zweite Teilnahme anzulegen. Löschung über dieselbe Teilnahme-ID entfernt auch 
 Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
 bei den Bewertungen 1–7 außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
 farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
-Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V13/abgeschlossen. Es gibt keinen Fragebogenfilter.
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V14/abgeschlossen. Es gibt keinen Fragebogenfilter.
 Nutzen, Suchkontrolle und Transparenz zeigen zusätzlich getrennte Mittelwerte aus jeweils drei gültigen Items.
 Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene
 Antworten werden gesondert gezählt und nicht als Null in Mittelwerte gerechnet.
@@ -346,3 +347,15 @@ nicht in der Antwortauswahl. Der Rohdownload enthält keine Chat- oder Profiltex
 und offene Chatreservierungen. Gesperrte Einwilligungskennungen verhindern, dass
 alte Browserstände die gelöschten Antworten erneut übertragen. Exporte und
 Datenbanksicherungen müssen zusätzlich bereinigt werden.
+
+## V14: Studienmetadaten und Analyseplan
+
+Unter **Studienphase und Rekrutierung** wird die Zuordnung neuer Einwilligungen eingestellt: Pretest (Standard) oder Hauptstudie samt Versandzeitpunkt. Bereits begonnene Teilnahmen werden nicht rückwirkend umklassifiziert. Diagramme und Downloads lassen sich nach dieser Phase filtern.
+
+Unter **Nutzungsverhalten** stehen zusätzlich die weitesten Studienschritte, initiale/letzte Mobil- oder Desktopansicht, standardisierte Fehlercodes und -phasen sowie die protokollierten Gewichtsvektoren je Bewertung. Die Metadatenübersicht enthält auch Teilnahmen ohne gespeicherte Antworten. Sie berücksichtigt Version, Gruppe und Phase; Antwortstatus-, Suchtext- und Promptfilter würden frühe Abbrüche ausschließen und werden in diesem Bereich ausdrücklich nicht angewandt. Ein nicht abgeschlossener Ablauf ist nicht automatisch ein endgültiger Abbruch.
+
+**Studienmetadaten herunterladen** liefert ZIP mit Kontextübersicht, `scoring_calls.csv` und `operation_events.csv`. Der allgemeine Auswertungs-ZIP enthält außerdem `analysis_input.csv` (technische Spalten), Kontext aller Einwilligungen der gewählten Phase und die Operations-/Scoringereignisse der ausgewählten Antwortteilnahmen. Die jeweiligen Denominator/Filter sind angegeben. T1/T2/M1 werden als Rohwerte mit Antwortstatus und eindeutigen deutschen Spalten exportiert. Das Vertrauensmittel benötigt beide gültigen Items, die übrigen Konstrukte je drei.
+
+**Studienanalyse** wird nur auf ausdrücklichen Klick berechnet. Hier gilt der vorab beschriebene Analyseumfang, unabhängig von den Beschreibungsfiltern: V14, `study_wave=main`, je Endpunkt vollständige Itemgruppe, auch aus später abgebrochenen Fragebögen. Neben Welch und Holm zeigt die Analyse Hedges g/95%-Intervalle, Cronbachs Alpha, den Manipulationscheck und Sensitivitäten zu Wiederholungsangaben. Bereinigte technische Ausfälle werden nicht aus beliebigen früheren Timeouts erraten; ein begründeter Ausschluss wird in einer separaten Analysearbeitskopie dokumentiert.
+
+Der Planstatus bleibt Entwurf, solange SESOI, Ausfallreserve und festes Rekrutierungsfenster nicht vor der Hauptstudie festgelegt und versioniert sind. Keine Rekrutierungsstopps aufgrund laufender p-Werte. Der Quellcode `research/v14/analyze.py` erzeugt denselben Bericht offline aus dem technischen CSV; `research/v14/faithfulness.py` unterstützt die getrennte, tatsächlich von zwei Menschen vorzunehmende Belegtreueprüfung.

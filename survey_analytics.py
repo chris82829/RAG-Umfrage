@@ -3,11 +3,11 @@ from collections import Counter
 from copy import deepcopy
 from statistics import mean, median
 
-from survey_store import (SURVEY_DEFINITION, V12_SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
+from survey_store import (SURVEY_DEFINITION, V13_SURVEY_DEFINITION, V12_SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
                           V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, answer_status,
                           QUESTIONS, ADDED_VALUE_LABELS, PREFERENCE_LABELS)
 
-DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V12_SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
+DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V13_SURVEY_DEFINITION, V12_SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
                V5_SURVEY_DEFINITION, V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION)}
 DEFINITIONS['diana-v2'] = deepcopy(LEGACY_SURVEY_DEFINITION)
 for category in [DEFINITIONS['diana-v2']['demographics'], *DEFINITIONS['diana-v2']['categories']]:
@@ -80,18 +80,18 @@ def analytics(rows, version):
         return result
     rows = [r for r in rows if r['survey_version'] == version]
     def cohort_key(row):
-        return (row.get('experiment_id') or '', tuple(row.get('presentation_versions') or ['undocumented']))
+        return (row.get('experiment_id') or '', tuple(row.get('presentation_versions') or ['undocumented']), row.get('study_wave') or 'unknown', row.get('recruitment_batch') or '')
     def series_key(row):
         arm = row.get('study_arm') or ''
         policy = row.get('system_prompt_policy') or ''
         revision = row.get('system_prompt_revision')
         sha256 = row.get('system_prompt_base_sha256') or ''
-        if version in ('diana-v11', 'diana-v12', 'diana-v13') and arm and policy and revision not in ('', None) and sha256:
+        if version in ('diana-v11', 'diana-v12', 'diana-v13', 'diana-v14') and arm and policy and revision not in ('', None) and sha256:
             return f'{arm}:{policy}:{revision}:{sha256}'
         return arm
-    experiments = sorted({cohort_key(r) for r in rows}) or [('', ('undocumented',))]
-    for experiment, presentation in experiments:
-        members = [r for r in rows if cohort_key(r) == (experiment, presentation)]
+    experiments = sorted({cohort_key(r) for r in rows}) or [('', ('undocumented',), 'unknown', '')]
+    for experiment, presentation, wave, batch in experiments:
+        members = [r for r in rows if cohort_key(r) == (experiment, presentation, wave, batch)]
         arms = sorted({r['study_arm'] for r in members if r['study_arm']})
         series = {}
         for row in members:
@@ -110,7 +110,7 @@ def analytics(rows, version):
             arm for arm in arms
             if len({series_key(row) for row in members if row.get('study_arm') == arm}) > 1
         )
-        cohort = dict(experiment_id=experiment, presentation_versions=list(presentation), total=len(members),
+        cohort = dict(study_wave=wave,recruitment_batch=batch,experiment_id=experiment, presentation_versions=list(presentation), total=len(members),
                       arms={arm: sum(r['study_arm']==arm for r in members) for arm in arms},
                       series=series, mixed_prompt_arms=mixed_prompt_arms, categories=[])
         cohort['constructs'] = [{**construct, 'overall': summarize_construct(members, construct),
@@ -124,7 +124,7 @@ def analytics(rows, version):
                 questions.append(dict(name=field['name'], title=field['title'], kind=field['kind'],
                                       scale=field.get('scale', definition.get('scale', {})),
                                       reverse=field['name'] in ('search_effort', 'study_effort'), visible_if=field.get('visibleIf'),
-                                      **{key: field.get(key) for key in ('framework','construct','source_item','source_url','adaptation','direction')},
+                                      **{key: field.get(key) for key in ('framework','construct','source_item','source_url','adaptation','direction','item_type')},
                                       overall=summarize(field, members),
                                       groups={key: summarize(field, [r for r in members if series_key(r)==key])
                                               for key in series}))

@@ -1,0 +1,2 @@
+# On-demand V14 administration analysis; no LLM or external data requests.
+scipy==1.16.2

@@ -11,11 +11,15 @@ COPY requirements.txt requirements-server.txt ./
 RUN pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu \
     && pip install -r requirements.txt -r requirements-server.txt
 
+COPY requirements-analysis.txt ./
+RUN pip install -r requirements-analysis.txt
+
 COPY *.py ./
 COPY personas/ ./personas/
 COPY migrations/ ./migrations/
 COPY dummy_jobs.json survey_definition*.json privacy_settings.json ./
-COPY STUDY-PROTOCOL.md ./
+COPY STUDY-PROTOCOL.md V14-METHODS.md ./
+COPY research/v14/ ./research/v14/
 COPY web-dist/ ./web-dist/
 RUN groupadd --gid 10001 diana && useradd --uid 10001 --gid diana --no-create-home diana
 USER diana

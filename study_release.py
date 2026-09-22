@@ -11,6 +11,7 @@ from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPU
 from retrieval import MODEL_ID, MODEL_REVISION, CACHE_VERSION, RRF_K, LEG_LIMIT
 from study_usage import CAPTURE_VERSION, usage_snapshot
 from study_metrics import METRICS_CAPTURE_VERSION, metrics_snapshot
+from study_context import context_snapshot
 from study_chat_limit import MAX_USER_CHAT_MESSAGES
 from study_assignment import EXPERIMENT_ID
 from survey_store import SURVEY_VERSION, SURVEY_DEFINITION
@@ -30,12 +31,13 @@ class StudyReleases:
         files = ['llm_service.py', 'advisor.py', 'retrieval.py', 'schemas.py', 'app.py',
                  'data_store.py', 'survey_store.py', 'survey_definition_v3.json', 'survey_definition_v4.json', 'survey_definition_v5.json', 'survey_definition_v6.json', 'study_assignment.py', 'advisor.py', 'survey_definition.json', 'requirements.txt', 'requirements-server.txt',
                  'web-dist/index.html']
-        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'survey_definition_v11.json', 'survey_definition_v12.json', 'survey_definition_v13.json', 'survey_migrations.py', 'study_metrics.py', 'study_chat_limit.py', 'system_prompt_store.py', 'test_access.py', 'STUDY-PROTOCOL.md']
+        files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'survey_definition_v11.json', 'survey_definition_v12.json', 'survey_definition_v13.json', 'survey_definition_v14.json', 'study_context.py', 'V14-METHODS.md', 'requirements-analysis.txt', 'survey_migrations.py', 'study_metrics.py', 'study_chat_limit.py', 'system_prompt_store.py', 'test_access.py', 'STUDY-PROTOCOL.md']
+        files += [path.relative_to(root).as_posix() for path in sorted((root/'research/v14').glob('*')) if path.is_file()]
         files += ['study_progress.py', 'study_telemetry.py', 'migrations/012_study_telemetry.sql']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}
-        for name in ['openai','pydantic','sentence-transformers','torch','transformers','numpy','rank-bm25','Flask']:
+        for name in ['openai','pydantic','sentence-transformers','torch','transformers','numpy','rank-bm25','Flask','scipy']:
             try: packages[name] = importlib.metadata.version(name)
             except importlib.metadata.PackageNotFoundError: packages[name] = None
         manifest = dict(format_version=1, openai_model=MODEL, reasoning_effort=REASONING_EFFORT,
@@ -50,7 +52,7 @@ class StudyReleases:
                                                            for policy,text in DEFAULT_SYSTEM_PROMPTS.items()},
                         system_prompts_admin_editable=True,
                         a_empty_prompt_means_no_system_message=True,
-                        system_prompt_snapshot_scope='base prompt frozen per participant for diana-abc-v4/v5/v6; policy, revision and base sha256 are exported without prompt text; C appends the participant-controlled personality at runtime',
+                        system_prompt_snapshot_scope='base prompt frozen per participant for diana-abc-v4/v5/v6/v7; policy, revision and base sha256 are exported without prompt text; C appends the participant-controlled personality at runtime',
                         presentation_policy='ranked_insights',
                         historical_neutral_presentation='random-order-generic-chat-v2',
                         operation_metrics_capture_version=METRICS_CAPTURE_VERSION,
@@ -97,7 +99,7 @@ class StudyReleases:
             ids = sorted(set(ids) | set(metadata.get('release_ids', [])))
         metadata.update(release_ids=ids, personality_usage=usage_snapshot(digest, db),
                         personality_usage_frozen=bool(completed),
-                        operation_metrics=metrics_snapshot(digest, db))
+                        operation_metrics=metrics_snapshot(digest, db), study_context=context_snapshot(digest, db))
         db.execute('INSERT INTO survey_response_metadata VALUES (?, ?) ON CONFLICT(submission_id) DO UPDATE SET metadata_json=excluded.metadata_json', (submission_id, canonical(metadata)))
 
     def all(self):

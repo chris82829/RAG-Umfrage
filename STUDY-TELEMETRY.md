@@ -30,3 +30,9 @@ Es gibt maximal 10.000 clientseitige Ereignisse pro Teilnahme; erfolgreiche Chat
 Der geschützte Telemetrie-CSV-Export enthält Teilnahme-ID, Suchsitzung, Ereignis, UTC-Zeit und aufgeteilte Metadaten. Er enthält keine Einwilligungstoken oder deren Hashes. Dieselben Teilnahmefilter wie bei den Antworten erlauben die Trennung abgeschlossener und unvollständiger Teilnahmen. Die `capture_version` kennzeichnet die Messdefinition; aktuell 1. Historische Teilnahmen ohne Ereignisse dürfen nicht ohne Kennzeichnung mit vollständig erfassten Teilnahmen gleichgesetzt werden.
 
 Verspätete Client-Ereignisse werden verworfen, wenn Stellenkennung und gemeldeter Rang nicht mehr zur aktuellen Rangliste passen (HTTP 409). Damit wird alte Sichtzeit nicht einer neuen Position zugeordnet; die Beobachtung bleibt best effort.
+
+## V14 – zusätzlicher Studienkontext
+
+Seit V14 erfassen `study_participant_context`, `study_scoring_calls` und `study_operation_events` die festgeschriebene Studienphase/Versandwelle, erste und letzte UI-Klasse (mobile ≤850 CSS-Pixel, desktop darüber), monoton bestätigte Schritte, tatsächliche Gewichte je Bewertung und sichere Fehlercodes/-phasen. Die Einwilligung bindet diese Daten pseudonym an die Teilnahme; Widerruf und Löschung entfernen sie über dieselben Löschpfade. Testseiten bleiben ausgeschlossen. Die neuen Tabellen enthalten keine Chat-, Profil- oder Personenbeschreibungstexte.
+
+Frühe Abbrüche bleiben auch ohne Umfrageantwort im Kontextbestand sichtbar; aktiv noch laufende Teilnahmen dürfen nicht als endgültige Abbrüche ausgelegt werden. Fehler nach erfolgreicher Wiederholung begründen keinen automatischen Studienausschluss. Metadaten und Operationen lassen sich in `/verwaltung` unter Nutzungsverhalten ansehen und herunterladen. `recruitment_batch` ist die administrativ zugeordnete Versandwelle, kein Nachweis einer individuell zugestellten E-Mail.

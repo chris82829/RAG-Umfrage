@@ -1278,9 +1278,13 @@ class OpenAIService:
             ranking["scoring_version"] = resolved["scoring_version"]
             ranking["reason"] = " ".join(ranking["reasons"])
             scored.append(ranking)
+        from advisor import SCORING_WEIGHTS, SCORING_VERSION
         scored.sort(key=lambda ranking: ranking["score"], reverse=True)
         return {
             "rankings": scored,
+            "_scoring_metadata": {"applied_weights": list(SCORING_WEIGHTS.values()),
+                                  "scoring_version": SCORING_VERSION,
+                                  "assessment_reused": fixed is not None},
             "assistant_message": result.assistant_message,
             "assessment_cache": {
                 "version": resolved["scoring_version"],

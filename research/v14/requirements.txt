@@ -1,0 +1,3 @@
+# Optional independent power cross-check; runtime analysis itself needs only numpy/scipy.
+-r ../requirements.txt
+statsmodels==0.14.6

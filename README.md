@@ -4,7 +4,7 @@ Flask-Prototyp mit Anzeigen aus dem bereitgestellten Export,
 SQLite-Vorfilter, paralleler BM25-/E5-Suche,
 Reciprocal Rank Fusion und GPT-5.4-Reranking mit begründeten Ergebnissen.
 Die React-Webseite enthält ein Suchprofil, Jobkarten und einen persistenten Chat.
-Im aktuellen Konferenzstand V13 zeigen **alle drei Varianten A/B/C** Scores von
+Im aktuellen Konferenzstand V14 zeigen **alle drei Varianten A/B/C** Scores von
 **1 bis 100**, kurze Begründungen und eine nach Score sortierte Ergebnisliste.
 Zunächst sind die ersten zehn Stellen sichtbar; weitere bis zu 20 lassen sich einblenden.
 Die Varianten unterscheiden sich im Beratungsangebot: Basissystem ohne wählbare Persönlichkeit,
@@ -24,9 +24,9 @@ belegte Fähigkeit übernommen. Bereits geklärte Punkte sollen nicht erneut abg
 werden; nach der dritten Studiennachricht wird keine weitere Antwort angefordert.
 Entwicklungsprüfung und Grenzen: [Rückfragen-Prüfung](research/development/2026-09-18-ranking-followups/README.md).
 
-## Aktueller Studienvergleich: A/B/C, Fragebogen V13
+## Aktueller Studienvergleich: A/B/C, Fragebogen V14
 
-Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v6`**, der Fragebogen **`diana-v13`**.
+Neue Teilnahmen werden serverseitig mit gleicher Wahrscheinlichkeit zufällig A, B oder C zugeteilt. Die Zuordnung bleibt beim Neuladen erhalten. Das Experiment heißt **`diana-abc-v7`**, der Fragebogen **`diana-v14`**.
 
 - **A:** Das LLM erhält Stellen und Profil standardmäßig ohne Systemprompt; keine Persönlichkeitswahl. In der Verwaltung kann für kontrollierte Vergleichsläufe optional ein eigener A-Basisprompt hinterlegt werden.
 - **B:** Der **Top-Berufsberater** ist fest eingestellt; Gewichtung und Eigenschaften sind nicht veränderbar.
@@ -41,7 +41,7 @@ weiterhin verändern. Änderungen und Dateizuordnung: [V12-CHANGES.md](V12-CHANG
 
 Der Vergleich B/C untersucht die zusätzliche Selbstgestaltung gegenüber dem festen Berufsberater; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch wenn sie die vorgeschlagene Ausgangskonfiguration nicht inhaltlich verändern. B/A vergleicht das gesamte RAG-Berufsberaterprompt-Paket mit dem Basissystem und ist kein isolierter Persönlichkeitstest. Im Ausgangsstand ist der A-Prompt leer; jede spätere A-Promptrevision muss getrennt dokumentiert und ausgewertet werden. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
 
-Der neue Fragebogen ersetzt alle bisherigen Live-Fragebögen. Alte Antworten und Entwürfe werden auf ausdrücklichen Wunsch gelöscht. Es gibt keine Auswahl alter Fassungen und keine Übernahme historischer Bewertungen. Die vorherige Software ist auf `sicherung-vor-framework-fragebogen-2026-09-21` gesichert.
+V14 ersetzt den aktiven Fragebogen. Bereits gespeicherte V13-Daten bleiben unverändert und getrennt erhalten; sie werden weder übernommen noch in V14-Diagramme gemischt. Es gibt keine Auswahl historischer Fragebögen. Der Stand vor V14 ist auf `sicherung-vor-v14-2026-09-22` gesichert.
 
 ### Varianten unabhängig von der Umfrage testen
 
@@ -70,10 +70,10 @@ Auswahl- und Betriebsmetadaten, ohne daraus Such- oder Chattexte abzulegen.
 
 ## Webseite ausprobieren
 
-### Aktueller Ablauf: V13 nach ResQue und CRS-Que
+### Aktueller Ablauf: V14 nach ResQue und CRS-Que
 
 „Umfrage starten“ auf der Vorstellungsseite führt zu `/umfrage`. Nach Einwilligung
-und zufälliger A/B/C-Zuteilung folgen vier kurze Kontextangaben (Situation,
+und zufälliger A/B/C-Zuteilung folgen die Wiederholungsfrage (Ja/Nein/Unsicher) und vier kurze Kontextangaben (Situation,
 optionale Fachrichtung, Jobportal- und KI-Chat-Erfahrung), die eingebettete Jobsuche
 und genau drei erfolgreich beantwortete eigene Chatnachrichten. Die separaten
 Testseiten bleiben unbegrenzt und erzeugen keine Studienantworten.
@@ -89,19 +89,21 @@ zusätzlicher Nutzen und Aufwand selbst gestaltbarer gegenüber fester KI-Beratu
 Gesprächseindrücke, Zufriedenheit und Wiederverwendung. Zwei ausdrücklich eigene
 DIANA-Aussagen erfassen Aufwand und wahrgenommene Gestaltbarkeit des Sprachstils.
 Nur C erhält zusätzlich die Frage nach tatsächlichen Änderungen der Einstellungen.
+V14 ergänzt zwei an die Vertrauensdimensionen angelehnte Aussagen, einen eigenen
+Manipulationscheck zum Beratungscharakter sowie die Wiederholungsfrage.
 
-**A/B: 22 Fragen; C: 23**, einschließlich optionaler Fachrichtung und optionalem
-Freitextfeedback. Alle 16 Bewertungsaussagen verwenden Zustimmung **1–7** mit
+**A/B: 26 Fragen; C: 27**, einschließlich optionaler Fachrichtung und optionalem
+Freitextfeedback. Alle 19 Bewertungsaussagen verwenden Zustimmung **1–7** mit
 „Kann ich nicht beurteilen“. Alter, Geschlecht und die bisherigen UI-Einzelfragen
 entfallen. Das ist eine dokumentierte deutsche Adaptation, keine automatisch
 validierte Gesamtskala. ResQue verwendet ursprünglich fünf, CRS-Que sieben Stufen.
 Vollständiger [Fragenkatalog und Quellen](QUESTIONNAIRE.md), verbindliche
-[Definition](survey_definition_v13.json), [Studienprotokoll](STUDY-PROTOCOL.md).
+[Definition](survey_definition_v14.json), [Studienprotokoll](STUDY-PROTOCOL.md).
 
 ### Speicherung und Auswertung
 
-Öffentliche Antwort-/Entwurfsrouten akzeptieren nur `diana-v13`; Experiment
-`diana-abc-v6`. Alte Browserstände werden verworfen statt Antworten zu übertragen.
+Öffentliche Antwort-/Entwurfsrouten akzeptieren nur `diana-v14`; Experiment
+`diana-abc-v7`. Alte Browserstände werden verworfen statt Antworten zu übertragen.
 Die früheren Definitionen bleiben nur für historische Offline-Nachvollziehbarkeit
 in Git. Verwaltung, Diagramme, Codebuch und CSV bieten nur den aktuellen Fragebogen.
 
@@ -109,13 +111,14 @@ Die Verwaltung unter `/verwaltung` enthält Diagramme, Einzelantworten mit
 Korrekturverlauf, Löschung und CSV-/ZIP-Download. Die drei Konstrukte Nutzen,
 Suchkontrolle und Transparenz werden getrennt als Mittel aus jeweils **drei gültigen
 numerischen Antworten** ausgewertet. Fehlt ein Item, bleibt der Wert leer. Kein
-Gesamtwert über alle Konstrukte und keine gemeinsame Skala aus den drei
+Gesamtwert über alle Konstrukte. Vertrauen erhält einen separaten Mittelwert aus
+beiden gültigen Items; keine gemeinsame Skala aus den drei
 Gesprächs-Einzelitems. Quellen und Adaptationen stehen im Codebuch.
 
 Für den primären C–B-Vergleich auch unvollständige Teilnahmen mit vollständigem
 Nutzenwert berücksichtigen. Die deutsche Adaptation benötigt Pretest und Prüfung
 von Reliabilität/Dimensionalität. Das historische `research/analyze_primary.py`
-ist kein V13-Auswerteskript. [ADMIN.md](ADMIN.md) erklärt CSV, fehlende Angaben
+ist kein aktuelles Auswerteskript. [ADMIN.md](ADMIN.md) erklärt CSV, fehlende Angaben
 und die Verknüpfung mit Nutzungsverhalten über die Teilnahme-ID.
 
 Unter `/verwaltung#nutzungsverhalten` stehen Zeiten, Klicks und Chatoperationen.
@@ -124,8 +127,9 @@ als CSV“ die Rohereignisse. Sichtbare Begründungszeit ist keine nachgewiesene
 Aufmerksamkeit und keine gesamte Sitzungsdauer.
 
 Der Tab „Systemprompts“ bleibt unabhängig vom Fragebogen bestehen. A/B/C sind
-getrennt bearbeitbar; neue Promptfassungen werden versioniert. Diese Änderung
-verändert weder Modell noch Matching oder Beratungsanweisungen.
+getrennt bearbeitbar; neue Promptfassungen werden versioniert. V14 korrigiert die bekannte alte B-Prozentangabe für neue Promptfassungen.
+Die bereits gespeicherten Teilnehmer-Prompts bleiben unverändert; explizit widersprüchliche
+Prozentangaben werden beim Speichern zurückgewiesen.
 
 ```bash
 .venv/bin/flask --app app:create_app survey-export --output instance/umfrage.csv
@@ -133,6 +137,23 @@ verändert weder Modell noch Matching oder Beratungsanweisungen.
 
 CSV verwendet UTF-8 mit BOM und Semikolon. Forschungsdaten und Exporte gehören
 nicht in Git. Beide Server speichern ihre neuen Teilnahmen weiterhin getrennt.
+
+### V14: Studienphase, Metadaten und geplante Analyse
+
+In der Verwaltung **Studienphase und Rekrutierung** einstellen: `pretest` ist der Standard; `main` benötigt den UTC-Zeitpunkt der Versandwelle. Die Einstellung gilt für neue Einwilligungen, bestehende Teilnahmen behalten ihre Phase. Beide Server speichern getrennt und müssen für eine gemeinsame Erhebung bewusst konsistent konfiguriert werden.
+
+**Nutzungsverhalten** zeigt auch den weitesten bestätigten Schritt inklusive früher Abbrüche, Mobil-/Desktopansicht, sichere Fehlercodes und tatsächlich verwendete Gewichte. Der Metadaten-Download enthält auch Einwilligungen ohne Fragebogenantwort; Antwort-, Gruppen- und Wellenfilter sind pro Export ausgewiesen. Daten bleiben pseudonym, keine Gerätefingerprints oder neuen Profil-/Chattextarchive.
+
+**Studienanalyse** berechnet auf ausdrücklichen Klick den C–B-Nutzenvergleich, drei Holm-korrigierte sekundäre Tests, Effekte mit Unsicherheit, vier Reliabilitäten, M1 und Wiederholungssensitivitäten. Es zählen ausschließlich V14-Hauptwellen mit vollständigen jeweiligen Konstrukten, auch bei späterem Abbruch. Der Analyseplan bleibt ein **Entwurf**, bis Effektgrenze, Ausfallreserve und Rekrutierungsfenster vor dem Hauptversand festgelegt sind; ein Commit allein ist keine externe Präregistrierung.
+
+Im ZIP liegt `analysis_input.csv` mit technischen Spalten. Offline:
+
+```bash
+.venv/bin/pip install -r requirements-analysis.txt
+.venv/bin/python -m research.v14.analyze analysis_input.csv --output auswertung/v14
+```
+
+Details: [Studienprotokoll](STUDY-PROTOCOL.md), [V14-Methoden](V14-METHODS.md), [Analyseskripte und separate Rater-Prüfung](research/v14/README.md). Die Rater-Werkzeuge führen keine menschliche Validierung automatisch durch und greifen nicht auf den Live-Studienfluss zu.
 
 ### Frisch von GitHub starten
 

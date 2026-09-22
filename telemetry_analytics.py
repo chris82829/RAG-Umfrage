@@ -9,6 +9,9 @@ import io
 import json
 import statistics
 
+from study_context import context_snapshot
+from study_metrics import operation_diagnostics
+
 METRIC_NAMES = ('dwell_seconds', 'viewed_job_count', 'job_expand_count',
                 'job_detail_count', 'successful_chat_count')
 EVENT_NAMES = ('dwell_justification', 'job_expand', 'job_detail', 'chat_turn')
@@ -85,6 +88,7 @@ def telemetry_analysis(db, rows):
             dwell_seconds=None, viewed_job_count=None, job_expand_count=None,
             job_detail_count=None, successful_chat_count=None,
             first_event_at=None, last_event_at=None, jobs={}, _dwell_ms=0,
+            **context_snapshot(digest, db), **operation_diagnostics(digest, db),
         )
     # Do not derive successful chat counts from chat_turn rows or their metadata.
     # This is the same durable operation counter used by the study's 3-turn gate.
@@ -168,7 +172,12 @@ def telemetry_analysis(db, rows):
 
 CSV_COLUMNS = (
     ('teilnahme_id', 'participation_id'), ('studiengruppe', 'study_arm'),
-    ('antwortstatus', 'response_status'), ('ereignisse_anzahl', 'event_count'),
+    ('antwortstatus', 'response_status'), ('studienphase', 'study_wave'),
+    ('rekrutierungswelle_utc', 'recruitment_batch'), ('ansicht_bei_beginn', 'viewport_class'),
+    ('ansicht_zuletzt', 'viewport_class_last'), ('weitester_studienschritt', 'furthest_step_reached'),
+    ('fehlgeschlagene_versuche', 'failed_attempt_count'), ('letzter_fehlercode', 'last_error_code'),
+    ('letzte_fehlerphase', 'last_error_stage'), ('letzte_operation_erfolgreich', 'last_operation_success'),
+    ('ereignisse_anzahl', 'event_count'),
     ('browserereignisse_anzahl', 'client_event_count'),
     ('begruendung_sichtbare_zeit_summe_sekunden', 'dwell_seconds'),
     ('stellen_mit_erfasster_interaktion_anzahl', 'viewed_job_count'),

@@ -205,7 +205,7 @@ class PromptExposureAppTests(unittest.TestCase):
         with sqlite3.connect(self.db_path) as db:
             db.execute(
                 "INSERT INTO survey_responses VALUES (?, ?, ?)",
-                (submission_id, "2026-09-21T12:00:00+00:00", json.dumps({"version": "diana-v13", "study_arm": "B"})),
+                (submission_id, "2026-09-21T12:00:00+00:00", json.dumps({"version": "diana-v14", "study_arm": "B"})),
             )
             db.execute(
                 "INSERT INTO privacy_links VALUES ('survey', ?, ?)",
@@ -249,7 +249,7 @@ class PromptExposureAppTests(unittest.TestCase):
         self.assertEqual(rows[0]["system_prompt_base_sha256"], first[2])
         self.assertNotIn(first[3], exported)
         codebook = {item["technical_variable"]: item for item in admin.codebook()}
-        self.assertEqual(codebook["system_prompt_policy"]["versions"], ["diana-v13"])
+        self.assertEqual(codebook["system_prompt_policy"]["versions"], ["diana-v14"])
         self.assertIn("kein Systemprompt", codebook["system_prompt_policy"]["codes"]["unprompted"])
 
         participation_id = row["participation_id"]
@@ -288,7 +288,7 @@ class PromptExposureAppTests(unittest.TestCase):
                 (
                     submission_id,
                     "2026-09-21T12:30:00+00:00",
-                    json.dumps({"version": "diana-v13", "study_arm": "A"}),
+                    json.dumps({"version": "diana-v14", "study_arm": "A"}),
                 ),
             )
             db.execute(
