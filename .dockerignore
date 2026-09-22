@@ -30,3 +30,4 @@
 !migrations/
 !migrations/**
 !survey_definition_v12.json
+!survey_definition_v13.json
