@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCheck, Compass, LoaderCircle, MessageCircle, X } from 'lucide-react';
-import { needsSystemPreparation, startPreparedSystem, surveyConfiguration, applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, submitSurvey, surveyErrors, surveyScale, suggestSearchGoal } from './survey.js';
+import { SURVEY_VERSION, needsSystemPreparation, startPreparedSystem, surveyConfiguration, applyStudyAssignment, restoreServerDraft, finishWaitingIfReady, displaySurveyGroup, markWaitingFields, remainingWaitingGroups, reviseSurvey, changeSurveyAnswer, visibleFields, demographics, emptyAnswers, loadSurveyState, newSurveyState, nextSurveyState, reachableStage, saveSurveyState, submitSurvey, surveyErrors, surveyScale, suggestSearchGoal } from './survey.js';
 import './survey.css';
 import SearchLoadingDialog from './SearchLoadingDialog.jsx';
 import {createSurveyAutosave} from './survey-autosave.js';
@@ -34,7 +34,7 @@ export function SurveyQuestion({ field, value, onChange, busy, error, suggestion
       <option value="" disabled>Bitte wählen</option>
       {field.options.map(([option, label]) => <option key={option} value={option}>{label}</option>)}
     </select> : field.kind === 'scale' ? <>
-      <div className={`survey-scale${labelled ? ' survey-likert' : ''}`}>
+      <div className={`survey-scale${labelled ? ' survey-likert' : ''}`} style={{'--survey-scale-columns': scores.length}}>
         {scores.map(score => <label key={score} className={`survey-score${value === score ? ' is-selected' : ''}`}>
           <input type="radio" name={field.name} value={score} checked={value === score} onChange={() => onChange(field.name, score)} required aria-label={`${score} – ${scale.labels?.[score - scale.min] || (score === scale.min ? scale.low : score === scale.max ? scale.high : score)}`} aria-invalid={Boolean(error)} aria-describedby={describedBy} />
           <span>{score}</span>{labelled && <span className="survey-likert-label">{scale.labels[score - scale.min]}</span>}
@@ -188,7 +188,7 @@ export default function SurveyPage({ initial, participationId }) {
       if(!response.ok)throw new Error('Deine Teilnahme konnte nicht geladen werden. Bitte versuche es erneut.');
       const {draft}=await response.json();
       if(cancelled)return;
-      if(draft?.completed){setState(previous=>({...previous,submitted:true}));setHydrated(true);return;}
+      if(draft?.completed && draft.version===SURVEY_VERSION){setState(previous=>({...previous,submitted:true}));setHydrated(true);return;}
       const assigned=await fetch('/api/study-assignment',{method:'POST',headers:consentHeaders(),signal:controller.signal});
       if(!assigned.ok)throw new Error('Deine Studienvariante konnte nicht geladen werden. Bitte versuche es erneut.');
       const assignment=await assigned.json();

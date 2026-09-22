@@ -30,7 +30,7 @@ class AdminUsageEndpointTests(unittest.TestCase):
         query='?status=in_progress&arm=C&q=needle'
         result=f.client.get('/api/admin/usage-analytics'+query)
         self.assertEqual(result.status_code,200)
-        self.filtered.assert_called_with('needle','diana-v12','in_progress','C','')
+        self.filtered.assert_called_with('needle','diana-v13','in_progress','C','')
         self.assertEqual(result.json['participants'][0]['dwell_seconds'],2.5)
         exported=f.client.get('/api/admin/usage-export'+query)
         self.assertEqual(exported.status_code,200)

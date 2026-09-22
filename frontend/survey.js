@@ -1,33 +1,24 @@
 import {consentHeaders} from './privacy.js';
 import {SURVEY_CHAT_LIMIT} from './chat-limit.js';
-import definition from '../survey_definition_v12.json' with { type: 'json' };
-import definitionV11 from '../survey_definition_v11.json' with { type: 'json' };
-import definitionV10 from '../survey_definition_v10.json' with { type: 'json' };
-import definitionV9 from '../survey_definition_v9.json' with { type: 'json' };
-import definitionV8 from '../survey_definition_v8.json' with { type: 'json' };
-import definitionV7 from '../survey_definition.json' with { type: 'json' };
-import definitionV6 from '../survey_definition_v6.json' with { type: 'json' };
-import definitionV5 from '../survey_definition_v5.json' with { type: 'json' };
-import definitionV4 from '../survey_definition_v4.json' with { type: 'json' };
+import definition from '../survey_definition_v13.json' with { type: 'json' };
 
 export const SURVEY_VERSION = definition.version;
 export const SURVEY_STORAGE_KEY = `diana-survey:${SURVEY_VERSION}`;
-const definitions = Object.fromEntries([definition, definitionV11, definitionV10, definitionV9, definitionV8, definitionV7, definitionV6, definitionV5, definitionV4].map(value => [value.version, value]));
-const preparedStudyVersions = ['diana-v9', 'diana-v10', 'diana-v11', 'diana-v12'];
-const waitingNames = ['search_goal', 'personality_customized', 'template_selection_ease', 'personality_setup'];
-const configurations = Object.fromEntries(Object.entries(definitions).map(([version, value]) => {
-  const demographics = {...value.demographics, fields:value.demographics.fields.filter(field=>!field.systemProvided)};
-  const surveyCategories = value.categories;
-  const surveyFields = [value.demographics, ...surveyCategories].flatMap(group=>group.fields);
-  const beforeSystemFields=demographics.fields.filter(field=>field.beforeSystem);
-  const versionWaitingNames=preparedStudyVersions.includes(version)?['search_goal']:waitingNames;
-  const waitingQuestionFields = versionWaitingNames.map(name=>surveyFields.find(field=>field.name===name)).filter(Boolean);
-  return [version, {beforeSystemFields, demographics, surveyCategories, surveyFields, surveyScale:value.scale,
-    surveyStages:['system', 'demographics', ...surveyCategories.map(group=>group.id)],
-    waitingQuestionFields, waitingQuestionGroups:[demographics, {id:'setup', title:'Weitere Fragen', fields:waitingQuestionFields}]}];
-}));
+const demographicsDefinition = {...definition.demographics, fields:definition.demographics.fields.filter(field=>!field.systemProvided)};
+const currentFields = [definition.demographics, ...definition.categories].flatMap(group=>group.fields);
+const currentWaitingFields = currentFields.filter(field=>field.name==='search_goal');
+const configuration = {
+  beforeSystemFields: demographicsDefinition.fields.filter(field=>field.beforeSystem),
+  demographics: demographicsDefinition, surveyCategories: definition.categories,
+  surveyFields: currentFields, surveyScale: definition.scale,
+  surveyStages: ['system', 'demographics', ...definition.categories.map(group=>group.id)],
+  waitingQuestionFields: currentWaitingFields,
+  waitingQuestionGroups: [demographicsDefinition, {id:'setup', title:'Weitere Fragen', fields:currentWaitingFields}],
+};
 export function surveyConfiguration(version = SURVEY_VERSION) {
-  return configurations[typeof version==='object'?version.version:version] || configurations[SURVEY_VERSION];
+  const requested = typeof version==='object' ? version?.version : version;
+  if(requested !== SURVEY_VERSION)throw new Error('Diese Fragebogenversion ist nicht verfügbar. Bitte starte eine neue Teilnahme.');
+  return configuration;
 }
 export const {demographics, surveyCategories, surveyFields, surveyScale, surveyStages, waitingQuestionFields, waitingQuestionGroups} = surveyConfiguration();
 
@@ -63,7 +54,7 @@ export function surveyErrors(answers, fields = surveyFields) {
   for (const field of visibleFields(fields, answers)) {
     const value = answers[field.name];
     if (field.kind === 'scale') {
-      if ((!Number.isInteger(value) || value < (field.scale?.min || 1) || value > (field.scale?.max || 10)) && !field.nonresponse?.some(([code]) => code === value)) errors[field.name] = 'Bitte wähle eine Bewertung oder eine der Antworten darunter.';
+      if ((!Number.isInteger(value) || value < (field.scale?.min ?? surveyScale.min) || value > (field.scale?.max ?? surveyScale.max)) && !field.nonresponse?.some(([code]) => code === value)) errors[field.name] = 'Bitte wähle eine Bewertung oder eine der Antworten darunter.';
     } else if (field.kind === 'choice') {
       if (!field.options.some(([option]) => option === value)) errors[field.name] = 'Bitte wähle eine Antwort.';
     } else if (typeof value !== 'string' || value.length > field.maxLength || (!field.optional && value.trim().length < (field.minLength || 1))) {
@@ -160,19 +151,19 @@ function sanitizeAnswers(source,version) {
 
 export function loadSurveyState(storage, fresh = newSurveyState) {
   try {
-    const keys=[SURVEY_STORAGE_KEY,...Object.keys(definitions).filter(version=>version!==SURVEY_VERSION).map(version=>`diana-survey:${version}`),'diana-survey:diana-v3','diana-survey:diana-v2'];
-    const raw=keys.map(key=>storage.getItem(key)).find(Boolean);
-    const state=JSON.parse(raw || 'null');
-    if ((definitions[state?.version] || ['diana-v2','diana-v3'].includes(state?.version)) && /^[a-f0-9]{32}$/.test(state.submissionId)
-        && /^[a-f0-9]{32}$/.test(state.runId) && typeof state.submitted==='boolean' && typeof state.systemOpened==='boolean') {
-      if(state.submitted && state.version!==SURVEY_VERSION)return state;
-      if(!definitions[state.version]) {
-        const answers=emptyAnswers();
-        for(const name of [...demographics.fields.map(field=>field.name),'search_goal'])if(state.answers?.[name]!==undefined)answers[name]=state.answers[name];
-        return {...state,version:SURVEY_VERSION,answers:sanitizeAnswers(answers,SURVEY_VERSION),stage:'system',systemOpened:true,systemCompleted:false,chatCompleted:false,chatCount:0,
-          runId:newSurveyState().runId,waitingAnswered:[],draftRevision:Math.max(Date.now(),(state.draftRevision || 0)+1)};
+    // Retired questionnaires must not reappear after the study has been reset.
+    if(typeof storage.key==='function' && typeof storage.removeItem==='function') {
+      const retired=[];
+      for(let index=0;index<storage.length;index++) {
+        const key=storage.key(index);
+        if(key?.startsWith('diana-survey:') && key!==SURVEY_STORAGE_KEY)retired.push(key);
       }
-      const version=state.version;
+      retired.forEach(key=>storage.removeItem(key));
+    }
+    const state=JSON.parse(storage.getItem(SURVEY_STORAGE_KEY) || 'null');
+    if (state?.version===SURVEY_VERSION && /^[a-f0-9]{32}$/.test(state.submissionId)
+        && /^[a-f0-9]{32}$/.test(state.runId) && typeof state.submitted==='boolean' && typeof state.systemOpened==='boolean') {
+      const version=SURVEY_VERSION;
       const {surveyStages,waitingQuestionGroups,surveyFields}=surveyConfiguration(version);
       if(!surveyStages.includes(state.stage))return fresh();
       const answers=sanitizeAnswers(state.answers,version);
@@ -189,7 +180,7 @@ export function loadSurveyState(storage, fresh = newSurveyState) {
 }
 
 export function saveSurveyState(storage, state) {
-  try { storage.setItem(SURVEY_STORAGE_KEY, JSON.stringify(state)); } catch { /* The form still works in memory. */ }
+  try { if(state.version===SURVEY_VERSION)storage.setItem(SURVEY_STORAGE_KEY, JSON.stringify(state)); } catch { /* The form still works in memory. */ }
 }
 
 export async function submitSurvey(state, { request = globalThis.fetch, signal } = {}) {
@@ -210,8 +201,8 @@ export async function submitSurvey(state, { request = globalThis.fetch, signal }
 }
 
 export function restoreServerDraft(previous,draft) {
+  if(draft.version!==SURVEY_VERSION)return previous;
   if(draft.completed)return {...previous,submitted:true};
-  if(!definitions[draft.version])return previous;
   if(draft.version===previous.version && draft.revision<=(previous.draftRevision || 0))return previous;
   const restored={...previous,version:draft.version,answers:sanitizeAnswers(draft.answers,draft.version),draftRevision:draft.revision,waitingAnswered:draft.waiting_answered || [],searchGoalEdited:true};
   return {...restored,stage:reachableStage(restored)};
@@ -219,18 +210,10 @@ export function restoreServerDraft(previous,draft) {
 
 export function applyStudyAssignment(state,assignment) {
   if(!['A','B','C'].includes(assignment?.arm))throw new Error('Studienzuordnung konnte nicht geladen werden.');
-  let version=assignment.questionnaire_version || (assignment.experiment_id==='diana-abc-v2'?'diana-v9':assignment.experiment_id==='diana-abc-v1'?'diana-v8':assignment.experiment_id?.startsWith('diana-ab-')?'diana-v7':SURVEY_VERSION);
-  // Some historical B/C participants already moved to v7 before the ABC study.
-  if(assignment.experiment_id==='diana-bc-v1' && state.version==='diana-v7')version='diana-v7';
-  if(!definitions[version])throw new Error('Diese Fragebogenversion ist nicht verfügbar.');
-  let next=state;
-  if(version!==state.version) {
-    const answers=emptyAnswers(version);
-    for(const name of [...demographics.fields.map(field=>field.name),'search_goal'])if(state.answers[name]!==undefined)answers[name]=state.answers[name];
-    next={...state,version,answers,stage:'system',systemTaskStarted:false,systemCompleted:false,chatCompleted:false,chatCount:0,runId:newSurveyState().runId,waitingAnswered:(state.waitingAnswered || []).filter(name=>[...demographics.fields.map(field=>field.name),'search_goal'].includes(name))};
-  }
-  const arm=version==='diana-v6' && assignment.experiment_id==='diana-bc-v1'?({A:'B',B:'C'}[assignment.arm] || assignment.arm):assignment.arm;
-  const answers=changeSurveyAnswer(next.answers,'study_arm',arm,version);
+  const version=assignment.questionnaire_version;
+  if(version!==SURVEY_VERSION)throw new Error('Diese Fragebogenversion ist nicht verfügbar. Bitte starte eine neue Teilnahme.');
+  const next=state.version===SURVEY_VERSION ? state : newSurveyState();
+  const answers=changeSurveyAnswer(next.answers,'study_arm',assignment.arm,version);
   const progress=assignment.chat_progress;
   const chatCount=Number.isInteger(progress?.used) && progress.used >= 0 ? progress.used : 0;
   return reviseSurvey(next,{answers,assignment,chatCount,chatCompleted:progress?.can_proceed===true && chatCount>=SURVEY_CHAT_LIMIT});
@@ -240,7 +223,7 @@ export function applyStudyAssignment(state,assignment) {
 export function needsSystemPreparation(state) {
   const fields=surveyConfiguration(state).beforeSystemFields;
   const startedOnServer=fields.length>0 && fields.every(field=>waitingFieldDone(state,field));
-  return preparedStudyVersions.includes(state.version) && !state.systemTaskStarted && !startedOnServer && !state.systemCompleted && !state.submitted;
+  return state.version===SURVEY_VERSION && !state.systemTaskStarted && !startedOnServer && !state.systemCompleted && !state.submitted;
 }
 export function startPreparedSystem(state) {
   const fields=surveyConfiguration(state).beforeSystemFields;

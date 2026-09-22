@@ -101,97 +101,50 @@ sind nur lokale Antworten sichtbar; Serverantworten bleiben in der Serverdatenba
    vollständiger Frage und Fragebogenversion. `study_manifest.json` dokumentiert
    zusätzlich die gewählte Spaltenbenennung.
 
-Beispiele für den Standardexport:
+Der aktuelle Fragebogen ist ausschließlich **`diana-v13`**, Experiment **`diana-abc-v6`**.
+Die Verwaltung bietet keine Auswahl früherer Fragebögen. Auch die Antwort-CSV und
+das Codebuch enthalten nur die neuen Fragefelder; alte Antworten werden nicht
+migriert. Einträge alter Browserfassungen werden beim Schreiben zurückgewiesen.
 
 | Exportspalte | Bedeutung |
 | --- | --- |
-| `teilnahme_id` | Pseudonyme Teilnahme-ID |
+| `teilnahme_id` | Verbindung zwischen Antworten und Nutzungsereignissen |
 | `teilnahme_status` | `completed` oder `in_progress` |
-| `studiengruppe` | A, B oder C; Bedeutung zusammen mit Version und Experiment auswerten |
-| `v12_chat_hilfe_suchwuensche` | Hilfe des Chats beim Konkretisieren der Suchwünsche |
-| `v12_score_nutzen` | Nützlichkeit des Scores für den Überblick |
-| `v12_begruendungen_nutzen` | Nützlichkeit der Begründungen zum Nachvollziehen |
-| `v12_suche_aufwand` | Aufwand: hoher Wert bedeutet **mehr** Aufwand |
-| `v12_ki_selbst_angepasst_selbstauskunft` | C-Selbstauskunft zur tatsächlichen Veränderung der vorgeschlagenen Ausgangskonfiguration |
-| `v12_system_nutzen_effektivitaet` | Effektivität der Stellensuche, Zustimmung 1–5 |
-| `v12_system_nutzen_geschwindigkeit` | Passende Stellen schneller finden, Zustimmung 1–5 |
-| `v12_system_nutzen_gesamturteil` | Gesamtnützlichkeit, Zustimmung 1–5 |
-| `ki_letzte_verwendung` | Automatisch erfasste Herkunft der angewendeten Persönlichkeit |
+| `studiengruppe` | A, B oder C |
+| `v13_nutzen_passende_stelle` | Nutzenitem zur idealen Stelle |
+| `v13_nutzen_einfacher_finden` | Nutzenitem zum einfachen Finden |
+| `v13_nutzen_vorschlaege` | Nutzenitem zu guten Vorschlägen |
+| `v13_nutzen_mittelwert` | Mittel aus genau drei gültigen Nutzenitems |
+| `v13_kontrolle_mittelwert` | Mittel aus genau drei gültigen Suchkontrollitems |
+| `v13_transparenz_mittelwert` | Mittel aus genau drei gültigen Transparenzitems |
+| `v13_zusatz_suchaufwand` | Gesamter subjektiver Nutzungsaufwand; hoch = mehr Aufwand |
+| `v13_zusatz_beratungsstil_steuerbarkeit` | Wahrgenommene Gestaltbarkeit des Sprachstils |
 
-Spaltennamen sind eindeutig, klein geschrieben und verwenden ausschließlich
-ASCII-Buchstaben, Ziffern und Unterstriche. Die API verwendet standardmäßig
-`/api/admin/export?columns=readable`; `columns=technical` erhält die bisherigen
-technischen Namen. Das gilt für CSV und ZIP. Der geschützte serverseitige
-`survey-export`-Befehl verwendet ebenfalls die verständlichen Spaltennamen;
-sein historisches Textformat für Auswahlantworten bleibt erhalten. Für numerische
-Numiqo-Auswertungen den Verwaltungsdownload verwenden.
+Alle Bewertungen verwenden **1–7**. „Kann ich nicht beurteilen“ bleibt leer und
+wird durch die zugehörige `_antwortstatus`-Spalte erklärt. Mittelwerte werden nur
+bei drei vollständigen numerischen Antworten berechnet, niemals aus weniger
+Items. Die drei Dialogeinzelitems bilden keine gemeinsame Skala; es gibt keinen
+Gesamtscore über den Fragebogen. Das Codebuch kennzeichnet Framework, Konstrukt,
+Fundstelle, DOI, Anpassung, Wertebereich, Antwortcodes und Richtung. Hoher Aufwand
+wird nicht automatisch umgepolt. Die rechnerischen Konstruktmittelwerte sind keine
+Bestätigung psychometrischer Validität.
 
-Eine Zeile entspricht einer Teilnahme. Der aktuelle Vergleich ist
-**`diana-abc-v5` / `diana-v12`**, mit eigenen `v12_`-Spalten. A/B/C sehen
-**17/21/22 Fragen** inklusive optionaler Fachrichtung und Feedback. Die drei
-Nutzen-Aussagen haben Werte 1–5 mit den Ankern „Stimme gar nicht zu“ bis „Stimme
-voll zu“, die anderen Bewertungsfragen bleiben 1–10. Ja=1 und Nein=0.
+A/B sehen 22 Fragen, C 23, inklusive freiwilliger Fachrichtung und Feedback.
+Gemeinsame Fragen sind in allen Gruppen identisch. Nur die Selbstauskunft zur
+Veränderung der Beratungseinstellungen erscheint in C. Alter und Geschlecht
+werden nicht erhoben. Die Zuordnung bleibt A/B/C, auch wenn C nichts verändert.
+[Fragenkatalog und Quellen](QUESTIONNAIRE.md), [Auswertungsplan](STUDY-PROTOCOL.md).
 
-A hat keine wählbare Persönlichkeit; sein separates Promptfeld ist standardmäßig
-leer. B nutzt den festen Top-Berufsberater, C dessen selbst gestaltbare Variante.
-Alle verwenden gleiche Scoring-Gewichte 60/15/7/6/6/6. Unterschiedliche Prompts
-können trotzdem unterschiedliche Teilbewertungen und Rankings erzeugen.
-`v12_studiengruppe_originalcode` bedeutet **0=A, 1=B, 2=C**; `studiengruppe`
-enthält direkt den Buchstaben. Alle zufällig C zugeteilten Teilnahmen bleiben C,
-auch ohne inhaltliche Änderung der Ausgangskonfiguration.
+Die technischen Spaltennamen sind mit `columns=technical` verfügbar; Standard
+ist `columns=readable`. Beide Exporte enthalten dieselben Werte. Die
+`spaltenzuordnung.csv` liefert die genaue Zuordnung der Namen. CSV nutzt UTF-8/BOM
+und Semikolon. Formelähnlicher Freitext wird beim Export mit Apostroph abgesichert.
 
-V12 erhebt keine Bewertungsschwerpunkte mehr. Die frühere Rangfolgenfrage wird
-nicht umbenannt oder überschrieben: die neue Frage zur Formulierung der Begründungen
-steht in `v12_ki_wirkung_sprachstil_begruendungen_verstaendnis` (technisch
-`v12_personality_clarity_explanations`). Alte Antwortfelder sind seit V12 deprecated
-und bleiben in den jeweiligen historischen Versionen erhalten. Nicht gestellte
-Fragen bleiben leer mit Status `skipped`.
-
-Die Startmigration `survey_migrations.py` ergänzt drei generierte INTEGER-Spalten
-für V12-Nutzenwerte in Antworten und Entwürfen. Sie werden aus den versionierten
-JSON-Antworten abgeleitet und folgen damit auch Verwaltungskorrekturen automatisch.
-Der Bereich 1–5 wird geprüft; fehlende und nicht beurteilbare Werte bleiben NULL.
-Die Migration ist wiederholt ausführbar und löscht keine historischen Daten.
-Standalone: `python survey_migrations.py /pfad/zur/datenbank.sqlite3`.
-
-Historische V11-Antworten behalten `v11_`-Spalten und `diana-abc-v4`, einschließlich
-des 1–10-Einzelitems `system_usefulness`, der früheren Rangfolgenfrage und der
-Bewertungsschwerpunkte. Sie werden nicht in die neue Skala überführt.
-
-Historische V10-Antworten behalten `v10_`-Spalten und `diana-abc-v3`: A war die
-feste sachliche Standardberatung, B bot Top-Berufsberater oder Fachexperte und C
-zusätzlich Selbstgestaltung. Diese Kohorte nicht mit V11 zusammenführen.
-
-Historische V9-Antworten behalten `v9_`-Spalten und `diana-abc-v2`. Die
-Systembedingungen waren bereits fair, der Fragebogen aber länger. V9 und V10
-werden getrennt ausgewertet. Die alten Einrichtungsbewertungen bleiben in V9
-lesbar; es werden weder Werte gelöscht noch Antworten für V10 ergänzt.
-
-Historische V8-Antworten behalten `v8_`-Spalten und `diana-abc-v1`. A hatte dort einen allgemeinen Chat, Zufallsreihenfolge und keine Scores/Begründungen; diese Daten sind keine Standardberatungs-Baseline aus V10.
-
-Historische V7-Antworten behalten ihre eigenen Spalten und Codes **0=A, 1=B**.
-B war dort frei gestaltbar und darf nicht als neue Vorlagengruppe B behandelt werden.
-
-Historischer Fragebogen V4 verwendet eigene `v4_`-Spalten:
-Ja=1, Nein=0 (nominal); fünf beschriftete Kategorien (ordinal); Nützlichkeit und Chat-Hilfe
-1–10 (ordinal). Demografische Auswahlwerte sind im Codebuch codiert; Freitext bleibt Text.
-ID, Modell und Version sind nominal. „Unentschieden“ bei Wiederverwendung ist der gültige
-Wert 3. Fehlende Bewertungen sind leer, nicht 0. Die jeweilige `_antwortstatus`-Spalte
-(im technischen Format `_status`) erklärt `answered`, `not_used`, `not_assessable`,
-`not_specified`, `skipped`, `no_answer`, `not_asked` und `unanswered`.
-In V4 bleiben bei `chat_used=no` die drei Folgefragen leer (`skipped`). Diese Frage
-entfällt in den neueren Versionen.
-
-Identische historische V2/V3-Fragen stehen in `v2_v3_`-Spalten, die vier zusätzlichen
-V3-Nützlichkeitsfragen in `v3_`-Spalten und V1-Antworten in `v1_`-Spalten.
-Spätere Versionen bleiben separat in `v4_` bis `v12_`.
-Antworten verschiedener Frageformulierungen oder Skalen nicht ungeprüft zusammenfassen.
-Das Codebuch enthält den vollständigen Originalwortlaut, Antwortcodes und Originalcodes,
-Skalenenden, fehlende Werte, Filterführung und Bewertungsrichtung. Die Aufwandsfrage ist
-explizit als gegenläufig markiert (`reverse_direction=true`); die Zahlen werden **nicht**
-automatisch umgepolt. Daraus entsteht kein ungeprüfter Gesamtwert.
-Formelähnlicher Freitext erhält ein vorangestelltes Apostroph zum Schutz beim
-Öffnen in Tabellenprogrammen; dies bei qualitativer Textauswertung berücksichtigen.
+`survey_migrations.py` ergänzt generierte INTEGER-Spalten für die neuen
+V13-Bewertungen aus dem Antwort-JSON. Der Bereich 1–7 wird geprüft; fehlende oder
+nicht beurteilbare Werte bleiben NULL. Wiederholter Start ist möglich; die
+Migration selbst ist keine Datenlöschung. Der beauftragte Datenreset wird
+separat auf den bestehenden Installationen durchgeführt.
 
 ### Aggregierte Nutzung und Laufzeiten
 
@@ -216,8 +169,7 @@ Zähler und Dauern leer; 0 gilt nur im erfassten Zeitraum. Abgeschlossene Antwor
 verwenden den eingefrorenen Stand bei Abgabe, Entwürfe den aktuellen Stand. Die
 Einzelansicht zeigt die Metadaten schreibgeschützt. Löschung/Widerruf entfernt auch
 diese Messwerte.
-Die Operationszähler belegen außerdem nicht zuverlässig, ob Suchwünsche im Chat
-verändert wurden. Die entsprechende Ja/Nein-Frage bleibt separat bestehen.
+Die Operationszähler belegen nicht zuverlässig, ob Suchwünsche inhaltlich geändert wurden; solche Änderungen nicht allein aus der Nachrichtenanzahl ableiten.
 
 ### Einzelereignisse ab V12
 
@@ -234,31 +186,22 @@ nicht zur Sitzungsdauer addieren. Details, Metadaten und Löschwege:
 [STUDY-TELEMETRY.md](STUDY-TELEMETRY.md). Separate Testseiten schreiben keine
 Studienereignisse. Historische Zeiträume werden nicht rückwirkend aufgefüllt.
 
-### Teilnahmefluss und vorläufiger V12-Endpunkt
+### Teilnahmefluss und Konstrukte in V13
 
-`teilnahmefluss.csv` enthält **ungefilterte** aggregierte Zahlen des aktiven
-Studienbestands, unabhängig vom Filter der Einzelantworten. Eine zugeteilte
-Einwilligungskennung zählt höchstens einmal. Experiment, ursprüngliche Gruppe,
-zugeteilte/abgeschlossene Teilnahmen und Antwortversionen bleiben getrennt.
-Widerrufene/gelöschte Fälle fehlen; dies ist ein Bestandsbericht, kein vollständiger
-Rekrutierungsverlauf.
+`teilnahmefluss.csv` enthält ungefilterte aggregierte Zahlen des aktiven V13-
+Studienbestands. Zuordnungen, Abschlüsse und vollständige Nutzen-, Kontroll- und
+Transparenzwerte bleiben getrennt. Das ist ein Bestandsbericht, kein vollständiger
+Rekrutierungsverlauf nach Löschungen/Widerrufen.
 
-`primaerwert_v12_vollstaendig_anzahl` zählt Personen mit **drei numerischen Antworten
-1–5** in den neuen Nutzenitems, auch bei insgesamt unvollständiger Umfrage.
-Historische gültige V9/V10/V11-Einzelitems haben eigene Zähler. Für die geplante
-V12-Auswertung abgeschlossene und unvollständige Antworten gemeinsam exportieren.
-Vorgesehen ist vorläufig das Mittel aus genau drei gültigen Items; bei einem
-fehlenden Item bleibt der Endpunkt fehlend. Die Verwaltung zeigt Einzelitems und
-berechnet diesen Mittelwert nicht automatisch. Das Instrument ist eine angepasste,
-noch nicht validierte Operationalisierung.
+Für den geplanten primären C–B-Vergleich auch unvollständige Teilnahmen mit drei
+vollständigen Nutzenantworten exportieren. Der Statusfilter gilt für Diagramme,
+Einzelantworten und die Antwort-/Nutzungsdownloads. Fehlende Antworten bleiben
+fehlend; keine Daten anderer Fragebogenversionen hinzunehmen.
 
-**`research/analyze_primary.py` unterstützt V12 nicht.** Es bleibt ein Werkzeug
-für die historischen V9–V11-Einzelitems. V12-Items nicht in alte Spalten umbenennen
-oder 1–5-Werte als 1–10-Werte behandeln. Analyseentscheidung und Stichprobenplanung
-vor der Haupterhebung festschreiben: [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md).
-Die separate [Relevanzprüfung](research/human_relevance/README.md) bereitet
-menschliche Urteile vor; echte aktuelle Urteile und Forschungsergebnisse liegen
-dafür noch nicht vor.
+`research/analyze_primary.py` ist ein historisches Werkzeug, kein V13-Analysetool.
+Der neue Export liefert alle Einzelitems und die drei vollständigen Skalenmittel.
+Pretest, psychometrische Prüfung, Fallzahl und inferenzstatistischer Analyseplan
+sind vor der Haupterhebung festzulegen; siehe [STUDY-PROTOCOL.md](STUDY-PROTOCOL.md).
 
 ### Automatische Herkunft der KI-Persönlichkeit
 
@@ -268,7 +211,7 @@ wenn dessen Werte zufällig einer Vorlage entsprechen. Es beweist nicht, dass
 Eigenschaften oder Gewichte inhaltlich verändert wurden. Die weiterhin erhobene
 Ja/Nein-Selbstauskunft zur Anpassung ist daher kein identisches Duplikat dieser Daten:
 
-In V11/V12 ist für B regulär `template`/`career` und für C `custom` zu erwarten; der
+In V13 ist für B regulär `template`/`career` und für C `custom` zu erwarten; der
 Fachexperten-Code bleibt ausschließlich für historische Datensätze lesbar.
 
 
@@ -350,62 +293,13 @@ Teilnahmen ist `abgeschlossen_am_utc` leer. Noch nicht beantwortete Pflichtfrage
 `unanswered` in ihrer Statusspalte. Ein späterer Abschluss ersetzt den Entwurf, ohne eine
 zweite Teilnahme anzulegen. Löschung über dieselbe Teilnahme-ID entfernt auch Entwürfe.
 
-## Fragebogen V5
-
-Alle subjektiven Bewertungen verwenden 1–10. Neue Antworten stehen in `v5_`-Spalten, historische V4-Werte unverändert in `v4_`-Spalten. Die Frage nach einer eigenen Chatnachricht entfällt in V5. Filter und Codebuch unterscheiden beide Versionen; Werte verschiedener Skalen nicht ungeprüft zusammenfassen.
-
-## Historischer A/B-Gesamtpaketvergleich (V7)
-
-Der aktuelle Vergleich untersucht das gesamte Funktionspaket:
-
-- **A:** neutrales profilbasiertes Suchsystem mit Chat, ohne angezeigte Scores und
-  ohne automatische Begründungsboxen an den Stellenkarten. Alle bis zu 20
-  zurückgegebenen Stellen werden angezeigt.
-- **B:** Suchsystem mit gestaltbarer KI-Suchpersönlichkeit, angezeigten Scores und
-  automatischen Begründungsboxen. Zunächst erscheinen Stellen ab 70 Punkten;
-  weitere bewertete Stellen lassen sich einblenden.
-
-A bleibt ein funktionierendes, hilfreiches Suchsystem; es erhält keine absichtlich
-falschen oder verschlechterten Antworten. Gemessen wird der zusätzliche Nutzen des
-Pakets, nicht der isolierte Effekt der Persönlichkeit, der Scores oder der
-Begründungen. Auch die anfängliche Sichtbarkeit der Ergebnisliste gehört zum
-verglichenen Paket. Gemeinsame Ergebnisfragen erlauben den Gruppenvergleich;
-funktionsbezogene Zusatzfragen werden nur B gestellt.
-
-Die Verwaltung zeigt und filtert einheitlich **A** und **B**. CSV/Numiqo-ZIP enthalten
-`studiengruppe`, `experiment_id`, `zugeteilt_am_utc`, `vorherige_systemnutzung` und getrennte
-`v7_`-Antwortspalten. Zuordnungen dieses historischen Stands verwendeten `experiment_id=diana-ab-v1`.
-Vorhandene Zuordnungen bleiben erhalten; eine fortgesetzte Teilnahme kann deshalb
-V7-Antworten mit einer älteren Experiment-ID enthalten. `vorherige_systemnutzung` beschreibt
-die Situation vor der ursprünglichen Zuordnung und ist kein vollständiger Nachweis
-aller früheren Systemnutzungen. Abbrüche stehen unter **Unvollständig**.
-
-## Historische Vergleichserhebung (V6)
-
-Gespeicherte V6-Antworten und die Definition in `survey_definition_v6.json` bleiben
-unverändert. Damals hatten **beide** Gruppen Scores und Begründungen. Die historischen
-Originalcodes **B** (neutral) und **C** (personalisiert) erscheinen in der Verwaltung
-als **A** beziehungsweise **B**; die Speicherung wird dafür nicht umgeschrieben.
-
-Die Metadatenspalte `studiengruppe` verwendet die einheitliche Anzeige A/B. Die eigene
-Spalte `v6_studiengruppe_originalcode` bewahrt die ursprüngliche Codierung numerisch: **0 = originales B**,
-**1 = originales C**. Bei V7 bedeutet `v7_studiengruppe_originalcode` dagegen **0 = A**, **1 = B**.
-`original_codes` im Codebuch dokumentiert diese Zuordnung. Die historische
-Experiment-ID bleibt `diana-bc-v1`; historische Antworten erhalten keine nachträglich
-erfundene aktuelle Zuordnung.
-
-**V6 und V7 getrennt auswerten.** Gleiche angezeigte Gruppenbuchstaben bedeuten nicht,
-dass die getesteten Funktionspakete gleich waren. Fragebogenversion, Experiment-ID
-und erfasste Systemstände gemeinsam prüfen; Ergebnisse nicht ungeprüft zusammenfassen.
-
 ## Diagramme und Einzelantworten
 
 Unter **Diagramme** zeigt die Verwaltung Häufigkeiten und Prozentwerte je Frage,
-bei numerischen Bewertungen (1–5 beziehungsweise 1–10) außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
+bei den Bewertungen 1–7 außerdem Mittelwert, Median und gültige Fallzahl. A/B/C werden
 farblich unterschieden; der Kategorienfilter begrenzt die Darstellung. Alle
-Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V12/abgeschlossen;
-ältere Antworten lassen sich mit dem Fragebogenfilter auswählen.
-Fragebogenversionen und Experimentkennungen werden nicht zusammengefasst.
+Tabellenseiten gehen in die Berechnung ein. Die Vorauswahl ist V13/abgeschlossen. Es gibt keinen Fragebogenfilter.
+Nutzen, Suchkontrolle und Transparenz zeigen zusätzlich getrennte Mittelwerte aus jeweils drei gültigen Items.
 Nicht beurteilbar, nicht genutzt, offene und durch Filterführung übersprungene
 Antworten werden gesondert gezählt und nicht als Null in Mittelwerte gerechnet.
 Die Aufwandsfrage bleibt in ihrer ursprünglichen Richtung (hoch = mehr Aufwand).
@@ -422,16 +316,6 @@ Einwilligungen werden widerrufen und als gesperrte Kennungen erhalten, damit alt
 Sitzungen keine Antworten nachliefern. Die Studie wird dadurch nicht geschlossen;
 neue Teilnahmen sind entsprechend dem Freigabestatus möglich. Exporte und Backups
 werden nicht automatisch gelöscht.
-
-## Allgemeiner Chat und zufällige Reihenfolge in A
-
-Vom 11. September 2026 bis zur Einführung von V8 verwendeten neue Zuordnungen `diana-ab-v2`. A hat einen
-allgemeinen Chat ohne fachliche Beratungsrolle und ohne zusätzliche Antwortlängen-
-grenze. Die bis zu 20 Retrieval-Kandidaten werden zufällig angeordnet; derselbe
-Pool bleibt bei Antworten und Neubewertung stabil. `darstellungs_versionen` in
-CSV und Diagrammkohorten trennt `random-order-generic-chat-v1` von älteren oder
-undokumentierten Ständen. Mehrere während einer Teilnahme genutzte Stände bleiben
-gesondert erkennbar. Ursprüngliche Gruppenzuordnungen werden nicht verändert.
 
 ## Nutzungsverhalten und Betrachtungszeit
 

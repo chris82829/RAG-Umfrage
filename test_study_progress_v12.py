@@ -31,7 +31,7 @@ class StudyProgressTests(SurveyChatLimitTests):
             result=self.client.post('/api/survey-responses',headers=headers,json=submission)
             self.assertEqual(result.status_code,403,result.json)
             draft=dict(submission_id='2'*32,version=version,revision=count+1,
-                waiting_answered=[],answers={'study_arm':'C','search_effort':3})
+                waiting_answered=[],answers={'study_arm':'C','study_effort':3})
             result=self.client.put('/api/survey-drafts',headers=headers,json=draft)
             self.assertEqual(result.status_code,403,result.json)
             state=self.chat(headers,state).json
@@ -43,7 +43,7 @@ class StudyProgressTests(SurveyChatLimitTests):
         headers=self.grant()
         version=self.client.post('/api/study-assignment',headers=headers).json['questionnaire_version']
         payload=dict(submission_id='3'*32,version=version,revision=1,waiting_answered=[],
-            answers={'study_arm':'A','age_group':'25_29','ai_chat_experience':'never','search_goal':'Python Entwickler'})
+            answers={'study_arm':'A','education':'master','ai_chat_experience':'never','search_goal':'Python Entwickler'})
         response=self.client.put('/api/survey-drafts',headers=headers,json=payload)
         self.assertEqual(response.status_code,200,response.json)
 

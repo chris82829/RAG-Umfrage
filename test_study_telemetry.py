@@ -183,9 +183,9 @@ class StudyTelemetryTests(unittest.TestCase):
         self.app.extensions['admin_data'].filtered = filtered
         self.assertEqual(self.client.get('/api/admin/telemetry-export').status_code, 401)
         self.assertEqual(self.client.post('/api/admin/login', json={'password': 'test-password'}).status_code, 200)
-        response = self.client.get('/api/admin/telemetry-export?version=diana-v12&status=in_progress&arm=C&q=needle')
+        response = self.client.get('/api/admin/telemetry-export?version=diana-v13&status=in_progress&arm=C&q=needle')
         self.assertEqual(response.status_code, 200)
-        filtered.assert_called_once_with('needle', 'diana-v12', 'in_progress', 'C', '')
+        filtered.assert_called_once_with('needle', 'diana-v13', 'in_progress', 'C', '')
         self.assertIn(participant_id, response.get_data(as_text=True))
         filtered.return_value = []
         response = self.client.get('/api/admin/telemetry-export?status=completed')

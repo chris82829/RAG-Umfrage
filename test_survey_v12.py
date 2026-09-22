@@ -11,7 +11,7 @@ from pydantic import ValidationError
 from admin_store import AdminSurveyData, displayed_study_arm
 from export_columns import export_name
 from survey_analytics import analytics
-from survey_store import (SURVEY_VERSION, SURVEY_FIELDS, VERSIONED_FIELDS, SurveyStore,
+from survey_store import (V12_SURVEY_DEFINITION, V12_SURVEY_FIELDS as SURVEY_FIELDS, VERSIONED_FIELDS, SurveyStore,
                           SurveyRequest, SurveyDraftRequest, field_visible)
 from survey_migrations import USEFULNESS_ITEMS
 
@@ -30,7 +30,7 @@ def answers(version='diana-v12', arm='C'):
 
 class SurveyV12Tests(unittest.TestCase):
     def test_appendix_counts_and_exact_items(self):
-        self.assertEqual(SURVEY_VERSION,'diana-v12')
+        self.assertEqual(V12_SURVEY_DEFINITION['version'],'diana-v12')
         for arm,count in [('A',17),('B',21),('C',22)]:
             self.assertEqual(sum(not f.get('systemProvided') and field_visible(f,{'study_arm':arm}) for f in SURVEY_FIELDS),count)
             SurveyRequest.model_validate(dict(submission_id='a'*32,**answers(arm=arm)))
@@ -85,7 +85,7 @@ class SurveyV12Tests(unittest.TestCase):
                 self.assertEqual(db.execute('SELECT usefulness_speed FROM survey_drafts').fetchone()[0],4)
                 with self.assertRaises(sqlite3.IntegrityError):
                     db.execute("UPDATE survey_drafts SET answers_json=json_set(answers_json,'$.usefulness_speed',9)")
-            stream=io.StringIO();store.export_csv(stream,columns='technical')
+            stream=io.StringIO();store._export_historical_csv(stream,columns='technical')
             rows=list(csv.DictReader(io.StringIO(stream.getvalue()),delimiter=';'))
             self.assertEqual(rows[0]['v11_personalized_search_usefulness'],'10')
             self.assertEqual(rows[0]['v12_usefulness_effective'],'')
@@ -94,7 +94,7 @@ class SurveyV12Tests(unittest.TestCase):
 
     def test_codebook_and_analytics_use_five_point_anchors(self):
         store=object.__new__(AdminSurveyData)
-        book={item['technical_variable']:item for item in store.codebook()}
+        book={item['technical_variable']:item for item in store._all_codebook()}
         item=book['v12_usefulness_effective']
         self.assertEqual(item['maximum'],5)
         self.assertEqual(item['codes']['3'],'Neutral')

@@ -1,9 +1,8 @@
-"""Idempotent, non-destructive questionnaire V12 migration.
+"""Idempotent questionnaire migrations: V13 seven-point items plus deprecated V12 columns.
 
 Run: python survey_migrations.py /path/to/surveys.sqlite3
-Historical JSON records and their original question keys remain unchanged. Generated
-columns expose the three V12 integer ratings to SQL without a second write source.
-An unanswered or explicitly unassessable item is SQL NULL, never zero.
+Versioned JSON is the sole write source. Generated SQL columns expose ratings without
+copying them; missing and explicitly unassessable ratings are NULL, never zero.
 """
 from __future__ import annotations
 
@@ -30,6 +29,27 @@ def migrate_v12(db):
                 CHECK ({name} IS NULL OR {name} BETWEEN 1 AND 5)''')
 
 
+def migrate_v13(db):
+    """Expose the current seven-point item ratings; JSON is the only write source."""
+    import json
+    definition = json.loads(Path(__file__).with_name('survey_definition_v13.json').read_text())
+    scales = [field for group in [definition['demographics'], *definition['categories']]
+              for field in group['fields'] if field['kind'] == 'scale']
+    for table in ('survey_responses', 'survey_drafts'):
+        columns = {row[1] for row in db.execute(f'PRAGMA table_xinfo({table})')}
+        for field in scales:
+            name = field['name']
+            if name in columns:
+                continue
+            assert name.replace('_', '').isalnum()
+            db.execute(f"""ALTER TABLE {table} ADD COLUMN {name} INTEGER
+                GENERATED ALWAYS AS (CASE
+                    WHEN json_extract(answers_json, '$.version') = 'diana-v13'
+                      AND json_type(answers_json, '$.{name}') = 'integer'
+                    THEN json_extract(answers_json, '$.{name}') ELSE NULL END) VIRTUAL
+                CHECK ({name} IS NULL OR {name} BETWEEN 1 AND 7)""")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('database', type=Path)
@@ -37,7 +57,7 @@ def main():
     # Initialize empty DBs and run the exact migration used during application startup.
     from survey_store import SurveyStore
     SurveyStore(args.database)
-    print('V12 migration applied; existing versioned answers preserved.')
+    print('V13 migration applied; current seven-point items available; retired columns remain historical only.')
 
 
 if __name__ == '__main__':

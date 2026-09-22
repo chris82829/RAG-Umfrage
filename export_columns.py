@@ -80,6 +80,8 @@ QUESTION_NAMES = {
     'future_preference': 'ki_beratung_kuenftig_bevorzugt',
 }
 
+QUESTION_NAMES.update({'usefulness_ideal': 'nutzen_passende_stelle', 'usefulness_find_easy': 'nutzen_einfacher_finden', 'usefulness_suggestions': 'nutzen_vorschlaege', 'dialogue_understanding': 'dialog_verstaendnis', 'dialogue_response_quality': 'dialog_antwortqualitaet', 'dialogue_attentiveness': 'dialog_aufmerksamkeit', 'control_preferences': 'kontrolle_praeferenzen', 'control_recommendations': 'kontrolle_empfehlungen', 'control_adjustment': 'kontrolle_anpassung', 'transparency_why': 'transparenz_empfehlungsgrund', 'transparency_assessment': 'transparenz_bewertung', 'transparency_fit': 'transparenz_passung', 'overall_satisfaction': 'gesamtzufriedenheit', 'intention_reuse': 'wiederverwendungsabsicht', 'study_effort': 'zusatz_suchaufwand', 'study_style_control': 'zusatz_beratungsstil_steuerbarkeit', 'usefulness_mean': 'nutzen_mittelwert', 'control_mean': 'kontrolle_mittelwert', 'transparency_mean': 'transparenz_mittelwert'})
+
 
 def validate_columns(columns):
     if columns not in COLUMN_FORMATS:

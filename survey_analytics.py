@@ -3,11 +3,11 @@ from collections import Counter
 from copy import deepcopy
 from statistics import mean, median
 
-from survey_store import (SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
+from survey_store import (SURVEY_DEFINITION, V12_SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION, V5_SURVEY_DEFINITION,
                           V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION, answer_status,
                           QUESTIONS, ADDED_VALUE_LABELS, PREFERENCE_LABELS)
 
-DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
+DEFINITIONS = {d['version']: d for d in (SURVEY_DEFINITION, V12_SURVEY_DEFINITION, V11_SURVEY_DEFINITION, V10_SURVEY_DEFINITION, V9_SURVEY_DEFINITION, V8_SURVEY_DEFINITION, V7_SURVEY_DEFINITION, V6_SURVEY_DEFINITION,
                V5_SURVEY_DEFINITION, V4_SURVEY_DEFINITION, LEGACY_SURVEY_DEFINITION)}
 DEFINITIONS['diana-v2'] = deepcopy(LEGACY_SURVEY_DEFINITION)
 for category in [DEFINITIONS['diana-v2']['demographics'], *DEFINITIONS['diana-v2']['categories']]:
@@ -54,6 +54,21 @@ def summarize(field, rows):
                 texts=texts[:50], remaining_texts=max(0, len(texts) - 50))
 
 
+def construct_value(answers, construct):
+    """Only complete numeric item sets yield a mean; missing values stay missing."""
+    values = [answers.get(name) for name in construct['items']]
+    if not all(type(value) is int and construct['min'] <= value <= construct['max'] for value in values):
+        return None
+    return mean(values)
+
+
+def summarize_construct(rows, construct):
+    values = [value for row in rows if (value := construct_value(row['answers'], construct)) is not None]
+    return dict(total=len(rows), n=len(values), missing=len(rows)-len(values),
+                mean=round(mean(values), 3) if values else None,
+                median=round(median(values), 3) if values else None)
+
+
 def analytics(rows, version):
     """Require a version; separate migrated experiment cohorts within that version."""
     definition = DEFINITIONS.get(version)
@@ -61,7 +76,7 @@ def analytics(rows, version):
                   in_progress=sum(r['response_status']=='in_progress' for r in rows),
                   versions=dict(Counter(r['survey_version'] for r in rows)), cohorts=[])
     if not definition:
-        result['message'] = 'Für Diagramme bitte eine einzelne Fragebogenversion auswählen. Die Skalen und Fragen verschiedener Versionen werden nicht vermischt.'
+        result['message'] = 'Dieser Fragebogen ist nicht mehr aktiv.'
         return result
     rows = [r for r in rows if r['survey_version'] == version]
     def cohort_key(row):
@@ -71,7 +86,7 @@ def analytics(rows, version):
         policy = row.get('system_prompt_policy') or ''
         revision = row.get('system_prompt_revision')
         sha256 = row.get('system_prompt_base_sha256') or ''
-        if version in ('diana-v11', 'diana-v12') and arm and policy and revision not in ('', None) and sha256:
+        if version in ('diana-v11', 'diana-v12', 'diana-v13') and arm and policy and revision not in ('', None) and sha256:
             return f'{arm}:{policy}:{revision}:{sha256}'
         return arm
     experiments = sorted({cohort_key(r) for r in rows}) or [('', ('undocumented',))]
@@ -98,6 +113,9 @@ def analytics(rows, version):
         cohort = dict(experiment_id=experiment, presentation_versions=list(presentation), total=len(members),
                       arms={arm: sum(r['study_arm']==arm for r in members) for arm in arms},
                       series=series, mixed_prompt_arms=mixed_prompt_arms, categories=[])
+        cohort['constructs'] = [{**construct, 'overall': summarize_construct(members, construct),
+            'groups': {key: summarize_construct([row for row in members if series_key(row)==key], construct) for key in series}}
+            for construct in definition.get('constructs', [])]
         for category in [definition['demographics'], *definition['categories']]:
             questions = []
             for field in category['fields']:
@@ -105,7 +123,8 @@ def analytics(rows, version):
                     continue
                 questions.append(dict(name=field['name'], title=field['title'], kind=field['kind'],
                                       scale=field.get('scale', definition.get('scale', {})),
-                                      reverse=field['name']=='search_effort', visible_if=field.get('visibleIf'),
+                                      reverse=field['name'] in ('search_effort', 'study_effort'), visible_if=field.get('visibleIf'),
+                                      **{key: field.get(key) for key in ('framework','construct','source_item','source_url','adaptation','direction')},
                                       overall=summarize(field, members),
                                       groups={key: summarize(field, [r for r in members if series_key(r)==key])
                                               for key in series}))

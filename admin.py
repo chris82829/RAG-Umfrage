@@ -109,7 +109,7 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
         return jsonify(updated)
     def filters():
         query=request.args.get('q','').strip();version=request.args.get('version',SURVEY_DEFINITION['version'])
-        if len(query)>100 or version not in ('','diana-v1','diana-v2','diana-v3','diana-v4','diana-v5','diana-v6','diana-v7','diana-v8','diana-v9','diana-v10','diana-v11','diana-v12'):raise ValueError()
+        if len(query)>100 or version != SURVEY_DEFINITION['version']:raise ValueError()
         status=request.args.get('status','')
         if status not in ('','completed','in_progress'):raise ValueError()
         arm=request.args.get('arm','')
@@ -132,10 +132,13 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
     @protected
     def detail(response_id):
         row=data.detail(response_id)
-        return jsonify(row) if row else error('Antwort nicht gefunden.',404)
+        return jsonify(row) if row and row['survey_version'] == SURVEY_DEFINITION['version'] else error('Antwort nicht gefunden.',404)
     @bp.put('/responses/<response_id>')
     @protected
     def correct_response(response_id):
+        existing=data.detail(response_id)
+        if not existing or existing['survey_version'] != SURVEY_DEFINITION['version']:
+            return error('Antwort nicht gefunden.',404)
         try:
             correction=AdminAnswerCorrection.model_validate(request.get_json(silent=True))
             data.correct(response_id,correction)
@@ -148,7 +151,7 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
         except ValueError as failure:
             return error(str(failure),400)
         row=data.detail(response_id)
-        return jsonify(row) if row else error('Antwort nicht gefunden.',404)
+        return jsonify(row) if row and row['survey_version'] == SURVEY_DEFINITION['version'] else error('Antwort nicht gefunden.',404)
     @bp.get('/analytics')
     @protected
     def analysis():

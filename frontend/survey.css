@@ -47,7 +47,7 @@
 .survey-page .survey-demographics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .survey-page .survey-demographics-grid .survey-question { margin: 0; padding: 0; border: 0; }
 .survey-page .survey-demographics-grid legend { min-height: 48px; }
-.survey-page .survey-scale { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 8px; }
+.survey-page .survey-scale { display: grid; grid-template-columns: repeat(var(--survey-scale-columns, 1), minmax(0, 1fr)); gap: 8px; }
 .survey-page .survey-score { position: relative; display: grid; place-items: center; min-width: 0; min-height: 48px; border: 1px solid #dce3f0; border-radius: 9px; background: white; color: #536684; font-size: 16px; font-weight: 600; cursor: pointer; }
 .survey-page .survey-score:hover { border-color: #a8b9ef; background: #f0f4ff; }
 .survey-page .survey-score.is-selected { color: white; background: var(--survey-blue); border-color: var(--survey-blue); }
@@ -86,7 +86,7 @@
   .survey-page .survey-question legend { font-size: 14px; }
   .survey-page .survey-rating-card { padding: 14px 12px; }
   .survey-page .survey-question-meta { font-size: 11px; }
-  .survey-page .survey-scale { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  .survey-page .survey-scale { grid-template-columns: repeat(auto-fit, minmax(48px, 1fr)); gap: 8px; }
   .survey-page .survey-scale-ends { gap: 18px; font-size: 10px; }
   .survey-page .survey-form-actions { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
   .survey-page .survey-form-actions .survey-back { justify-content: center; }
@@ -154,11 +154,11 @@
   .survey-page .survey-preparation .survey-form-actions { flex-direction: column; align-items: stretch; }
 }
 
-/* V12 agreement items retain all five verbal anchors on desktop and mobile. */
-.survey-page .survey-scale.survey-likert { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-.survey-page .survey-likert .survey-score { align-content: center; gap: 5px; padding: 12px 7px; text-align: center; min-height: 92px; }
+/* Use the scale length from the definition; keep every verbal anchor readable. */
+.survey-page .survey-scale.survey-likert { grid-template-columns: repeat(var(--survey-scale-columns, 1), minmax(0, 1fr)); }
+.survey-page .survey-likert .survey-score { align-content: center; gap: 5px; padding: 12px 7px; text-align: center; min-height: 112px; }
 .survey-page .survey-likert-label { font-size: 12px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
-@media (max-width: 600px) {
+@media (max-width: 760px) {
   .survey-page .survey-scale.survey-likert { grid-template-columns: 1fr; gap: 7px; }
   .survey-page .survey-likert .survey-score { display: flex; justify-content: flex-start; gap: 12px; min-height: 48px; padding: 11px 15px; text-align: left; }
   .survey-page .survey-likert-label { font-size: 14px; }
