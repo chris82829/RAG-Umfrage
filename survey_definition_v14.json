@@ -288,7 +288,7 @@
       "fields": [
         {
           "name": "usefulness_ideal",
-          "title": "Das System hat mir geholfen, die ideale Stelle für mein Suchvorhaben zu finden.",
+          "title": "Das System hat mir geholfen, die ideale Stelle für dein Suchvorhaben zu finden.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -512,7 +512,7 @@
         },
         {
           "name": "dialogue_response_quality",
-          "title": "Die meisten Antworten des Chatbots ergaben für mich Sinn.",
+          "title": "Die Antworten des Chatbots ergaben für mich Sinn.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",

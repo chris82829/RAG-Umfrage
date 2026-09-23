@@ -21,13 +21,13 @@ Die Referenznummern erhalten die V13-Zuordnung; T1/T2/M1 sind ergänzte Einschü
 | 3 | 3 | `job_portal_experience` | Wie häufig hast du in den letzten sechs Monaten Online-Jobportale genutzt? | Nie / Seltener als einmal pro Woche / Mindestens wöchentlich, aber nicht täglich / Täglich / Keine Angabe | context · DIANA |
 | 4 | 4 | `ai_chat_experience` | Wie häufig hast du in den letzten sechs Monaten KI-Chatbots genutzt? | Nie / Seltener als einmal pro Woche / Mindestens wöchentlich, aber nicht täglich / Täglich / Keine Angabe | context · DIANA |
 | 5 | 5 | `search_goal` | Wonach hast du mit dem System gesucht? | Freitext | context · DIANA |
-| 6 | 6 | `usefulness_ideal` | Das System hat mir geholfen, die ideale Stelle für mein Suchvorhaben zu finden. | 1–7 + nicht beurteilbar | multi_item · ResQue |
+| 6 | 6 | `usefulness_ideal` | Das System hat mir geholfen, die ideale Stelle für dein Suchvorhaben zu finden. | 1–7 + nicht beurteilbar | multi_item · ResQue |
 | 7 | 7 | `usefulness_find_easy` | Mit dem System war es einfach, Stellen zu finden, die mir gefallen. | 1–7 + nicht beurteilbar | multi_item · ResQue |
 | 8 | 8 | `usefulness_suggestions` | Das System hat mir gute Vorschläge gemacht. | 1–7 + nicht beurteilbar | multi_item · ResQue |
 | 9 | T1 | `trust_fit` | Ich vertraue darauf, dass die vom System vorgeschlagenen Stellen wirklich zu mir passen. | 1–7 + nicht beurteilbar | multi_item · ResQue / CRS-Que (angelehnt) |
 | 10 | T2 | `trust_credibility` | Die Einschätzungen des Systems zur Passung erschienen mir glaubwürdig. | 1–7 + nicht beurteilbar | multi_item · ResQue / CRS-Que (angelehnt) |
 | 11 | 9 | `dialogue_understanding` | Ich hatte den Eindruck, dass der Chatbot verstand, was ich wollte. | 1–7 + nicht beurteilbar | single_item · CRS-Que |
-| 12 | 10 | `dialogue_response_quality` | Die meisten Antworten des Chatbots ergaben für mich Sinn. | 1–7 + nicht beurteilbar | single_item · CRS-Que |
+| 12 | 10 | `dialogue_response_quality` | Die Antworten des Chatbots ergaben für mich Sinn. | 1–7 + nicht beurteilbar | single_item · CRS-Que |
 | 13 | 11 | `dialogue_attentiveness` | Der Chatbot schenkte meinen Aussagen Aufmerksamkeit. | 1–7 + nicht beurteilbar | single_item · CRS-Que |
 | 14 | M1 | `perceived_character` | Die Beratung im Chat hatte für mich einen erkennbaren eigenen Charakter (z. B. Tonfall, Persönlichkeit). | 1–7 + nicht beurteilbar | single_item · DIANA |
 | 15 | 12 | `control_preferences` | Ich hatte die Kontrolle darüber, meine Suchwünsche im Chat zu verändern. | 1–7 + nicht beurteilbar | multi_item · CRS-Que |
