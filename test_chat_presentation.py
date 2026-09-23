@@ -72,6 +72,21 @@ def test_non_list_intro_uses_actual_job_titles_without_fabricated_advice():
     assert result == '- Python-Entwickler\n- Data Engineer\n\nWelche Tätigkeit bevorzugst du?'
 
 
+def test_long_followup_drops_repeated_intro_and_preserves_job_titles():
+    first = 'Werkstudent im Bereich Data Management (m|w|d)'
+    second = 'Werkstudent/Praktikant Data Engineering mit Python (m/w/d)'
+    text = 'Am besten passen deine Kenntnisse zur ersten Stelle.\n'
+    text += '- ' + first + ': ' + 'Python und Pandas passen. ' * 12
+    text += '\n- ' + second + ': ' + 'SQL passt zu den Datenaufgaben. ' * 12
+    text += '\n\nWillst du lieber ETL oder ML?'
+    result = compact_advice(text)
+    assert len(result) <= MAX_BC_ANSWER_CHARS
+    assert result.startswith('- ' + first + ':')
+    assert '\n- ' + second + ':' in result
+    assert 'Am besten' not in result
+    assert result.endswith('\n\nWillst du lieber ETL oder ML?')
+
+
 @pytest.mark.parametrize('value', ['[Python](job:123)', '[Python]\\(job:123)', '[Python](job:123',
                                   '[Python]\\(job:123', '[Python]('])
 def test_public_text_never_contains_reference_syntax(value):

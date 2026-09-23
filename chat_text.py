@@ -70,17 +70,29 @@ def compact_advice(text: str, *, intro_jobs: list[dict] | None = None) -> str:
             body = body[:-len(last)].rstrip()
     budget = MAX_BC_ANSWER_CHARS - (len(question) + 2 if question else 0)
     lines = [line.strip() for line in body.splitlines() if line.strip()]
-    if intro_jobs is not None:
-        bullets = [re.sub(r'^(?:[-•*]|\d+[.)])\s+', '', line)
-                   for line in lines if re.match(r'^(?:[-•*]|\d+[.)])\s+', line)][:2]
-        if not bullets:
-            bullets = [clean_job_references(job.get('title', 'Stellenangebot'))
-                       for job in intro_jobs[:2]]
-        if bullets:
-            item_budget = (budget - 3 * len(bullets)) // len(bullets)
-            body = '\n'.join('- ' + _fit(item, item_budget) for item in bullets)
-        else:
-            body = _fit(body, budget)
+    bullets = [re.sub(r'^(?:[-•*]|\d+[.)])\s+', '', line)
+               for line in lines if re.match(r'^(?:[-•*]|\d+[.)])\s+', line)][:2]
+    if intro_jobs is not None and not bullets:
+        bullets = [clean_job_references(job.get('title', 'Stellenangebot'))
+                   for job in intro_jobs[:2]]
+    if bullets:
+        # Drop a redundant prose lead-in before a list; spend the space on the
+        # job titles and evidence. Shorten evidence before shortening a title.
+        parts = [item.rpartition(': ') for item in bullets]
+        minimum = [len(title) + 18 if separator else len(item)
+                   for item, (title, separator, _) in zip(bullets, parts)]
+        while len(bullets) > 1 and sum(minimum) + 3 * len(bullets) > budget:
+            bullets.pop(); parts.pop(); minimum.pop()
+        extra = max(0, budget - sum(minimum) - 3 * len(bullets)) // len(bullets)
+        formatted = []
+        for item, (title, separator, evidence), needed in zip(bullets, parts, minimum):
+            item_budget = min(budget - 3, needed + extra)
+            if separator and len(title) + 4 < item_budget:
+                item = title + separator + _fit(evidence, item_budget - len(title) - 2)
+            else:
+                item = _fit(item, item_budget)
+            formatted.append('- ' + item)
+        body = '\n'.join(formatted)
     else:
         kept = []
         for line in lines:
