@@ -9,6 +9,7 @@ system or developer message while its optional admin field is empty.
 from __future__ import annotations
 
 import json
+import re
 import logging
 from hashlib import sha256
 from time import perf_counter
@@ -94,7 +95,7 @@ class _PublicAnswer(_StrictModel):
     @field_validator('assistant_message', check_fields=False)
     @classmethod
     def validate_public_answer(cls, value):
-        value = remove_gender_suffixes(value).strip()
+        value = re.sub(r'…|\.{3,}', '', remove_gender_suffixes(value)).strip()
         if not value:
             raise ValueError('Eine Beratungsantwort darf nicht leer sein.')
         if cls.__name__ != 'GenericChatDecision' and len(value) > MAX_ASSISTANT_MESSAGE_CHARS:

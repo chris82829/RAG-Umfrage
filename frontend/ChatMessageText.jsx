@@ -1,40 +1,45 @@
 import React, {useState} from 'react';
 import {BriefcaseBusiness} from 'lucide-react';
-import {messagePreview} from './chat-layout.js';
-import {jobReferenceParts, previewParts, separateFollowUp, removeChatGenderSuffixes} from './chat-presentation.js';
+import {jobReferenceParts, separateFollowUp, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
 
-export function RichChatText({text, jobs, onOpenJob, busy = false, streaming = false}) {
-  const {body, question} = separateFollowUp(removeChatGenderSuffixes(text, streaming));
-  const render = value => jobReferenceParts(value, jobs).map((part, index) => part.job
+function ChatBody({blocks, render}) {
+  return blocks.map((block, index) => block.type === 'jobs'
+    ? <ul className="chat-job-points" key={index}>{block.items.map((item, i) =>
+      <li key={i}><div className="chat-job-title">{render(item.title)}</div>
+        {item.description && <p className="chat-job-description">{render(item.description)}</p>}</li>)}</ul>
+    : <p className="chat-paragraph" key={index}>{render(block.text)}</p>);
+}
+
+function renderReferences(value, jobs, onOpenJob, busy) {
+  return jobReferenceParts(value, jobs).map((part, index) => part.job
     ? <button key={index} type="button" className="chat-job-reference" disabled={busy}
         title={`Stellendetails öffnen · ${part.job.company}`}
         aria-label={`Stelle öffnen: ${removeChatGenderSuffixes(part.job.title)} bei ${part.job.company}`}
         onClick={() => onOpenJob(part.job.id)}><BriefcaseBusiness size={14} aria-hidden="true"/>{part.text}</button>
     : <React.Fragment key={index}>{part.text}</React.Fragment>);
+}
+
+export function RichChatText({text, jobs, onOpenJob, busy = false, streaming = false}) {
+  const {body, question} = separateFollowUp(removeChatGenderSuffixes(text, streaming));
+  const render = value => renderReferences(value, jobs, onOpenJob, busy);
   return <div className={`message-text message-text--rich${streaming ? ' streaming-text' : ''}`}>
-    {body && <p>{render(body)}</p>}{question && <p className="chat-follow-up">{render(question)}</p>}
+    <ChatBody blocks={chatContentBlocks(body)} render={render} />
+    {question && <p className="chat-follow-up">{render(question)}</p>}
   </div>;
 }
 
 export default function ChatMessageText({text, assistant, enhanced = false, jobs = [], onOpenJob, busy = false}) {
   const [expanded, setExpanded] = useState(false);
-  const displayText = assistant ? removeChatGenderSuffixes(text) : text;
-  if (!assistant || !enhanced) {
-    const preview = assistant ? messagePreview(displayText) : displayText;
-    return <div className="message-bubble"><div className="message-text">{expanded ? displayText : preview}</div>{preview !== displayText && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}</div>;
-  }
+  if (!assistant) return <div className="message-bubble"><div className="message-text">{text}</div></div>;
+  const displayText = removeChatGenderSuffixes(text);
   const {body, question} = separateFollowUp(displayText);
-  const parts = jobReferenceParts(body, jobs);
-  const preview = previewParts(parts);
-  const render = items => items.map((part, index) => part.job
-    ? <button key={index} type="button" className="chat-job-reference" disabled={busy}
-        title={`Stellendetails öffnen · ${part.job.company}`}
-        aria-label={`Stelle öffnen: ${removeChatGenderSuffixes(part.job.title)} bei ${part.job.company}`}
-        onClick={() => onOpenJob(part.job.id)}><BriefcaseBusiness size={14} aria-hidden="true"/>{part.text}</button>
-    : <React.Fragment key={index}>{part.text}</React.Fragment>);
+  const blocks = chatContentBlocks(body);
+  // Collapse only complete blocks. Never replace part of a sentence with dots.
+  const collapsible = displayText.length > 700 && blocks.length > 2;
+  const render = value => enhanced ? renderReferences(value, jobs, onOpenJob, busy) : value;
   return <div className="message-bubble"><div className="message-text message-text--rich">
-    {body && <p>{render(expanded ? parts : preview)}</p>}
-    {preview !== parts && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}
-    {question && <p className="chat-follow-up">{render(jobReferenceParts(question, jobs))}</p>}
+    <ChatBody blocks={collapsible && !expanded ? blocks.slice(0, 2) : blocks} render={render} />
+    {collapsible && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}
+    {question && <p className="chat-follow-up">{render(question)}</p>}
   </div></div>;
 }

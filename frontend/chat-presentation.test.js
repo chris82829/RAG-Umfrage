@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {jobReferenceParts, separateFollowUp, previewParts, jobNavigationTarget, removeChatGenderSuffixes} from './chat-presentation.js';
+import {jobReferenceParts, separateFollowUp, previewParts, jobNavigationTarget, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
 
 const jobs = [{id:'123',title:'Python Developer',company:'Daten AG'},
   {id:'456',title:'Data Analyst',company:'Daten AG'},
@@ -104,4 +104,16 @@ test('streaming gender suffix tokens do not flash back after a cleaned title', (
   }
   assert.equal(removeChatGenderSuffixes('Data Analyst (Python)',true),'Data Analyst (Python)');
   assert.equal(removeChatGenderSuffixes('Data Analyst (Machine Learning)',true),'Data Analyst (Machine Learning)');
+});
+
+test('readable job blocks separate titles and explanations without truncation',()=>{
+  const text='Hallo! 20 Stellen gefunden.\n\n- Python Developer: Deine Python-Kenntnisse passen zu den Aufgaben.\n\n- Data Analyst: Hier kannst du mit SQL arbeiten.';
+  const blocks=chatContentBlocks(text);
+  assert.equal(blocks.length,2);
+  assert.equal(blocks[0].type,'paragraph');
+  assert.deepEqual(blocks[1],{type:'jobs',items:[
+    {title:'Python Developer',description:'Deine Python-Kenntnisse passen zu den Aufgaben.'},
+    {title:'Data Analyst',description:'Hier kannst du mit SQL arbeiten.'},
+  ]});
+  assert.equal(removeChatGenderSuffixes('Python… SQL... Version 3.12'), 'Python SQL Version 3.12');
 });

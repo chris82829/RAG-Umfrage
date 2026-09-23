@@ -70,7 +70,7 @@ def test_welcome_is_two_bullets_short_question_and_bounded(policy):
 def test_non_list_intro_uses_actual_job_titles_without_fabricated_advice():
     text = 'Am besten passen diese Stellen. Welche Tätigkeit bevorzugst du?'
     result = compact_advice(text, intro_jobs=[{'title': 'Python-Entwickler'}, {'title': 'Data Engineer'}])
-    assert result == '- Python-Entwickler\n- Data Engineer\n\nWelche Tätigkeit bevorzugst du?'
+    assert result == '- Python-Entwickler\n\n- Data Engineer\n\nWelche Tätigkeit bevorzugst du?'
 
 
 def test_long_followup_drops_repeated_intro_and_preserves_job_titles():
@@ -185,3 +185,24 @@ def test_streamed_bc_chat_is_bounded_before_any_preview_is_sent():
     assert preview == completed.value.value['assistant_message']
     assert len(preview) <= MAX_BC_ANSWER_CHARS
     assert 'job:' not in preview and '123' not in preview
+
+
+def test_compacting_never_clips_explanations_or_adds_ellipsis():
+    text = '- Python-Entwickler: Deine Python-Kenntnisse passen zu den Datenaufgaben. Weitere Aufgaben sind möglich.\n- Data Engineer: Hier kannst du deine SQL-Kenntnisse einsetzen.\n\nWelche Aufgabe bevorzugst du?'
+    result = compact_advice(text, max_characters=160)
+    assert '…' not in result and '...' not in result
+    assert 'Deine Python-Kenntnisse passen zu den Datenaufgaben.' in result
+    assert 'Weitere Aufgaben' not in result
+    assert result.endswith('Welche Aufgabe bevorzugst du?')
+    assert len(result) <= 160
+
+
+def test_long_single_sentence_is_omitted_instead_of_being_cut_mid_word():
+    text = '- Data Engineer: ' + 'Zusätzliche ' * 100 + 'Aufgaben.'
+    assert compact_advice(text) == '- Data Engineer'
+    from chat_completion import conclude_custom_chat, C_SELECTION_CONCLUSION
+    assert conclude_custom_chat('Eine ' * 100 + 'Aussage.', [{}]) == C_SELECTION_CONCLUSION
+
+
+def test_generated_ellipsis_is_removed_without_changing_decimal_numbers():
+    assert clean_job_references('Python… SQL... Version 3.12 bleibt.') == 'Python SQL Version 3.12 bleibt.'

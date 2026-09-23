@@ -1,6 +1,6 @@
 // Display-only cleanup. Original job data and user-authored messages stay intact.
 export function removeChatGenderSuffixes(text, streaming = false) {
-  const value = text.replace(/[ \t]*\(\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*\)/gi, '');
+  const value = text.replace(/…|\.{3,}/g, '').replace(/[ \t]*\(\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*\)/gi, '');
   // Hold back an unfinished suffix at the stream boundary. A completed technical
   // parenthesis such as (Python) is never removed.
   return streaming ? value.replace(/[ \t]*\(\s*[mwfdx](?:\s*[/|]\s*(?:[mwfdx](?:\s*[/|]\s*[mwfdx]?)?)?)?\s*$/i, '') : value;
@@ -91,4 +91,27 @@ export function previewParts(parts, limit = 620) {
 export function jobNavigationTarget(jobs, jobId, initialCount = 10) {
   const index = jobs.findIndex(job => String(job.id) === String(jobId));
   return index < 0 ? null : {job: jobs[index], revealAll: index >= initialCount};
+}
+
+// Keep job names and explanations in separate readable lines, using real lists.
+export function chatContentBlocks(text) {
+  const blocks = [];
+  let paragraph = [];
+  const flush = () => {
+    if (paragraph.length) blocks.push({type: 'paragraph', text: paragraph.join('\n')});
+    paragraph = [];
+  };
+  for (const line of text.split('\n')) {
+    const item = line.trim().match(/^(?:[-•*]|\d+[.)])\s+(.+)$/);
+    if (item) {
+      flush();
+      if (blocks.at(-1)?.type !== 'jobs') blocks.push({type: 'jobs', items: []});
+      const split = item[1].indexOf(': ');
+      blocks.at(-1).items.push({title: split < 0 ? item[1] : item[1].slice(0, split),
+        description: split < 0 ? '' : item[1].slice(split + 2)});
+    } else if (!line.trim()) flush();
+    else paragraph.push(line.trim());
+  }
+  flush();
+  return blocks;
 }

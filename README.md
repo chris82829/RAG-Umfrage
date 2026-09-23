@@ -478,12 +478,17 @@ abgeglichen, Institutsname und Adresse mit der
 Neue B/C-Chatantworten sind auf **380 Zeichen** begrenzt; die vollständige
 Begrüßung bleibt unter **420 Zeichen**. B/C beginnen mit **„Hallo! 20 Stellen gefunden
 und bewertet. Du kannst mich alles über diese Stellen fragen.“**; die Zahl wird
-an die tatsächliche Auswahl angepasst. Darunter zeigt die Suchansprache zwei kurze
+an die tatsächliche Auswahl angepasst. Darunter zeigt die Suchansprache ein bis zwei kurze
 Stellenpunkte und bei Bedarf eine konkrete Rückfrage in einem eigenen Absatz.
 Stellen erscheinen mit ihrem Titel, ohne sichtbare Job-IDs oder Linksyntax.
 Geschlechtszusätze wie **„(m/w/d)“** oder **„(f/m/d)“** werden im Chat aller drei
 Varianten ausgeblendet, einschließlich älterer Assistentenantworten und Chatlinks.
 Die Stellenkarten und Nutzereingaben behalten ihren Originaltext.
+Jeder Stellenpunkt zeigt den Titel in einer eigenen Zeile und darunter einen
+kurzen, vollständigen Satz. B/C verwenden einfache Sprache statt Stichwortketten.
+Zu lange Antworten werden an vollständigen Sätzen oder Stellenpunkten gekürzt,
+ohne Auslassungspunkte und ohne abgeschnittene Wörter. Lange Chattexte lassen
+sich blockweise aufklappen.
 Die Formatregeln werden auch vor Streaming-Vorschauen angewendet. Die B/C-Kürzung
 wird nicht auf A angewendet. Neue B/C-Basisprompts werden einmalig migriert; bestehende
 Teilnehmer-Snapshots bleiben erhalten und bekommen die versionierte

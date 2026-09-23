@@ -5,7 +5,7 @@ COMPACT_CHAT_VERSION = 'short-job-bullets-v2'
 MAX_BC_ANSWER_CHARS = 380
 MAX_BC_WELCOME_CHARS = 420
 SCORE_SCALE = {'minimum': 1, 'maximum': 100, 'unit': 'Punkte', 'is_probability': False}
-CHAT_PRESENTATION_VERSION = 'clean-job-titles-welcome-v1'
+CHAT_PRESENTATION_VERSION = 'readable-complete-job-points-v2'
 
 COMPACT_CHAT_INSTRUCTIONS = """
 VERBINDLICHES KURZFORMAT FÜR assistant_message (v2):
@@ -13,6 +13,12 @@ Höchstens 45 Wörter und 380 Zeichen insgesamt, einschließlich Rückfrage.
 Bei einer Suchansprache oder einem Stellenvergleich: zwei kurze Aufzählungspunkte,
 jeweils in einer eigenen Zeile mit '- Stellentitel: ein konkreter passender Beleg'.
 Verwende die exakten Stellentitel aus den Daten, damit sie anklickbar bleiben.
+Schreibe zum Titel genau einen vollständigen Satz mit höchstens zwölf Wörtern.
+Sprich den Nutzer direkt an: zum Beispiel 'Deine Python-Kenntnisse passen zu den Datenaufgaben.'
+Keine Stichwortketten, Pluszeichen oder durch Semikolon getrennte Faktenlisten.
+Erkläre einen konkreten Nutzen in einfacher Sprache; keine Ansammlung von Fachbegriffen.
+Verwende niemals Auslassungspunkte ('...' oder '…') und breche keinen Satz ab.
+Kürze durch Weglassen zusätzlicher Aspekte, nicht durch Satzfragmente.
 Kürze den Beleg, nicht den Titel. Bei sehr langen Titeln genügt ein Stellenpunkt.
 Bei nur einer passenden Stelle genügt ebenfalls ein Punkt. Keine Zusammenfassung.
 Nenne niemals Job-IDs, job:-Verweise, Markdown-Links oder technische Kennungen.
@@ -43,14 +49,14 @@ def clean_job_references(text: str) -> str:
     text = re.sub(r'\(?\bJob[- ]?ID\s*:?\s*[\w-]+\)?', '', text, flags=re.I)
     text = re.sub(r'\\?\(?\bjob:[\w%.-]*\\?\)?', '', text, flags=re.I)
     text = re.sub(r'[;,.]?\s*weitere findest du über\s*[„"«]?Weitere Stellen anzeigen[“"»]?\.?', '', text, flags=re.I)
-    return remove_gender_suffixes(text).strip()
+    return re.sub(r'…|\.{3,}', '', remove_gender_suffixes(text)).strip()
 
 
 def _fit(text: str, budget: int) -> str:
     text = re.sub(r'\s+', ' ', text).strip()
     if len(text) <= budget:
         return text
-    # Prefer complete sentences; otherwise stop at a word boundary, never an ID/link.
+    # Keep only complete sentences when a paragraph exceeds the available space.
     sentences = re.split(r'(?<=[.!?])\s+', text)
     result = ''
     for sentence in sentences:
@@ -60,8 +66,7 @@ def _fit(text: str, budget: int) -> str:
         result = candidate
     if result:
         return result
-    fragment = text[:max(0, budget - 1)].rsplit(' ', 1)[0].rstrip(' ,;:–-')
-    return fragment + '…' if fragment else ''
+    return ''  # Never return a sentence fragment to satisfy a character budget.
 
 
 def compact_advice(text: str, *, intro_jobs: list[dict] | None = None,
@@ -88,23 +93,23 @@ def compact_advice(text: str, *, intro_jobs: list[dict] | None = None,
         bullets = [clean_job_references(job.get('title', 'Stellenangebot'))
                    for job in intro_jobs[:2]]
     if bullets:
-        # Drop a redundant prose lead-in before a list; spend the space on the
-        # job titles and evidence. Shorten evidence before shortening a title.
-        parts = [item.rpartition(': ') for item in bullets]
-        minimum = [len(title) + 18 if separator else len(item)
-                   for item, (title, separator, _) in zip(bullets, parts)]
-        while len(bullets) > 1 and sum(minimum) + 3 * len(bullets) > budget:
-            bullets.pop(); parts.pop(); minimum.pop()
-        extra = max(0, budget - sum(minimum) - 3 * len(bullets)) // len(bullets)
+        # Keep each full title and one complete sentence. If two explanations do
+        # not fit, show one useful point rather than clipping both mid-sentence.
         formatted = []
-        for item, (title, separator, evidence), needed in zip(bullets, parts, minimum):
-            item_budget = min(budget - 3, needed + extra)
-            if separator and len(title) + 4 < item_budget:
-                item = title + separator + _fit(evidence, item_budget - len(title) - 2)
-            else:
-                item = _fit(item, item_budget)
-            formatted.append('- ' + item)
-        body = '\n'.join(formatted)
+        for item in bullets:
+            title, separator, evidence = item.partition(': ')
+            if separator:
+                evidence = re.split(r'(?<=[.!?])\s+', evidence.strip(), maxsplit=1)[0]
+                item = title + separator + evidence if evidence else title
+            candidate = '- ' + item
+            if len('\n\n'.join(formatted + [candidate])) <= budget:
+                formatted.append(candidate)
+        if not formatted:
+            # Extremely long generated prose must not erase the actual job title.
+            title = bullets[0].partition(': ')[0]
+            if len(title) + 2 <= budget:
+                formatted = ['- ' + title]
+        body = '\n\n'.join(formatted)
     else:
         kept = []
         for line in lines:

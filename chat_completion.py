@@ -53,5 +53,5 @@ def conclude_custom_chat(answer, jobs):
         if kept:
             text = kept
         else:
-            text = text[:budget - 1].rsplit(' ', 1)[0].rstrip(' ,;:–-') + '…'
+            text = ''  # Keep the complete conclusion instead of a clipped answer.
     return '\n\n'.join(part for part in (text, conclusion) if part)

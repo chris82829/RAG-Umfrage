@@ -48,3 +48,13 @@
 @media (prefers-reduced-motion: reduce) {
   .chat-typing i, .streaming-text::after { animation: none; }
 }
+
+.message-text--rich > .chat-paragraph + .chat-paragraph { margin-top: 12px; }
+.message-text--rich .chat-job-points { margin: 14px 0; padding: 0; list-style: none; }
+.chat-job-points li { position: relative; padding-left: 16px; line-height: 1.6; }
+.chat-job-points li::before { content: "•"; position: absolute; left: 0; top: 0; }
+.chat-job-points li + li { margin-top: 16px; }
+.chat-job-title { font-weight: 650; line-height: 1.5; }
+.chat-job-description { margin: 5px 0 0; font-weight: 400; line-height: 1.65; }
+.chat-job-title .chat-job-reference { background: none; border: 0; padding: 0; line-height: 1.5; }
+.chat-job-points + .chat-follow-up { padding-top: 12px; border-top: 1px solid #dce3ef; }
