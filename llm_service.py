@@ -17,7 +17,7 @@ from typing import Annotated, Any, Generator, Literal, TypeVar
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, create_model, field_validator, model_validator
 from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
-from chat_text import COMPACT_CHAT_INSTRUCTIONS, SCORE_SCALE, compact_advice
+from chat_text import COMPACT_CHAT_INSTRUCTIONS, SCORE_SCALE, compact_advice, remove_gender_suffixes
 
 
 MODEL = "gpt-5.4-nano-2026-03-17"
@@ -94,6 +94,9 @@ class _PublicAnswer(_StrictModel):
     @field_validator('assistant_message', check_fields=False)
     @classmethod
     def validate_public_answer(cls, value):
+        value = remove_gender_suffixes(value).strip()
+        if not value:
+            raise ValueError('Eine Beratungsantwort darf nicht leer sein.')
         if cls.__name__ != 'GenericChatDecision' and len(value) > MAX_ASSISTANT_MESSAGE_CHARS:
             raise ValueError('Die Antwort überschreitet die Transportgrenze.')
         try:

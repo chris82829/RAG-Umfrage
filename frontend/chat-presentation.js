@@ -1,5 +1,14 @@
+// Display-only cleanup. Original job data and user-authored messages stay intact.
+export function removeChatGenderSuffixes(text, streaming = false) {
+  const value = text.replace(/[ \t]*\(\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*\)/gi, '');
+  // Hold back an unfinished suffix at the stream boundary. A completed technical
+  // parenthesis such as (Python) is never removed.
+  return streaming ? value.replace(/[ \t]*\(\s*[mwfdx](?:\s*[/|]\s*(?:[mwfdx](?:\s*[/|]\s*[mwfdx]?)?)?)?\s*$/i, '') : value;
+}
+
 // Only references to jobs in the current result set become interactive.
 export function jobReferenceParts(text, jobs = []) {
+  text = removeChatGenderSuffixes(text);
   const byId = new Map(jobs.map(job => [String(job.id), job]));
   // Models sometimes escape Markdown brackets/parentheses. Treat these as the
   // same internal reference; the UI renders a known title, never this markup.
@@ -7,7 +16,7 @@ export function jobReferenceParts(text, jobs = []) {
   const references = [...text.matchAll(reference)];
   const explicitReferences = references.length > 0;
   const names = new Map();
-  for (const job of jobs) for (const name of explicitReferences ? [] : [job.title, job.company]) {
+  for (const job of jobs) for (const name of explicitReferences ? [] : [removeChatGenderSuffixes(job.title || ''), job.company]) {
     if (!name || name.length < 5) continue;
     const key = name.toLocaleLowerCase('de');
     const existing = names.get(key);
@@ -46,7 +55,7 @@ export function jobReferenceParts(text, jobs = []) {
     try { id = decodeURIComponent(match[2]); } catch { id = ''; }
     const job = byId.get(id);
     // Never navigate to a model-provided URL or invent a target for unknown IDs.
-    parts.push(job ? {text: job.title, job} : {text: match[1].replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\\([\[\]()])/g, '$1')});
+    parts.push(job ? {text: removeChatGenderSuffixes(job.title), job} : {text: match[1].replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\\([\[\]()])/g, '$1')});
     start = match.index + match[0].length;
   }
   plain(text.slice(start));

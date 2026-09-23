@@ -1,10 +1,11 @@
-"""Compact public B/C messages; never modify assessments or A's answers."""
+"""Chat-only title cleanup and compact B/C messages; never modify assessments."""
 import re
 
 COMPACT_CHAT_VERSION = 'short-job-bullets-v2'
 MAX_BC_ANSWER_CHARS = 380
 MAX_BC_WELCOME_CHARS = 420
 SCORE_SCALE = {'minimum': 1, 'maximum': 100, 'unit': 'Punkte', 'is_probability': False}
+CHAT_PRESENTATION_VERSION = 'clean-job-titles-welcome-v1'
 
 COMPACT_CHAT_INSTRUCTIONS = """
 VERBINDLICHES KURZFORMAT FÜR assistant_message (v2):
@@ -27,6 +28,12 @@ Diese Darstellungsvorgabe verändert keine Fakten, Bewertungen oder Gewichte.
 """.strip()
 
 
+def remove_gender_suffixes(text: str) -> str:
+    """Remove job-title gender markers, retaining technical parentheses and line breaks."""
+    return re.sub(r'[ \t]*\(\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*[/|]\s*[mwfdx]\s*\)',
+                  '', text, flags=re.I)
+
+
 def clean_job_references(text: str) -> str:
     """Keep human labels, including malformed/escaped references from older prompts."""
     text = re.sub(r'\[([^\]\n]+)\]\\?\(job:[^\s)]*\\?\)', r'\1', text)
@@ -36,7 +43,7 @@ def clean_job_references(text: str) -> str:
     text = re.sub(r'\(?\bJob[- ]?ID\s*:?\s*[\w-]+\)?', '', text, flags=re.I)
     text = re.sub(r'\\?\(?\bjob:[\w%.-]*\\?\)?', '', text, flags=re.I)
     text = re.sub(r'[;,.]?\s*weitere findest du über\s*[„"«]?Weitere Stellen anzeigen[“"»]?\.?', '', text, flags=re.I)
-    return text.strip()
+    return remove_gender_suffixes(text).strip()
 
 
 def _fit(text: str, budget: int) -> str:
@@ -57,7 +64,8 @@ def _fit(text: str, budget: int) -> str:
     return fragment + '…' if fragment else ''
 
 
-def compact_advice(text: str, *, intro_jobs: list[dict] | None = None) -> str:
+def compact_advice(text: str, *, intro_jobs: list[dict] | None = None,
+                   max_characters: int = MAX_BC_ANSWER_CHARS) -> str:
     """Bound both final responses and previews without shrinking the JSON schema.
 
     Complete short questions keep their own paragraph. Initial prose that ignores
@@ -72,7 +80,7 @@ def compact_advice(text: str, *, intro_jobs: list[dict] | None = None) -> str:
         if len(last) <= 150:
             question = last
             body = body[:-len(last)].rstrip()
-    budget = MAX_BC_ANSWER_CHARS - (len(question) + 2 if question else 0)
+    budget = max_characters - (len(question) + 2 if question else 0)
     lines = [line.strip() for line in body.splitlines() if line.strip()]
     bullets = [re.sub(r'^(?:[-•*]|\d+[.)])\s+', '', line)
                for line in lines if re.match(r'^(?:[-•*]|\d+[.)])\s+', line)][:2]

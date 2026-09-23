@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {jobReferenceParts, separateFollowUp, previewParts, jobNavigationTarget} from './chat-presentation.js';
+import {jobReferenceParts, separateFollowUp, previewParts, jobNavigationTarget, removeChatGenderSuffixes} from './chat-presentation.js';
 
 const jobs = [{id:'123',title:'Python Developer',company:'Daten AG'},
   {id:'456',title:'Data Analyst',company:'Daten AG'},
@@ -68,4 +68,40 @@ Möchtest du eher SQL oder Python nutzen?`);
   assert.equal(parts.map(part=>part.text).join(''),'- Data Analyst: SQL passt.\n- Python Developer: Python passt.');
   assert.equal(question,'Möchtest du eher SQL oder Python nutzen?');
   assert.equal(parts.find(part=>part.job)?.job.id,'456');
+});
+test('chat gender suffixes are removed while technical parentheses and line breaks remain', () => {
+  for (const suffix of ['(m/w/d)','(w/m/d)','(m|w|d)','(f/m/d)','(m/w/x)','( W / M / D )']) {
+    assert.equal(removeChatGenderSuffixes(`Data Analyst ${suffix} bei Example (Python)\nSQL (SQL)`),
+      'Data Analyst bei Example (Python)\nSQL (SQL)');
+  }
+  assert.equal(removeChatGenderSuffixes('Data Analyst (Python) oder (Machine Learning)'),
+    'Data Analyst (Python) oder (Machine Learning)');
+});
+test('cleaned titles remain navigable with or without gender suffix and keep original job data', () => {
+  const genderJob={id:'321',title:'Python Developer (m/w/d)',company:'Beispiel'};
+  for(const text of ['Python Developer (m/w/d)','Python Developer','[Kurz](job:321)',String.raw`[Kurz]\(job:321)`]) {
+    const parts=jobReferenceParts(text,[genderJob]);
+    assert.deepEqual(parts.map(part=>[part.text,part.job?.id]),[['Python Developer','321']]);
+    assert.equal(parts[0].job,genderJob);
+  }
+  assert.equal(genderJob.title,'Python Developer (m/w/d)');
+});
+test('titles that become ambiguous after suffix removal never infer a target', () => {
+  const similar=[{id:'1',title:'Data Analyst (m/w/d)',company:'Firma A'},
+    {id:'2',title:'Data Analyst (f/m/d)',company:'Firma B'}];
+  for(const text of ['Data Analyst','Data Analyst (m/w/d)','Data Analyst (f/m/d)']) {
+    const parts=jobReferenceParts(text,similar);
+    assert.equal(parts.some(part=>part.job),false);
+    assert.equal(parts.map(part=>part.text).join(''),'Data Analyst');
+  }
+  assert.equal(jobReferenceParts('[Data Analyst](job:2)',similar)[0].job.id,'2');
+});
+test('streaming gender suffix tokens do not flash back after a cleaned title', () => {
+  for(const suffix of ['(m/w/d)','(w/m/d)','(f/m/d)','(m|w|d)','(m/w/x)']) {
+    for(let length=2;length<=suffix.length;length++) {
+      assert.equal(removeChatGenderSuffixes(`Data Analyst ${suffix.slice(0,length)}`,true),'Data Analyst');
+    }
+  }
+  assert.equal(removeChatGenderSuffixes('Data Analyst (Python)',true),'Data Analyst (Python)');
+  assert.equal(removeChatGenderSuffixes('Data Analyst (Machine Learning)',true),'Data Analyst (Machine Learning)');
 });
