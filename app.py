@@ -40,7 +40,7 @@ from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraft
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice, token_hash
 from study_release import StudyReleases
 from system_prompt_store import SystemPromptStore
-from chat_text import compact_advice, MAX_BC_WELCOME_CHARS
+from chat_text import format_chat_answer
 from chat_completion import conclude_custom_chat, custom_chat_preview
 from admin import register_admin
 
@@ -180,8 +180,7 @@ def welcome_message(result, *, prompt_policy=None):
         found = f'{total} Stellen' if total != 1 else 'Eine Stelle'
         reference = 'diese Stellen' if total != 1 else 'diese Stelle'
         overview = f'Hallo! {found} gefunden und bewertet. Du kannst mich alles über {reference} fragen.'
-        return overview + '\n\n' + compact_advice(result['assistant_message'], intro_jobs=jobs,
-            max_characters=MAX_BC_WELCOME_CHARS - len(overview) - 2)
+        return overview + '\n\n' + format_chat_answer(result['assistant_message'])
     # Match the initial visibility policy in frontend/result-visibility.js.
     visible = min(total, 10)
     if not total:

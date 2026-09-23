@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import hashlib
 import re
 import sqlite3
-from chat_text import COMPACT_CHAT_INSTRUCTIONS, COMPACT_CHAT_VERSION
+from chat_text import COMPACT_CHAT_INSTRUCTIONS, LEGACY_COMPACT_CHAT_INSTRUCTIONS, COMPACT_CHAT_VERSION, update_dialogue_rules
 
 
 PROMPT_POLICIES = ("unprompted", "career_fixed", "custom_career")
@@ -159,8 +159,10 @@ zu sortieren. Frage nicht nach bereits geklärten oder abgelehnten Punkten.
 Erfinde keine Abweichung und ändere Prioritäten erst nach der Nutzerantwort.
 """.rstrip()
 
+LEGACY_COMPACT_CHAT_GUIDANCE = LEGACY_COMPACT_CHAT_INSTRUCTIONS + CHAT_GUIDANCE[len(COMPACT_CHAT_INSTRUCTIONS):]
+
 for _policy in ('career_fixed', 'custom_career'):
-    DEFAULT_SYSTEM_PROMPTS[_policy] += '\n\n' + CHAT_GUIDANCE
+    DEFAULT_SYSTEM_PROMPTS[_policy] = update_dialogue_rules(DEFAULT_SYSTEM_PROMPTS[_policy]) + '\n\n' + CHAT_GUIDANCE
 
 
 class PromptConflict(ValueError):
@@ -265,7 +267,7 @@ class SystemPromptStore:
                         continue
                     # Remove only our exact previous link-format block, never
                     # administrator text or immutable participant snapshots.
-                    base = saved.replace(LEGACY_CHAT_GUIDANCE, '').strip()
+                    base = update_dialogue_rules(saved.replace(LEGACY_CHAT_GUIDANCE, '').replace(LEGACY_COMPACT_CHAT_GUIDANCE, '').strip())
                     updated = _validated_text(policy, base + '\n\n' + CHAT_GUIDANCE)
                     db.execute("UPDATE system_prompts SET text=?, revision=revision+1, sha256=?, updated_at=? WHERE policy=?",
                                (updated, _sha256(updated), now, policy))

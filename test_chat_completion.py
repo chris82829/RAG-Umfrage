@@ -5,7 +5,6 @@ import pytest
 
 from chat_completion import (C_SELECTION_CONCLUSION, C_EMPTY_CONCLUSION,
                              conclude_custom_chat, custom_chat_preview)
-from chat_text import MAX_BC_ANSWER_CHARS
 import test_survey_chat_limit as fixtures
 
 
@@ -48,7 +47,6 @@ def test_third_successful_c_turn_answers_then_concludes_for_every_action(study, 
     assert result['assistant_message'].endswith(C_SELECTION_CONCLUSION)
     assert '?' not in result['assistant_message']
     assert 'Python' in result['assistant_message']
-    assert len(result['assistant_message']) <= MAX_BC_ANSWER_CHARS
     assert result['messages'][-1]['content'] == result['assistant_message']
     assert study.model.follow_up_flags[-1] is False
     if action != 'answer':
@@ -160,11 +158,11 @@ def test_empty_pool_conclusion_does_not_claim_matching_favorites(study):
     assert 'Favoriten' not in result['assistant_message']
 
 
-def test_conclusion_is_bounded_and_drops_followup_question():
+def test_conclusion_preserves_all_factual_sentences_and_drops_followup_question():
     result = conclude_custom_chat('Python passt zu den Aufgaben. ' * 30 + '\nWelche Stelle bevorzugst du?', [{}])
     assert result.startswith('Python passt')
     assert result.endswith(C_SELECTION_CONCLUSION)
-    assert len(result) <= MAX_BC_ANSWER_CHARS
+    assert result.count("Python passt zu den Aufgaben.") == 30
     assert '?' not in result
     assert conclude_custom_chat(result, [{}]) == result
 
@@ -175,3 +173,8 @@ def test_previews_delay_questions_even_before_concurrent_third_turn_is_known():
         preview = custom_chat_preview(text[:length])
         assert 'Welche' not in preview
         assert '?' not in preview
+
+
+def test_conclusion_preserves_german_abbreviations_and_requirement_details():
+    text='Offen sind Container (z. B. Docker) und Git. Das ist im Profil nicht belegt.'
+    assert conclude_custom_chat(text, [{}]) == text+'\n\n'+C_SELECTION_CONCLUSION

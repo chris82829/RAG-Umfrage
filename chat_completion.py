@@ -1,10 +1,8 @@
-"""A bounded conclusion after C's third committed user turn, without a new counter."""
-import re
-
-from chat_text import MAX_BC_ANSWER_CHARS, clean_job_references
+"""A conclusion after C's third committed user turn, without a new counter."""
+from chat_text import clean_job_references, sentence_parts
 
 
-C_THIRD_TURN_VERSION = 'custom-third-successful-turn-v1'
+C_THIRD_TURN_VERSION = 'custom-third-successful-turn-no-truncation-v2'
 C_SELECTION_CONCLUSION = (
     'Das ist meine aktuelle Auswahl für dich, abgestimmt auf dein Profil und unser Gespräch. '
     'Schau dir jetzt deine Favoriten genauer an.'
@@ -19,7 +17,7 @@ def without_followup_question(text):
     """Keep factual sentences; a finished third turn must not solicit another reply."""
     lines = []
     for line in clean_job_references(text).splitlines():
-        sentences = re.split(r'(?<=[.!?])\s+', line.strip())
+        sentences = sentence_parts(line.strip())
         kept = [sentence for sentence in sentences if '?' not in sentence]
         if kept:
             lines.append(' '.join(kept))
@@ -29,29 +27,16 @@ def without_followup_question(text):
 def custom_chat_preview(text):
     """Delay questions and unfinished sentences until the transaction is committed."""
     return '\n'.join(
-        ' '.join(sentence for sentence in re.split(r'(?<=[.!?])\s+', line.strip())
+        ' '.join(sentence for sentence in sentence_parts(line.strip())
                  if sentence.endswith(('.', '!')) and '?' not in sentence)
         for line in clean_job_references(text).splitlines()
     ).strip()
 
 
 def conclude_custom_chat(answer, jobs):
-    """Preserve the answer within the existing limit, then add a truthful conclusion."""
+    """Preserve the complete answer, then add a truthful conclusion."""
     conclusion = C_SELECTION_CONCLUSION if jobs else C_EMPTY_CONCLUSION
     text = without_followup_question(answer)
     # Remain idempotent if a saved answer is passed through the finalizer again.
     text = text.replace(conclusion, '').strip()
-    budget = MAX_BC_ANSWER_CHARS - len(conclusion) - 2
-    if len(text) > budget:
-        sentences = re.split(r'(?<=[.!])\s+', text)
-        kept = ''
-        for sentence in sentences:
-            candidate = (kept + ' ' + sentence).strip()
-            if len(candidate) > budget:
-                break
-            kept = candidate
-        if kept:
-            text = kept
-        else:
-            text = ''  # Keep the complete conclusion instead of a clipped answer.
     return '\n\n'.join(part for part in (text, conclusion) if part)

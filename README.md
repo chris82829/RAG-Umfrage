@@ -476,8 +476,8 @@ und Sprechzeiten wurden am 09.09.2026 mit dem
 abgeglichen, Institutsname und Adresse mit der
 [IFAI-Team- und Kontaktseite](https://www.th-nuernberg.de/einrichtungen-gesamt/in-institute/institut-fuer-angewandte-informatik-ifai/team-und-kontakt/).
 
-Neue B/C-Chatantworten sind auf **380 Zeichen** begrenzt; die vollständige
-Begrüßung bleibt unter **420 Zeichen**. B/C beginnen mit **„Hallo! 20 Stellen gefunden
+B/C sollen laut Prompt kurz und präzise antworten. Es gibt keine feste
+Zeichengrenze und keine nachträgliche Kürzung der Antworten. B/C beginnen mit **„Hallo! 20 Stellen gefunden
 und bewertet. Du kannst mich alles über diese Stellen fragen.“**; die Zahl wird
 an die tatsächliche Auswahl angepasst. Darunter zeigt die Suchansprache ein bis zwei kurze
 Stellenpunkte und bei Bedarf eine konkrete Rückfrage in einem eigenen Absatz.
@@ -487,11 +487,9 @@ Varianten ausgeblendet, einschließlich älterer Assistentenantworten und Chatli
 Die Stellenkarten und Nutzereingaben behalten ihren Originaltext.
 Jeder Stellenpunkt zeigt den Titel in einer eigenen Zeile und darunter einen
 kurzen, vollständigen Satz. B/C verwenden einfache Sprache statt Stichwortketten.
-Zu lange Antworten werden an vollständigen Sätzen oder Stellenpunkten gekürzt,
-ohne Auslassungspunkte und ohne abgeschnittene Wörter. Lange Chattexte lassen
-sich blockweise aufklappen.
-Die Formatregeln werden auch vor Streaming-Vorschauen angewendet. Die B/C-Kürzung
-wird nicht auf A angewendet. Neue B/C-Basisprompts werden einmalig migriert; bestehende
+Antworten werden vollständig übernommen, ohne Abschneiden an Zeichen- oder
+Satzgrenzen. Lange Chattexte lassen sich vollständig aufklappen.
+Die Bereinigung der Verweissyntax gilt auch für Streaming-Vorschauen. Neue B/C-Basisprompts werden einmalig migriert; bestehende
 Teilnehmer-Snapshots bleiben erhalten und bekommen die versionierte
 Darstellungsvorgabe ausschließlich für die Textausgabe ergänzt.
 Alle 20 Stellen behalten ihren Score; zunächst erhalten nur die Top 5 Begründungs-Stichpunkte.
@@ -888,7 +886,7 @@ ist ein sinnvoller nächster Ausbauschritt.
 OpenAI wird serverseitig über die Responses API mit Pydantic Structured Outputs,
 `store=False`, 90 Sekunden Timeout, einem Retry und begrenzter Ausgabelänge
 aufgerufen. Das Ausgabelimit beträgt 10.000 Tokens für bis zu 20 vollständige
-Bewertungen, sonst 6.000; B/C-Chattexte sind auf 380 Zeichen begrenzt.
+Bewertungen, sonst 6.000; B/C-Chattexte werden nicht nach Zeichenzahl gekürzt.
 Alle aktuellen OpenAI-Aufrufe verwenden seit dem 22.09.2026 den festen Snapshot
 **`gpt-5.4-nano-2026-03-17`** (GPT-5.4 nano), einheitlich in A, B und C
 sowie auf den Testseiten. Historische Messungen mit GPT-5.4 bleiben als solche erhalten.
@@ -1151,3 +1149,15 @@ Ein bereits widerrufener Zugang bleibt gesperrt.
 Eingebaute Persönlichkeiten liegen als versionierte `.mlds`-Dateien in `personas/`. Das Frontend lädt sie aus `/api/persona-templates`; individuelle Konfigurationen werden in der Sitzung als `advisor_mlds` abgelegt. Siehe [MLDS.md](MLDS.md).
 
 Einzelantworten können unter `/verwaltung` über **Einzelantworten → Ansehen → Antworten bearbeiten** mit Korrekturgrund geändert werden. Ursprungswerte und Änderungsverlauf bleiben erhalten. Details zu Exporten und Korrekturen: [ADMIN.md](ADMIN.md).
+
+### Gesprächsverhalten B/C (23. September 2026)
+
+Die aktuelle Nutzerfrage hat Vorrang vor Listen und proaktiven Rückfragen.
+Eine gewünschte Alternative soll die genannten Stellen nicht wiederholen;
+Fragen zu einer konkreten Stelle behandeln deren Passung und offene Anforderungen.
+Die reine Formatierung entfernt technische Verweissyntax und Geschlechtszusätze,
+aber keine Einleitungen, Aufzählungspunkte oder Sätze. Auch C ergänzt nach dem
+dritten Turn den Abschluss ohne die eigentliche Antwort zu kürzen.
+Das versionierte Verhalten ist `request-first-dialogue-v3`. Frühere
+Teilnehmer-Prompts bleiben als Snapshots erhalten; die Laufzeit-Darstellungsvorgabe
+wird über die Release-Metadaten nachvollziehbar versioniert.

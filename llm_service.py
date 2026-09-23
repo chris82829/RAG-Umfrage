@@ -18,7 +18,7 @@ from typing import Annotated, Any, Generator, Literal, TypeVar
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, create_model, field_validator, model_validator
 from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
-from chat_text import COMPACT_CHAT_INSTRUCTIONS, SCORE_SCALE, compact_advice, remove_gender_suffixes
+from chat_text import COMPACT_CHAT_INSTRUCTIONS, chat_instructions, SCORE_SCALE, format_chat_answer, remove_gender_suffixes
 
 
 MODEL = "gpt-5.4-nano-2026-03-17"
@@ -29,7 +29,7 @@ RERANK_OUTPUT_TOKENS = 10000
 INITIAL_EXPLANATION_LIMIT = 5
 EXPLANATION_POLICY_VERSION = "score-all-explain-top-five-v1"
 ADVISORY_VERSION = 'separate-system-prompts-v4'
-MAX_ASSISTANT_MESSAGE_CHARS = 6000
+MAX_ASSISTANT_MESSAGE_CHARS = None
 logger = logging.getLogger(__name__)
 
 
@@ -90,16 +90,13 @@ class ProfilePatch(_StrictModel):
 
 
 class _PublicAnswer(_StrictModel):
-    # Keep transport protection server-side, not in the decoding schema: a small
-    # maxLength caused otherwise valid responses to end mid-sentence at 600 chars.
+    # Conciseness is a prompt preference, never a character limit or truncation.
     @field_validator('assistant_message', check_fields=False)
     @classmethod
     def validate_public_answer(cls, value):
         value = re.sub(r'…|\.{3,}', '', remove_gender_suffixes(value)).strip()
         if not value:
             raise ValueError('Eine Beratungsantwort darf nicht leer sein.')
-        if cls.__name__ != 'GenericChatDecision' and len(value) > MAX_ASSISTANT_MESSAGE_CHARS:
-            raise ValueError('Die Antwort überschreitet die Transportgrenze.')
         try:
             parsed = json.loads(value.strip().removeprefix('```json').removesuffix('```').strip())
         except (ValueError, TypeError):
@@ -1160,7 +1157,7 @@ class OpenAIService:
         if prompt_policy in ("career_fixed", "custom_career"):
             instructions = _effective_policy_prompt(prompt_policy, system_prompt, resolved)
             result = yield from self._parse_steps(
-                instructions + '\n\n' + COMPACT_CHAT_INSTRUCTIONS,
+                chat_instructions(instructions),
                 {
                     "current_profile": _profile_data(profile),
                     "conversation_history": _conversation_history(history),
@@ -1174,7 +1171,7 @@ class OpenAIService:
                 ChatDecision,
                 stream=stream,
                 domain_rules=False,
-                answer_formatter=compact_advice,
+                answer_formatter=format_chat_answer,
             )
             return result.model_dump()
         if resolved['neutral']:
@@ -1403,9 +1400,8 @@ class OpenAIService:
         if prompt_policy in ('career_fixed', 'custom_career'):
             # A frozen base stays intact. Presentation rules are versioned
             # separately and never affect the numerical scoring request.
-            explanation_instructions += '\n\n' + COMPACT_CHAT_INSTRUCTIONS
-            intro_jobs = selected_jobs if context.get('initial_intro') else None
-            answer_formatter = lambda text: compact_advice(text, intro_jobs=intro_jobs)
+            explanation_instructions = chat_instructions(instructions)
+            answer_formatter = format_chat_answer
         explanation_result = yield from self._parse_steps(
             explanation_instructions, explanation_data,
             _candidate_reranking_schema(selected_ids, cached=True),
