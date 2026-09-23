@@ -263,11 +263,11 @@
     {
       "id": "search_context",
       "title": "Dein Suchvorhaben",
-      "description": "Beschreibe kurz, wofür du DIANA gerade genutzt hast.",
+      "description": "Beschreibe kurz, wofür du das System gerade genutzt hast.",
       "fields": [
         {
           "name": "search_goal",
-          "title": "Wonach hast du mit DIANA gesucht?",
+          "title": "Wonach hast du mit dem System gesucht?",
           "kind": "text",
           "multiline": true,
           "minLength": 3,
@@ -288,7 +288,7 @@
       "fields": [
         {
           "name": "usefulness_ideal",
-          "title": "DIANA hat mir geholfen, die ideale Stelle für mein Suchvorhaben zu finden.",
+          "title": "Das System hat mir geholfen, die ideale Stelle für mein Suchvorhaben zu finden.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -322,7 +322,7 @@
         },
         {
           "name": "usefulness_find_easy",
-          "title": "Mit DIANA war es einfach, Stellen zu finden, die mir gefallen.",
+          "title": "Mit dem System war es einfach, Stellen zu finden, die mir gefallen.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -356,7 +356,7 @@
         },
         {
           "name": "usefulness_suggestions",
-          "title": "DIANA hat mir gute Vorschläge gemacht.",
+          "title": "Das System hat mir gute Vorschläge gemacht.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -397,7 +397,7 @@
       "fields": [
         {
           "name": "trust_fit",
-          "title": "Ich vertraue darauf, dass die von DIANA vorgeschlagenen Stellen wirklich zu mir passen.",
+          "title": "Ich vertraue darauf, dass die vom System vorgeschlagenen Stellen wirklich zu mir passen.",
           "kind": "scale",
           "scale": {
             "min": 1,
@@ -434,7 +434,7 @@
         },
         {
           "name": "trust_credibility",
-          "title": "Die Einschätzungen von DIANA zur Passung erschienen mir glaubwürdig.",
+          "title": "Die Einschätzungen des Systems zur Passung erschienen mir glaubwürdig.",
           "kind": "scale",
           "scale": {
             "min": 1,
@@ -473,7 +473,7 @@
     },
     {
       "id": "dialogue",
-      "title": "Das Gespräch mit DIANA",
+      "title": "Das Gespräch mit dem System",
       "description": "Denke an deine gerade abgeschlossene Suche. Bewerte jede Aussage von 1 bis 7. Wenn du sie nicht beurteilen kannst, wähle die entsprechende Antwort.",
       "fields": [
         {
@@ -762,7 +762,7 @@
         },
         {
           "name": "transparency_assessment",
-          "title": "Ich habe verstanden, wie DIANA die Eignung der Stellen beurteilt hat.",
+          "title": "Ich habe verstanden, wie das System die Eignung der Stellen beurteilt hat.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -837,7 +837,7 @@
       "fields": [
         {
           "name": "overall_satisfaction",
-          "title": "Insgesamt bin ich mit DIANA zufrieden.",
+          "title": "Insgesamt bin ich mit dem System zufrieden.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -871,7 +871,7 @@
         },
         {
           "name": "intention_reuse",
-          "title": "Ich werde DIANA bei einer weiteren Jobsuche wieder nutzen.",
+          "title": "So ein System werde ich bei einer weiteren Jobsuche wieder nutzen.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -912,7 +912,7 @@
       "fields": [
         {
           "name": "study_effort",
-          "title": "Die Nutzung von DIANA war für mich aufwendig.",
+          "title": "Die Nutzung des Systems war für mich aufwendig.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -978,37 +978,6 @@
           "source_url": "",
           "adaptation": "Studienbezogene Eigenentwicklung; keine Framework-Skala.",
           "item_type": "single_item"
-        },
-        {
-          "name": "personality_customized",
-          "title": "Hast du die angebotenen Einstellungen der KI-Beratung selbst verändert?",
-          "kind": "choice",
-          "presentation": "radio",
-          "level": "nominal",
-          "options": [
-            [
-              "yes",
-              "Ja"
-            ],
-            [
-              "no",
-              "Nein"
-            ]
-          ],
-          "codes": {
-            "yes": 1,
-            "no": 0
-          },
-          "visibleIf": {
-            "field": "study_arm",
-            "equals": "C"
-          },
-          "framework": "DIANA",
-          "construct": "customization_check",
-          "source_item": "DIANA-Nutzungskontrolle, nur C",
-          "source_url": "",
-          "adaptation": "Studienbezogene Eigenentwicklung; keine Framework-Skala.",
-          "item_type": "single_item"
         }
       ]
     },
@@ -1064,6 +1033,39 @@
       "item_type": "screening",
       "source_item": "DIANA – Selbstbericht zur früheren Teilnahme",
       "adaptation": "Keine technische Duplikaterkennung; unklare Antworten bleiben gesondert.",
+      "retired": true,
+      "optional": true
+    },
+    {
+      "name": "personality_customized",
+      "title": "Hast du die angebotenen Einstellungen der KI-Beratung selbst verändert?",
+      "kind": "choice",
+      "presentation": "radio",
+      "level": "nominal",
+      "options": [
+        [
+          "yes",
+          "Ja"
+        ],
+        [
+          "no",
+          "Nein"
+        ]
+      ],
+      "codes": {
+        "yes": 1,
+        "no": 0
+      },
+      "visibleIf": {
+        "field": "study_arm",
+        "equals": "C"
+      },
+      "framework": "DIANA",
+      "construct": "customization_check",
+      "source_item": "DIANA-Nutzungskontrolle, nur C",
+      "source_url": "",
+      "adaptation": "Studienbezogene Eigenentwicklung; keine Framework-Skala.",
+      "item_type": "single_item",
       "retired": true,
       "optional": true
     }

@@ -26,12 +26,12 @@ const retired = ['age_group','gender','system_usefulness','usefulness_effective'
 
 test('V14 is the only active questionnaire and has the required arm-specific counts', () => {
   assert.equal(SURVEY_VERSION, 'diana-v14');
-  for(const [arm,count] of [['A',25],['B',25],['C',26]]) {
+  for(const [arm,count] of [['A',25],['B',25],['C',25]]) {
     const state=assigned(arm), config=surveyConfiguration(state);
     assert.equal(state.version,SURVEY_VERSION);
     assert.equal(visibleFields(config.surveyFields,state.answers).filter(field=>!field.systemProvided).length,count);
     assert(!config.surveyFields.some(field=>retired.includes(field.name)));
-    assert.equal(visibleFields(config.surveyFields,state.answers).some(field=>field.name==='personality_customized'),arm==='C');
+    assert.equal(visibleFields(config.surveyFields,state.answers).some(field=>field.name==='personality_customized'),false);
     assert.equal(needsSystemPreparation(state),true);
   }
   for(const version of ['diana-v4','diana-v11','diana-v12','diana-v13','diana-v99']) {
@@ -77,7 +77,7 @@ test('V14 browser and server resume preserve preparation but sanitize unknown/hi
   const fromBrowser=loadSurveyState(storage);
   assert.equal(fromBrowser.submissionId,prepared.submissionId);
   assert.equal(needsSystemPreparation(fromBrowser),false);
-  assert.equal(fromBrowser.answers.personality_customized,null);
+  assert.equal(fromBrowser.answers.personality_customized,undefined);
   assert(!Object.hasOwn(fromBrowser.answers,'system_usefulness'));
   const fromServer=restoreServerDraft(initial,{version:SURVEY_VERSION,revision:prepared.draftRevision+1,
     answers:prepared.answers,waiting_answered:prepared.waitingAnswered});
@@ -108,13 +108,12 @@ test('all nineteen rating items have seven full anchors and accept only 1–7 or
   assert('temporary' in surveyErrors({temporary:8},[inherited]));
 });
 
-test('customization check is C-only and is never part of waiting questions', () => {
-  const state=assigned('C');
-  assert(!surveyConfiguration().waitingQuestionFields.some(field=>field.name==='personality_customized'));
-  const selected=changeSurveyAnswer(state.answers,'personality_customized','yes');
-  assert.equal(selected.personality_customized,'yes');
-  const switched=changeSurveyAnswer(selected,'study_arm','B');
-  assert.equal(switched.personality_customized,null);
+test('retired customization question is absent for every group and waiting phase', () => {
+  for (const arm of ['A','B','C']) {
+    const config=surveyConfiguration(assigned(arm));
+    assert(!config.surveyFields.some(field=>field.name==='personality_customized'));
+    assert(!config.waitingQuestionFields.some(field=>field.name==='personality_customized'));
+  }
 });
 
 test('navigation keeps the existing authoritative three-turn gate and skips answered waiting fields', () => {
@@ -140,7 +139,7 @@ test('autosave sends only active answer fields and serializes new ratings after 
   const payload=draftPayload(state);
   assert.equal(payload.version,SURVEY_VERSION);
   assert.equal(payload.answers.usefulness_ideal,6);
-  assert.equal(payload.answers.personality_customized,null);
+  assert(!Object.hasOwn(payload.answers,'personality_customized'));
   assert(!Object.hasOwn(payload.answers,'system_usefulness'));
   assert(!Object.hasOwn(payload.answers,'source_item'));
   const saved=[];
@@ -169,7 +168,7 @@ test('complete V14 submission exports neither retired answers nor framework/sour
     sent=JSON.parse(options.body);return {ok:true,json:async()=>({saved:true})};
   }});
   assert.equal(sent.version,SURVEY_VERSION);
-  assert.equal(sent.personality_customized,'yes');
+  assert(!Object.hasOwn(sent,'personality_customized'));
   assert.equal(sent.usefulness_ideal,4);
   assert(!Object.hasOwn(sent,'system_usefulness'));
   assert(!Object.hasOwn(sent,'framework'));
@@ -179,7 +178,13 @@ test('V14 removes repeat screening and retains trust and manipulation checks', a
   const {default:old}=await import('../survey_definition_v13.json',{with:{type:'json'}});
   const original=[old.demographics,...old.categories].flatMap(group=>group.fields);
   const current=surveyConfiguration().surveyFields;
-  for(const field of original)assert.equal(current.find(item=>item.name===field.name)?.title,field.title);
+  for(const field of original.filter(item=>item.name!=='personality_customized')) {
+    const active=current.find(item=>item.name===field.name);
+    assert.equal(active.kind,field.kind);
+    assert.equal(active.construct,field.construct);
+  }
+  assert(current.every(field=>!field.title?.includes('DIANA')));
+  assert.equal(current.find(field=>field.name==='intention_reuse').title,'So ein System werde ich bei einer weiteren Jobsuche wieder nutzen.');
   const sequence=names(current);
   assert(!sequence.includes('previous_participation'));
   assert(sequence.indexOf('trust_fit')>sequence.indexOf('usefulness_suggestions'));

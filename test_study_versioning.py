@@ -126,14 +126,13 @@ class StudyVersioningTests(unittest.TestCase):
                 requested = AdvisorConfig(mode="custom", focus=focus).model_dump()
                 self.assertEqual(advisor_for_policy(requested, "configurable"), requested)
 
-    def test_c_self_report_refers_to_real_change(self):
-        question = next(
-            field["title"]
-            for category in SURVEY_DEFINITION["categories"]
-            for field in category["fields"]
-            if field["name"] == "personality_customized"
-        )
-        self.assertIn("selbst verändert", question)
+    def test_c_self_report_is_retired_and_no_longer_asked(self):
+        active = [field for category in SURVEY_DEFINITION['categories'] for field in category['fields']]
+        self.assertFalse(any(field['name'] == 'personality_customized' for field in active))
+        retired = next(field for field in SURVEY_DEFINITION['retiredFields']
+                       if field['name'] == 'personality_customized')
+        self.assertTrue(retired['retired'])
+        self.assertTrue(retired['optional'])
 
 
 if __name__ == "__main__":

@@ -157,9 +157,9 @@
 /* Use the scale length from the definition; keep every verbal anchor readable. */
 .survey-page .survey-scale.survey-likert { grid-template-columns: repeat(var(--survey-scale-columns, 1), minmax(0, 1fr)); }
 .survey-page .survey-likert .survey-score { align-content: center; gap: 5px; padding: 12px 7px; text-align: center; min-height: 112px; }
-.survey-page .survey-likert-label { font-size: 12px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
+.survey-page .survey-likert-label { font-size: 11px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere; }
 @media (max-width: 760px) {
   .survey-page .survey-scale.survey-likert { grid-template-columns: 1fr; gap: 7px; }
   .survey-page .survey-likert .survey-score { display: flex; justify-content: flex-start; gap: 12px; min-height: 48px; padding: 11px 15px; text-align: left; }
-  .survey-page .survey-likert-label { font-size: 14px; }
+  .survey-page .survey-likert-label { font-size: 12px; }
 }

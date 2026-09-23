@@ -48,7 +48,7 @@ export function SurveyQuestion({ field, value, onChange, busy, error, suggestion
     </> : <>
       {field.multiline ? <textarea {...inputProps} value={value} onChange={event => onChange(field.name, event.target.value)} rows={4} maxLength={field.maxLength} />
         : <input {...inputProps} type="text" value={value} onChange={event => onChange(field.name, event.target.value)} maxLength={field.maxLength} />}
-      {field.name === 'search_goal' && suggestion && <p className="survey-field-hint">{value === suggestion ? 'Aus deinem DIANA-Suchprofil übernommen. Bitte prüfe und ergänze den Vorschlag.' : <button type="button" className="survey-suggestion-button" onClick={() => onChange(field.name, suggestion)}>Suchvorhaben aus DIANA übernehmen</button>}</p>}
+      {field.name === 'search_goal' && suggestion && <p className="survey-field-hint">{value === suggestion ? 'Aus deinem Suchprofil übernommen. Bitte prüfe und ergänze den Vorschlag.' : <button type="button" className="survey-suggestion-button" onClick={() => onChange(field.name, suggestion)}>Suchvorhaben aus dem System übernehmen</button>}</p>}
     </>}
     {field.hint && <p id={hintId} className="survey-field-hint">{field.hint}</p>}
     {error && <p className="survey-field-error" id={errorId}>{error}</p>}

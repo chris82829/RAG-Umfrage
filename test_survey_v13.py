@@ -44,7 +44,7 @@ class SurveyV13Tests(unittest.TestCase):
             self.assertEqual(len(f['scale']['labels']),7)
             self.assertIn('source_item',f)
             self.assertEqual(f['nonresponse'],[['not_assessable','Kann ich nicht beurteilen']])
-        for arm,count in [('A',25),('B',25),('C',26)]:
+        for arm,count in [('A',25),('B',25),('C',25)]:
             self.assertEqual(sum(not f.get('retired') and not f.get('systemProvided') and field_visible(f,{'study_arm':arm}) for f in SURVEY_FIELDS),count)
             SurveyRequest.model_validate(dict(submission_id='a'*32,**answers(arm)))
 
@@ -53,9 +53,14 @@ class SurveyV13Tests(unittest.TestCase):
         current={f['name']:f for f in SURVEY_FIELDS}
         for group in [old['demographics'],*old['categories']]:
             for field in group['fields']:
-                self.assertEqual(current[field['name']]['title'],field['title'])
+                self.assertEqual(current[field['name']]['kind'],field['kind'])
+                self.assertEqual(current[field['name']]['construct'],field['construct'])
         names=[f['name'] for f in SURVEY_FIELDS]
         self.assertTrue(current['previous_participation']['retired'])
+        self.assertTrue(current['personality_customized']['retired'])
+        self.assertTrue(current['personality_customized']['optional'])
+        self.assertTrue(all('DIANA' not in f['title'] for f in SURVEY_FIELDS if not f.get('retired')))
+        self.assertEqual(current['intention_reuse']['title'],'So ein System werde ich bei einer weiteren Jobsuche wieder nutzen.')
         self.assertEqual(names[names.index('usefulness_suggestions')+1:names.index('usefulness_suggestions')+3],['trust_fit','trust_credibility'])
         self.assertEqual(names[names.index('dialogue_attentiveness')+1],'perceived_character')
         trust=next(c for c in SURVEY_DEFINITION['constructs'] if c['id']=='trust')
