@@ -4,6 +4,7 @@ import re
 COMPACT_CHAT_VERSION = 'short-job-bullets-v2'
 MAX_BC_ANSWER_CHARS = 380
 MAX_BC_WELCOME_CHARS = 420
+SCORE_SCALE = {'minimum': 1, 'maximum': 100, 'unit': 'Punkte', 'is_probability': False}
 
 COMPACT_CHAT_INSTRUCTIONS = """
 VERBINDLICHES KURZFORMAT FÜR assistant_message (v2):
@@ -14,6 +15,9 @@ Verwende die exakten Stellentitel aus den Daten, damit sie anklickbar bleiben.
 Kürze den Beleg, nicht den Titel. Bei sehr langen Titeln genügt ein Stellenpunkt.
 Bei nur einer passenden Stelle genügt ebenfalls ein Punkt. Keine Zusammenfassung.
 Nenne niemals Job-IDs, job:-Verweise, Markdown-Links oder technische Kennungen.
+Die Stellen-Scores reichen von 1 bis 100 Punkten, niemals von 1 bis 10.
+Übernimm erwähnte Scores exakt aus den bereitgestellten Daten (z. B. 85/100).
+Erfinde keine Punktzahl, rechne sie nicht auf zehn um und nenne sie nicht Prozent.
 Schreibe keine Begrüßung, Trefferzahl, Hinweise zur Ergebnisansicht oder den Satz
 über 'Weitere Stellen anzeigen'; die Oberfläche zeigt die Trefferzahl selbst.
 Wenn eine konkrete Rückfrage sinnvoll und follow_up_allowed wahr ist, stelle

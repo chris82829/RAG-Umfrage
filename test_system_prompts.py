@@ -60,6 +60,9 @@ class CapturingResponses:
             payload = {"rankings": rankings, "assistant_message": "Python passt. Was ist dir wichtiger: Datenpipelines oder Analysen?"}
             if "Scoring" in schema.__name__:
                 payload.pop("assistant_message")
+        elif schema.__name__ == 'CachedJobAssessment':
+            payload = {"reasons": ["Python passt zur Aufgabe.", "Die Tätigkeit ist konkret beschrieben."],
+                       "matched_skills": ["Python"], "missing_skills": []}
         else:
             payload = {"action": "answer", "profile_patch": neutral_patch(),
                        "assistant_message": "Python passt. Möchtest du nach Datenpipelines oder Analysen gruppieren?"}
@@ -86,7 +89,8 @@ class PromptPolicyTests(unittest.TestCase):
         call = self.responses.calls[-1]
         self.assertEqual([item["role"] for item in call["input"]], ["user"])
         payload = json.loads(call["input"][0]["content"])
-        self.assertEqual(set(payload), {"profile", "history", "message", "jobs"})
+        self.assertEqual(set(payload), {"profile", "history", "message", "jobs", "score_scale"})
+        self.assertEqual(payload['score_scale']['maximum'], 100)
         self.assertNotIn("persona", payload)
         self.assertNotIn("assistant_preferences", payload)
         self.assertIsNone(call.get("max_output_tokens"))
@@ -100,7 +104,37 @@ class PromptPolicyTests(unittest.TestCase):
                          {"profile", "jobs", "history", "message", "requested_count"})
         self.assertEqual(set(json.loads(explanation_call["input"][0]["content"])),
                          {"profile", "jobs", "history", "message", "requested_count",
-                          "evaluated_candidate_count", "fixed_components", "selected_job_ids"})
+                          "evaluated_candidate_count", "fixed_components", "selected_job_ids", "scores", "score_scale"})
+
+    def test_single_explanation_uses_existing_score_and_frozen_prompt_without_rescoring(self):
+        components = dict(technical_fit=80, preferences_fit=70, technical_depth=65,
+                          learning=60, innovation=55, clarity=75)
+        job = {**JOBS[0], 'match': {'score': 76, 'components': components}}
+        for policy in ('unprompted', 'career_fixed', 'custom_career'):
+            with self.subTest(policy=policy):
+                explained = self.model.explain_job(PROFILE, job, prompt_policy=policy,
+                                                   system_prompt=self.store.snapshot(policy))
+                call = self.responses.calls[-1]
+                payload = json.loads(call['input'][-1]['content'])
+                self.assertEqual(payload['score'], 76)
+                self.assertEqual(payload['score_scale']['minimum'], 1)
+                self.assertEqual(payload['score_scale']['maximum'], 100)
+                self.assertFalse(payload['score_scale']['is_probability'])
+                self.assertEqual(payload['fixed_components'], components)
+                self.assertEqual(payload['job']['id'], job['id'])
+                self.assertEqual(set(explained), {'reasons', 'matched_skills', 'missing_skills'})
+                self.assertEqual(len(call['input']), 1 if policy == 'unprompted' else 2)
+                self.assertNotIn('score', call['text_format'].model_fields)
+
+    def test_chat_receives_actual_100_point_scores_in_each_arm(self):
+        for policy in ('unprompted', 'career_fixed', 'custom_career'):
+            self.model.plan_chat(PROFILE, [], 'Wie hoch ist der Score?',
+                                 jobs=[{**JOBS[0], 'match': {'score': 85}}], prompt_policy=policy,
+                                 system_prompt=self.store.snapshot(policy))
+            payload = json.loads(self.responses.calls[-1]['input'][-1]['content'])
+            visible = payload['jobs'] if policy == 'unprompted' else payload['visible_jobs']
+            self.assertEqual(visible[0]['previous_score'], 85)
+            self.assertEqual(payload['score_scale']['maximum'], 100)
 
     def test_b_and_c_use_distinct_complete_system_prompts(self):
         career = self.store.snapshot("career_fixed")

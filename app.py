@@ -8,6 +8,7 @@ import os
 import random
 import secrets
 import time
+import threading
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -20,7 +21,7 @@ from werkzeug.exceptions import HTTPException
 
 from data_store import JobStore
 from llm_service import (MODEL, REASONING_EFFORT, LLMUnavailable, OpenAIService,
-                         PersonaResult, unprompted_persona)
+                         PersonaResult, CachedJobAssessment, unprompted_persona)
 from retrieval import EmbeddingUnavailable, HybridRetriever
 from schemas import ChatInput, Profile, SearchInput
 from session_store import SessionConflict, SessionStore, EphemeralSessionStore
@@ -40,6 +41,7 @@ from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice, to
 from study_release import StudyReleases
 from system_prompt_store import SystemPromptStore
 from chat_text import compact_advice
+from chat_completion import conclude_custom_chat, custom_chat_preview
 from admin import register_admin
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -218,6 +220,8 @@ def create_app(config=None, *, retriever=None, llm=None):
     if app.config['SEED_DUMMY_DATA']:
         store.seed_if_empty(BASE_DIR / 'dummy_jobs.json')
     sessions = (SessionStore if app.config['PERSIST_CHAT_SESSIONS'] else EphemeralSessionStore)(db_path)
+    explanation_inflight = set()
+    explanation_lock = threading.Lock()
     privacy = PrivacyStore(db_path)
     personality_usage = StudyPersonalityUsage(db_path)
     operation_metrics = StudyOperationMetrics(db_path)
@@ -489,11 +493,11 @@ def create_app(config=None, *, retriever=None, llm=None):
             raise ConsentRequired()
         if not app.config['PRIVACY_REQUIRED'] and not test_arm():
             return
-        if request.endpoint in {'search', 'onboard', 'chat', 'get_session', 'delete_session', 'proceed_to_survey', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
+        if request.endpoint in {'search', 'onboard', 'chat', 'explain_job', 'get_session', 'delete_session', 'proceed_to_survey', 'submit_survey', 'save_survey_draft', 'get_survey_draft'}:
             privacy.require(consent_token(), request_notice())
             if request.endpoint == 'get_survey_draft' and not privacy.owns(consent_token(), 'survey', request.view_args['submission_id']):
                 return jsonify(draft=None)
-            if request.endpoint in {'get_session', 'delete_session'} and not privacy.owns(consent_token(), 'chat', request.view_args['session_id']):
+            if request.endpoint in {'get_session', 'delete_session', 'explain_job'} and not privacy.owns(consent_token(), 'chat', request.view_args['session_id']):
                 raise ConsentRequired()
 
     @app.after_request
@@ -931,6 +935,52 @@ def create_app(config=None, *, retriever=None, llm=None):
                        'advisor': saved[0].get('advisor', AdvisorConfig().model_dump())}),
                        chat_usage=chat_usage(saved[0]))
 
+    @app.post('/api/sessions/<session_id>/jobs/<job_id>/explanation')
+    def explain_job(session_id, job_id):
+        if not request.is_json or request.get_json(silent=True) != {}:
+            return error_response({'code': 'validation_error', 'message': 'Diese Aktion benötigt keine weiteren Angaben.'}, 400)
+        with explanation_lock:
+            if session_id in explanation_inflight:
+                return error_response({'code': 'explanation_in_progress', 'message': 'Eine Begründung wird bereits berechnet.'}, 409)
+            explanation_inflight.add(session_id)
+        try:
+            saved = sessions.get(session_id)
+            if not saved:
+                return error_response({'code': 'not_found', 'message': 'Bitte starte deine Suche neu.'}, 404)
+            state, version = saved
+            assigned = request_assignment()
+            if incompatible_session(state, assigned) or outdated_neutral_presentation(state):
+                return error_response({'code': 'not_found', 'message': 'Bitte starte deine Suche neu.'}, 404)
+            job = next((item for item in state.get('jobs', []) if str(item['id']) == job_id), None)
+            if not job:
+                return error_response({'code': 'not_found', 'message': 'Diese Stelle gehört nicht zu deiner Auswahl.'}, 404)
+            match = job.get('match') or {}
+            if match.get('reasons') or match.get('reason'):
+                return jsonify(session_id=session_id, **public_state(state), chat_usage=chat_usage(state))
+            if not isinstance(match.get('components'), dict):
+                return error_response({'code': 'assessment_missing', 'message': 'Starte bitte eine neue Suche, um diese Stelle erklären zu lassen.'}, 409)
+            policy = state.get('_personality_policy') or (assigned['personality_policy'] if assigned else None)
+            frozen_prompt = state.get('_system_prompt_snapshot')
+            if frozen_prompt is None and policy in ('unprompted', 'career_fixed', 'custom_career'):
+                frozen_prompt = prompt_snapshot(policy, assigned)
+            with timed_phase('explanation'):
+                generated = language_model.explain_job(state['profile'], job, advisor=state.get('advisor'),
+                    prompt_policy=policy, system_prompt=frozen_prompt)
+            try:
+                explanation = CachedJobAssessment.model_validate(generated).model_dump()
+            except ValidationError:
+                raise LLMUnavailable('Die Begründung konnte nicht zuverlässig erstellt werden.') from None
+            updated_match = {**match, **explanation, 'reason': ' '.join(explanation['reasons'])}
+            updated = {**state, 'jobs': [({**item, 'match': updated_match} if str(item['id']) == job_id else item)
+                                        for item in state['jobs']]}
+            # Attach only the new prose. No chat reservation, user turn, profile,
+            # score, ordering or assistant-message mutation is performed here.
+            sessions.update(session_id, updated, version, before_save=consent_link('chat'))
+            return jsonify(session_id=session_id, **public_state(updated), chat_usage=chat_usage(updated))
+        finally:
+            with explanation_lock:
+                explanation_inflight.discard(session_id)
+
     @app.delete('/api/sessions/<session_id>')
     def delete_session(session_id):
         if not sessions.delete(session_id):
@@ -970,8 +1020,13 @@ def create_app(config=None, *, retriever=None, llm=None):
             advisor = selected_advisor
             applied_selection = selected_selection
             profile = body.profile.model_dump() if body.profile is not None else state['profile']
+            concluding_c = False
+            if policy == 'custom_career' and body.message:
+                concluding_c = chat_usage(state)['used'] + 1 == 3
             context = {'messages': state['messages'][-12:], 'jobs': public_state({**state, 'advisor': advisor})['jobs'][:20],
                        'follow_up_allowed': follow_up_allowed(state, message=body.message, reservation=reservation)}
+            if concluding_c:
+                context['follow_up_allowed'] = False
             action = 'answer'
             answer = 'Dein Suchprofil ist unverändert. Die bisherigen Empfehlungen bleiben erhalten.'
             if body.message:
@@ -1082,10 +1137,53 @@ def create_app(config=None, *, retriever=None, llm=None):
             new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), '_personality_policy': state.get('_personality_policy'), '_system_prompt_snapshot': frozen_prompt,
                          '_experiment_id': state.get('_experiment_id'), 'messages': messages[-100:],
                          '_user_chat_count': state.get('_user_chat_count', sum(message.get('role') == 'user' for message in state['messages'])) + int(bool(body.message))}
-            sessions.update(body.session_id, new_state, version, before_save=consent_link('chat', selection=applied_selection, timings=timings, chat_reservation=reservation))
+            attach = consent_link('chat', selection=applied_selection, timings=timings, chat_reservation=reservation)
+            def finalize_turn(db, record_id):
+                if attach:
+                    attach(db, record_id)
+                if policy != 'custom_career' or not body.message:
+                    return
+                if app.config['PRIVACY_REQUIRED'] and not test_arm():
+                    # Reuse the allowance's authoritative successful counter in
+                    # the same commit transaction, after this turn was recorded.
+                    digest = privacy.require(consent_token(), request_notice(), db)
+                    successful = chat_limit.snapshot(digest, db)['used']
+                else:
+                    successful = new_state['_user_chat_count']
+                if successful == 3:
+                    final = conclude_custom_chat(new_state['assistant_message'], new_state['jobs'])
+                    new_state['assistant_message'] = final
+                    new_state['messages'][-1]['content'] = final
+            sessions.update(body.session_id, new_state, version, before_save=finalize_turn)
             return {'session_id': body.session_id, **public_state(new_state), 'chat_usage': chat_usage(new_state)}
 
-        measured = measured_operation(operation(), timings)
+        def guarded_previews():
+            source = operation()
+            try:
+                while True:
+                    try:
+                        event = next(source)
+                    except StopIteration as completed:
+                        return completed.value
+                    if policy == 'custom_career' and body.message and event.get('type') == 'assistant_text':
+                        current = chat_usage(state)
+                        # A pending request can become the third successful turn
+                        # even across different sessions. Keep phase indicators,
+                        # but wait for the committed final text in that case.
+                        if current['used'] + max(1, current['pending']) >= 3:
+                            continue
+                        # Another session can reserve its turn after this
+                        # preview. Questions therefore appear only in a final
+                        # committed C answer; complete factual sentences stream.
+                        preview = custom_chat_preview(event['text'])
+                        if not preview:
+                            continue
+                        event = {**event, 'text': preview}
+                    yield event
+            finally:
+                source.close()
+
+        measured = measured_operation(guarded_previews(), timings)
         return operation_response(limited_chat_operation(measured, reservation, state) if body.message else measured)
 
     @app.errorhandler(ValidationError)

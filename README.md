@@ -2,7 +2,7 @@
 
 Flask-Prototyp mit Anzeigen aus dem bereitgestellten Export,
 SQLite-Vorfilter, paralleler BM25-/E5-Suche,
-Reciprocal Rank Fusion und GPT-5.4-Reranking mit begründeten Ergebnissen.
+Reciprocal Rank Fusion und GPT-5.4-Nano-Reranking (`gpt-5.4-nano-2026-03-17`) mit begründeten Ergebnissen.
 Die React-Webseite enthält ein Suchprofil, Jobkarten und einen persistenten Chat.
 Im aktuellen Konferenzstand V14 zeigen **alle drei Varianten A/B/C** Scores von
 **1 bis 100**, kurze Begründungen und eine nach Score sortierte Ergebnisliste.
@@ -483,7 +483,16 @@ Die Formatregeln werden auch vor Streaming-Vorschauen angewendet. A bleibt
 unverändert. Neue B/C-Basisprompts werden einmalig migriert; bestehende
 Teilnehmer-Snapshots bleiben erhalten und bekommen die versionierte
 Darstellungsvorgabe ausschließlich für die Textausgabe ergänzt.
-Alle 20 Stellen behalten ihren Score; nur die Top 5 erhalten Begründungs-Stichpunkte.
+Alle 20 Stellen behalten ihren Score; zunächst erhalten nur die Top 5 Begründungs-Stichpunkte.
+An jeder noch unerklärten Stelle lässt sich über **„Begründung berechnen“** gezielt
+die Erklärung nachladen. Dabei bleiben Score, Reihenfolge, Profil und Chatkontingent
+unverändert. Bereits berechnete Erklärungen werden in der Sitzung wiederverwendet;
+ein erneuter Klick löst keine zusätzliche Modellanfrage aus. **„Weitere Stellen anzeigen“**
+blendet ausschließlich die bereits bewerteten Plätze 11–20 ein. Alle Chatvarianten
+erhalten die gespeicherten Scores mit expliziter Skala **1–100 Punkte**, nicht Prozent.
+In C ergänzt die dritte erfolgreich gespeicherte Nutzernachricht einen kurzen Abschluss
+zur aktuellen Auswahl, ohne eine perfekte Passung zu versprechen oder eine neue Frage
+zu stellen. Auf `/test/c` sind anschließend weiterhin zusätzliche Nachrichten möglich.
 Unter **„Warum das passen könnte“** ist zunächst nur der erste Stichpunkt sichtbar.
 **„Mehr anzeigen“** öffnet die weiteren Gründe und passenden Fähigkeiten;
 **„Weniger anzeigen“** steht ganz unten in der Begründungsbox, nach allen Gründen
@@ -577,6 +586,7 @@ curl -X POST http://127.0.0.1:5050/api/chat \
 | `POST /api/onboard` | Profil → Suche, Begrüßung/Begründung und neue Chat-Sitzung |
 | `POST /api/chat` | Nachricht, Profil oder Aktion → Antwort, Pool-Neubewertung oder neue Suche |
 | `GET /api/sessions/<session_id>` | Gespeicherten Verlauf und Jobkarten laden |
+| `POST /api/sessions/<session_id>/jobs/<job_id>/explanation` | Erklärung einer gespeicherten Stelle ergänzen, JSON `{}`; Score und Chatkontingent bleiben erhalten |
 | `DELETE /api/sessions/<session_id>` | Gespeicherten Chat samt Profil löschen |
 
 Antworten enthalten `profile`, `persona`, `jobs`, `assistant_message` und

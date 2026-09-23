@@ -8,4 +8,7 @@
 .reason-more-content[hidden]{display:none}
 .reason-more-content>.reason-bullets{margin-top:2px}
 .reason-more-content .skills-list span{min-width:0;overflow-wrap:anywhere}
+.job-explanation-action{margin:10px 0 14px}
+.job-explanation-action .reason-more-toggle{font-weight:600}
+.job-explanation-error{font-size:13px;line-height:1.5;color:#974b38;margin-top:5px}
 @media(prefers-reduced-motion:reduce){.reason-more-toggle>svg{transition:none}}

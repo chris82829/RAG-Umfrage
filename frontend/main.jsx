@@ -13,6 +13,7 @@ import { actionFeedback, candidatePool, canSendChat, pendingFeedback, profileCha
 import {sendStudyEvent, observeJustification} from './telemetry.js';
 import { chatAllowance } from './chat-limit.js';
 import { INITIAL_RESULT_COUNT, resultVisibilityKey, resultVisibility } from './result-visibility.js';
+import {hasJobExplanation, requireExplanationSession, revealedAfterExplanation} from './job-explanations.js';
 import { buildChatSuggestions } from './chat-suggestions.js';
 import JourneyGuide from './JourneyGuide.jsx';
 import ProfileSummaryPopover from './ProfileSummaryPopover.jsx';
@@ -91,13 +92,13 @@ function AssistantActionArea({ feedback, children }) {
   </div>;
 }
 
-export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, assistantName, onAsk, busy, chatBlocked = false, onTelemetry, openRequest }) {
+export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, assistantName, onAsk, onExplain, explaining = false, explanationError = '', busy, chatBlocked = false, onTelemetry, openRequest }) {
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const detailsId = useId();
   const match = showInsights ? job.match : null;
   const reasons = (match?.reasons?.length ? match.reasons : [match?.reason]).filter(reason => typeof reason === 'string' && reason.trim());
   const matchedSkills = match?.matched_skills || [];
-  const hasJustification = reasons.length > 0 || matchedSkills.length > 0;
+  const hasJustification = hasJobExplanation(match);
   const justification = useRef(null);
   const card = useRef(null);
   const referenced = openRequest?.jobId === String(job.id);
@@ -133,6 +134,13 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
       {reasons.length > 0 && <ul className="reason-bullets"><li>{reasons[0]}</li></ul>}
       {(reasons.length > 1 || matchedSkills.length > 0) && <MoreMatchReasons key={JSON.stringify([match.score, reasons, matchedSkills])} reasons={reasons} matchedSkills={matchedSkills} onExpand={()=>onTelemetry?.('job_expand',{job_id:job.id,rank:index+1})} />}
     </div> : <p className="job-summary">{job.summary || job.tasks}</p>}
+    {ranked && match && !hasJustification && onExplain && <div className="job-explanation-action">
+      <button type="button" className="reason-more-toggle" disabled={busy} aria-busy={explaining} onClick={() => onExplain(job)}>
+        {explaining ? <span className="spinner" aria-hidden="true" /> : <CompassAvatar className="inline-compass" />}
+        {explaining ? 'Begründung wird berechnet …' : 'Begründung berechnen'}
+      </button>
+      {explanationError && <p className="job-explanation-error" role="alert">{explanationError}</p>}
+    </div>}
     <div className="job-card-footer">
       <div className="job-card-actions">
         <button type="button" className="job-action-details" aria-label="Stellendetails" aria-expanded={detailsExpanded} aria-controls={detailsId} onClick={() => { if(!detailsExpanded)onTelemetry?.('job_detail',{job_id:job.id,rank:index+1}); setDetailsExpanded(!detailsExpanded); }}>
@@ -215,6 +223,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState('');
   const [error, setError] = useState('');
+  const [explanationError, setExplanationError] = useState(null);
   const [searchActive, setSearchActive] = useState(false);
   const [searchProgress, setSearchProgress] = useState(null);
   const [surveySearchProfile, setSurveySearchProfile] = useState(null);
@@ -331,6 +340,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
   }
   async function run(body, endpoint, kind = 'chat') {
     if (sending.current) return;
+    setExplanationError(null);
     setSurveySearchProfile(body.profile || session?.profile || null);
     setSearchProgress(null);
     setOpenJobRequest(null);
@@ -526,6 +536,45 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
     setEditor(null); setMobileView('chat'); setActivity('chat'); markSteps(3);
     requestAnimationFrame(() => document.getElementById(chatAccess.blocked ? 'chat-allowance' : 'chat-input')?.focus());
   }
+  async function explainJob(job) {
+    if (sending.current || busy || booting || !session || !showInsights || !job.match || hasJobExplanation(job.match)) return;
+    const previous = session;
+    const sessionId = previous.session_id;
+    const jobId = String(job.id);
+    const turn = ++generation.current;
+    sending.current = true;
+    setBusy(true); setError(''); setExplanationError(null); setSearchActive(false);
+    setOperation({kind:'explanation', jobId});
+    const accept = result => {
+      requireExplanationSession(result, sessionId);
+      setRevealedResults(revealed => revealedAfterExplanation(previous, result, revealed));
+      syncSession(result, true, true);
+    };
+    try {
+      const result = await api(`/sessions/${encodeURIComponent(sessionId)}/jobs/${encodeURIComponent(jobId)}/explanation`, {});
+      if (generation.current !== turn) return;
+      requireExplanationSession(result, sessionId);
+      if (!hasJobExplanation(result.jobs.find(candidate => String(candidate.id) === jobId)?.match)) {
+        throw new Error('Die Begründung ist noch nicht verfügbar. Bitte versuche es erneut.');
+      }
+      accept(result);
+    } catch (error) {
+      if (generation.current !== turn) return;
+      // A lost response may still have completed. Read once; never repeat a paid POST automatically.
+      try {
+        const latest = await api(`/sessions/${encodeURIComponent(sessionId)}`);
+        if (generation.current !== turn) return;
+        accept(latest);
+        if (hasJobExplanation(latest.jobs.find(candidate => String(candidate.id) === jobId)?.match)) return;
+      } catch { /* Retain the displayed results if recovery also fails. */ }
+      if (generation.current !== turn) return;
+      setExplanationError({jobId, message: error.status === 409
+        ? 'Die Suche wurde zwischenzeitlich geändert. Bitte versuche die Begründung erneut.'
+        : error instanceof TypeError ? 'Die Verbindung wurde unterbrochen. Bitte versuche die Begründung erneut.' : error.message});
+    } finally {
+      if (generation.current === turn) { sending.current = false; setBusy(false); setOperation(null); }
+    }
+  }
   function openChatJob(jobId) {
     if (busy || !session) return;
     const target = jobNavigationTarget(session.jobs, jobId, INITIAL_RESULT_COUNT);
@@ -537,6 +586,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
   }
   function reset() {
     if (busy) return;
+    setExplanationError(null);
     personalityIntroSeen.current = false; setPersonalityIntro(null);
     generation.current++; remember(null); setSession(null); setAdvisor(advisorForPolicy(personalityPolicy,careerBase)); setRevealedResults(null); setOpenJobRequest(null); setOnboardingStep(1); setOnboardingStarted(false); setDraft(''); setPending(''); setError(''); setEditor(null); setMobileView('jobs'); setActivity('results'); setCompletedSteps([]); editorDrafts.current = { profile: false, advisor: false };
   }
@@ -608,7 +658,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
         {error && (showWelcome || mobileView === 'jobs') && <div className={`error-banner${showWelcome ? '' : ' journey-mobile-error'}`} role="alert">{error}</div>}
         {booting ? <div className="empty-state" role="status"><span className="spinner" /><p>Deine Jobsuche wird geladen …</p></div> : session ? <>
           <div id="ranked-jobs" className="jobs-list" aria-busy={busy}>
-            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={showInsights} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} busy={busy} chatBlocked={chatAccess.blocked} onTelemetry={recordJobEvent} openRequest={openJobRequest} />)}
+            {visibleJobs.map((job, i) => <JobCard key={job.id} job={job} index={i} ranked showInsights={showInsights} scoreLabel={scoreLabel} assistantName={assistantName} onAsk={askAboutJob} onExplain={explainJob} explaining={operation?.kind === 'explanation' && operation.jobId === String(job.id)} explanationError={explanationError?.jobId === String(job.id) ? explanationError.message : ''} busy={busy} chatBlocked={chatAccess.blocked} onTelemetry={recordJobEvent} openRequest={openJobRequest} />)}
             {!jobs.length && <div className="empty-state"><Search size={34} strokeWidth={1.3} /><h2>Hier ist noch Platz für deinen Match.</h2><p>{profileInfo.hardFilters.length && !pool.refreshRequired ? 'Aktuell gibt es keine Stellen zur gewählten Stellenart. Du kannst im Suchprofil oder Chat weitere Stellenarten einbeziehen.' : 'Aktuell liegen keine Stellenempfehlungen vor. Prüfe dein Suchprofil oder starte eine neue Suche.'}</p><button className="text-button" disabled={busy} onClick={() => { setDraft(profileInfo.hardFilters.length ? 'Welche Stellenarten sind aktuell ausgewählt und welche weiteren kommen für mich infrage?' : 'Welche Angaben sind aktuell in meinem Suchprofil gespeichert?'); showChat(); }}>Suchprofil im Chat besprechen <ArrowRight size={15} /></button></div>}
           </div>
           {additionalCount > 0 && <MoreResults expanded={showAllResults} busy={busy} onToggle={toggleMoreResults} />}
@@ -631,7 +681,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
         {error && <div className="error-banner" role="alert">{error}</div>}
         {indexState?.required && !indexReady && <p className="index-chat-status" role="status">Suchindex: {indexState.completed.toLocaleString('de-DE')} von {indexState.total.toLocaleString('de-DE')} Anzeigen vorbereitet. {session ? 'Fragen und das Bewerten gespeicherter Jobs bleiben möglich. Neue Suchen sind nach Abschluss verfügbar.' : 'Deine Suche ist nach Abschluss verfügbar.'}</p>}
         {!session ? <div className="profile-scroll"><ProfileForm showPersonalityStep={showPersonalityStep} form={form} setForm={setForm} onSubmit={startSearch} busy={busy || booting} ready={indexReady} advisor={advisor} setAdvisor={chooseAdvisor} step={onboardingStep} onNext={nextOnboardingStep} onBack={() => { setError(''); setOnboardingStep(1); }} onExplainAdvisor={() => setPersonalityIntro('help')} /></div> : editor === 'profile' ? <div className="profile-scroll"><ProfileForm editMode advisor={session.advisor} form={form} setForm={editProfileDraft} onSubmit={applyProfile} busy={busy} onBack={cancelEditor} /></div> : editor === 'advisor' && showPersonalityStep ? <form className="advisor-editor profile-form" onSubmit={applyAdvisor}><AdvisorPicker value={advisor} onChange={editAdvisorDraft} disabled={busy} onExplain={() => setPersonalityIntro('help')} />{!pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum Anwenden deiner Persönlichkeit brauchst du eine neue Suche.'} Deine Auswahl bleibt dabei erhalten. <button type="button" onClick={refreshCandidates} disabled={busy}>Neue Suche starten</button></p>}<div className="onboarding-actions"><button type="button" className="back-button" onClick={cancelEditor} disabled={busy}>Abbrechen</button><button type="submit" className="primary-button" disabled={busy || !pool.canRerank}>{busy ? 'Jobs werden geprüft …' : 'Persönlichkeit anwenden'}<ArrowRight size={17} /></button></div><p className="privacy-note">Dein Suchprofil mit Stellenart, Wünschen und Erfahrung bleibt erhalten.{pool.canRerank ? ` ${advisorAiLabel(advisor)} bewertet die vorhandenen ${pool.count} Jobs neu.` : ''}</p></form> : <>
-          <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite" onScroll={event => { const feed = event.currentTarget; followChat.current = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80; }}>{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} enhanced={enhancedChat} jobs={jobs} onOpenJob={openChatJob} busy={busy} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><ChatMessageText text={pending} assistant={false} /></div>}{busy && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="message-bubble" aria-busy="true">{streamingText ? (enhancedChat ? <RichChatText text={streamingText} jobs={jobs} onOpenJob={openChatJob} busy streaming /> : <div className="message-text streaming-text">{streamingText}</div>) : <div className="chat-typing"><span className="sr-only">{progressLabel}</span><span aria-hidden="true"><i /><i /><i /></span></div>}</div></div>}<div ref={messagesEnd} /></div>
+          <div className="chat-feed" role="log" aria-label="Chatverlauf" aria-live="polite" onScroll={event => { const feed = event.currentTarget; followChat.current = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80; }}>{session.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={`${index}-${message.role}`}><span className="message-author">{message.role === 'user' ? 'DU' : <><CompassAvatar className="message-compass" /><span className="advisor-name">{message.advisor_name || assistantName}</span></>}</span><ChatMessageText text={message.content} assistant={message.role === 'assistant'} enhanced={enhancedChat} jobs={jobs} onOpenJob={openChatJob} busy={busy} /></div>)}{pending && <div className="chat-message user pending"><span className="message-author">DU</span><ChatMessageText text={pending} assistant={false} /></div>}{busy && operation?.kind !== 'explanation' && <div className="chat-message assistant"><span className="message-author"><CompassAvatar className="message-compass" /><span className="advisor-name">{pendingAssistantName}</span></span><div className="message-bubble" aria-busy="true">{streamingText ? (enhancedChat ? <RichChatText text={streamingText} jobs={jobs} onOpenJob={openChatJob} busy streaming /> : <div className="message-text streaming-text">{streamingText}</div>) : <div className="chat-typing"><span className="sr-only">{progressLabel}</span><span aria-hidden="true"><i /><i /><i /></span></div>}</div></div>}<div ref={messagesEnd} /></div>
           <div className="chat-bottom">{!chatAccess.blocked && chatSuggestions.length > 0 && <details className="chat-examples"><summary>Vorschläge für deinen nächsten Schritt</summary><div className="suggestions">{chatSuggestions.map(suggestion => <button key={suggestion.id} disabled={busy} onClick={() => { setDraft(suggestion.message); requestAnimationFrame(() => document.getElementById('chat-input')?.focus()); }}><Plus size={13} />{suggestion.label}</button>)}</div></details>}
             {!chatAccess.blocked && !pool.canRerank && <p className="pool-hint">{pool.refreshRequired ? poolRefreshHint : 'Zum erneuten Bewerten sind gerade keine gespeicherten Jobs verfügbar.'} Du kannst im Chat um eine neue Suche bitten.</p>}
             {chatAccess.limit !== null && <p id="chat-allowance" tabIndex={-1} className={`chat-allowance${chatAccess.blocked ? ' chat-allowance--complete' : ''}`} role="status">

@@ -150,17 +150,18 @@ class SurveyChatLimitTests(unittest.TestCase):
                 self.onboard(headers)
                 self.assertIs(self.model.ranking_follow_up_flags[-1], False)
 
-    def test_standalone_tests_keep_followups_after_three_messages(self):
+    def test_standalone_tests_resume_followups_after_c_third_turn_conclusion(self):
         for arm in ('B', 'C'):
             headers = self.grant(arm, standalone=True)
             state = self.onboard(headers)
             self.model.action = 'rerank'
-            for _ in range(4):
+            for index in range(4):
                 response = self.chat(headers, state)
                 self.assertEqual(response.status_code, 200, response.json)
                 state = response.json
-                self.assertIs(self.model.follow_up_flags[-1], True)
-                self.assertIs(self.model.ranking_follow_up_flags[-1], True)
+                expected = not (arm == 'C' and index == 2)
+                self.assertIs(self.model.follow_up_flags[-1], expected)
+                self.assertIs(self.model.ranking_follow_up_flags[-1], expected)
 
     def test_profile_and_search_or_rerank_without_message_do_not_consume_allowance(self):
         headers = self.grant()

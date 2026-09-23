@@ -17,7 +17,7 @@ from typing import Annotated, Any, Generator, Literal, TypeVar
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, create_model, field_validator, model_validator
 from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
-from chat_text import COMPACT_CHAT_INSTRUCTIONS, compact_advice
+from chat_text import COMPACT_CHAT_INSTRUCTIONS, SCORE_SCALE, compact_advice
 
 
 MODEL = "gpt-5.4-nano-2026-03-17"
@@ -1140,7 +1140,8 @@ class OpenAIService:
                     "profile": _profile_data(profile),
                     "history": _conversation_history(history),
                     "message": _text(message, 6000),
-                    "jobs": _visible_jobs(jobs, include_assessments=False),
+                    "jobs": _visible_jobs(jobs, include_assessments=True),
+                    "score_scale": SCORE_SCALE,
                 },
                 GenericChatDecision,
                 stream=stream,
@@ -1157,6 +1158,7 @@ class OpenAIService:
                     "conversation_history": _conversation_history(history),
                     "latest_message": _text(message, 6000),
                     "visible_jobs": _visible_jobs(jobs, include_assessments=True),
+                    "score_scale": SCORE_SCALE,
                     "mode": _text(mode, 40),
                     "candidate_count": max(0, candidate_count),
                     "follow_up_allowed": follow_up_allowed,
@@ -1193,6 +1195,28 @@ class OpenAIService:
             stream=stream,
         )
         return result.model_dump()
+
+    def explain_job(self, profile: dict, job: dict, *, advisor=None,
+                    prompt_policy=None, system_prompt=None) -> dict:
+        """Generate prose for one saved score, never rerank or recompute it."""
+        resolved = resolve_advisor(advisor)
+        instructions = _effective_policy_prompt(prompt_policy, system_prompt, resolved)
+        if prompt_policy != 'unprompted':
+            instructions = (instructions or _advisor_instructions(resolved)) + (
+                '\n\nErkläre ausschließlich die gespeicherte Bewertung dieser einen Stelle '
+                'anhand der Anzeige und des Profils. Die Teilbewertungen und der Score '
+                'sind fest und werden nicht neu berechnet. Der Score liegt auf der '
+                'Skala 1–100 Punkte, nicht 1–10 und nicht Prozent. '
+                'Formuliere zwei bis drei kurze konkrete Gründe, ohne Job-IDs.'
+            )
+        match = job['match']
+        components = ScoreComponents.model_validate(match['components']).model_dump()
+        return self._parse(
+            instructions,
+            {'profile': _profile_data(profile), 'job': _transport_job(_candidate_data(job)),
+             'fixed_components': components, 'score': match['score'], 'score_scale': SCORE_SCALE},
+            CachedJobAssessment, max_output_tokens=2000, domain_rules=False,
+        ).model_dump()
 
     def rerank(self, *args, **kwargs) -> dict:
         return _complete(self.rerank_steps(*args, **kwargs))
@@ -1352,6 +1376,8 @@ class OpenAIService:
             evaluated_candidate_count=count,
             fixed_components={job_id: assessments[job_id] for job_id in selected_ids},
             selected_job_ids=selected_ids,
+            scores={item['job_id']: item['score'] for item in scored[:INITIAL_EXPLANATION_LIMIT]},
+            score_scale=SCORE_SCALE,
         )
         explanation_instructions = instructions
         answer_formatter = None
