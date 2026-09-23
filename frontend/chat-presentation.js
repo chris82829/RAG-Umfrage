@@ -6,14 +6,61 @@ export function removeChatGenderSuffixes(text, streaming = false) {
   return streaming ? value.replace(/[ \t]*\(\s*[mwfdx](?:\s*[/|]\s*(?:[mwfdx](?:\s*[/|]\s*[mwfdx]?)?)?)?\s*$/i, '') : value;
 }
 
+const internalJobReference = /\\*\[([^\]\n]+?)\\*\][ \t]*\\*\([ \t]*job[ \t]*:[ \t]*([^\s)\\]+)[ \t]*\\*\)/gi;
+
+// Explicit ID labels do not belong in participant-facing answers, including
+// invented IDs. Only supplied job records can create an interactive link.
+// Plain numbers (scores, hours, dates, technologies) are never treated as IDs.
+export function removeVisibleJobIds(text, jobs = [], {streaming = false} = {}) {
+  const byId = new Map(jobs.map(job => [String(job.id ?? ''), job]));
+  const ids = [...new Set(jobs.map(job => String(job.id ?? '')).filter(Boolean))]
+    .sort((a, b) => b.length - a.length)
+    .map(id => id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const numericId = '(?=[\\p{L}\\p{N}._-]*\\p{N})[\\p{L}\\p{N}](?:[\\p{L}\\p{N}._-]*[\\p{L}\\p{N}])?';
+  const id = `(?:${[...ids, numericId].join('|')})(?![\\p{L}\\p{N}_-])`;
+  const label = '(?:(?:Job|Stellen|Anzeigen)[ \\t‐‑–-]*ID|Stellenkennung|Jobkennung|Kennung|ID)';
+  const marker = `(?<![\\p{L}\\p{N}_])(?:\\*\\*)?(?:${label}(?:\\*\\*)?[ \\t]*:?[ \\t]*#?[ \\t]*|#[ \\t]*)${id}(?:\\*\\*)?`;
+  const wrapped = new RegExp(`[ \\t]*\\([ \\t]*${marker}[ \\t]*\\)`, 'giu');
+  const bare = new RegExp(`[ \\t]*${marker}`, 'giu');
+  const longIds = [...byId.keys()].filter(value => value.length >= 5 && /^[A-Za-z0-9_-]+$/.test(value))
+    .sort((a, b) => b.length - a.length).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const bareId = longIds.length ? new RegExp(`(?<![\\p{L}\\p{N}_.-])(${longIds.join('|')})(?![\\p{L}\\p{N}_-]|[.,]\\d)`, 'gu') : null;
+  const streamTail = new RegExp(`[ \\t]*(?:\\([ \\t]*)?(?<![\\p{L}\\p{N}_])(?:\\*\\*)?(?:${label}|(?:Job|Stellen|Anzeigen)[ \\t‐‑–-]*I)(?:\\*\\*)?[ \\t]*:?[ \\t]*#?[ \\t]*[\\p{L}\\p{N}._-]*$|[ \\t]*(?:\\([ \\t]*)?#[ \\t]*[\\p{N}]*$`, 'iu');
+  const clean = (value, final = false) => {
+    if (streaming && final) value = value.replace(streamTail, '');
+    let result = value.replace(wrapped, '').replace(bare, '');
+    if (bareId) result = result.replace(bareId, (match, key, offset, source) => {
+      if (/^[ \t]*(?:€|EUR\b|Euro\b|%|Stunden?\b|h\b|Std\.?\b)/i.test(source.slice(offset + match.length))) return match;
+      const job = byId.get(key);
+      const title = removeChatGenderSuffixes(job.title || 'diese Stelle').replace(/\[/g, '［').replace(/\]/g, '］');
+      return `[${title}](job:${encodeURIComponent(key)})`;
+    });
+    return result === value ? value : result.replace(/[ \t]{2,}/g, ' ');
+  };
+  // Transport targets must survive intact, including a label that is itself an
+  // identifier: a known reference is rendered using its canonical job title.
+  let output = '', start = 0;
+  for (const match of text.matchAll(internalJobReference)) {
+    output += clean(text.slice(start, match.index)) + match[0];
+    start = match.index + match[0].length;
+  }
+  return output + clean(text.slice(start), true);
+}
+
+export function jobDiscussionPrompt(job, {enhanced = false} = {}) {
+  const title = enhanced ? removeChatGenderSuffixes(job.title) : job.title;
+  const identifier = enhanced ? '' : ` (Job-ID ${job.id})`;
+  return `Warum passt die Stelle „${title}“ bei ${job.company}${identifier} zu mir, und welche Kenntnisse fehlen noch?`.slice(0, 3000);
+}
+
 // Only references to supplied, server-grounded job records become interactive.
-export function jobReferenceParts(text, jobs = []) {
+export function jobReferenceParts(text, jobs = [], {hideJobIds = true} = {}) {
   text = removeChatGenderSuffixes(text);
+  if (hideJobIds) text = removeVisibleJobIds(text, jobs);
   const byId = new Map(jobs.map(job => [String(job.id), job]));
   // Models sometimes escape Markdown brackets/parentheses. Treat these as the
   // same internal reference; the UI renders a known title, never this markup.
-  const reference = /\\*\[([^\]\n]+?)\\*\][ \t]*\\*\([ \t]*job[ \t]*:[ \t]*([^\s)\\]+)[ \t]*\\*\)/gi;
-  const references = [...text.matchAll(reference)];
+  const references = [...text.matchAll(internalJobReference)];
   const names = new Map();
   for (const job of jobs) {
     const title = removeChatGenderSuffixes(job.title || '').replace(/\s+/g, ' ').trim();
@@ -33,6 +80,7 @@ export function jobReferenceParts(text, jobs = []) {
       .map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s+'), 'giu')}));
   const parts = [];
   function plain(value) {
+    if (hideJobIds) value = value.replace(/\\*\[[ \t]*#?\d+[ \t]*(?:\\*\][ \t]*(?:\\*\((?:j(?:o(?:b(?::[^\n)]*)?)?)?)?\\*)?)?$/gi, 'diese Stelle');
     // Also recognize unambiguous titles in earlier messages without link markup.
     let rest = value.replace(/\*\*([^*]+)\*\*/g, '$1')
       // Suppress an unfinished internal target while its tokens are streaming.
@@ -67,7 +115,10 @@ export function jobReferenceParts(text, jobs = []) {
     try { id = decodeURIComponent(match[2]); } catch { id = ''; }
     const job = byId.get(id);
     // Never navigate to a model-provided URL or invent a target for unknown IDs.
-    parts.push(job ? {text: removeChatGenderSuffixes(job.title), job} : {text: match[1].replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\\([\[\]()])/g, '$1')});
+    const label = match[1].replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\\([\[\]()])/g, '$1');
+    let safeLabel = hideJobIds ? removeVisibleJobIds(label, jobs) : label;
+    if (hideJobIds && (!safeLabel.trim() || /^#?\s*\d+$/.test(label.trim()) || label.trim().replace(/^#/, '') === id)) safeLabel = 'diese Stelle';
+    parts.push(job ? {text: removeChatGenderSuffixes(job.title), job} : {text: safeLabel});
     start = match.index + match[0].length;
   }
   plain(text.slice(start));
@@ -133,5 +184,5 @@ export function chatContentBlocks(text) {
 
 // Baseline A may mention the same jobs, but never exposes interactive targets.
 export function plainJobReferences(text, jobs = []) {
-  return jobReferenceParts(text, jobs).map(part => part.text).join('');
+  return jobReferenceParts(text, jobs, {hideJobIds: false}).map(part => part.text).join('');
 }

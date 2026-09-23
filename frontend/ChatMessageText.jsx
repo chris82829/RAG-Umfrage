@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {jobReferenceParts, plainJobReferences, separateFollowUp, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
+import {jobReferenceParts, plainJobReferences, separateFollowUp, removeChatGenderSuffixes, removeVisibleJobIds, chatContentBlocks} from './chat-presentation.js';
 
 function ChatBody({blocks, render}) {
   return blocks.map((block, index) => block.type === 'jobs'
@@ -19,7 +19,7 @@ function renderReferences(value, jobs, onOpenJob, busy) {
 }
 
 export function RichChatText({text, jobs, onOpenJob, busy = false, streaming = false}) {
-  const {body, question} = separateFollowUp(removeChatGenderSuffixes(text, streaming));
+  const {body, question} = separateFollowUp(removeVisibleJobIds(removeChatGenderSuffixes(text, streaming), jobs, {streaming}));
   const render = value => renderReferences(value, jobs, onOpenJob, busy);
   return <div className={`message-text message-text--rich${streaming ? ' streaming-text' : ''}`}>
     <ChatBody blocks={chatContentBlocks(body)} render={render} />
@@ -29,13 +29,16 @@ export function RichChatText({text, jobs, onOpenJob, busy = false, streaming = f
 
 export default function ChatMessageText({text, assistant, enhanced = false, jobs = [], references = [], onOpenJob, busy = false}) {
   const [expanded, setExpanded] = useState(false);
-  if (!assistant) return <div className="message-bubble"><div className="message-text">{text}</div></div>;
-  const displayText = removeChatGenderSuffixes(text);
+  const linkedJobs = [...references, ...jobs.filter(job=>!references.some(ref=>String(ref.id)===String(job.id)))];
+  if (!assistant) {
+    const visible = enhanced ? jobReferenceParts(text, linkedJobs).map(part=>part.text).join('') : text;
+    return <div className="message-bubble"><div className="message-text">{visible}</div></div>;
+  }
+  const displayText = removeChatGenderSuffixes(enhanced ? removeVisibleJobIds(text, linkedJobs) : text);
   const {body, question} = separateFollowUp(displayText);
   const blocks = chatContentBlocks(body);
   // Collapse only complete blocks. Never replace part of a sentence with dots.
   const collapsible = displayText.length > 700 && blocks.length > 2;
-  const linkedJobs = [...references, ...jobs.filter(job=>!references.some(ref=>String(ref.id)===String(job.id)))];
   const render = value => enhanced ? renderReferences(value, linkedJobs, onOpenJob, busy) : plainJobReferences(value, jobs);
   return <div className="message-bubble"><div className="message-text message-text--rich">
     <ChatBody blocks={collapsible && !expanded ? blocks.slice(0, 2) : blocks} render={render} />

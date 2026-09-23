@@ -50,7 +50,7 @@ V14 ersetzt den aktiven Fragebogen. Bereits gespeicherte V13-Daten bleiben unver
 - [/test/b](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/b) – fester Top-Berufsberater
 - [/test/c](http://ifaiforschung.informatik.fh-nuernberg.de:5051/test/c) – selbst gestaltete Persönlichkeit auf Berufsberater-Basis
 
-Diese Zugänge haben getrennte Einwilligungen und Sitzungen. Sie erzeugen keine Umfrageantworten, keine zufällige Studienzuordnung und keine Nutzungsmetadaten für die Studie. Vorlagenauswahl und tatsächlich angewendete eigene Gestaltung werden dagegen bei regulären Studienteilnahmen separat von der Selbstauskunft dokumentiert. Der Export verwendet verständliche deutsche Spalten mit Codebuch und technischer Spaltenzuordnung.
+Diese Zugänge haben getrennte Einwilligungen und Sitzungen. Sie erzeugen keine Umfrageantworten, keine zufällige Studienzuordnung und keine Nutzungsmetadaten für die Studie. Die feste beziehungsweise selbst gestaltete Konfiguration und tatsächlich angewendete Änderungen werden bei regulären Studienteilnahmen automatisch dokumentiert; eine zusätzliche Selbstauskunft zur Änderung wird nicht mehr erhoben. Der Export verwendet verständliche deutsche Spalten mit Codebuch und technischer Spaltenzuordnung.
 
 ## Datenschutz und Studienfreigabe
 
@@ -74,7 +74,7 @@ Auswahl- und Betriebsmetadaten, ohne daraus Such- oder Chattexte abzulegen.
 ### Aktueller Ablauf: V14 nach ResQue und CRS-Que
 
 „Umfrage starten“ auf der Vorstellungsseite führt zu `/umfrage`. Nach Einwilligung
-und zufälliger A/B/C-Zuteilung folgen die Wiederholungsfrage (Ja/Nein/Unsicher) und vier kurze Kontextangaben (Situation,
+und zufälliger A/B/C-Zuteilung folgen vier kurze Kontextangaben (Situation,
 optionale Fachrichtung, Jobportal- und KI-Chat-Erfahrung), die eingebettete Jobsuche
 und genau drei erfolgreich beantwortete eigene Chatnachrichten. Die separaten
 Testseiten bleiben unbegrenzt und erzeugen keine Studienantworten.
@@ -89,12 +89,13 @@ zusätzlicher Nutzen und Aufwand selbst gestaltbarer gegenüber fester KI-Beratu
 **14 Framework-Aussagen** erfassen Nutzen, Suchkontrolle, Transparenz, drei
 Gesprächseindrücke, Zufriedenheit und Wiederverwendung. Zwei ausdrücklich eigene
 DIANA-Aussagen erfassen Aufwand und wahrgenommene Gestaltbarkeit des Sprachstils.
-Nur C erhält zusätzlich die Frage nach tatsächlichen Änderungen der Einstellungen.
 V14 ergänzt zwei an die Vertrauensdimensionen angelehnte Aussagen, einen eigenen
-Manipulationscheck zum Beratungscharakter sowie die Wiederholungsfrage.
+Manipulationscheck zum Beratungscharakter und eine separate Kontrollaussage zur
+Verfügbarkeit passender Stellen. Die Fragen nach früherer Teilnahme und selbst
+veränderten KI-Einstellungen werden nicht mehr gestellt.
 
-**A/B: 26 Fragen; C: 27**, einschließlich optionaler Fachrichtung und optionalem
-Freitextfeedback. Alle 19 Bewertungsaussagen verwenden Zustimmung **1–7** mit
+**A/B/C: jeweils 26 Fragen**, einschließlich optionaler Fachrichtung und optionalem
+Freitextfeedback. Alle 20 Bewertungsaussagen verwenden Zustimmung **1–7** mit
 „Kann ich nicht beurteilen“. Alter, Geschlecht und die bisherigen UI-Einzelfragen
 entfallen. Das ist eine dokumentierte deutsche Adaptation, keine automatisch
 validierte Gesamtskala. ResQue verwendet ursprünglich fünf, CRS-Que sieben Stufen.

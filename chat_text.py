@@ -5,7 +5,7 @@ COMPACT_CHAT_VERSION = 'request-first-dialogue-v3'
 MAX_BC_ANSWER_CHARS = None
 MAX_BC_WELCOME_CHARS = None
 SCORE_SCALE = {'minimum': 1, 'maximum': 100, 'unit': 'Punkte', 'is_probability': False}
-CHAT_PRESENTATION_VERSION = 'grounded-job-links-v4'
+CHAT_PRESENTATION_VERSION = 'grounded-job-links-no-visible-ids-v5'
 
 INITIAL_CHAT_FORMAT_VERSION = 'initial-job-bullets-proactive-v2'
 INITIAL_CHAT_INSTRUCTIONS = """
@@ -319,6 +319,10 @@ Wenn du in assistant_message eine konkrete übergebene Stelle nennst, verwende
 immer [Exakter Stellentitel](job:ID) mit ihrer tatsächlich übergebenen ID.
 Das gilt auch für Alternativen, neue Suchergebnisse, Vergleiche und Rückfragen.
 Die Oberfläche zeigt nur den anklickbaren Titel; ID und Linksyntax bleiben unsichtbar.
+Nenne NIEMALS eine Job-ID als sichtbaren Text, auch nicht in Klammern, als
+„Job-ID“, „Stellen-ID“, „Kennung“, „#123456“ oder alleinstehende Nummer.
+IDs dürfen ausschließlich im internen Ziel (job:ID) vorkommen. Verwende im
+sichtbaren Text immer den Stellentitel, bei Bedarf mit dem Unternehmen.
 Verlinke nur den Stellentitel, nicht Unternehmen, Orte oder ganze Absätze. Verwende
 keine externen Links und erfinde keine Stellen oder IDs. Allgemeine Berufsrichtungen
 sind keine konkreten Anzeigen und brauchen keinen Link. Beantworte weiterhin zuerst
@@ -341,8 +345,29 @@ def linked_chat_answer(text, jobs):
         return f'\ue100{len(held)-1}\ue101'
     def explicit(match):
         job = by_id.get(unquote(match[2]))
-        return hold(job) if job else match[1]
-    value = clean_job_references(JOB_REFERENCE_PATTERN.sub(explicit, text))
+        if job:
+            return hold(job)
+        label = match[1].strip()
+        return 'diese Stelle' if label.lstrip('#') == unquote(match[2]) else label
+    value = JOB_REFERENCE_PATTERN.sub(explicit, text)
+    # Strip explicitly labelled identifiers, including provider wording variants.
+    # Other numbers (scores, hours, salary) are not identifiers.
+    marker = r'(?:Job[-\s]*IDs?|Stellen[-\s]*(?:IDs?|kennung)|Anzeigen[-\s]*IDs?|Kennung|ID)'
+    identifier = r'(?=[\w-]*\d)[\w-]+'
+    labelled = rf'\b{marker}[ \t]*[:#]?[ \t]*{identifier}\b'
+    value = re.sub(r'[ \t]*\([ \t]*' + labelled + r'[ \t]*\)', '', value, flags=re.I)
+    value = re.sub(labelled, '', value, flags=re.I)
+    # When a known identifier is used instead of a title, display the title.
+    # Do not rewrite a coincidentally equal amount of money or measurement.
+    known = [key for key in by_id if len(key) >= 5 and re.fullmatch(r'[A-Za-z0-9_-]+', key)]
+    if known:
+        number = re.compile(r'(?<![\w.])#?(' + '|'.join(re.escape(key) for key in sorted(known, key=len, reverse=True)) + r')(?!\w|[.,]\d)')
+        def bare(match):
+            if re.match(r'[ \t]*(?:€|EUR\b|Euro\b|%|Stunden\b|h\b)', value[match.end():], re.I):
+                return match[0]
+            return hold(by_id[match[1]])
+        value = number.sub(bare, value)
+    value = clean_job_references(value)
     names = {}
     for job in by_id.values():
         title = re.sub(r'\s+', ' ', remove_gender_suffixes(job.get('title') or '')).strip()

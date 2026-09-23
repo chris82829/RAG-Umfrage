@@ -1,0 +1,122 @@
+[
+  {
+    "arm": "A",
+    "width": 1440,
+    "groups": [
+      "Dein Suchvorhaben",
+      "Verfügbare Stellenangebote",
+      "Nutzen für deine Suche",
+      "Vertrauen in die Empfehlungen",
+      "Das Gespräch mit dem System",
+      "Einfluss auf deine Suche",
+      "Empfehlungen verstehen",
+      "Dein Gesamturteil",
+      "Deine Erfahrung mit der Beratung",
+      "Dein Feedback"
+    ],
+    "ratings": 20,
+    "errors": [],
+    "failed": [],
+    "passed": true
+  },
+  {
+    "arm": "A",
+    "width": 390,
+    "groups": [
+      "Dein Suchvorhaben",
+      "Verfügbare Stellenangebote",
+      "Nutzen für deine Suche",
+      "Vertrauen in die Empfehlungen",
+      "Das Gespräch mit dem System",
+      "Einfluss auf deine Suche",
+      "Empfehlungen verstehen",
+      "Dein Gesamturteil",
+      "Deine Erfahrung mit der Beratung",
+      "Dein Feedback"
+    ],
+    "ratings": 20,
+    "errors": [],
+    "failed": [],
+    "passed": true
+  },
+  {
+    "arm": "B",
+    "width": 1440,
+    "groups": [
+      "Dein Suchvorhaben",
+      "Verfügbare Stellenangebote",
+      "Nutzen für deine Suche",
+      "Vertrauen in die Empfehlungen",
+      "Das Gespräch mit dem System",
+      "Einfluss auf deine Suche",
+      "Empfehlungen verstehen",
+      "Dein Gesamturteil",
+      "Deine Erfahrung mit der Beratung",
+      "Dein Feedback"
+    ],
+    "ratings": 20,
+    "errors": [],
+    "failed": [],
+    "passed": true
+  },
+  {
+    "arm": "B",
+    "width": 390,
+    "groups": [
+      "Dein Suchvorhaben",
+      "Verfügbare Stellenangebote",
+      "Nutzen für deine Suche",
+      "Vertrauen in die Empfehlungen",
+      "Das Gespräch mit dem System",
+      "Einfluss auf deine Suche",
+      "Empfehlungen verstehen",
+      "Dein Gesamturteil",
+      "Deine Erfahrung mit der Beratung",
+      "Dein Feedback"
+    ],
+    "ratings": 20,
+    "errors": [],
+    "failed": [],
+    "passed": true
+  },
+  {
+    "arm": "C",
+    "width": 1440,
+    "groups": [
+      "Dein Suchvorhaben",
+      "Verfügbare Stellenangebote",
+      "Nutzen für deine Suche",
+      "Vertrauen in die Empfehlungen",
+      "Das Gespräch mit dem System",
+      "Einfluss auf deine Suche",
+      "Empfehlungen verstehen",
+      "Dein Gesamturteil",
+      "Deine Erfahrung mit der Beratung",
+      "Dein Feedback"
+    ],
+    "ratings": 20,
+    "errors": [],
+    "failed": [],
+    "passed": true
+  },
+  {
+    "arm": "C",
+    "width": 390,
+    "groups": [
+      "Dein Suchvorhaben",
+      "Verfügbare Stellenangebote",
+      "Nutzen für deine Suche",
+      "Vertrauen in die Empfehlungen",
+      "Das Gespräch mit dem System",
+      "Einfluss auf deine Suche",
+      "Empfehlungen verstehen",
+      "Dein Gesamturteil",
+      "Deine Erfahrung mit der Beratung",
+      "Dein Feedback"
+    ],
+    "ratings": 20,
+    "errors": [],
+    "failed": [],
+    "passed": true
+  }
+]

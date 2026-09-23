@@ -124,7 +124,7 @@ class ConditionalSurvey(APIModel):
             if 'visibleIf' not in field:
                 continue
             value = answers[field['name']]
-            if field_visible(field, answers) and value is None:
+            if field_visible(field, answers) and value is None and not field.get('retired'):
                 raise ValueError(f"Bitte beantworte {field['name']}.")
             if not field_visible(field, answers) and value is not None:
                 raise ValueError(f"Die übersprungene Frage {field['name']} muss leer bleiben.")

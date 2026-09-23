@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {jobReferenceParts, plainJobReferences, separateFollowUp, previewParts, jobNavigationTarget, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
+import {jobReferenceParts, plainJobReferences, separateFollowUp, previewParts, jobNavigationTarget, removeChatGenderSuffixes, removeVisibleJobIds, jobDiscussionPrompt, chatContentBlocks} from './chat-presentation.js';
 
 const jobs = [{id:'123',title:'Python Developer',company:'Daten AG'},
   {id:'456',title:'Data Analyst',company:'Daten AG'},
@@ -171,4 +171,119 @@ test('title punctuation inside a reference does not split a job bullet or follow
  assert.equal(block.items[0].title,`[${title}](job:17)`);
  assert.equal(block.items[0].description,'Python passt.');
  assert.equal(jobReferenceParts(block.items[0].title,[{id:'17',title}]).filter(p=>p.job).length,1);
+});
+
+test('enhanced chat hides known explicit job identifiers and keeps title links', () => {
+  const job={id:'813447',title:'Python Developer',company:'Daten AG'};
+  for(const marker of ['(Job-ID 813447)','(Job ID: 813447)','Job-ID 813447',
+    'Job‑ID: 813447','Stellen-ID 813447','Anzeigen-ID: 813447',
+    'Kennung: 813447','ID 813447','#813447','(**Job-ID 813447**)']) {
+    const text=`Python Developer ${marker} passt zu dir.`;
+    const parts=jobReferenceParts(text,[job]);
+    assert.equal(parts.map(part=>part.text).join(''),'Python Developer passt zu dir.',marker);
+    assert.equal(parts.find(part=>part.job)?.job.id,'813447',marker);
+  }
+});
+
+test('identifier cleanup preserves transport links and resolves them using exact records', () => {
+  const text='[Job-ID 123](job:123) (Kennung: 123) und [Kurz](job:%34%35%36).';
+  assert.equal(removeVisibleJobIds(text,jobs),'[Job-ID 123](job:123) und [Kurz](job:%34%35%36).');
+  const parts=jobReferenceParts(text,jobs);
+  assert.equal(parts.map(part=>part.text).join(''),'Python Developer und Data Analyst.');
+  assert.deepEqual(parts.filter(part=>part.job).map(part=>part.job.id),['123','456']);
+  assert.equal(jobReferenceParts('[Job-ID 123](job:999)',jobs).map(part=>part.text).join(''),'diese Stelle');
+});
+
+test('job identifiers never swallow scores hours years salaries or ordinary words', () => {
+  const records=[{id:20,title:'Werkstudent'},{id:85,title:'Entwickler'},{id:'123',title:'Python Developer'}];
+  const text='85/100 Punkte, 20 Stunden, Python 3.12, 2026 und 123 Euro.';
+  assert.equal(removeVisibleJobIds(text,records),text);
+  assert.equal(removeVisibleJobIds('Job-ID Python und ID SQL bleiben normale Wörter.',records),
+    'Job-ID Python und ID SQL bleiben normale Wörter.');
+});
+
+test('explicit unknown identifiers disappear without creating fictitious links', () => {
+  for(const text of ['Alternative (Job-ID: 987654) passt.', 'Alternative Kennung 987654 passt.',
+    'Alternative (Anzeigen-ID: ext-987654) passt.', 'Alternative #987654 passt.']) {
+    assert.equal(removeVisibleJobIds(text,[]),'Alternative passt.',text);
+    const parts=jobReferenceParts(text,jobs);
+    assert.equal(parts.map(part=>part.text).join(''),'Alternative passt.',text);
+    assert.equal(parts.some(part=>part.job),false,text);
+  }
+  assert.equal(removeVisibleJobIds('Job-ID 1234.',jobs),'.');
+  assert.equal(removeVisibleJobIds('Neue Stelle (Job-ID: 987654) passt.',[],{streaming:true}),
+    'Neue Stelle passt.');
+});
+
+test('streaming holds unfinished explicit identifiers at the boundary without hiding ordinary numbers', () => {
+  const records=[{id:'813447',title:'Python Developer'}];
+  for(const marker of ['(Job-ID: 813447)','Job ID 813447','#813447','Kennung: 813447']) {
+    const start=marker.indexOf('8');
+    for(let length=start+1;length<=marker.length;length++) {
+      const text=`Python Developer ${marker.slice(0,length)}`;
+      assert.equal(removeVisibleJobIds(text,records,{streaming:true}),'Python Developer',text);
+    }
+  }
+  assert.equal(removeVisibleJobIds('Neue Stelle (Job-ID: 987',[],{streaming:true}),'Neue Stelle');
+  for(const text of ['85/100 Punkte','20 Stunden','Python 3.12','123 Euro'])
+    assert.equal(removeVisibleJobIds(text,records,{streaming:true}),text);
+  assert.equal(removeVisibleJobIds('[Python Developer](job:813447)',records,{streaming:true}),
+    '[Python Developer](job:813447)');
+});
+
+test('baseline A retains its prior explicit identifier display and discussion question', () => {
+  const text='Python Developer (Job-ID 123) mit 20 Stunden.';
+  assert.equal(plainJobReferences(text,jobs),text);
+  const job={id:'123',title:'Python Developer (m/w/d)',company:'Daten AG'};
+  assert.equal(jobDiscussionPrompt(job),
+    'Warum passt die Stelle „Python Developer (m/w/d)“ bei Daten AG (Job-ID 123) zu mir, und welche Kenntnisse fehlen noch?');
+  assert.equal(jobDiscussionPrompt(job,{enhanced:true}),
+    'Warum passt die Stelle „Python Developer“ bei Daten AG zu mir, und welche Kenntnisse fehlen noch?');
+});
+
+test('historical job records remove identifiers after the active result set has changed', () => {
+  const historical={id:'813447',title:'Python Developer',company:'Daten AG'};
+  const parts=jobReferenceParts('Python Developer (Kennung: 813447)',[historical,...jobs]);
+  assert.equal(parts.map(part=>part.text).join(''),'Python Developer');
+  // Exact ID targets remain reliable even where the displayed title is ambiguous.
+  assert.equal(jobReferenceParts('[Python Developer](job:813447) (Job-ID 813447)',[historical,...jobs])
+    .find(part=>part.job)?.job.id,'813447');
+});
+
+test('bare known long IDs become exact title links including at sentence end and during streaming', () => {
+  const job={id:'813447',title:'Python Developer',company:'Daten AG'};
+  for(const streaming of [false,true]) {
+    const text=removeVisibleJobIds('Alternative: 813447.',[job],{streaming});
+    const parts=jobReferenceParts(text,[job]);
+    assert.equal(parts.map(part=>part.text).join(''),'Alternative: Python Developer.');
+    assert.equal(parts.find(part=>part.job)?.job.id,'813447');
+    const hash=removeVisibleJobIds('Python Developer (#813447).',[job],{streaming});
+    assert.equal(jobReferenceParts(hash,[job]).map(part=>part.text).join(''),'Python Developer.');
+  }
+  const direct=jobReferenceParts('Alternative: 813447.',[job]);
+  assert.equal(direct.map(part=>part.text).join(''),'Alternative: Python Developer.');
+  assert.equal(direct.find(part=>part.job)?.job.id,'813447');
+  assert.equal(plainJobReferences('Alternative: 813447.',[job]),'Alternative: 813447.');
+});
+
+test('bare identifier fallback protects amounts units decimals scores years and other IDs', () => {
+  const records=[{id:'813447',title:'Python Developer'},{id:'2026',title:'Werkstudent'},{id:'85',title:'Analyst'}];
+  for(const text of ['813447 Euro','813447 EUR','813447 €','813447 %','813447 Stunden','813447 h',
+    '813447,50 Euro','813447.5 Stunden','85/100 Punkte','im Jahr 2026','Alternative: 813448.']) {
+    assert.equal(removeVisibleJobIds(text,records),text,text);
+    assert.equal(removeVisibleJobIds(text,records,{streaming:true}),text,text);
+  }
+});
+
+test('unknown numeric reference labels are neutral and never expose or invent IDs', () => {
+  for(const text of ['[999999](job:999999)','[#999999](job:999999)','[999999](job:other)',
+    '[Job-ID 999999](job:999999)']) {
+    const parts=jobReferenceParts(text,jobs);
+    assert.deepEqual(parts,[{text:'diese Stelle'}],text);
+  }
+  const reference='[999999](job:999999)';
+  for(let length=2;length<=reference.length;length++) {
+    const text=reference.slice(0,length);
+    assert.equal(jobReferenceParts(text,jobs).map(part=>part.text).join(''),'diese Stelle',text);
+  }
 });

@@ -1,6 +1,6 @@
 # DIANA: Studien- und Analyseprotokoll V14
 
-Stand: 22. September 2026. Fragebogen `diana-v14`. **Präregistrierungsvorstufe / Entwurf**, noch nicht als vor der Haupterhebung eingefroren ausgeben. Maßgeblich sind [survey_definition_v14.json](survey_definition_v14.json), [QUESTIONNAIRE.md](QUESTIONNAIRE.md) und der unten beschriebene Analysecode. Die bisherige Version bleibt in Git nachvollziehbar.
+Stand: 23. September 2026. Fragebogen `diana-v14`. **Präregistrierungsvorstufe / Entwurf**, noch nicht als vor der Haupterhebung eingefroren ausgeben. Maßgeblich sind [survey_definition_v14.json](survey_definition_v14.json), [QUESTIONNAIRE.md](QUESTIONNAIRE.md) und der unten beschriebene Analysecode. Die bisherige Version bleibt in Git nachvollziehbar.
 
 ## Forschungsfrage und Behandlungen
 
@@ -12,7 +12,7 @@ Welchen zusätzlichen wahrgenommenen Nutzen und Aufwand verursacht eine selbst g
 | B | Fester Top-Berufsberater mit RAG-Auftrag und konkreten Rückfragen |
 | C | Derselbe fachliche Berufsberater-Auftrag mit selbst gestaltbarem Namen, Gesprächseigenschaften und Freitexthinweisen; Suchfokus fest ausgewogen |
 
-Alle Gruppen verwenden denselben Modell-Snapshot, Stellenbestand, BM25/E5/RRF-Retrieval, Top-20-Pool und dieselbe numerische Bewertungsformel (60/15/7/6/6/6 Prozent: fachliche Passung, Profilpräferenzen, fachliche Tiefe, Lernen/Entwicklung, Gestaltung/Innovation, Klarheit). Scores und Begründungen werden in allen Gruppen gezeigt; zuerst zehn Stellen, anschließend auf Wunsch bis zu 20. Keine Mindestscore-Schwelle.
+Alle Gruppen verwenden denselben Modell-Snapshot, Stellenbestand, BM25/E5/RRF-Retrieval, Top-20-Pool und dieselbe numerische Bewertungsformel (60/15/7/6/6/6 Prozent: fachliche Passung, Profilpräferenzen, fachliche Tiefe, Lernen/Entwicklung, Gestaltung/Innovation, Klarheit). A zeigt keine numerischen Scores; B und C zeigen Scores von 1 bis 100. Die intern berechnete Rangfolge und Begründungen bleiben in allen Gruppen erhalten. Zuerst werden zehn Stellen angezeigt, anschließend auf Wunsch bis zu 20. Keine Mindestscore-Schwelle.
 
 Seit dem 22.09.2026 ist der aktive Snapshot `gpt-5.4-nano-2026-03-17`, weiterhin mit
 `reasoning.effort=none`. Dies gilt für A/B/C und die separaten Testseiten. Der vorherige
@@ -20,7 +20,7 @@ Stand mit `gpt-5.4-2026-03-05` bleibt in Git und historischen Release-Metadaten 
 seine Messwerte sind kein Qualitäts- oder Laufzeitnachweis für Nano. Der Modellwechsel
 erzeugt einen neuen Systemstand und muss bei der späteren Auswertung berücksichtigt werden.
 
-Gleiche numerische Gewichte erzwingen keine identischen Teilbewertungen, Rankings oder Antwortzeiten. Die Prompts beeinflussen die generative Bewertung; aktualisierte Suchangaben können den Pool oder dessen Reihenfolge verändern. B gegen A ist ein **Paketvergleich** aus Berufsberatungsauftrag, RAG-Instruktion und Gesprächsinitiative. C gegen B untersucht das Angebot zusätzlicher Selbstgestaltung. Wer C zugeteilt wurde, bleibt C, auch wenn nichts geändert wurde. Ein Vergleich innerhalb C nach tatsächlich berichteter Anpassung ist durch Selbstselektion verzerrt. Die frühere Filter-/Stichwortsuchbefragung ist Kontext, kein zeitgleich randomisierter Kontrollarm.
+Gleiche numerische Gewichte erzwingen keine identischen Teilbewertungen, Rankings oder Antwortzeiten. Die Prompts beeinflussen die generative Bewertung; aktualisierte Suchangaben können den Pool oder dessen Reihenfolge verändern. B gegen A ist ein **Paketvergleich** aus Berufsberatungsauftrag, RAG-Instruktion, Gesprächsinitiative sowie Score-Anzeige und Stellenlinks im Chat. C gegen B untersucht das Angebot zusätzlicher Selbstgestaltung. Wer C zugeteilt wurde, bleibt C, auch wenn nichts geändert wurde. Ein Vergleich innerhalb C nach tatsächlich angewendeter Anpassung ist durch Selbstselektion verzerrt; die aktuelle Erfassung erfolgt über Konfigurationsmetadaten, nicht über die entfernte Selbstauskunft. Die frühere Filter-/Stichwortsuchbefragung ist Kontext, kein zeitgleich randomisierter Kontrollarm.
 
 Die tatsächlichen numerischen Gewichte werden je Bewertung separat vom Prompttext protokolliert. Ein bekannter überholter B-Prompt mit abweichenden Prozentzahlen wird für neue Promptfassungen bereinigt; alte unveränderliche Teilnahmesnapshots bleiben historische Fassungen. Das Erfassungsfeld allein beweist keine richtige Promptfassung: zusätzlich werden Promptrevision und -Hash dokumentiert und der aktive Prompt auf widersprüchliche Gewichtung geprüft.
 
@@ -28,20 +28,20 @@ Die tatsächlichen numerischen Gewichte werden je Bewertung separat vom Promptte
 
 Neue Einwilligungskennungen werden serverseitig mit Wahrscheinlichkeit 1/3 einer Gruppe zugewiesen; Wiederaufruf erhält dieselbe transaktional gespeicherte Zuteilung. Eine genau gleiche Gruppengröße wird nicht garantiert. Getrennte Testseiten erzeugen keine Studienantworten und haben kein Nachrichtenlimit.
 
-Vor den bisherigen Kontextfragen wird erhoben, ob bereits an dieser Studie teilgenommen wurde (Ja/Nein/Unsicher). Anschließend: Ausbildungs-/Studienstand, optionale Fachrichtung, Jobportal- und KI-Chat-Erfahrung. Das Suchvorhaben kann während der Wartezeit beantwortet und aus der eigenen Suche als Vorschlag übernommen werden. Die Aufgabe lautet: realistisches Suchprofil erstellen, Empfehlungen und Begründungen betrachten, genau drei erfolgreich beantwortete eigene Nachrichten schreiben. Automatische Begrüßungen und fehlgeschlagene Anfragen zählen nicht. Das Budget gilt über Suchsitzungen hinweg. Dies standardisiert Interaktionstiefe; es misst keine freiwillige Gesprächsbereitschaft.
+Zu Beginn werden Ausbildungs-/Studienstand, optionale Fachrichtung, Jobportal- und KI-Chat-Erfahrung erhoben. Die Frage nach früherer Teilnahme wird nicht mehr gestellt. Das Suchvorhaben kann während der Wartezeit beantwortet und aus der eigenen Suche als Vorschlag übernommen werden. Die Aufgabe lautet: realistisches Suchprofil erstellen, Empfehlungen und Begründungen betrachten, genau drei erfolgreich beantwortete eigene Nachrichten schreiben. Automatische Begrüßungen und fehlgeschlagene Anfragen zählen nicht. Das Budget gilt über Suchsitzungen hinweg. Dies standardisiert Interaktionstiefe; es misst keine freiwillige Gesprächsbereitschaft.
 
-Nach der Nutzung folgt der Fragebogen. Automatisches Speichern nach jeder Antwort ermöglicht Auswertung beantworteter Konstrukte auch bei späterem Abbruch. Ein optionales Freitextfeld schließt ab. **A/B: 26 Fragen; C: 27**, einschließlich optionaler Fachrichtung und optionalem Feedback. Gegenüber V13 kommen zwei Vertrauensitems, ein Charakteritem und ein Screening hinzu. Die im Vorschlag genannten 25/26 ließen das zusätzliche Screening ungezählt. E1 „einfache Bedienung“ bleibt weg, um den Fragebogen kompakt zu halten.
+Nach der Nutzung folgt der Fragebogen. Automatisches Speichern nach jeder Antwort ermöglicht Auswertung beantworteter Konstrukte auch bei späterem Abbruch. Ein optionales Freitextfeld schließt ab. **A/B/C: jeweils 26 Fragen**, einschließlich optionaler Fachrichtung und optionalem Feedback. Darunter sind 20 Bewertungsaussagen mit der Skala 1–7 plus „Kann ich nicht beurteilen“: 14 Framework-Adaptionen, zwei eigene Aussagen zu Aufwand und Stilkontrolle, zwei adaptierte Vertrauensaussagen, ein Charakteritem und die separate Kontrollaussage zur Stellenverfügbarkeit. Das Suchvorhaben ergänzt die vier Kontextfragen und das Freitextfeedback. Die Fragen nach früherer Teilnahme und selbst geänderten KI-Einstellungen sind entfernt; die automatische Gruppenzuteilung zählt nicht als Frage. E1 „einfache Bedienung“ bleibt weg, um den Fragebogen kompakt zu halten.
 
 Wellen werden bei Beginn mit `study_wave=pretest` oder `main` festgehalten; Wechsel der aktiven Rekrutierung verändert bestehende Kennungen nicht. Die Rekrutierungswelle erhält eine dokumentierte Kennung/Zeitmarke `recruitment_batch`; sie wird nicht aus der späteren Antwortzeit erfunden. Nur Hauptwellen fließen in die geplanten Hypothesentests ein.
 
 ## Messmodell und Quellen
 
-Die bestehenden **14 aus Frameworks adaptierten Aussagen** bleiben unverändert: ResQue-Nutzen (3), CRS-Que-Dialogverständnis, Antwortqualität und Aufmerksamkeit (je 1 aus der Kurzform), CRS-Que-Suchkontrolle (3), CRS-Que-Transparenz (3), ResQue-Zufriedenheit (1), ResQue-Wiedernutzungsabsicht (1). V13 enthielt außerdem zwei eigene DIANA-Ratings zu Aufwand und Stilkontrolle sowie die C-Selbstauskunft zur Anpassung. Die pauschale Bezeichnung „17 Framework-Items“ im Vorschlag wird deshalb nicht übernommen.
+Die aktuellen **14 aus Frameworks adaptierten Aussagen** umfassen (Wortlautrevision siehe unten): ResQue-Nutzen (3), CRS-Que-Dialogverständnis, Antwortqualität und Aufmerksamkeit (je 1 aus der Kurzform), CRS-Que-Suchkontrolle (3), CRS-Que-Transparenz (3), ResQue-Zufriedenheit (1), ResQue-Wiedernutzungsabsicht (1). V13 enthielt außerdem zwei eigene DIANA-Ratings zu Aufwand und Stilkontrolle sowie die C-Selbstauskunft zur Anpassung. Die pauschale Bezeichnung „17 Framework-Items“ im Vorschlag wird deshalb nicht übernommen.
 
-Neu nach den drei Nutzenitems stehen:
+Nach den drei Nutzenitems stehen aktuell:
 
-- T1 / `trust_fit`: „Ich vertraue darauf, dass die von DIANA vorgeschlagenen Stellen wirklich zu mir passen.“
-- T2 / `trust_credibility`: „Die Einschätzungen von DIANA zur Passung erschienen mir glaubwürdig.“
+- T1 / `trust_fit`: „Ich vertraue der Einschätzung des Systems, welche der verfügbaren Stellen am besten zu mir passen.“
+- T2 / `trust_credibility`: „Die Einschätzungen des Systems zur Passung der gefundenen Stellen erschienen mir glaubwürdig.“
 
 Dieses Paar ist an die Dimension Confidence & Trust in ResQue und Trust & Confidence in CRS-Que angelehnt. Die Originalskalen enthalten vier bzw. sechs Items; deren offizielle CRS-Kurzform ein Item. **Diese zwei deutschen Aussagen sind eine eigenständig adaptierte Zweiergruppe, keine vollständig übernommene oder bereits validierte Originalskala.** T1 verbindet Vertrauen und erwartete Passung; T2 erfasst Glaubwürdigkeit. Kognitiver Pretest prüft insbesondere, ob diese Trennung verstanden wird. Die Originaltabellen wurden am 22. September 2026 gelesen und visuell geprüft; Einzelbelege in [V14-METHODS.md](V14-METHODS.md).
 
@@ -69,7 +69,7 @@ Der Hauptvergleich nutzt alle verfügbaren vollständigen Nutzenwerte, auch bei 
 
 Ein **endgültig nicht wiederhergestellter**, dokumentierter technischer Fehlschlag vor angemessener Systemexposition kann gemäß vor Entblindung protokollierter Entscheidung ausgeschlossen werden. Ein einzelner Timeout oder eine später erfolgreich wiederholte Anfrage reicht nicht. Dafür kann die separate Analysearbeitskopie `technical_exclusion=1` mit verpflichtendem `technical_exclusion_reason` enthalten; Produktivantworten bleiben unverändert. Die Anwendung löscht nicht automatisch Teilnahmen aufgrund eines Fehlercodes. Ein unabhängiger, nach Antwortinhalten optimierter Ausschluss ist unzulässig.
 
-Wiederholungsteilnahmen werden zunächst eingeschlossen und zusätzlich sensitiv behandelt. Hauptsensitivität entfernt `previous_participation=yes`, belässt Unsichere; eine weitere Darstellung verwendet nur ausdrücklich erstmalige Teilnahmen (`no`). Selbstbericht ersetzt keine verlässliche technische Duplikaterkennung. Keine IP-Sammlung oder Gerätefingerprints für diesen Zweck.
+Die Frage nach früherer Teilnahme wird aktuell nicht mehr erhoben. Historische Werte in `previous_participation` bleiben erhalten; bei neuen Teilnahmen bedeutet ein fehlender Wert unbekannt, nicht „Nein“. Die vorhandenen Wiederholungssensitivitäten (Ausschluss von `yes` beziehungsweise Beschränkung auf ausdrücklich `no`) sind nur für Daten mit tatsächlich erhobener Selbstauskunft interpretierbar und erkennen keine Wiederholungen unter neuen Kennungen. Keine IP-Sammlung oder Gerätefingerprints für diesen Zweck.
 
 ## Primärer Test, sekundäre Familie und explorative Analysen
 
@@ -83,7 +83,7 @@ Die sekundäre Familie enthält **genau drei** zweiseitige Welch-Tests mit Holm-
 2. Transparenz: C minus B.
 3. Nutzen: B minus A, ausdrücklich Paketvergleich.
 
-Nicht berechenbare sekundäre Tests reduzieren die vorab definierte Familie nicht. Explorativ und ohne Anspruch einer unabhängigen konfirmatorischen Familie: Nutzen C minus A; Nutzen innerhalb C nach selbstberichteter Anpassung; deskriptive Werte für Zufriedenheit, Wiedernutzung, Aufwand, Stilkontrolle und Dialogeinzelitems. Wiederholungssensitivitäten ersetzen das Hauptergebnis nicht.
+Nicht berechenbare sekundäre Tests reduzieren die vorab definierte Familie nicht. Explorativ und ohne Anspruch einer unabhängigen konfirmatorischen Familie: Nutzen C minus A; Nutzen innerhalb C nach historisch erhobener Selbstauskunft zur Anpassung (in der aktuellen Erhebung nicht mehr verfügbar); deskriptive Werte für Zufriedenheit, Wiedernutzung, Aufwand, Stilkontrolle und Dialogeinzelitems. Wiederholungssensitivitäten ersetzen das Hauptergebnis nicht.
 
 Je Vergleich: n, Mittelwert, SD, unstandardisierte Differenz mit 95%-Welch-t-Intervall, exakter numerischer p-Wert und Hedges g mit 95%-Intervall. g verwendet die gepoolte SD und die Gamma-basierte Kleinstichprobenkorrektur; bei ungleichen Varianzen ist der Standardisierungsbezug ausdrücklich zu beachten. Das g-Intervall wird mit 5.000 unabhängigen gruppenweisen Perzentil-Bootstrap-Ziehungen und deterministischem Seed berechnet. Bei mehr als 1 % degenerierten Ziehungen entfällt das Intervall mit Begründung. Bei zu wenig Daten/Nullvarianz werden fehlende Werte statt irreführender 0-Werte oder NaN ausgegeben.
 

@@ -88,3 +88,29 @@ def test_route_keeps_references_when_new_search_replaces_results(monkeypatch,arm
             restored=fixture.client.get('/api/sessions/'+second['session_id'],headers=headers).json
             assert restored['messages']==second['messages']
     finally:fixture.doCleanups()
+
+@pytest.mark.parametrize('marker',['Job-ID 813447','Job ID: 813447','Stellen-ID: 813447','Anzeigen-ID 813447','Kennung 813447','ID 813447'])
+def test_bc_never_displays_identifier_annotations(marker):
+    jobs=[{'id':'813447','title':'Werkstudent Data Engineering','company':'Test AG'}]
+    value=format_chat_answer(f'- [Stelle](job:813447) ({marker}): Passt mit 85/100 Punkten bei 20 Stunden.',jobs)
+    assert value=='- [Werkstudent Data Engineering](job:813447): Passt mit 85/100 Punkten bei 20 Stunden.'
+    assert marker not in value
+
+
+def test_bare_known_ids_become_titles_but_salary_scores_and_hours_remain():
+    jobs=[{'id':'813447','title':'Data Engineer'}, {'id':'100000','title':'Data Analyst'}]
+    value=format_chat_answer('813447 passt, #100000 ist eine Alternative. 100000 Euro, 85/100 Punkte und 20 Stunden.',jobs)
+    assert value=='[Data Engineer](job:813447) passt, [Data Analyst](job:100000) ist eine Alternative. 100000 Euro, 85/100 Punkte und 20 Stunden.'
+
+
+def test_unknown_labelled_id_is_removed_without_inventing_link():
+    assert format_chat_answer('Data Engineer (Job-ID: 999999) passt.',JOBS)=='Data Engineer passt.'
+
+
+def test_numeric_unknown_link_label_is_not_a_visible_id():
+    assert format_chat_answer('Prüfe [999999](job:999999).',JOBS)=='Prüfe diese Stelle.'
+
+
+def test_known_id_at_sentence_end_is_linked_without_changing_decimal_amounts():
+    jobs=[{'id':'813447','title':'Data Engineer'}]
+    assert format_chat_answer('Alternative: 813447. 813447,50 Euro.',jobs) == 'Alternative: [Data Engineer](job:813447). 813447,50 Euro.'
