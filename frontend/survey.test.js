@@ -26,7 +26,7 @@ const retired = ['age_group','gender','system_usefulness','usefulness_effective'
 
 test('V14 is the only active questionnaire and has the required arm-specific counts', () => {
   assert.equal(SURVEY_VERSION, 'diana-v14');
-  for(const [arm,count] of [['A',26],['B',26],['C',27]]) {
+  for(const [arm,count] of [['A',25],['B',25],['C',26]]) {
     const state=assigned(arm), config=surveyConfiguration(state);
     assert.equal(state.version,SURVEY_VERSION);
     assert.equal(visibleFields(config.surveyFields,state.answers).filter(field=>!field.systemProvided).length,count);
@@ -41,9 +41,9 @@ test('V14 is the only active questionnaire and has the required arm-specific cou
   assert.throws(()=>assigned('A',{questionnaire_version:undefined}),/Fragebogenversion ist nicht verfügbar/);
 });
 
-test('screening and four background answers precede use; only search context can be answered while waiting', () => {
+test('four background answers precede use; only search context can be answered while waiting', () => {
   const state=assigned('B'), config=surveyConfiguration(state);
-  assert.deepEqual(names(config.beforeSystemFields),['previous_participation','education','study_field','job_portal_experience','ai_chat_experience']);
+  assert.deepEqual(names(config.beforeSystemFields),['education','study_field','job_portal_experience','ai_chat_experience']);
   assert.equal(startPreparedSystem(state),state);
   const started=prepare(state);
   assert.equal(started.systemTaskStarted,true);
@@ -175,13 +175,13 @@ test('complete V14 submission exports neither retired answers nor framework/sour
   assert(!Object.hasOwn(sent,'framework'));
 });
 
-test('V14 inserts screening, trust and manipulation checks without changing retained wording', async()=>{
+test('V14 removes repeat screening and retains trust and manipulation checks', async()=>{
   const {default:old}=await import('../survey_definition_v13.json',{with:{type:'json'}});
   const original=[old.demographics,...old.categories].flatMap(group=>group.fields);
   const current=surveyConfiguration().surveyFields;
   for(const field of original)assert.equal(current.find(item=>item.name===field.name)?.title,field.title);
   const sequence=names(current);
-  assert(sequence.indexOf('previous_participation')<sequence.indexOf('education'));
+  assert(!sequence.includes('previous_participation'));
   assert(sequence.indexOf('trust_fit')>sequence.indexOf('usefulness_suggestions'));
   assert(sequence.indexOf('trust_credibility')<sequence.indexOf('dialogue_understanding'));
   assert(sequence.indexOf('perceived_character')>sequence.indexOf('dialogue_attentiveness'));

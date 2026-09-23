@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {BriefcaseBusiness} from 'lucide-react';
-import {jobReferenceParts, separateFollowUp, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
+import {jobReferenceParts, plainJobReferences, separateFollowUp, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
 
 function ChatBody({blocks, render}) {
   return blocks.map((block, index) => block.type === 'jobs'
@@ -36,7 +36,7 @@ export default function ChatMessageText({text, assistant, enhanced = false, jobs
   const blocks = chatContentBlocks(body);
   // Collapse only complete blocks. Never replace part of a sentence with dots.
   const collapsible = displayText.length > 700 && blocks.length > 2;
-  const render = value => enhanced ? renderReferences(value, jobs, onOpenJob, busy) : value;
+  const render = value => enhanced ? renderReferences(value, jobs, onOpenJob, busy) : plainJobReferences(value, jobs);
   return <div className="message-bubble"><div className="message-text message-text--rich">
     <ChatBody blocks={collapsible && !expanded ? blocks.slice(0, 2) : blocks} render={render} />
     {collapsible && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}

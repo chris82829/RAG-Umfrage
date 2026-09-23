@@ -101,6 +101,27 @@ class SurveyChatLimitTests(unittest.TestCase):
         return self.client.post('/api/chat', headers=headers,
                                 json=dict(session_id=state['session_id'], message='Warum passt das?', **changes))
 
+    def test_a_hides_scores_in_api_b_c_keep_them_and_internal_rankings_survive(self):
+        from app import public_state
+        from copy import deepcopy
+        for arm, policy in [('A','unprompted'), ('B','career_fixed'), ('C','custom_career')]:
+            headers = self.grant(arm)
+            state = self.onboard(headers)
+            refreshed = self.client.get('/api/sessions/' + state['session_id'], headers=headers)
+            self.assertEqual(refreshed.status_code, 200)
+            for response in (state, refreshed.json):
+                self.assertTrue(response['jobs'])
+                for job in response['jobs']:
+                    self.assertEqual('score' in job['match'], arm != 'A')
+            internal = {'_personality_policy':policy, 'advisor':state['advisor'],
+                        'jobs':[{'id':'x', 'match':{'score':85, 'components':{'technical_fit':90},
+                                                   'reasons':['Python passt.']}}]}
+            before = deepcopy(internal)
+            exposed = public_state(internal)
+            self.assertEqual(internal, before)
+            self.assertEqual(exposed['jobs'][0]['match']['reasons'], ['Python passt.'])
+            self.assertEqual('components' in exposed['jobs'][0]['match'], arm != 'A')
+
     def test_each_study_arm_limits_successful_messages_before_model_call(self):
         for arm in ('A', 'B', 'C'):
             with self.subTest(arm=arm):

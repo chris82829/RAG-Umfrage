@@ -44,8 +44,8 @@ class SurveyV13Tests(unittest.TestCase):
             self.assertEqual(len(f['scale']['labels']),7)
             self.assertIn('source_item',f)
             self.assertEqual(f['nonresponse'],[['not_assessable','Kann ich nicht beurteilen']])
-        for arm,count in [('A',26),('B',26),('C',27)]:
-            self.assertEqual(sum(not f.get('systemProvided') and field_visible(f,{'study_arm':arm}) for f in SURVEY_FIELDS),count)
+        for arm,count in [('A',25),('B',25),('C',26)]:
+            self.assertEqual(sum(not f.get('retired') and not f.get('systemProvided') and field_visible(f,{'study_arm':arm}) for f in SURVEY_FIELDS),count)
             SurveyRequest.model_validate(dict(submission_id='a'*32,**answers(arm)))
 
     def test_existing_wording_preserved_new_items_order_and_trust_two_items(self):
@@ -55,7 +55,7 @@ class SurveyV13Tests(unittest.TestCase):
             for field in group['fields']:
                 self.assertEqual(current[field['name']]['title'],field['title'])
         names=[f['name'] for f in SURVEY_FIELDS]
-        self.assertLess(names.index('previous_participation'),names.index('education'))
+        self.assertTrue(current['previous_participation']['retired'])
         self.assertEqual(names[names.index('usefulness_suggestions')+1:names.index('usefulness_suggestions')+3],['trust_fit','trust_credibility'])
         self.assertEqual(names[names.index('dialogue_attentiveness')+1],'perceived_character')
         trust=next(c for c in SURVEY_DEFINITION['constructs'] if c['id']=='trust')

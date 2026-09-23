@@ -31,6 +31,8 @@ SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v14.j
 SURVEY_VERSION = SURVEY_DEFINITION['version']
 SURVEY_FIELDS = [field for group in [SURVEY_DEFINITION['demographics'], *SURVEY_DEFINITION['categories']]
                  for field in group['fields']]
+# Keep historical values exportable, without asking retired questions again.
+SURVEY_FIELDS += SURVEY_DEFINITION.get('retiredFields', [])
 LEGACY_SURVEY_DEFINITION = json.loads(Path(__file__).with_name('survey_definition_v3.json').read_text())
 LEGACY_SURVEY_FIELDS = [field for group in [LEGACY_SURVEY_DEFINITION['demographics'], *LEGACY_SURVEY_DEFINITION['categories']]
                         for field in group['fields']]
@@ -142,7 +144,7 @@ def _submission_fields(version):
             annotation = Annotated[str, Field(min_length=0 if field.get('optional') else field.get('minLength', 1), max_length=field['maxLength'])]
             if field.get('optional'):
                 default = ''
-        if 'visibleIf' in field:
+        if 'visibleIf' in field or field.get('retired'):
             annotation = annotation | None
             default = None
         fields[field['name']] = (annotation, default)

@@ -9,7 +9,7 @@ import unittest
 from werkzeug.security import generate_password_hash
 
 from app import create_app, welcome_message
-from llm_service import OpenAIService
+from llm_service import OpenAIService, ScoreComponents, SCORING_CONTRACT_VERSION
 from system_prompt_store import DEFAULT_SYSTEM_PROMPTS, PromptConflict, SystemPromptStore
 
 
@@ -89,8 +89,8 @@ class PromptPolicyTests(unittest.TestCase):
         call = self.responses.calls[-1]
         self.assertEqual([item["role"] for item in call["input"]], ["user"])
         payload = json.loads(call["input"][0]["content"])
-        self.assertEqual(set(payload), {"profile", "history", "message", "jobs", "score_scale"})
-        self.assertEqual(payload['score_scale']['maximum'], 100)
+        self.assertEqual(set(payload), {"profile", "history", "message", "jobs", "presentation"})
+        self.assertIn('Keine numerischen Scores', payload['presentation'])
         self.assertNotIn("persona", payload)
         self.assertNotIn("assistant_preferences", payload)
         self.assertIsNone(call.get("max_output_tokens"))
@@ -101,10 +101,38 @@ class PromptPolicyTests(unittest.TestCase):
         self.assertEqual([item["role"] for item in scoring_call["input"]], ["user"])
         self.assertEqual([item["role"] for item in explanation_call["input"]], ["user"])
         self.assertEqual(set(json.loads(scoring_call["input"][0]["content"])),
-                         {"profile", "jobs", "history", "message", "requested_count"})
+                         {"profile", "jobs", "history", "message", "requested_count", "score_scale",
+                          "scoring_rubric", "scoring_contract_version"})
         self.assertEqual(set(json.loads(explanation_call["input"][0]["content"])),
                          {"profile", "jobs", "history", "message", "requested_count",
-                          "evaluated_candidate_count", "fixed_components", "selected_job_ids", "scores", "score_scale"})
+                          "evaluated_candidate_count", "selected_job_ids", "presentation"})
+
+    def test_all_arms_receive_identical_explicit_100_point_scoring_contract(self):
+        contracts = []
+        totals = []
+        for policy in ('unprompted', 'career_fixed', 'custom_career'):
+            result = self.model.rerank({}, PROFILE, CANDIDATES, prompt_policy=policy,
+                                      system_prompt=self.store.snapshot(policy))
+            request = self.responses.calls[-2]
+            data = json.loads(request['input'][-1]['content'])
+            contracts.append({key: data[key] for key in
+                              ('score_scale', 'scoring_rubric', 'scoring_contract_version')})
+            totals.append(result['rankings'][0]['score'])
+            self.assertEqual(data['scoring_contract_version'], SCORING_CONTRACT_VERSION)
+            self.assertEqual(data['score_scale']['maximum'], 100)
+            self.assertIn('75–89', data['scoring_rubric'])
+            schema = request['text_format'].model_json_schema()
+            for field in schema['$defs']['ScoreComponents']['properties'].values():
+                numeric = next((entry for entry in field.get('anyOf', [])
+                                if entry.get('type') == 'integer'), field)
+                self.assertEqual(numeric['maximum'], 100)
+                self.assertIn('NICHT 1 bis 10', numeric['description'])
+        self.assertEqual(contracts, [contracts[0]] * 3)
+        self.assertEqual(totals, [totals[0]] * 3)
+        # A genuinely low component is valid and must never be multiplied by ten.
+        self.assertEqual(ScoreComponents(technical_fit=8, preferences_fit=None,
+                         technical_depth=None, learning=None, innovation=None,
+                         clarity=None).technical_fit, 8)
 
     def test_single_explanation_uses_existing_score_and_frozen_prompt_without_rescoring(self):
         components = dict(technical_fit=80, preferences_fit=70, technical_depth=65,
@@ -116,25 +144,35 @@ class PromptPolicyTests(unittest.TestCase):
                                                    system_prompt=self.store.snapshot(policy))
                 call = self.responses.calls[-1]
                 payload = json.loads(call['input'][-1]['content'])
-                self.assertEqual(payload['score'], 76)
-                self.assertEqual(payload['score_scale']['minimum'], 1)
-                self.assertEqual(payload['score_scale']['maximum'], 100)
-                self.assertFalse(payload['score_scale']['is_probability'])
-                self.assertEqual(payload['fixed_components'], components)
+                if policy == 'unprompted':
+                    self.assertNotIn('score', payload)
+                    self.assertNotIn('fixed_components', payload)
+                    self.assertIn('Keine numerischen Scores', payload['presentation'])
+                else:
+                    self.assertEqual(payload['score'], 76)
+                    self.assertEqual(payload['score_scale']['minimum'], 1)
+                    self.assertEqual(payload['score_scale']['maximum'], 100)
+                    self.assertFalse(payload['score_scale']['is_probability'])
+                    self.assertEqual(payload['fixed_components'], components)
                 self.assertEqual(payload['job']['id'], job['id'])
                 self.assertEqual(set(explained), {'reasons', 'matched_skills', 'missing_skills'})
                 self.assertEqual(len(call['input']), 1 if policy == 'unprompted' else 2)
                 self.assertNotIn('score', call['text_format'].model_fields)
 
-    def test_chat_receives_actual_100_point_scores_in_each_arm(self):
+    def test_chat_receives_scores_only_in_b_c_and_a_is_qualitative(self):
         for policy in ('unprompted', 'career_fixed', 'custom_career'):
             self.model.plan_chat(PROFILE, [], 'Wie hoch ist der Score?',
                                  jobs=[{**JOBS[0], 'match': {'score': 85}}], prompt_policy=policy,
                                  system_prompt=self.store.snapshot(policy))
             payload = json.loads(self.responses.calls[-1]['input'][-1]['content'])
             visible = payload['jobs'] if policy == 'unprompted' else payload['visible_jobs']
-            self.assertEqual(visible[0]['previous_score'], 85)
-            self.assertEqual(payload['score_scale']['maximum'], 100)
+            if policy == 'unprompted':
+                self.assertNotIn('previous_score', visible[0])
+                self.assertNotIn('score_scale', payload)
+                self.assertIn('Keine numerischen Scores', payload['presentation'])
+            else:
+                self.assertEqual(visible[0]['previous_score'], 85)
+                self.assertEqual(payload['score_scale']['maximum'], 100)
 
     def test_b_and_c_use_distinct_complete_system_prompts(self):
         career = self.store.snapshot("career_fixed")

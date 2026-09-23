@@ -7,7 +7,7 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPUT_TOKENS, ChatDecision, MAX_ASSISTANT_MESSAGE_CHARS, ADVISORY_VERSION, INITIAL_EXPLANATION_LIMIT, EXPLANATION_POLICY_VERSION
+from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPUT_TOKENS, ChatDecision, MAX_ASSISTANT_MESSAGE_CHARS, ADVISORY_VERSION, SCORING_CONTRACT_VERSION, INITIAL_EXPLANATION_LIMIT, EXPLANATION_POLICY_VERSION
 from retrieval import MODEL_ID, MODEL_REVISION, CACHE_VERSION, RRF_K, LEG_LIMIT
 from study_usage import CAPTURE_VERSION, usage_snapshot
 from study_metrics import METRICS_CAPTURE_VERSION, metrics_snapshot
@@ -60,6 +60,8 @@ class StudyReleases:
                         explanation_policy_version=EXPLANATION_POLICY_VERSION,
                         on_demand_explanations='per-job-fixed-score-session-cache-v1',
                         score_display_scale=SCORE_SCALE,
+                        score_visibility_by_arm={"A":False,"B":True,"C":True},
+                        scoring_contract_version=SCORING_CONTRACT_VERSION,
                         custom_third_turn_version=C_THIRD_TURN_VERSION,
                         bc_message_format_version=COMPACT_CHAT_VERSION,
                         chat_presentation_version=CHAT_PRESENTATION_VERSION,

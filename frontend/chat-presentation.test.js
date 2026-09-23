@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {jobReferenceParts, separateFollowUp, previewParts, jobNavigationTarget, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
+import {jobReferenceParts, plainJobReferences, separateFollowUp, previewParts, jobNavigationTarget, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
 
 const jobs = [{id:'123',title:'Python Developer',company:'Daten AG'},
   {id:'456',title:'Data Analyst',company:'Daten AG'},
@@ -116,4 +116,10 @@ test('readable job blocks separate titles and explanations without truncation',(
     {title:'Data Analyst',description:'Hier kannst du mit SQL arbeiten.'},
   ]});
   assert.equal(removeChatGenderSuffixes('Python… SQL... Version 3.12'), 'Python SQL Version 3.12');
+});
+
+test('baseline references become plain labels without IDs or interactive metadata', () => {
+  assert.equal(plainJobReferences('Hier: [Kurz](job:123). [Andere](job:999)', jobs),
+    'Hier: Python Developer. Andere');
+  assert.equal(typeof plainJobReferences('Python Developer', jobs), 'string');
 });

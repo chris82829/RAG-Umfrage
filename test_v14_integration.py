@@ -71,6 +71,28 @@ class V14AdminIntegrationTests(unittest.TestCase):
         receipt=self.app.extensions['privacy_store'].receipt(headers['X-Diana-Consent'])
         return identifier,receipt['participation_id'],headers
 
+    def test_removed_repeat_question_is_optional_and_historical_answer_is_preserved(self):
+        from survey_store import SURVEY_DEFINITION
+        active = [field['name'] for group in [SURVEY_DEFINITION['demographics'],
+                  *SURVEY_DEFINITION['categories']] for field in group['fields']]
+        self.assertNotIn('previous_participation', active)
+        headers = self.fx.grant('A')
+        state = self.fx.onboard(headers)
+        for _ in range(3):
+            state = self.fx.chat(headers, state).json
+        answers = complete_answers('A')
+        answers.pop('previous_participation')
+        identifier = secrets.token_hex(16)
+        response = self.client.post('/api/survey-responses', headers=headers,
+                    json=dict(submission_id=identifier, **answers))
+        self.assertIn(response.status_code, (200, 201), response.json)
+        self.login()
+        export_response = self.client.get('/api/admin/export?format=csv&columns=technical')
+        self.assertEqual(export_response.status_code, 200)
+        exported = csv_rows(export_response.data)
+        self.assertEqual(exported[0]['v14_previous_participation'], '')
+        # Existing export test separately verifies historical 'no' remains 0.
+
     def test_admin_configuration_authentication_csrf_and_frozen_cohorts(self):
         for endpoint in ('study-context','study-metadata','study-metadata-export','study-analysis'):
             self.assertEqual(self.client.get('/api/admin/'+endpoint).status_code,401)

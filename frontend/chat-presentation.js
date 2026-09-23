@@ -115,3 +115,8 @@ export function chatContentBlocks(text) {
   flush();
   return blocks;
 }
+
+// Baseline A may mention the same jobs, but never exposes interactive targets.
+export function plainJobReferences(text, jobs = []) {
+  return jobReferenceParts(text, jobs).map(part => part.text).join('');
+}

@@ -4,8 +4,9 @@ Flask-Prototyp mit Anzeigen aus dem bereitgestellten Export,
 SQLite-Vorfilter, paralleler BM25-/E5-Suche,
 Reciprocal Rank Fusion und GPT-5.4-Nano-Reranking (`gpt-5.4-nano-2026-03-17`) mit begründeten Ergebnissen.
 Die React-Webseite enthält ein Suchprofil, Jobkarten und einen persistenten Chat.
-Im aktuellen Konferenzstand V14 zeigen **alle drei Varianten A/B/C** Scores von
-**1 bis 100**, kurze Begründungen und eine nach Score sortierte Ergebnisliste.
+Im aktuellen Stand V14 zeigen **B und C** Scores von **1 bis 100**.
+**A zeigt keine Scores**; kurze Begründungen und die intern berechnete
+Ergebnisreihenfolge bleiben in allen drei Varianten erhalten.
 Zunächst sind die ersten zehn Stellen sichtbar; weitere bis zu 20 lassen sich einblenden.
 Die Varianten unterscheiden sich im Beratungsangebot: Basissystem ohne wählbare Persönlichkeit,
 fester Top-Berufsberater oder eigene Gestaltung auf Berufsberater-Basis. Die produktive Konfiguration
@@ -39,7 +40,7 @@ bleiben bestehen; gleiche Gewichte garantieren deshalb keine identischen
 LLM-Teilbewertungen oder Rankings. Neue Nutzerangaben können die Ergebnisse
 weiterhin verändern. Änderungen und Dateizuordnung: [V12-CHANGES.md](V12-CHANGES.md).
 
-Der Vergleich B/C untersucht die zusätzliche Selbstgestaltung gegenüber dem festen Berufsberater; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch wenn sie die vorgeschlagene Ausgangskonfiguration nicht inhaltlich verändern. B/A vergleicht das gesamte RAG-Berufsberaterprompt-Paket mit dem Basissystem und ist kein isolierter Persönlichkeitstest. Im Ausgangsstand ist der A-Prompt leer; jede spätere A-Promptrevision muss getrennt dokumentiert und ausgewertet werden. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
+Der Vergleich B/C untersucht die zusätzliche Selbstgestaltung gegenüber dem festen Berufsberater; alle zufällig C zugeteilten Teilnahmen gehören zu C, auch wenn sie die vorgeschlagene Ausgangskonfiguration nicht inhaltlich verändern. B/A vergleicht das gesamte RAG-Berufsberaterprompt-Paket einschließlich Score-Anzeige mit dem Basissystem und ist kein isolierter Persönlichkeitstest. Im Ausgangsstand ist der A-Prompt leer; jede spätere A-Promptrevision muss getrennt dokumentiert und ausgewertet werden. Untersucht wird kein Chatbot gegen eine reine Stichwortsuche. Einordnung: [CONFERENCE-FIT.md](CONFERENCE-FIT.md).
 
 V14 ersetzt den aktiven Fragebogen. Bereits gespeicherte V13-Daten bleiben unverändert und getrennt erhalten; sie werden weder übernommen noch in V14-Diagramme gemischt. Es gibt keine Auswahl historischer Fragebögen. Der Stand vor V14 ist auf `sicherung-vor-v14-2026-09-22` gesichert.
 

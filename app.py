@@ -156,6 +156,13 @@ def public_state(state):
         # the session for the identical retrieval/reranking pipeline, never in API cards.
         public['jobs'] = [{key: value for key, value in job.items()
                            if key not in ('match', 'retrieval')} for job in state.get('jobs', [])]
+    elif state.get('_personality_policy') == 'unprompted':
+        # A keeps qualitative explanations and ranking, but numeric assessments
+        # stay on the server. Never mutate the cached internal job dictionaries.
+        hidden = {'score', 'components', 'scoring_weights', 'scoring_version'}
+        public['jobs'] = [{**job, 'match': {key: value for key, value in job.get('match', {}).items()
+                                           if key not in hidden}}
+                          for job in state.get('jobs', [])]
     return public
 
 
@@ -796,6 +803,7 @@ def create_app(config=None, *, retriever=None, llm=None):
                                 if key not in ('search_text', 'raw')}} for item in candidates]
         result = {'profile': profile, 'persona': persona, 'advisor': advisor, 'jobs': cards,
                   '_matching_policy_version': MATCHING_POLICY_VERSION,
+                  '_personality_policy': prompt_policy,
                   '_candidates': pool, 'assistant_message': reranked['assistant_message'],
                   'retrieval': {'filtered_count': filtered_count, 'candidate_count': len(pool)}}
         if resolve_advisor(advisor)['neutral']:
@@ -820,6 +828,7 @@ def create_app(config=None, *, retriever=None, llm=None):
                     'Du kannst die Stellenart im Suchprofil oder im Chat ändern.',
                     'retrieval': {'filtered_count': 0, 'candidate_count': 0},
                     '_candidates': [], '_matching_policy_version': MATCHING_POLICY_VERSION,
+                    '_personality_policy': prompt_policy,
                     **({'_persona_fingerprint': saved_persona_fingerprint}
                        if saved_persona_fingerprint is not None else {}),
                     'chat_action': 'search'}

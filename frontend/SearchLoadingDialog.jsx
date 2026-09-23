@@ -61,7 +61,7 @@ export default function SearchLoadingDialog({ open, assistantName = 'Dein KI-Ass
         </li>;
       })}
     </ol>
-    <p className="search-loading-time">Die Suche dauert etwa 1–2 Minuten.</p>
+    <p className="search-loading-time">Die Suche dauert etwa 30 Sekunden.</p>
     {onQuestions && <button className="survey-primary diana-action-motion search-loading-questions" type="button" onClick={onQuestions}><span>Wartezeit für Fragen nutzen</span><ArrowRight className="diana-action-arrow" size={18}/></button>}
   </dialog>;
 }

@@ -120,7 +120,12 @@ class GenericChatDecision(ChatDecision):
     assistant_message: str = Field(min_length=1)
 
 
-ComponentValue = Annotated[int, Field(ge=1, le=100, strict=True)]
+A_SCORE_PRESENTATION = "Keine numerischen Scores, Teilbewertungen, Punkte oder Prozentwerte nennen oder erfinden. Begründe die Passung ausschließlich in Worten."
+SCORING_CONTRACT_VERSION = "components-explicit-100-point-rubric-v1"
+ComponentValue = Annotated[int, Field(ge=1, le=100, strict=True, description=(
+    "Ganzzahl auf einer Skala von 1 bis 100, NICHT 1 bis 10. "
+    "80 bedeutet hohe Ausprägung; 8 bedeutet sehr geringe Ausprägung, nicht 8 von 10. "
+    "Nutze die Bewertungsanker aus scoring_rubric."))]
 
 
 class ScoreComponents(_StrictModel):
@@ -880,7 +885,7 @@ def _assessment_fingerprint(profile: dict, jobs: list[dict], *, prompt_policy: s
                             prompt_sha256: str | None = None) -> str:
     canonical = json.dumps(
         {"profile": profile, "jobs": jobs, "prompt_policy": prompt_policy,
-         "prompt_sha256": prompt_sha256},
+         "prompt_sha256": prompt_sha256, "scoring_contract_version": SCORING_CONTRACT_VERSION},
         ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False,
     )
     return sha256(canonical.encode("utf-8")).hexdigest()
@@ -926,7 +931,7 @@ def _previous_scoring(match: dict) -> dict:
 
 
 def _visible_jobs(jobs: list[dict], *, candidates: list[dict] | None = None,
-                  include_assessments: bool = True) -> list[dict]:
+                  include_assessments: bool = True, include_scores: bool = True) -> list[dict]:
     """Keep result order and bounded prior explanations for up to 20 jobs."""
     visible = []
     current_by_id = {job["id"]: job for job in candidates or []}
@@ -948,11 +953,10 @@ def _visible_jobs(jobs: list[dict], *, candidates: list[dict] | None = None,
             **details,
             "position": position,
             **({
-            "previous_score": score,
+            **({"previous_score": score, **_previous_scoring(match)} if include_scores else {}),
             "previous_reasons": [_text(reason, 200) for reason in reasons[:3]],
             "previous_matched_skills": [_text(skill, 200) for skill in (match.get("matched_skills") or [])[:20]],
             "previous_missing_skills": [_text(skill, 200) for skill in (match.get("missing_skills") or [])[:20]],
-            **_previous_scoring(match),
             } if include_assessments else {}),
         })
     return visible
@@ -1144,8 +1148,8 @@ class OpenAIService:
                     "profile": _profile_data(profile),
                     "history": _conversation_history(history),
                     "message": _text(message, 6000),
-                    "jobs": _visible_jobs(jobs, include_assessments=True),
-                    "score_scale": SCORE_SCALE,
+                    "jobs": _visible_jobs(jobs, include_scores=False),
+                    "presentation": A_SCORE_PRESENTATION,
                 },
                 GenericChatDecision,
                 stream=stream,
@@ -1215,10 +1219,13 @@ class OpenAIService:
             )
         match = job['match']
         components = ScoreComponents.model_validate(match['components']).model_dump()
+        data = {'profile': _profile_data(profile), 'job': _transport_job(_candidate_data(job))}
+        if prompt_policy == 'unprompted':
+            data['presentation'] = A_SCORE_PRESENTATION
+        else:
+            data.update(fixed_components=components, score=match['score'], score_scale=SCORE_SCALE)
         return self._parse(
-            instructions,
-            {'profile': _profile_data(profile), 'job': _transport_job(_candidate_data(job)),
-             'fixed_components': components, 'score': match['score'], 'score_scale': SCORE_SCALE},
+            instructions, data,
             CachedJobAssessment, max_output_tokens=2000, domain_rules=False,
         ).model_dump()
 
@@ -1332,6 +1339,10 @@ class OpenAIService:
                 "selected_job_ids": selected_ids,
             }
             domain_rules = True
+        # All arms use the same measurement contract, including A without a
+        # system message. A numeric upper bound alone does not communicate units.
+        request_data.update(score_scale=SCORE_SCALE, scoring_rubric=_COMPONENT_INSTRUCTIONS,
+                            scoring_contract_version=SCORING_CONTRACT_VERSION)
         # The six component ratings and the weighted formula remain unchanged.
         # Choose the explanation IDs only after the server knows every score.
         if fixed is None:
@@ -1383,6 +1394,10 @@ class OpenAIService:
             scores={item['job_id']: item['score'] for item in scored[:INITIAL_EXPLANATION_LIMIT]},
             score_scale=SCORE_SCALE,
         )
+        if prompt_policy == 'unprompted':
+            for key in ('scores', 'fixed_components', 'score_scale', 'scoring_rubric', 'scoring_contract_version'):
+                explanation_data.pop(key, None)
+            explanation_data['presentation'] = A_SCORE_PRESENTATION
         explanation_instructions = instructions
         answer_formatter = None
         if prompt_policy in ('career_fixed', 'custom_career'):

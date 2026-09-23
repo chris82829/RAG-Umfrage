@@ -123,36 +123,6 @@
         "item_type": "context"
       },
       {
-        "name": "previous_participation",
-        "title": "Hast du bereits einmal an dieser Studie teilgenommen?",
-        "kind": "choice",
-        "beforeSystem": true,
-        "options": [
-          [
-            "yes",
-            "Ja"
-          ],
-          [
-            "no",
-            "Nein"
-          ],
-          [
-            "unsure",
-            "Unsicher"
-          ]
-        ],
-        "codes": {
-          "yes": 1,
-          "no": 0,
-          "unsure": 2
-        },
-        "framework": "DIANA",
-        "construct": "repeat_participation",
-        "item_type": "screening",
-        "source_item": "DIANA – Selbstbericht zur früheren Teilnahme",
-        "adaptation": "Keine technische Duplikaterkennung; unklare Antworten bleiben gesondert."
-      },
-      {
         "name": "education",
         "title": "Was beschreibt deine aktuelle Situation am besten?",
         "kind": "choice",
@@ -1062,6 +1032,40 @@
           "item_type": "single_item"
         }
       ]
+    }
+  ],
+  "retiredFields": [
+    {
+      "name": "previous_participation",
+      "title": "Hast du bereits einmal an dieser Studie teilgenommen?",
+      "kind": "choice",
+      "beforeSystem": true,
+      "options": [
+        [
+          "yes",
+          "Ja"
+        ],
+        [
+          "no",
+          "Nein"
+        ],
+        [
+          "unsure",
+          "Unsicher"
+        ]
+      ],
+      "codes": {
+        "yes": 1,
+        "no": 0,
+        "unsure": 2
+      },
+      "framework": "DIANA",
+      "construct": "repeat_participation",
+      "item_type": "screening",
+      "source_item": "DIANA – Selbstbericht zur früheren Teilnahme",
+      "adaptation": "Keine technische Duplikaterkennung; unklare Antworten bleiben gesondert.",
+      "retired": true,
+      "optional": true
     }
   ]
 }

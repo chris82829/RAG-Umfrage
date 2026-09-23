@@ -11,7 +11,7 @@ Prüfung: 22. September 2026, Originalpublikationen gelesen; Tabellen 2 (ResQue)
 
 `trust_fit` verbindet Vertrauen in Empfehlungen mit erwarteter eigener Passung. Inhaltlicher Bezug besteht zu Vertrauen in Empfehlungen und Zuversicht, die empfohlenen Gegenstände zu mögen. `trust_credibility` richtet sich auf Glaubwürdigkeit der DIANA-Passungseinschätzung. Keines der beiden Items ist eine wortgetreue deutsche Übertragung eines vollständigen Originalkonstrukts. Der userseitig vorgeschlagene Wortlaut bleibt erhalten; Codebuch und Protokoll kennzeichnen die beiden Aussagen als **an ResQue/CRS-Que angelehntes, eigenständig adaptiertes Vertrauenspaar**.
 
-`perceived_character` ist ein DIANA-Manipulationscheck. Ein erkennbarer Charakter ist nicht gleich „menschlich wirken“, Sympathie oder wahrgenommene Kontrolle. Das Item deshalb nicht als CRS-Que-Humanness-Item ausgeben. Die zusätzliche Screening-Frage ist ebenfalls eine Eigenentwicklung.
+`perceived_character` ist ein DIANA-Manipulationscheck. Ein erkennbarer Charakter ist nicht gleich „menschlich wirken“, Sympathie oder wahrgenommene Kontrolle. Das Item deshalb nicht als CRS-Que-Humanness-Item ausgeben. Die inzwischen entfernte Screening-Frage war ebenfalls eine Eigenentwicklung.
 
 Die bisher vorhandenen 14 Framework-Aussagen werden nicht umformuliert. Die zwei bestehenden DIANA-Ratings zu Aufwand und Stilkontrolle sind weiterhin Einzelitems. Die Herkunftstypen müssen im Codebuch sichtbar bleiben; eine gemeinsame 1–7-Skala macht nicht jede Aussage zu einer validierten Framework-Skala. ResQue verwendete fünf Zustimmungskategorien, CRS-Que sieben; die einheitliche Skala sowie Übersetzung und Jobkontext benötigen einen Pretest.
 
@@ -23,7 +23,7 @@ Die bisher vorhandenen 14 Framework-Aussagen werden nicht umformuliert. Die zwei
 - **M1 ist kein Gate für H1.** Fehlende Signifikanz kann mangelnde Power bedeuten. Keine Negativaussage „Personas wirken nicht“ aus dem Manipulationscheck ableiten.
 - **Keine automatische Fehler-Ausschlussregel:** wiederhergestellte Fehler sind kein Grund, gültige Antworten zu entfernen. Dokumentierte terminale Ausschlüsse werden vor Entblindung gesondert begründet.
 - **Fallzahlbeispiel statt fingiertem Freeze:** d = 0,35 und 72 Stunden sind noch nicht bestätigt. Rechner und Entwurfsprotokoll sind vorbereitet; Forschungsentscheidungen werden nicht als erledigt behauptet.
-- **26/27 Fragen statt 25/26**, wenn das im Plan zusätzlich verlangte Screening mitgezählt wird. E1 wird nicht ergänzt.
+- **25/26 aktive Fragen (A/B: 25, C: 26)** nach Entfernung der Frage zur früheren Teilnahme. E1 wird nicht ergänzt.
 - **Pseudonymisierte Metadaten bleiben verknüpfbar.** Aus technischen Änderungen allein folgt weder Anonymität noch eine abschließende datenschutzrechtliche Bewertung.
 
 ## Statistikimplementierung
@@ -33,3 +33,22 @@ Die zweiseitigen Welch-Werte wurden mit `scipy.stats.ttest_ind(equal_var=False)`
 Hedges g verwendet die Gamma-basierte Bias-Korrektur J mit df = n₁+n₂−2. Das 95%-Intervall ist ein unabhängiger, gruppenweiser Perzentil-Bootstrap; es ist bei kleinen Stichproben und heterogenen Varianzen nur näherungsweise belastbar. Der Mittelwertunterschied wird zusätzlich mit seinem Welch-Intervall berichtet. Alle Richtungen sind konsistent „zuerst genannte Gruppe minus zweite Gruppe“. Nicht schätzbare Koeffizienten bleiben `null`, keine erfundenen Nullen.
 
 Cronbach-α wird aus vollständigen Itemvektoren berechnet. Das Vertrauenspaar erhält zusätzlich Interitemkorrelation und Spearman–Brown; beide ersetzen keine Inhalts- oder Konstruktvalidität. Gruppenwerte und gepoolte Reliabilität werden getrennt ausgewiesen. Ohne Varianz ist ein Koeffizient nicht definiert. Rater-Belegtreue wird getrennt mit ungewichtetem Cohen-κ analysiert; perfekte Übereinstimmung nur in einer Kategorie erzeugt kein definiertes κ.
+
+## Revision vom 23. September 2026
+
+Die Frage nach einer früheren Teilnahme wird nicht mehr gestellt. Historische
+`previous_participation`-Werte bleiben im Export erhalten; neue fehlende Werte
+bedeuten unbekannt, nicht „Nein“. Der Analysefilter `first_time_only` ist deshalb
+nur für Fälle mit tatsächlich erhobener Antwort geeignet.
+
+Alle drei Gruppen erhalten bei der Komponentenbewertung dieselbe explizite
+1–100-Skala mit Bewertungsankern (`components-explicit-100-point-rubric-v1`).
+Die Gewichte und die serverseitige Berechnung ändern sich nicht. Frühere Scores
+werden weder rückwirkend skaliert noch überschrieben.
+
+Variante A zeigt ab dieser Revision keine numerischen Scores; Begründungen und
+die intern berechnete Rangfolge bleiben erhalten. Die API entfernt Scores und
+Teilbewertungen aus den A-Stellenkarten; der A-Textgenerator erhält keine
+numerischen Bewertungen. B und C zeigen weiterhin Scores von 1 bis 100. Diese
+Präsentationsänderung ist in der Release-Metadatenvariable `score_visibility_by_arm`
+festgehalten und bei Vergleichen mit früheren Releases zu berücksichtigen.
