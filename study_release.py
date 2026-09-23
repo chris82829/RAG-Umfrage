@@ -19,7 +19,7 @@ from advisor import SCORING_VERSION, SCORING_WEIGHTS
 from study_progress import MIN_USER_CHAT_MESSAGES
 from study_telemetry import CAPTURE_VERSION as TELEMETRY_CAPTURE_VERSION
 from system_prompt_store import DEFAULT_SYSTEM_PROMPTS
-from chat_text import COMPACT_CHAT_VERSION, MAX_BC_ANSWER_CHARS, MAX_BC_WELCOME_CHARS, SCORE_SCALE, CHAT_PRESENTATION_VERSION
+from chat_text import INITIAL_CHAT_FORMAT_VERSION, COMPACT_CHAT_VERSION, MAX_BC_ANSWER_CHARS, MAX_BC_WELCOME_CHARS, SCORE_SCALE, CHAT_PRESENTATION_VERSION
 from chat_completion import C_THIRD_TURN_VERSION
 
 
@@ -64,6 +64,7 @@ class StudyReleases:
                         scoring_contract_version=SCORING_CONTRACT_VERSION,
                         custom_third_turn_version=C_THIRD_TURN_VERSION,
                         bc_message_format_version=COMPACT_CHAT_VERSION,
+                        initial_chat_format_version=INITIAL_CHAT_FORMAT_VERSION,
                         chat_presentation_version=CHAT_PRESENTATION_VERSION,
                         bc_answer_max_characters=MAX_BC_ANSWER_CHARS,
                         bc_welcome_max_characters=MAX_BC_WELCOME_CHARS,

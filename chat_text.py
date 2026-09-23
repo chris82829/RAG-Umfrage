@@ -7,6 +7,25 @@ MAX_BC_WELCOME_CHARS = None
 SCORE_SCALE = {'minimum': 1, 'maximum': 100, 'unit': 'Punkte', 'is_probability': False}
 CHAT_PRESENTATION_VERSION = 'request-first-complete-sentences-v3'
 
+INITIAL_CHAT_FORMAT_VERSION = 'initial-job-bullets-v1'
+INITIAL_CHAT_INSTRUCTIONS = """
+FORMAT FÜR DIE ERSTE SUCHANSPRACHE (assistant_message):
+Stelle die empfohlenen Stellen ausschließlich als kurze Liste vor, nicht als
+Fließtext. Jede Stelle bekommt einen eigenen Listenpunkt in einer neuen Zeile,
+beginnend mit '- '. Verwende dieses Muster:
+- Exakter Stellentitel: Ein kurzer vollständiger Satz, warum die Stelle passt.
+- Weiterer exakter Stellentitel: Ein kurzer vollständiger Satz zur Passung.
+Nenne normalerweise zwei passende Stellen; bei nur einer verfügbaren Stelle
+nur einen Punkt. Die Titel im Muster sind Platzhalter: Nutze ausschließlich echte
+Titel aus den übergebenen Stellen. Keine Sammelsätze mit mehreren Stellentiteln,
+kein einleitender Absatz wie 'Am besten passt'. Zwischen den Listenpunkten darf
+eine Leerzeile stehen. Eine hilfreiche Rückfrage steht danach in einem eigenen
+Absatz, sofern follow_up_allowed wahr ist. Die Begrüßung ergänzt die Oberfläche.
+Halte dich kurz, aber beende jeden Satz vollständig. Keine harte Zeichengrenze.
+Diese Regel betrifft nur assistant_message bei der ersten Suche. Bewertungen,
+Gewichte und die einzelnen Stellenbegründungen bleiben unverändert.
+""".strip()
+
 LEGACY_COMPACT_CHAT_INSTRUCTIONS = """
 VERBINDLICHES KURZFORMAT FÜR assistant_message (v2):
 Höchstens 45 Wörter und 380 Zeichen insgesamt, einschließlich Rückfrage.

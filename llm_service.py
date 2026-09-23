@@ -18,7 +18,7 @@ from typing import Annotated, Any, Generator, Literal, TypeVar
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, create_model, field_validator, model_validator
 from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
-from chat_text import COMPACT_CHAT_INSTRUCTIONS, chat_instructions, SCORE_SCALE, format_chat_answer, remove_gender_suffixes
+from chat_text import INITIAL_CHAT_INSTRUCTIONS, COMPACT_CHAT_INSTRUCTIONS, chat_instructions, SCORE_SCALE, format_chat_answer, remove_gender_suffixes
 
 
 MODEL = "gpt-5.4-nano-2026-03-17"
@@ -1401,6 +1401,8 @@ class OpenAIService:
             # A frozen base stays intact. Presentation rules are versioned
             # separately and never affect the numerical scoring request.
             explanation_instructions = chat_instructions(instructions)
+            if context.get('initial_intro'):
+                explanation_instructions += '\n\n' + INITIAL_CHAT_INSTRUCTIONS
             answer_formatter = format_chat_answer
         explanation_result = yield from self._parse_steps(
             explanation_instructions, explanation_data,
