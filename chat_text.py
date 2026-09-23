@@ -7,7 +7,7 @@ MAX_BC_WELCOME_CHARS = None
 SCORE_SCALE = {'minimum': 1, 'maximum': 100, 'unit': 'Punkte', 'is_probability': False}
 CHAT_PRESENTATION_VERSION = 'request-first-complete-sentences-v3'
 
-INITIAL_CHAT_FORMAT_VERSION = 'initial-job-bullets-v1'
+INITIAL_CHAT_FORMAT_VERSION = 'initial-job-bullets-proactive-v2'
 INITIAL_CHAT_INSTRUCTIONS = """
 FORMAT FÜR DIE ERSTE SUCHANSPRACHE (assistant_message):
 Stelle die empfohlenen Stellen ausschließlich als kurze Liste vor, nicht als
@@ -19,8 +19,20 @@ Nenne normalerweise zwei passende Stellen; bei nur einer verfügbaren Stelle
 nur einen Punkt. Die Titel im Muster sind Platzhalter: Nutze ausschließlich echte
 Titel aus den übergebenen Stellen. Keine Sammelsätze mit mehreren Stellentiteln,
 kein einleitender Absatz wie 'Am besten passt'. Zwischen den Listenpunkten darf
-eine Leerzeile stehen. Eine hilfreiche Rückfrage steht danach in einem eigenen
-Absatz, sofern follow_up_allowed wahr ist. Die Begrüßung ergänzt die Oberfläche.
+eine Leerzeile stehen. Die Begrüßung ergänzt die Oberfläche.
+
+VERBINDLICHER ABSCHLUSS DER ERSTEN SUCHANSPRACHE:
+Wenn follow_up_allowed wahr ist, schließe nach der Stellenliste IMMER mit genau
+EINER kurzen, konkreten Frage in einem eigenen Absatz ab. Diese Einstiegsregel
+hat Vorrang vor der allgemeinen Vorgabe, nur bei notwendiger Klärung nachzufragen.
+Leite die Frage aus einem belegten Unterschied der vorgestellten Stellen ab,
+z. B. Aufgaben, Technologien, Arbeitsort oder Arbeitsmodell. Frage nach EINER
+noch offenen Präferenz, die hilft, die Stellen sinnvoll zu gruppieren oder neu
+zu sortieren. Wiederhole keine bereits beantwortete Frage und erfinde keine
+Unterschiede. Sind keine unterschiedlichen Merkmale belegt, frage, welche der
+vorgestellten Tätigkeiten der Nutzer bei der weiteren Auswahl priorisieren möchte.
+Kein allgemeines 'Kann ich dir helfen?'. Ändere Präferenzen oder Reihenfolge erst
+nach der Nutzerantwort. Bei follow_up_allowed=false endet der Text ohne Rückfrage.
 Halte dich kurz, aber beende jeden Satz vollständig. Keine harte Zeichengrenze.
 Diese Regel betrifft nur assistant_message bei der ersten Suche. Bewertungen,
 Gewichte und die einzelnen Stellenbegründungen bleiben unverändert.

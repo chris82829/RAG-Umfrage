@@ -256,17 +256,23 @@ def test_all_deployed_v2_variants_are_removed_even_when_new_guidance_is_already_
 
 @pytest.mark.parametrize('policy', ['unprompted', 'career_fixed', 'custom_career'])
 @pytest.mark.parametrize('initial', [False, True])
-def test_initial_job_list_guidance_is_scoped_to_bc_greeting_only(policy, initial):
+@pytest.mark.parametrize('follow_up', [False, True])
+def test_initial_job_list_guidance_is_scoped_to_bc_greeting_only(policy, initial, follow_up):
     from chat_text import INITIAL_CHAT_INSTRUCTIONS
     responses = CapturingResponses()
     service = OpenAIService('', client=SimpleNamespace(responses=responses))
     service.rerank({}, PROFILE, CANDIDATES, prompt_policy=policy,
                    system_prompt='Individuelle Beratung.',
-                   chat_context={'initial_intro': initial})
+                   chat_context={'initial_intro': initial, 'follow_up_allowed': follow_up})
     scoring = responses.calls[0]['input'][0]['content']
     explanation = responses.calls[1]['input'][0]['content']
     assert INITIAL_CHAT_INSTRUCTIONS not in scoring
     assert (INITIAL_CHAT_INSTRUCTIONS in explanation) == (initial and policy != 'unprompted')
+    if policy != 'unprompted':
+        payload = json.loads(responses.calls[1]['input'][-1]['content'])
+        assert payload['follow_up_allowed'] is follow_up
+        if initial:
+            assert explanation.endswith(INITIAL_CHAT_INSTRUCTIONS)
     service.plan_chat(PROFILE, [], 'Warum passt diese Stelle?', jobs=[],
                       prompt_policy=policy, system_prompt='Individuelle Beratung.')
     assert INITIAL_CHAT_INSTRUCTIONS not in responses.calls[-1]['input'][0]['content']
