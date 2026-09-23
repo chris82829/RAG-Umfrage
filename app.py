@@ -179,7 +179,7 @@ def welcome_message(result, *, prompt_policy=None):
             return 'Aktuell gibt es keine Stellen zur gewählten Stellenart.'
         found = f'{total} Stellen' if total != 1 else 'Eine Stelle'
         reference = 'diese Stellen' if total != 1 else 'diese Stelle'
-        overview = f'Hallo! {found} gefunden und bewertet. Du kannst mich alles über {reference} fragen.'
+        overview = f'Hallo! {found} gefunden und bewertet. Du kannst mich alles über {reference} fragen. Hier eine kleine Auswahl:'
         return overview + '\n\n' + format_chat_answer(result['assistant_message'])
     # Match the initial visibility policy in frontend/result-visibility.js.
     visible = min(total, 10)

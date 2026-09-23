@@ -19,7 +19,7 @@ def test_a_opening_is_only_the_actual_model_answer():
             'assistant_message':answer}
     assert welcome_message(result,prompt_policy='unprompted')==answer
     assert welcome_message(result,prompt_policy='career_fixed').startswith(
-        'Hallo! 20 Stellen gefunden und bewertet. Du kannst mich alles über diese Stellen fragen.\n\n')
+        'Hallo! 20 Stellen gefunden und bewertet. Du kannst mich alles über diese Stellen fragen. Hier eine kleine Auswahl:\n\n')
 
 
 def test_guidance_migration_preserves_admin_edits_a_and_frozen_participant_prompts(tmp_path):
@@ -104,7 +104,7 @@ def test_greeting_uses_actual_count_and_requested_sentence(policy, count):
     else:
         found = f'{count} Stellen' if count != 1 else 'Eine Stelle'
         reference = 'diese Stellen' if count != 1 else 'diese Stelle'
-        assert message.startswith(f'Hallo! {found} gefunden und bewertet. Du kannst mich alles über {reference} fragen.\n\n')
+        assert message.startswith(f'Hallo! {found} gefunden und bewertet. Du kannst mich alles über {reference} fragen. Hier eine kleine Auswahl:\n\n')
         assert message.endswith('Welche Aufgaben bevorzugst du?')
 
 
