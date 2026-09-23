@@ -606,7 +606,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
   const visibilityKey = resultVisibilityKey(session);
   const showAllResults = visibilityKey !== null && revealedResults === visibilityKey;
   const { visibleJobs, additionalCount } = resultVisibility(jobs, showAllResults);
-  const chatSuggestions = buildChatSuggestions(session, visibleJobs, { showScores: showInsights && enhancedChat });
+  const chatSuggestions = chatOptions.testPage ? buildChatSuggestions(session, visibleJobs, { showScores: showInsights && enhancedChat }) : [];
   const allDemo = catalog.length > 0 && catalog.every(j => demoIds.has(j.id));
   const profileInfo = profileSummary(session?.profile);
   const indexReady = indexState?.status === 'ready';

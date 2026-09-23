@@ -14,15 +14,23 @@ export function jobReferenceParts(text, jobs = []) {
   // same internal reference; the UI renders a known title, never this markup.
   const reference = /\\*\[([^\]\n]+?)\\*\][ \t]*\\*\([ \t]*job[ \t]*:[ \t]*([^\s)\\]+)[ \t]*\\*\)/gi;
   const references = [...text.matchAll(reference)];
-  const explicitReferences = references.length > 0;
   const names = new Map();
-  for (const job of jobs) for (const name of explicitReferences ? [] : [removeChatGenderSuffixes(job.title || '')]) {
-    if (!name || name.length < 5) continue;
-    const key = name.toLocaleLowerCase('de');
-    const existing = names.get(key);
-    names.set(key, existing && existing.id !== job.id ? {ambiguous: true} : existing || job);
+  for (const job of jobs) {
+    const title = removeChatGenderSuffixes(job.title || '').replace(/\s+/g, ' ').trim();
+    // Harmless shortening used in chat: retain the actual role and specialism.
+    // Do not guess from a company name or use fuzzy matching for different jobs.
+    const variants = new Set([title, title.replace(/\bim Bereich\s+/gi, '')]);
+    for (const name of variants) {
+      if (name.length < 5) continue;
+      const key = name.toLocaleLowerCase('de');
+      const existing = names.get(key);
+      names.set(key, existing && existing.id !== job.id ? {ambiguous: true} : existing || job);
+    }
   }
-  const unique = [...names].filter(([, job]) => !job.ambiguous).sort((a, b) => b[0].length - a[0].length);
+  const unique = [...names].filter(([, job]) => !job.ambiguous)
+    .sort((a, b) => b[0].length - a[0].length)
+    .map(([name, job]) => ({job, pattern: new RegExp(name.split(/\s+/)
+      .map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s+'), 'giu')}));
   const parts = [];
   function plain(value) {
     // Also recognize unambiguous titles in earlier messages without link markup.
@@ -34,13 +42,17 @@ export function jobReferenceParts(text, jobs = []) {
       .replace(/\\*\([ \t]*job[ \t]*:[^\n)]*(?:\)|$)/gi, '')
       .replace(/\\([\[\]()])/g, '$1').replace(/\\+$/g, '');
     while (rest) {
-      const lower = rest.toLocaleLowerCase('de');
       let next = null;
-      for (const [name, job] of unique) {
-        const index = lower.indexOf(name);
-        if (index < 0 || (index > 0 && /[\p{L}\p{N}]/u.test(rest[index - 1]))
-            || /[\p{L}\p{N}]/u.test(rest[index + name.length] || '')) continue;
-        if (!next || index < next.index) next = {index, length: name.length, job};
+      for (const {pattern, job} of unique) {
+        pattern.lastIndex = 0;
+        for (const match of rest.matchAll(pattern)) {
+          const index = match.index, length = match[0].length;
+          if ((index > 0 && /[\p{L}\p{N}]/u.test(rest[index - 1]))
+              || /[\p{L}\p{N}]/u.test(rest[index + length] || '')) continue;
+          if (!next || index < next.index || (index === next.index && length > next.length))
+            next = {index, length, job};
+          break;
+        }
       }
       if (!next) { parts.push({text: rest}); break; }
       if (next.index) parts.push({text: rest.slice(0, next.index)});

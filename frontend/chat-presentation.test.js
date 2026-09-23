@@ -133,3 +133,31 @@ test('only job titles become links; even unique company names and locations stay
   assert.equal(parts.map(part=>part.text).join(''),text);
   assert.equal(jobReferenceParts('Wieland-Werke AG, Ulm.',[job]).some(part=>part.job),false);
 });
+
+
+test('MEAG title with omitted im Bereich links only the title, not company or place', () => {
+  const job={id:'853303',title:'Werkstudent im Bereich Data Management (m|w|d)',company:'MEAG MUNICH ERGO AssetManagement GmbH'};
+  const text='Werkstudent Data Management bei MEAG Munich Re AssetManagement (München, hybrid)';
+  const parts=jobReferenceParts(text,[job]);
+  assert.deepEqual(parts.filter(p=>p.job).map(p=>[p.text,p.job.id]),[['Werkstudent Data Management','853303']]);
+  assert.equal(parts.map(p=>p.text).join(''),text);
+});
+
+test('gender marker inside title and variable whitespace still resolve correctly', () => {
+  const job={id:'819942',title:'Werkstudent (m|w|d) Data Management',company:'MEAG'};
+  for (const text of ['Werkstudent Data Management','Werkstudent  Data Management','Werkstudent (m|w|d) Data Management'])
+    assert.equal(jobReferenceParts(text,[job]).find(p=>p.job)?.job.id,'819942');
+});
+
+test('shortened ambiguous titles never select an arbitrary job', () => {
+  const jobs=[{id:'1',title:'Werkstudent im Bereich Data Management',company:'MEAG'},
+    {id:'2',title:'Werkstudent Data Management',company:'Andere Firma'}];
+  assert.equal(jobReferenceParts('Werkstudent Data Management',jobs).some(p=>p.job),false);
+  assert.equal(jobReferenceParts('Werkstudent im Bereich Data Management',jobs).find(p=>p.job)?.job.id,'1');
+  assert.equal(jobReferenceParts('Werkstudent Data Science',jobs).some(p=>p.job),false);
+});
+
+test('plain titles remain linked alongside explicit references in the same message', () => {
+  const parts=jobReferenceParts('[Kurz](job:123) und Data Analyst',[jobs[0],jobs[1]]);
+  assert.deepEqual(parts.filter(p=>p.job).map(p=>p.job.id),['123','456']);
+});
