@@ -39,6 +39,7 @@ from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraft
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice, token_hash
 from study_release import StudyReleases
 from system_prompt_store import SystemPromptStore
+from chat_text import compact_advice
 from admin import register_admin
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -164,6 +165,11 @@ def welcome_message(result, *, prompt_policy=None):
     total = len(jobs)
     if resolve_advisor(result.get('advisor'))['neutral']:
         return 'Hallo ich bin dein KI Assistent'
+    if prompt_policy in ('career_fixed', 'custom_career'):
+        overview = (f'{total} Stellen gefunden.' if total != 1 else 'Eine Stelle gefunden.')
+        if not total:
+            return 'Aktuell gibt es keine Stellen zur gewählten Stellenart.'
+        return overview + '\n\n' + compact_advice(result['assistant_message'], intro_jobs=jobs)
     # Match the initial visibility policy in frontend/result-visibility.js.
     visible = min(total, 10)
     if not total:
@@ -173,9 +179,6 @@ def welcome_message(result, *, prompt_policy=None):
         overview = f'{found} gefunden und bewertet.'
         if visible == total:
             overview += ' Du findest alle links in der Ergebnisübersicht.'
-        else:
-            overview += (f' Links siehst du die ersten {visible}; '
-                         'weitere findest du über „Weitere Stellen anzeigen“.')
     # Counts stay authoritative; the model's concrete advice/question is the conclusion.
     return f"Hallo! {overview}\n\n{result['assistant_message']}"
 
@@ -903,7 +906,7 @@ def create_app(config=None, *, retriever=None, llm=None):
         timings = {'search': time.monotonic()}
         def operation():
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor,
-                chat_context={'follow_up_allowed': follow_up_allowed({'messages': []})},
+                chat_context={'follow_up_allowed': follow_up_allowed({'messages': []}), 'initial_intro': True},
                 prompt_policy=policy, system_prompt=frozen_prompt)
             result['assistant_message'] = welcome_message(result, prompt_policy=policy)
             state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None, '_system_prompt_snapshot': frozen_prompt,

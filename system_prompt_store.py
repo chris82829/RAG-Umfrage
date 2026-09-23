@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 import hashlib
 import re
 import sqlite3
+from chat_text import COMPACT_CHAT_INSTRUCTIONS, COMPACT_CHAT_VERSION
 
 
 PROMPT_POLICIES = ("unprompted", "career_fixed", "custom_career")
@@ -121,8 +122,8 @@ angegebene Gewichtung der aktuellen selbst gestalteten Persönlichkeit.
 }
 
 
-CHAT_GUIDANCE_VERSION = 'linked-proactive-chat-v1'
-CHAT_GUIDANCE = """
+CHAT_GUIDANCE_VERSION = COMPACT_CHAT_VERSION
+LEGACY_CHAT_GUIDANCE = """
 STELLENBEZÜGE UND PROAKTIVE RÜCKFRAGEN (v1):
 Wenn du eine konkrete Stelle erwähnst, kennzeichne sie in assistant_message als
 [Stellentitel](job:ID). Nutze ausschließlich die exakte ID und den Titel einer
@@ -148,6 +149,15 @@ Hilfsfloskel. Bestehende Regeln zu follow_up_allowed, bereits geklärten Wünsch
 und abgelehnten Rückfragen gelten weiterhin. Antworte weiterhin auf Deutsch,
 kurz und präzise, soweit die selbst gewählte Ausdrucksweise nichts anderes verlangt.
 """.strip()
+
+CHAT_GUIDANCE = COMPACT_CHAT_INSTRUCTIONS + """
+
+Berate proaktiv: Prüfe die Stellen auf belegte Übereinstimmungen und Unterschiede
+zu den ausdrücklich genannten Wünschen, etwa Ort, Technologie oder Tätigkeit.
+Die kurze Rückfrage soll helfen, diese Stellen sinnvoll zu gruppieren oder neu
+zu sortieren. Frage nicht nach bereits geklärten oder abgelehnten Punkten.
+Erfinde keine Abweichung und ändere Prioritäten erst nach der Nutzerantwort.
+""".rstrip()
 
 for _policy in ('career_fixed', 'custom_career'):
     DEFAULT_SYSTEM_PROMPTS[_policy] += '\n\n' + CHAT_GUIDANCE
@@ -253,7 +263,10 @@ class SystemPromptStore:
                     saved = db.execute("SELECT text FROM system_prompts WHERE policy=?", (policy,)).fetchone()[0]
                     if CHAT_GUIDANCE in saved:
                         continue
-                    updated = _validated_text(policy, saved + '\n\n' + CHAT_GUIDANCE)
+                    # Remove only our exact previous link-format block, never
+                    # administrator text or immutable participant snapshots.
+                    base = saved.replace(LEGACY_CHAT_GUIDANCE, '').strip()
+                    updated = _validated_text(policy, base + '\n\n' + CHAT_GUIDANCE)
                     db.execute("UPDATE system_prompts SET text=?, revision=revision+1, sha256=?, updated_at=? WHERE policy=?",
                                (updated, _sha256(updated), now, policy))
                     changed = True

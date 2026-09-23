@@ -17,6 +17,7 @@ from typing import Annotated, Any, Generator, Literal, TypeVar
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, create_model, field_validator, model_validator
 from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
+from chat_text import COMPACT_CHAT_INSTRUCTIONS, compact_advice
 
 
 MODEL = "gpt-5.4-nano-2026-03-17"
@@ -992,6 +993,7 @@ class OpenAIService:
         max_output_tokens: int | None = MAX_OUTPUT_TOKENS,
         stream: bool = False,
         domain_rules: bool = True,
+        answer_formatter=None,
     ) -> Generator[dict, None, _ResultT]:
         started = perf_counter()
         api_status = "not_received"
@@ -1030,6 +1032,9 @@ class OpenAIService:
                         except (ValueError, ValidationError):
                             continue
                         message = getattr(partial, "assistant_message", "")
+                        if message and answer_formatter is not None:
+                            message = answer_formatter(message)
+                            partial = partial.model_copy(update={"assistant_message": message})
                         if message and message != previous:
                             previous = message
                             yield {"type": "assistant_preview", "data": partial.model_dump()}
@@ -1058,6 +1063,10 @@ class OpenAIService:
             # Re-validate even injected clients rather than trusting their type.
             payload = parsed.model_dump(by_alias=True) if isinstance(parsed, BaseModel) else parsed
             result = schema.model_validate(payload)
+            if answer_formatter is not None:
+                result = result.model_copy(update={
+                    'assistant_message': answer_formatter(result.assistant_message),
+                })
             outcome = "parsed"
             return result
         except LLMUnavailable:
@@ -1142,7 +1151,7 @@ class OpenAIService:
         if prompt_policy in ("career_fixed", "custom_career"):
             instructions = _effective_policy_prompt(prompt_policy, system_prompt, resolved)
             result = yield from self._parse_steps(
-                instructions,
+                instructions + '\n\n' + COMPACT_CHAT_INSTRUCTIONS,
                 {
                     "current_profile": _profile_data(profile),
                     "conversation_history": _conversation_history(history),
@@ -1155,6 +1164,7 @@ class OpenAIService:
                 ChatDecision,
                 stream=stream,
                 domain_rules=False,
+                answer_formatter=compact_advice,
             )
             return result.model_dump()
         if resolved['neutral']:
@@ -1343,11 +1353,20 @@ class OpenAIService:
             fixed_components={job_id: assessments[job_id] for job_id in selected_ids},
             selected_job_ids=selected_ids,
         )
+        explanation_instructions = instructions
+        answer_formatter = None
+        if prompt_policy in ('career_fixed', 'custom_career'):
+            # A frozen base stays intact. Presentation rules are versioned
+            # separately and never affect the numerical scoring request.
+            explanation_instructions += '\n\n' + COMPACT_CHAT_INSTRUCTIONS
+            intro_jobs = selected_jobs if context.get('initial_intro') else None
+            answer_formatter = lambda text: compact_advice(text, intro_jobs=intro_jobs)
         explanation_result = yield from self._parse_steps(
-            instructions, explanation_data,
+            explanation_instructions, explanation_data,
             _candidate_reranking_schema(selected_ids, cached=True),
             max_output_tokens=RERANK_OUTPUT_TOKENS,
             stream=stream, domain_rules=domain_rules,
+            answer_formatter=answer_formatter,
         )
         result = _candidate_reranking_result(explanation_result, cached=True)
         by_id = {ranking.job_id: ranking for ranking in result.rankings}

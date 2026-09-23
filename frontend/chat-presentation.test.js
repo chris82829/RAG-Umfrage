@@ -39,3 +39,33 @@ test('job links reveal hidden results and never invent a navigation target', () 
 test('streamed incomplete job-link syntax stays out of visible text', () => {
   assert.equal(jobReferenceParts('[Python Developer](job:1',jobs).map(p=>p.text).join(''),'Python Developer');
 });
+test('escaped internal links display canonical titles and keep exact navigation targets', () => {
+  for (const value of [String.raw`[Kurz]\(job:456)`, String.raw`[Kurz]\(job:456\)`,
+    String.raw`\[Kurz\]\(job:456\)`, '[Kurz] (job:456)', '[Kurz](job:%34%35%36)']) {
+    assert.deepEqual(jobReferenceParts(value,jobs).map(part=>[part.text,part.job?.id]),[['Data Analyst','456']],value);
+  }
+});
+test('unknown escaped references show only labels and cannot invent navigation', () => {
+  const parts=jobReferenceParts(String.raw`[**Unbekannte Stelle**]\(job:999\)`,jobs);
+  assert.deepEqual(parts,[{text:'Unbekannte Stelle'}]);
+  assert.equal(jobReferenceParts('Hinweis (job:999)',jobs).map(part=>part.text).join(''),'Hinweis ');
+});
+test('every streamed prefix of escaped or normal job markup hides technical fragments', () => {
+  for (const value of ['[Python Developer](job:123)', String.raw`[Python Developer]\(job:123\)`,
+    String.raw`\[Python Developer\]\(job:123\)`]) {
+    for (let length=1;length<=value.length;length++) {
+      const visible=jobReferenceParts(value.slice(0,length),jobs).map(part=>part.text).join('');
+      assert(!/[\[\]\\]|job:|123/.test(visible),`${value.slice(0,length)} => ${visible}`);
+    }
+  }
+});
+test('job references preserve concise bullet lines and the follow-up paragraph', () => {
+  const {body,question}=separateFollowUp(String.raw`- [Kurz]\(job:456): SQL passt.
+- Python Developer: Python passt.
+
+Möchtest du eher SQL oder Python nutzen?`);
+  const parts=jobReferenceParts(body,jobs);
+  assert.equal(parts.map(part=>part.text).join(''),'- Data Analyst: SQL passt.\n- Python Developer: Python passt.');
+  assert.equal(question,'Möchtest du eher SQL oder Python nutzen?');
+  assert.equal(parts.find(part=>part.job)?.job.id,'456');
+});

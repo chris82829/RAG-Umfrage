@@ -19,6 +19,7 @@ from advisor import SCORING_VERSION, SCORING_WEIGHTS
 from study_progress import MIN_USER_CHAT_MESSAGES
 from study_telemetry import CAPTURE_VERSION as TELEMETRY_CAPTURE_VERSION
 from system_prompt_store import DEFAULT_SYSTEM_PROMPTS
+from chat_text import COMPACT_CHAT_VERSION, MAX_BC_ANSWER_CHARS, MAX_BC_WELCOME_CHARS
 
 
 def canonical(value):
@@ -33,7 +34,7 @@ class StudyReleases:
                  'web-dist/index.html']
         files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'survey_definition_v11.json', 'survey_definition_v12.json', 'survey_definition_v13.json', 'survey_definition_v14.json', 'study_context.py', 'V14-METHODS.md', 'requirements-analysis.txt', 'survey_migrations.py', 'study_metrics.py', 'study_chat_limit.py', 'system_prompt_store.py', 'test_access.py', 'STUDY-PROTOCOL.md']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'research/v14').glob('*')) if path.is_file()]
-        files += ['study_progress.py', 'study_telemetry.py', 'migrations/012_study_telemetry.sql']
+        files += ['study_progress.py', 'study_telemetry.py', 'migrations/012_study_telemetry.sql', 'chat_text.py']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}
@@ -56,6 +57,9 @@ class StudyReleases:
                         presentation_policy='ranked_insights',
                         initial_explanation_limit=INITIAL_EXPLANATION_LIMIT,
                         explanation_policy_version=EXPLANATION_POLICY_VERSION,
+                        bc_message_format_version=COMPACT_CHAT_VERSION,
+                        bc_answer_max_characters=MAX_BC_ANSWER_CHARS,
+                        bc_welcome_max_characters=MAX_BC_WELCOME_CHARS,
                         historical_neutral_presentation='random-order-generic-chat-v2',
                         operation_metrics_capture_version=METRICS_CAPTURE_VERSION,
                         personality_usage_capture_version=CAPTURE_VERSION,

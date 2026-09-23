@@ -475,8 +475,15 @@ und Sprechzeiten wurden am 09.09.2026 mit dem
 abgeglichen, Institutsname und Adresse mit der
 [IFAI-Team- und Kontaktseite](https://www.th-nuernberg.de/einrichtungen-gesamt/in-institute/institut-fuer-angewandte-informatik-ifai/team-und-kontakt/).
 
-Neue GPT-Chatantworten sind auf **900 Zeichen** begrenzt und zielen auf etwa
-40–80 Wörter. Alle bis zu 20 Jobbewertungen behalten ihre eigenen Begründungs-Stichpunkte.
+Neue B/C-Chatantworten sind auf **380 Zeichen** begrenzt; die vollständige
+Begrüßung bleibt unter **420 Zeichen**. Die Suchansprache zeigt zwei kurze
+Stellenpunkte und bei Bedarf eine konkrete Rückfrage in einem eigenen Absatz.
+Stellen erscheinen mit ihrem Titel, ohne sichtbare Job-IDs oder Linksyntax.
+Die Formatregeln werden auch vor Streaming-Vorschauen angewendet. A bleibt
+unverändert. Neue B/C-Basisprompts werden einmalig migriert; bestehende
+Teilnehmer-Snapshots bleiben erhalten und bekommen die versionierte
+Darstellungsvorgabe ausschließlich für die Textausgabe ergänzt.
+Alle 20 Stellen behalten ihren Score; nur die Top 5 erhalten Begründungs-Stichpunkte.
 Unter **„Warum das passen könnte“** ist zunächst nur der erste Stichpunkt sichtbar.
 **„Mehr anzeigen“** öffnet die weiteren Gründe und passenden Fähigkeiten;
 **„Weniger anzeigen“** steht ganz unten in der Begründungsbox, nach allen Gründen
@@ -860,7 +867,7 @@ ist ein sinnvoller nächster Ausbauschritt.
 OpenAI wird serverseitig über die Responses API mit Pydantic Structured Outputs,
 `store=False`, 90 Sekunden Timeout, einem Retry und begrenzter Ausgabelänge
 aufgerufen. Das Ausgabelimit beträgt 10.000 Tokens für bis zu 20 vollständige
-Bewertungen, sonst 6.000; der Chattext bleibt auf 900 Zeichen begrenzt.
+Bewertungen, sonst 6.000; B/C-Chattexte sind auf 380 Zeichen begrenzt.
 Alle aktuellen OpenAI-Aufrufe verwenden seit dem 22.09.2026 den festen Snapshot
 **`gpt-5.4-nano-2026-03-17`** (GPT-5.4 nano), einheitlich in A, B und C
 sowie auf den Testseiten. Historische Messungen mit GPT-5.4 bleiben als solche erhalten.
