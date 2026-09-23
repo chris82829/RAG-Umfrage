@@ -26,13 +26,11 @@
 .message-text--rich > .chat-follow-up:first-child { margin-top: 0; }
 .chat-job-reference {
   display: inline; text-align: left; font: inherit; font-weight: 650;
-  color: #2048b7; background: #e5ecff; border: 1px solid #b9cbf5;
-  border-radius: 6px; padding: 2px 5px; cursor: pointer; line-height: 1.9;
-  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  color: #2048b7; background: transparent; border: 0;
+  border-radius: 0; padding: 0; cursor: pointer; line-height: inherit;
   overflow-wrap: anywhere;
 }
-.chat-job-reference svg { vertical-align: -2px; margin-right: 4px; }
-.chat-job-reference:hover:not(:disabled) { background: #d7e3ff; text-decoration: underline; }
+.chat-job-reference:hover:not(:disabled) { background: transparent; text-decoration: underline; }
 .chat-job-reference:focus-visible { outline: 2px solid #244ddb; outline-offset: 3px; }
 .chat-job-reference:disabled { cursor: wait; }
 .job-card.job-card--referenced { border-color: #5f7fd4; box-shadow: 0 0 0 3px #244ddb18; animation: none; scroll-margin-top: 14px; }

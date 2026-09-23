@@ -16,7 +16,7 @@ export function jobReferenceParts(text, jobs = []) {
   const references = [...text.matchAll(reference)];
   const explicitReferences = references.length > 0;
   const names = new Map();
-  for (const job of jobs) for (const name of explicitReferences ? [] : [removeChatGenderSuffixes(job.title || ''), job.company]) {
+  for (const job of jobs) for (const name of explicitReferences ? [] : [removeChatGenderSuffixes(job.title || '')]) {
     if (!name || name.length < 5) continue;
     const key = name.toLocaleLowerCase('de');
     const existing = names.get(key);
@@ -25,7 +25,7 @@ export function jobReferenceParts(text, jobs = []) {
   const unique = [...names].filter(([, job]) => !job.ambiguous).sort((a, b) => b[0].length - a[0].length);
   const parts = [];
   function plain(value) {
-    // Also recognize unambiguous names in earlier messages without link markup.
+    // Also recognize unambiguous titles in earlier messages without link markup.
     let rest = value.replace(/\*\*([^*]+)\*\*/g, '$1')
       // Suppress an unfinished internal target while its tokens are streaming.
       .replace(/\\*\[([^\]\n]+?)\\*\][ \t]*\\*\((?:j(?:o(?:b(?::[^\n)]*)?)?)?)?\\*$/gi, '$1')

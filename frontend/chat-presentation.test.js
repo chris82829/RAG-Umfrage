@@ -123,3 +123,13 @@ test('baseline references become plain labels without IDs or interactive metadat
     'Hier: Python Developer. Andere');
   assert.equal(typeof plainJobReferences('Python Developer', jobs), 'string');
 });
+
+
+test('only job titles become links; even unique company names and locations stay plain', () => {
+  const job={id:'813447',title:'Werkstudent/Praktikant Data Engineering mit Python (m/w/d)',company:'Wieland-Werke AG',location:'Ulm'};
+  const text='Empfehlung: Werkstudent/Praktikant Data Engineering mit Python bei Wieland-Werke AG, Ulm.';
+  const parts=jobReferenceParts(text,[job]);
+  assert.deepEqual(parts.filter(part=>part.job).map(part=>part.text),['Werkstudent/Praktikant Data Engineering mit Python']);
+  assert.equal(parts.map(part=>part.text).join(''),text);
+  assert.equal(jobReferenceParts('Wieland-Werke AG, Ulm.',[job]).some(part=>part.job),false);
+});

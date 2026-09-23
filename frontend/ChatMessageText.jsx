@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {BriefcaseBusiness} from 'lucide-react';
 import {jobReferenceParts, plainJobReferences, separateFollowUp, removeChatGenderSuffixes, chatContentBlocks} from './chat-presentation.js';
 
 function ChatBody({blocks, render}) {
@@ -15,7 +14,7 @@ function renderReferences(value, jobs, onOpenJob, busy) {
     ? <button key={index} type="button" className="chat-job-reference" disabled={busy}
         title={`Stellendetails öffnen · ${part.job.company}`}
         aria-label={`Stelle öffnen: ${removeChatGenderSuffixes(part.job.title)} bei ${part.job.company}`}
-        onClick={() => onOpenJob(part.job.id)}><BriefcaseBusiness size={14} aria-hidden="true"/>{part.text}</button>
+        onClick={() => onOpenJob(part.job.id)}>{part.text}</button>
     : <React.Fragment key={index}>{part.text}</React.Fragment>);
 }
 
