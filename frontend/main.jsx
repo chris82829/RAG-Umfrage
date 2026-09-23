@@ -95,6 +95,9 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const detailsId = useId();
   const match = showInsights ? job.match : null;
+  const reasons = (match?.reasons?.length ? match.reasons : [match?.reason]).filter(reason => typeof reason === 'string' && reason.trim());
+  const matchedSkills = match?.matched_skills || [];
+  const hasJustification = reasons.length > 0 || matchedSkills.length > 0;
   const justification = useRef(null);
   const card = useRef(null);
   const referenced = openRequest?.jobId === String(job.id);
@@ -108,15 +111,13 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
     return () => cancelAnimationFrame(frame);
   }, [openRequest, referenced]);
   useEffect(()=> {
-    if(!match || !onTelemetry)return;
+    if(!hasJustification || !onTelemetry)return;
     return observeJustification(justification.current, {
       isActive:()=>!busy,
       onDuration:duration_ms=>onTelemetry('dwell_justification',{job_id:job.id,rank:index+1,duration_ms}),
     });
-  },[job.id,index,busy,Boolean(match),onTelemetry]);
+  },[job.id,index,busy,hasJustification,onTelemetry]);
 
-  const reasons = (match?.reasons?.length ? match.reasons : [match?.reason]).filter(reason => typeof reason === 'string' && reason.trim());
-  const matchedSkills = match?.matched_skills || [];
   const demo = demoIds.has(job.id);
   const initials = (job.company || 'Stelle').split(/\s+/).slice(0, 2).map(x => x[0]).join('');
   const hours = job.hours_min != null ? `${job.hours_min}${job.hours_max != null && job.hours_max !== job.hours_min ? `–${job.hours_max}` : ''} h / Woche` : 'Stunden nach Absprache';
@@ -127,7 +128,7 @@ export function JobCard({ job, index, ranked, showInsights = true, scoreLabel, a
     <h3 tabIndex={-1}>{job.title}</h3>
     <div className="job-meta"><span><MapPin size={15} />{job.location || 'Ort offen'}</span><span><Clock3 size={15} />{hours}</span></div>
     <div className="tags"><span className="tag">{remoteLabels[job.remote]}</span>{job.professional_fields.slice(0, 2).map(x => <span className="tag neutral" key={x}>{x}</span>)}</div>
-    {match ? <div className="match-reason" ref={justification}>
+    {hasJustification ? <div className="match-reason" ref={justification}>
       <span className="reason-title"><CompassAvatar className="inline-compass" />Warum das passen könnte</span>
       {reasons.length > 0 && <ul className="reason-bullets"><li>{reasons[0]}</li></ul>}
       {(reasons.length > 1 || matchedSkills.length > 0) && <MoreMatchReasons key={JSON.stringify([match.score, reasons, matchedSkills])} reasons={reasons} matchedSkills={matchedSkills} onExpand={()=>onTelemetry?.('job_expand',{job_id:job.id,rank:index+1})} />}

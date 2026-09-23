@@ -7,7 +7,7 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPUT_TOKENS, ChatDecision, MAX_ASSISTANT_MESSAGE_CHARS, ADVISORY_VERSION
+from llm_service import MODEL, REASONING_EFFORT, MAX_OUTPUT_TOKENS, RERANK_OUTPUT_TOKENS, ChatDecision, MAX_ASSISTANT_MESSAGE_CHARS, ADVISORY_VERSION, INITIAL_EXPLANATION_LIMIT, EXPLANATION_POLICY_VERSION
 from retrieval import MODEL_ID, MODEL_REVISION, CACHE_VERSION, RRF_K, LEG_LIMIT
 from study_usage import CAPTURE_VERSION, usage_snapshot
 from study_metrics import METRICS_CAPTURE_VERSION, metrics_snapshot
@@ -54,6 +54,8 @@ class StudyReleases:
                         a_empty_prompt_means_no_system_message=True,
                         system_prompt_snapshot_scope='base prompt frozen per participant for diana-abc-v4/v5/v6/v7; policy, revision and base sha256 are exported without prompt text; C appends the participant-controlled personality at runtime',
                         presentation_policy='ranked_insights',
+                        initial_explanation_limit=INITIAL_EXPLANATION_LIMIT,
+                        explanation_policy_version=EXPLANATION_POLICY_VERSION,
                         historical_neutral_presentation='random-order-generic-chat-v2',
                         operation_metrics_capture_version=METRICS_CAPTURE_VERSION,
                         personality_usage_capture_version=CAPTURE_VERSION,

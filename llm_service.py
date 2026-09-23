@@ -24,6 +24,8 @@ REASONING_EFFORT = "none"
 REQUEST_TIMEOUT_SECONDS = 90.0
 MAX_OUTPUT_TOKENS = 6000
 RERANK_OUTPUT_TOKENS = 10000
+INITIAL_EXPLANATION_LIMIT = 5
+EXPLANATION_POLICY_VERSION = "score-all-explain-top-five-v1"
 ADVISORY_VERSION = 'separate-system-prompts-v4'
 MAX_ASSISTANT_MESSAGE_CHARS = 6000
 logger = logging.getLogger(__name__)
@@ -188,6 +190,19 @@ def _candidate_reranking_result(result, *, cached: bool = False):
         ],
         "assistant_message": result.assistant_message,
     })
+
+
+def _candidate_scoring_schema(job_ids: list[str]):
+    """Score the entire pool without generating per-job prose."""
+    assessments = create_model(
+        "CandidateScores", __base__=_StrictModel,
+        **{f"candidate_{index}": (ScoreComponents, Field(alias=job_id))
+           for index, job_id in enumerate(job_ids)},
+    )
+    return create_model(
+        "CandidateScoringResult", __base__=_StrictModel,
+        rankings=(assessments, ...),
+    )
 
 
 _SAFETY_INSTRUCTIONS = """
@@ -1221,12 +1236,6 @@ class OpenAIService:
             assessment_cache, fingerprint, resolved["scoring_version"], valid_ids
         )
         selected_ids = None
-        if fixed is not None:
-            selected_ids = sorted(
-                [job["id"] for job in jobs],
-                key=lambda job_id: score_from_components(fixed[job_id], advisor),
-                reverse=True,
-            )[:5]
         if prompt_policy == "unprompted":
             instructions = effective_prompt
             request_data = {
@@ -1285,42 +1294,73 @@ class OpenAIService:
                 "selected_job_ids": selected_ids,
             }
             domain_rules = True
-        response_schema = _candidate_reranking_schema(
-            [job["id"] for job in jobs], cached=fixed is not None,
-        )
-        result = yield from self._parse_steps(
-            instructions,
-            request_data,
-            response_schema,
-            max_output_tokens=RERANK_OUTPUT_TOKENS,
-            stream=stream,
-            domain_rules=domain_rules,
-        )
-        result = _candidate_reranking_result(result, cached=fixed is not None)
-        returned_ids = [ranking.job_id for ranking in result.rankings]
-        if (
-            len(returned_ids) != count
-            or len(set(returned_ids)) != count
-            or not set(returned_ids).issubset(valid_ids)
-        ):
+        # The six component ratings and the weighted formula remain unchanged.
+        # Choose the explanation IDs only after the server knows every score.
+        if fixed is None:
+            component_result = yield from self._parse_steps(
+                instructions, request_data,
+                _candidate_scoring_schema([job["id"] for job in jobs]),
+                max_output_tokens=RERANK_OUTPUT_TOKENS,
+                stream=stream, domain_rules=domain_rules,
+            )
+            assessments = component_result.rankings.model_dump(by_alias=True)
+        else:
+            assessments = {job_id: dict(values) for job_id, values in fixed.items()}
+        if set(assessments) != valid_ids:
             raise LLMUnavailable("Die KI hat keine gültige Auswahl der Suchkandidaten geliefert.")
-        by_id = {ranking.job_id: ranking for ranking in result.rankings}
+
+        # Stable sorting retains retrieval order for tied scores. These numbers
+        # are never taken from, or overwritten by, the explanation response.
         scored = []
-        assessments = {}
-        # Build in retrieval order first. Stable sorting then preserves that order
-        # for equal totals, regardless of how the model ordered its JSON output.
         for job in jobs:
-            ranking = by_id[job["id"]].model_dump()
-            if fixed is not None:
-                ranking["components"] = dict(fixed[job["id"]])
-            assessments[job["id"]] = dict(ranking["components"])
-            ranking["score"] = score_from_components(ranking["components"], advisor)
-            ranking["scoring_weights"] = dict(resolved["scoring_weights"])
-            ranking["scoring_version"] = resolved["scoring_version"]
-            ranking["reason"] = " ".join(ranking["reasons"])
-            scored.append(ranking)
-        from advisor import SCORING_WEIGHTS, SCORING_VERSION
+            components = assessments[job["id"]]
+            scored.append({
+                "job_id": job["id"], "components": dict(components),
+                "score": score_from_components(components, advisor),
+                "scoring_weights": dict(resolved["scoring_weights"]),
+                "scoring_version": resolved["scoring_version"],
+                "reasons": [], "reason": "", "matched_skills": [], "missing_skills": [],
+            })
         scored.sort(key=lambda ranking: ranking["score"], reverse=True)
+        selected_ids = [item["job_id"] for item in scored[:INITIAL_EXPLANATION_LIMIT]]
+        jobs_by_id = {job["id"]: job for job in jobs}
+        selected_jobs = [jobs_by_id[job_id] for job_id in selected_ids]
+        explanation_data = dict(request_data)
+        explanation_data["jobs" if prompt_policy == "unprompted" else "candidates"] = [
+            _transport_job(job) for job in selected_jobs
+        ]
+        if "conversation_context" in explanation_data:
+            explanation_data["conversation_context"] = {
+                **request_data["conversation_context"],
+                "previous_jobs": _visible_jobs(
+                    context.get("jobs") or [], candidates=selected_jobs,
+                    include_assessments=not resolved["neutral"],
+                ),
+            }
+        explanation_data.update(
+            requested_count=len(selected_ids),
+            evaluated_candidate_count=count,
+            fixed_components={job_id: assessments[job_id] for job_id in selected_ids},
+            selected_job_ids=selected_ids,
+        )
+        explanation_result = yield from self._parse_steps(
+            instructions, explanation_data,
+            _candidate_reranking_schema(selected_ids, cached=True),
+            max_output_tokens=RERANK_OUTPUT_TOKENS,
+            stream=stream, domain_rules=domain_rules,
+        )
+        result = _candidate_reranking_result(explanation_result, cached=True)
+        by_id = {ranking.job_id: ranking for ranking in result.rankings}
+        if set(by_id) != set(selected_ids):
+            raise LLMUnavailable("Die KI hat keine gültigen Begründungen für die ausgewählten Stellen geliefert.")
+        for ranking in scored[:INITIAL_EXPLANATION_LIMIT]:
+            explanation = by_id[ranking["job_id"]]
+            ranking.update(
+                reasons=list(explanation.reasons), reason=" ".join(explanation.reasons),
+                matched_skills=list(explanation.matched_skills),
+                missing_skills=list(explanation.missing_skills),
+            )
+        from advisor import SCORING_WEIGHTS, SCORING_VERSION
         return {
             "rankings": scored,
             "_scoring_metadata": {"applied_weights": list(SCORING_WEIGHTS.values()),

@@ -41,7 +41,7 @@ class CapturingResponses:
     def parse(self, **options):
         self.calls.append(options)
         schema = options["text_format"]
-        if schema.__name__.endswith("RerankingResult"):
+        if schema.__name__.endswith(("RerankingResult", "ScoringResult")):
             data = json.loads(options["input"][-1]["content"])
             jobs = data.get("jobs") or data.get("candidates") or []
             rankings = {}
@@ -55,7 +55,11 @@ class CapturingResponses:
                 }
                 if "Cached" in schema.__name__:
                     rankings[job["id"]].pop("components")
+                elif "Scoring" in schema.__name__:
+                    rankings[job["id"]] = rankings[job["id"]]["components"]
             payload = {"rankings": rankings, "assistant_message": "Python passt. Was ist dir wichtiger: Datenpipelines oder Analysen?"}
+            if "Scoring" in schema.__name__:
+                payload.pop("assistant_message")
         else:
             payload = {"action": "answer", "profile_patch": neutral_patch(),
                        "assistant_message": "Python passt. Möchtest du nach Datenpipelines oder Analysen gruppieren?"}
@@ -89,10 +93,14 @@ class PromptPolicyTests(unittest.TestCase):
 
         self.model.rerank({}, PROFILE, CANDIDATES, prompt_policy="unprompted",
                           system_prompt=self.store.snapshot("unprompted"))
-        call = self.responses.calls[-1]
-        self.assertEqual([item["role"] for item in call["input"]], ["user"])
-        self.assertEqual(set(json.loads(call["input"][0]["content"])),
+        scoring_call, explanation_call = self.responses.calls[-2:]
+        self.assertEqual([item["role"] for item in scoring_call["input"]], ["user"])
+        self.assertEqual([item["role"] for item in explanation_call["input"]], ["user"])
+        self.assertEqual(set(json.loads(scoring_call["input"][0]["content"])),
                          {"profile", "jobs", "history", "message", "requested_count"})
+        self.assertEqual(set(json.loads(explanation_call["input"][0]["content"])),
+                         {"profile", "jobs", "history", "message", "requested_count",
+                          "evaluated_candidate_count", "fixed_components", "selected_job_ids"})
 
     def test_b_and_c_use_distinct_complete_system_prompts(self):
         career = self.store.snapshot("career_fixed")

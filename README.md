@@ -871,6 +871,14 @@ nicht durch ausgelassene, doppelte oder erfundene IDs verkürzen. Die Anwendung
 wandelt diese Zuordnung anschließend in die bisherige Ergebnisliste um; Scores,
 Gewichte und Prompttexte bleiben unverändert. Dies gilt auch für Neubewertungen
 mit gespeicherten Teilbewertungen und für Streaming.
+Seit dem 23.09.2026 werden zunächst alle 20 Kandidaten mit den bisherigen sechs
+Kriterien bewertet. Der Server berechnet daraus mit den unveränderten Gewichten
+die Scores und die Rangfolge. Ein anschließender Aufruf erzeugt Begründungen und
+Kompetenzhinweise nur für die fünf bestplatzierten Stellen; er kann keine Scores
+ändern. Die übrigen Stellen behalten ihren Score, ihre Anzeige und die
+Besprechen-Funktion. Gespeicherte gültige Teilbewertungen werden weiterhin
+wiederverwendet. Die Begrenzung wird im Studienstand als
+`initial_explanation_limit=5` dokumentiert.
 Neue Teilnahmen werden dem verwendeten Systemstand zugeordnet; alte Antworten
 ohne Nachweis bleiben als unbekannt gekennzeichnet. Details: [ADMIN.md](ADMIN.md).
 [GPT-5.4 nano](https://developers.openai.com/api/docs/models/gpt-5.4-nano),
@@ -882,8 +890,8 @@ aus bereits gespeicherten Teilbewertungen. Diese Einstellung wird von
 [GPT-5.4 nano offiziell unterstützt](https://developers.openai.com/api/docs/models/gpt-5.4-nano).
 Die bisherigen Werte `medium` und `low` werden nicht mehr gesetzt. Die Scores
 werden bei gültigen gespeicherten Teilbewertungen weiterhin aus dem Cache berechnet.
-Structured Outputs, Streaming, alle 20 Bewertungen, die Begründungen und die
-Persönlichkeitsgewichtung bleiben erhalten. `/api/health` meldet den aktiven
+Structured Outputs, Streaming und alle 20 Bewertungen bleiben erhalten;
+Begründungen werden für die Top 5 erzeugt. `/api/health` meldet den aktiven
 Denkaufwand als `openai_reasoning_effort`; die Performance-Logs enthalten ihn ebenfalls.
 Die Suchpersona hat kompaktere Textziele;
 Grenzen für Fachpassung, Scores und Begründungen bleiben erhalten. Die Optimierung

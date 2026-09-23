@@ -200,7 +200,7 @@ class V14PromptIntegrationTests(unittest.TestCase):
             self.assertEqual(result['_scoring_metadata'],dict(applied_weights=list(SCORING_WEIGHTS.values()),scoring_version=SCORING_VERSION,assessment_reused=False))
             scores.append(result['rankings'][0]['score'])
         self.assertEqual(len(set(scores)),1)
-        self.assertEqual(len(responses.calls),3)
+        self.assertEqual(len(responses.calls),6)
 
 
 if __name__=='__main__':unittest.main()
