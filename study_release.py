@@ -49,6 +49,7 @@ class StudyReleases:
                         personality_focus_policy={'A':'ausgewogen','B':'lernpotenzial','C':'ausgewogen'},
                         scoring_focus_policy='fixed balanced weights, regardless of stored personality focus',
                         questionnaire_version=SURVEY_VERSION,
+                        questionnaire_wording_revision=SURVEY_DEFINITION.get('wording_revision'),
                         questionnaire_frameworks=SURVEY_DEFINITION.get('frameworks', []),
                         default_system_prompt_base_sha256={policy:hashlib.sha256(text.encode('utf-8')).hexdigest()
                                                            for policy,text in DEFAULT_SYSTEM_PROMPTS.items()},

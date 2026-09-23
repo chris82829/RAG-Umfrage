@@ -282,13 +282,54 @@
       ]
     },
     {
+      "id": "catalog_availability",
+      "title": "Verfügbare Stellenangebote",
+      "description": "Denke an die verfügbaren Angebote für dein Suchvorhaben.",
+      "fields": [
+        {
+          "name": "catalog_availability",
+          "title": "Für mein Anliegen gab es im System grundsätzlich passende Stellenangebote.",
+          "kind": "scale",
+          "level": "ordinal",
+          "presentation": "likert",
+          "scale": {
+            "min": 1,
+            "max": 7,
+            "low": "Stimme überhaupt nicht zu",
+            "high": "Stimme voll und ganz zu",
+            "labels": [
+              "Stimme überhaupt nicht zu",
+              "Stimme nicht zu",
+              "Stimme eher nicht zu",
+              "Weder noch",
+              "Stimme eher zu",
+              "Stimme zu",
+              "Stimme voll und ganz zu"
+            ]
+          },
+          "nonresponse": [
+            [
+              "not_assessable",
+              "Kann ich nicht beurteilen"
+            ]
+          ],
+          "construct": "catalog_availability",
+          "framework": "DIANA",
+          "item_type": "control_variable",
+          "source_item": "Eigene Kontrollvariable: wahrgenommene Verfügbarkeit passender Stellen",
+          "source_url": "",
+          "adaptation": "Einzelne subjektive Kontrollvariable. Nicht Bestandteil von Konstrukt-Mittelwerten oder Reliabilitätsberechnungen; kein objektiver Nachweis der Korpusabdeckung."
+        }
+      ]
+    },
+    {
       "id": "usefulness",
       "title": "Nutzen für deine Suche",
       "description": "Denke an deine gerade abgeschlossene Suche. Bewerte jede Aussage von 1 bis 7. Wenn du sie nicht beurteilen kannst, wähle die entsprechende Antwort.",
       "fields": [
         {
           "name": "usefulness_ideal",
-          "title": "Das System hat mir geholfen, die ideale Stelle für dein Suchvorhaben zu finden.",
+          "title": "Das System hat mir geholfen, unter den verfügbaren Angeboten die für mich relevantesten Stellen zu finden.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -317,12 +358,12 @@
           "framework": "ResQue",
           "source_item": "Tabelle 2, Perceived Usefulness, Item 1",
           "source_url": "https://doi.org/10.1145/2043932.2043962",
-          "adaptation": "Deutsche Übertragung in den DIANA-Jobsuchkontext; gemeinsame siebenstufige Skala.",
+          "adaptation": "Deutsche Übertragung in den DIANA-Jobsuchkontext; gemeinsame siebenstufige Skala. Revision vom 23.09.2026: eigenständige Umformulierung mit Bezug auf verfügbare Angebote bzw. Sucheingrenzung; keine wortgetreue Originalskala, direkte Vergleichbarkeit eingeschränkt.",
           "item_type": "multi_item"
         },
         {
           "name": "usefulness_find_easy",
-          "title": "Mit dem System war es einfach, Stellen zu finden, die mir gefallen.",
+          "title": "Mit dem System war es einfach, meine Suche einzugrenzen und relevante Stellen zu sichten.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -351,12 +392,12 @@
           "framework": "ResQue",
           "source_item": "Tabelle 2, Perceived Usefulness, Item 2",
           "source_url": "https://doi.org/10.1145/2043932.2043962",
-          "adaptation": "Deutsche Übertragung in den DIANA-Jobsuchkontext; gemeinsame siebenstufige Skala.",
+          "adaptation": "Deutsche Übertragung in den DIANA-Jobsuchkontext; gemeinsame siebenstufige Skala. Revision vom 23.09.2026: eigenständige Umformulierung mit Bezug auf verfügbare Angebote bzw. Sucheingrenzung; keine wortgetreue Originalskala, direkte Vergleichbarkeit eingeschränkt.",
           "item_type": "multi_item"
         },
         {
           "name": "usefulness_suggestions",
-          "title": "Das System hat mir gute Vorschläge gemacht.",
+          "title": "Das System hat aus dem verfügbaren Angebot die bestmöglichen Vorschläge gemacht.",
           "kind": "scale",
           "level": "ordinal",
           "presentation": "likert",
@@ -385,7 +426,7 @@
           "framework": "ResQue",
           "source_item": "Tabelle 2, Perceived Usefulness, Item 3",
           "source_url": "https://doi.org/10.1145/2043932.2043962",
-          "adaptation": "Deutsche Übertragung in den DIANA-Jobsuchkontext; gemeinsame siebenstufige Skala.",
+          "adaptation": "Deutsche Übertragung in den DIANA-Jobsuchkontext; gemeinsame siebenstufige Skala. Revision vom 23.09.2026: eigenständige Umformulierung mit Bezug auf verfügbare Angebote bzw. Sucheingrenzung; keine wortgetreue Originalskala, direkte Vergleichbarkeit eingeschränkt.",
           "item_type": "multi_item"
         }
       ]
@@ -397,7 +438,7 @@
       "fields": [
         {
           "name": "trust_fit",
-          "title": "Ich vertraue darauf, dass die vom System vorgeschlagenen Stellen wirklich zu mir passen.",
+          "title": "Ich vertraue der Einschätzung des Systems, welche der verfügbaren Stellen am besten zu mir passen.",
           "kind": "scale",
           "scale": {
             "min": 1,
@@ -429,12 +470,12 @@
             "https://doi.org/10.1145/2043932.2043962",
             "https://doi.org/10.1145/3631534"
           ],
-          "adaptation": "Eigenständig adaptierte Zweiergruppe für Stellenpassung und Glaubwürdigkeit; keine vollständige oder validierte Originalskala.",
+          "adaptation": "Eigenständig adaptierte Zweiergruppe für Stellenpassung und Glaubwürdigkeit; keine vollständige oder validierte Originalskala. Revision vom 23.09.2026: eigenständige Umformulierung mit Bezug auf verfügbare Angebote bzw. Sucheingrenzung; keine wortgetreue Originalskala, direkte Vergleichbarkeit eingeschränkt.",
           "presentation": "likert"
         },
         {
           "name": "trust_credibility",
-          "title": "Die Einschätzungen des Systems zur Passung erschienen mir glaubwürdig.",
+          "title": "Die Einschätzungen des Systems zur Passung der gefundenen Stellen erschienen mir glaubwürdig.",
           "kind": "scale",
           "scale": {
             "min": 1,
@@ -466,7 +507,7 @@
             "https://doi.org/10.1145/2043932.2043962",
             "https://doi.org/10.1145/3631534"
           ],
-          "adaptation": "Eigenständig adaptierte Zweiergruppe für Stellenpassung und Glaubwürdigkeit; keine vollständige oder validierte Originalskala.",
+          "adaptation": "Eigenständig adaptierte Zweiergruppe für Stellenpassung und Glaubwürdigkeit; keine vollständige oder validierte Originalskala. Revision vom 23.09.2026: eigenständige Umformulierung mit Bezug auf verfügbare Angebote bzw. Sucheingrenzung; keine wortgetreue Originalskala, direkte Vergleichbarkeit eingeschränkt.",
           "presentation": "likert"
         }
       ]
@@ -1069,5 +1110,6 @@
       "retired": true,
       "optional": true
     }
-  ]
+  ],
+  "wording_revision": "diana-v14-corpus-aware-2026-09-23"
 }

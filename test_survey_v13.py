@@ -36,17 +36,33 @@ class SurveyV13Tests(unittest.TestCase):
     def test_framework_sources_counts_and_scale_are_consistent_for_all_arms(self):
         self.assertEqual(SURVEY_VERSION,'diana-v14')
         scales=[f for f in SURVEY_FIELDS if f['kind']=='scale']
-        self.assertEqual(len(scales),19)
+        self.assertEqual(len(scales),20)
         self.assertEqual(sum(f['framework'] in ('ResQue','CRS-Que') for f in scales),14)
-        self.assertEqual(sum(f['framework']=='DIANA' for f in scales),3)
+        self.assertEqual(sum(f['framework']=='DIANA' for f in scales),4)
         for f in scales:
             self.assertEqual(f['scale']['max'],7)
             self.assertEqual(len(f['scale']['labels']),7)
             self.assertIn('source_item',f)
             self.assertEqual(f['nonresponse'],[['not_assessable','Kann ich nicht beurteilen']])
-        for arm,count in [('A',25),('B',25),('C',25)]:
+        for arm,count in [('A',26),('B',26),('C',26)]:
             self.assertEqual(sum(not f.get('retired') and not f.get('systemProvided') and field_visible(f,{'study_arm':arm}) for f in SURVEY_FIELDS),count)
             SurveyRequest.model_validate(dict(submission_id='a'*32,**answers(arm)))
+
+    def test_availability_control_has_schema_export_and_no_construct_membership(self):
+        field = next(f for f in SURVEY_FIELDS if f['name']=='catalog_availability')
+        self.assertEqual(field['item_type'], 'control_variable')
+        self.assertTrue(all(field['name'] not in c['items'] for c in SURVEY_DEFINITION['constructs']))
+        book = {r['technical_variable']:r for r in object.__new__(AdminSurveyData).codebook()}
+        self.assertEqual(book['v14_catalog_availability']['item_type'], 'control_variable')
+        with tempfile.TemporaryDirectory() as directory:
+            store = SurveyStore(Path(directory)/'test.db')
+            with store.connect() as db:
+                self.assertIn('v14_catalog_availability', {r[1] for r in db.execute('pragma table_xinfo(survey_responses)')})
+            values=answers('C')
+            values['catalog_availability']=3
+            store.save(SurveyRequest.model_validate(dict(submission_id='c'*32,**values)).root)
+            with store.connect() as db:
+                self.assertEqual(db.execute('select v14_catalog_availability from survey_responses').fetchone()[0],3)
 
     def test_existing_wording_preserved_new_items_order_and_trust_two_items(self):
         old=json.loads(Path(__file__).with_name('survey_definition_v13.json').read_text())

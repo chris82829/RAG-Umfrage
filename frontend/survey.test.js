@@ -26,7 +26,7 @@ const retired = ['age_group','gender','system_usefulness','usefulness_effective'
 
 test('V14 is the only active questionnaire and has the required arm-specific counts', () => {
   assert.equal(SURVEY_VERSION, 'diana-v14');
-  for(const [arm,count] of [['A',25],['B',25],['C',25]]) {
+  for(const [arm,count] of [['A',26],['B',26],['C',26]]) {
     const state=assigned(arm), config=surveyConfiguration(state);
     assert.equal(state.version,SURVEY_VERSION);
     assert.equal(visibleFields(config.surveyFields,state.answers).filter(field=>!field.systemProvided).length,count);
@@ -90,10 +90,10 @@ test('V14 browser and server resume preserve preparation but sanitize unknown/hi
   assert.equal(restoreServerDraft(initial,{version:SURVEY_VERSION,completed:true}).submitted,true);
 });
 
-test('all nineteen rating items have seven full anchors and accept only 1–7 or explicit nonresponse', () => {
+test('all twenty rating items have seven full anchors and accept only 1–7 or explicit nonresponse', () => {
   const fields=surveyConfiguration().surveyFields.filter(field=>field.kind==='scale');
-  assert.equal(fields.length,19);
-  assert.equal(fields.filter(field=>field.framework==='DIANA').length,3);
+  assert.equal(fields.length,20);
+  assert.equal(fields.filter(field=>field.framework==='DIANA').length,4);
   for(const field of fields) {
     assert.equal(field.presentation,'likert');
     assert.equal(field.scale.min,1);
@@ -128,7 +128,7 @@ test('navigation keeps the existing authoritative three-turn gate and skips answ
   assert.equal(hasRequiredStudyChat(ready),true);
   const waitingFields=surveyConfiguration().waitingQuestionFields;
   const answered=markWaitingFields({...ready,answers:{...ready.answers,search_goal:'Softwareentwicklung als Werkstudent'}},waitingFields);
-  assert.equal(nextSurveyState(answered).stage,'usefulness');
+  assert.equal(nextSurveyState(answered).stage,'catalog_availability');
   assert.equal(hasRequiredStudyChat({...ready,chatCompleted:false}),false);
   assert.equal(hasRequiredStudyChat({...ready,chatCount:2}),false);
 });

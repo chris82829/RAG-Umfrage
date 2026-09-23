@@ -30,6 +30,19 @@ def fixture_rows():
 
 
 class AnalysisTests(unittest.TestCase):
+    def test_catalog_availability_is_separate_and_never_changes_constructs(self):
+        rows = fixture_rows()
+        before = analyze_rows(rows, include_inference=False)
+        for row in rows:
+            row['answers']['catalog_availability'] = 7
+        after = analyze_rows(rows, include_inference=False)
+        for name in CONSTRUCTS:
+            self.assertEqual(before['descriptives'][name], after['descriptives'][name])
+            self.assertEqual(before['reliability'][name], after['reliability'][name])
+        self.assertNotIn('catalog_availability', after['reliability'])
+        self.assertEqual(before['descriptives']['catalog_availability']['A']['n'], 0)
+        self.assertEqual(after['descriptives']['catalog_availability']['A']['mean'], 7)
+
     def test_rating_does_not_impute_or_coerce_boolean_fraction_or_nonresponse(self):
         for value in (None, '', 'not_assessable', True, 0, 8, 1.5, 'nan'):
             self.assertIsNone(rating(value))

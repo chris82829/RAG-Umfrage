@@ -13,7 +13,7 @@ Prüfung: 22. September 2026, Originalpublikationen gelesen; Tabellen 2 (ResQue)
 
 `perceived_character` ist ein DIANA-Manipulationscheck. Ein erkennbarer Charakter ist nicht gleich „menschlich wirken“, Sympathie oder wahrgenommene Kontrolle. Das Item deshalb nicht als CRS-Que-Humanness-Item ausgeben. Die inzwischen entfernte Screening-Frage war ebenfalls eine Eigenentwicklung.
 
-Die bisher vorhandenen 14 Framework-Aussagen werden nicht umformuliert. Die zwei bestehenden DIANA-Ratings zu Aufwand und Stilkontrolle sind weiterhin Einzelitems. Die Herkunftstypen müssen im Codebuch sichtbar bleiben; eine gemeinsame 1–7-Skala macht nicht jede Aussage zu einer validierten Framework-Skala. ResQue verwendete fünf Zustimmungskategorien, CRS-Que sieben; die einheitliche Skala sowie Übersetzung und Jobkontext benötigen einen Pretest.
+Die ursprüngliche Revision übernahm die vorhandenen 14 Framework-Aussagen. Für die aktuelle Umformulierung siehe den Revisionsabschnitt unten. Die zwei bestehenden DIANA-Ratings zu Aufwand und Stilkontrolle sind weiterhin Einzelitems. Die Herkunftstypen müssen im Codebuch sichtbar bleiben; eine gemeinsame 1–7-Skala macht nicht jede Aussage zu einer validierten Framework-Skala. ResQue verwendete fünf Zustimmungskategorien, CRS-Que sieben; die einheitliche Skala sowie Übersetzung und Jobkontext benötigen einen Pretest.
 
 ## Festgelegte methodische Auflösungen des Vorschlags
 
@@ -23,7 +23,7 @@ Die bisher vorhandenen 14 Framework-Aussagen werden nicht umformuliert. Die zwei
 - **M1 ist kein Gate für H1.** Fehlende Signifikanz kann mangelnde Power bedeuten. Keine Negativaussage „Personas wirken nicht“ aus dem Manipulationscheck ableiten.
 - **Keine automatische Fehler-Ausschlussregel:** wiederhergestellte Fehler sind kein Grund, gültige Antworten zu entfernen. Dokumentierte terminale Ausschlüsse werden vor Entblindung gesondert begründet.
 - **Fallzahlbeispiel statt fingiertem Freeze:** d = 0,35 und 72 Stunden sind noch nicht bestätigt. Rechner und Entwurfsprotokoll sind vorbereitet; Forschungsentscheidungen werden nicht als erledigt behauptet.
-- **25/26 aktive Fragen (A/B: 25, C: 26)** nach Entfernung der Frage zur früheren Teilnahme. E1 wird nicht ergänzt.
+- **26 aktive Fragen in A/B/C** nach Entfernung der Selbstberichte zur früheren Teilnahme und Einstellungsänderung sowie Ergänzung der Verfügbarkeitskontrolle. E1 wird nicht ergänzt.
 - **Pseudonymisierte Metadaten bleiben verknüpfbar.** Aus technischen Änderungen allein folgt weder Anonymität noch eine abschließende datenschutzrechtliche Bewertung.
 
 ## Statistikimplementierung
@@ -52,3 +52,11 @@ Teilbewertungen aus den A-Stellenkarten; der A-Textgenerator erhält keine
 numerischen Bewertungen. B und C zeigen weiterhin Scores von 1 bis 100. Diese
 Präsentationsänderung ist in der Release-Metadatenvariable `score_visibility_by_arm`
 festgehalten und bei Vergleichen mit früheren Releases zu berücksichtigen.
+
+## Korpusbezogene Fragebogenrevision vom 23. September 2026
+
+Wortlautrevision: `diana-v14-corpus-aware-2026-09-23`. Fünf Aussagen (drei Nutzen, zwei Vertrauen) wurden auf verfügbare Stellen bzw. den Suchprozess bezogen; die technischen Feldnamen bleiben zur Rückverfolgbarkeit erhalten. Der aktuelle Wortlaut steht in `QUESTIONNAIRE.md` und `survey_definition_v14.json`. Diese zusätzliche Adaption schwächt die direkte Vergleichbarkeit mit unveränderten ResQue-/CRS-Que-Items; sie ist nicht eigenständig validiert. Frühere Antworten bleiben historisch erhalten, nicht nachträglich als Antworten auf den neuen Wortlaut behandeln. Wortlautrevision und Definitions-Hash werden im System-Release protokolliert.
+
+Neue Frage 6: „Für mein Anliegen gab es im System grundsätzlich passende Stellenangebote.“ (`catalog_availability`, 1–7 oder „Kann ich nicht beurteilen“). Dies ist eine subjektive Kontrollvariable nach Systemnutzung, kein objektiver Beleg der Korpusabdeckung. Sie wird separat deskriptiv nach A/B/C ausgewiesen, nicht in Konstruktmittelwerte oder Reliabilität eingerechnet. Bestehende Mittelwert- und Cronbach-α-Berechnungen bleiben auf denselben Itemsets. Keine automatische Fallselektion, Schwelle oder Kovariatenkorrektur anhand dieser Antwort. Fehlende historische Antworten bleiben fehlend. Die Umformulierung allein beseitigt keine Korpusabhängigkeit.
+
+Alle Gruppen beantworten nun 26 Fragen einschließlich 20 Ratings. Die übrigen aktuellen Fragen bleiben unverändert; die Fragen nach früherer Teilnahme und selbst geänderten KI-Einstellungen bleiben entfernt. Dieser Entwurf wird durch die technische Aktualisierung nicht zu einer Präregistrierung.

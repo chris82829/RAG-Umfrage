@@ -27,6 +27,7 @@ CONSTRUCTS = {
 SINGLES = ('dialogue_understanding', 'dialogue_response_quality', 'dialogue_attentiveness',
            'overall_satisfaction', 'intention_reuse', 'study_effort', 'study_style_control',
            'perceived_character')
+CONTROLS = ('catalog_availability',)
 ARMS = ('A', 'B', 'C')
 
 
@@ -336,7 +337,7 @@ def analyze_rows(rows, operations=None, *, plan_status=None, include_inference=T
         out['warnings'].append('Some treatment-version metadata are unknown; version homogeneity cannot be verified or retroactively assumed.')
     if plan_status != 'frozen_before_main':
         out['warnings'].insert(0, 'Draft analysis plan: all findings are preliminary/exploratory, not preregistered confirmatory evidence.')
-    for field in (*CONSTRUCTS, *SINGLES):
+    for field in (*CONSTRUCTS, *SINGLES, *CONTROLS):
         out['descriptives'][field] = {arm: describe(values_for([r for r in included if r['study_arm'] == arm], field)) for arm in ARMS}
     for name in CONSTRUCTS:
         out['reliability'][name] = reliability(included, name)
