@@ -345,6 +345,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
     setSearchProgress(null);
     setOpenJobRequest(null);
     sending.current = true; setBusy(true); setError(''); setSearchActive(false); setStreamingText('');
+    if (kind === 'chat' && body.message) setDraft('');
     let operationMode = kind === 'profile' ? profileChangeAction(session?.profile, body.profile) : body.mode || 'auto';
     if (kind === 'profile' && operationMode === 'rerank' && candidatePool(session).refreshRequired) operationMode = 'search';
     setOperation({ kind, mode: operationMode, assistantName: advisorAiLabel(body.advisor || session?.advisor || advisor) });
@@ -363,7 +364,6 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
         if (kind === 'advisor') markSteps(2);
         if (kind === 'chat') markSteps(3, 4);
         if (kind === 'profile' || kind === 'advisor' || kind === 'onboard') setEditor(null);
-        if (kind === 'chat') setDraft('');
         if (['onboard', 'profile', 'advisor', 'rerank', 'refresh'].includes(kind)) {
           setActivity('results'); setMobileView('jobs');
         }
@@ -401,6 +401,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
           }
         } catch (restoreError) { if (restoreError.status === 404) { remember(null); setSession(null); setAdvisor(advisorForPolicy(personalityPolicy,careerBase)); setEditor(null); setOnboardingStep(1); setOnboardingStarted(false); setMobileView('jobs'); editorDrafts.current = { profile: false, advisor: false }; setActivity('results'); setCompletedSteps([]); } }
       }
+      if (kind === 'chat' && body.message) setDraft(current => current || body.message);
       setError(e.code === 'chat_message_limit' && e.chatUsage ? ''
         : e.status === 409 && e.code !== 'chat_reservation_expired' ? 'Dein Chat wurde zwischenzeitlich geändert. Der aktuelle Verlauf ist geladen; deine Eingabe bleibt erhalten.'
         : e instanceof TypeError ? 'Die Verbindung wurde unterbrochen. Deine Eingabe bleibt erhalten.' : e.message);
@@ -437,7 +438,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
   function sendMessage(event) {
     event.preventDefault();
     const message = draft.trim();
-    if (busy || !canSendChat('auto', message, session, chatOptions)) return;
+    if (busy || sending.current || !canSendChat('auto', message, session, chatOptions)) return;
     setActivity('chat'); setPending(message); void run({ session_id: session.session_id, mode: 'auto', message }, '/chat');
   }
   function applyProfile(event) {
