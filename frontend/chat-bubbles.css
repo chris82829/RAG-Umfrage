@@ -21,6 +21,21 @@
 }
 .chat-message.user .message-text { padding: 0; border: 0; background: transparent; }
 .message-bubble .message-expand { min-height: 32px; }
+.message-text--rich > p { margin: 0; white-space: pre-wrap; }
+.message-text--rich > .chat-follow-up { margin-top: 16px; font-weight: 600; }
+.message-text--rich > .chat-follow-up:first-child { margin-top: 0; }
+.chat-job-reference {
+  display: inline; text-align: left; font: inherit; font-weight: 650;
+  color: #2048b7; background: #e5ecff; border: 1px solid #b9cbf5;
+  border-radius: 6px; padding: 2px 5px; cursor: pointer; line-height: 1.9;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  overflow-wrap: anywhere;
+}
+.chat-job-reference svg { vertical-align: -2px; margin-right: 4px; }
+.chat-job-reference:hover:not(:disabled) { background: #d7e3ff; text-decoration: underline; }
+.chat-job-reference:focus-visible { outline: 2px solid #244ddb; outline-offset: 3px; }
+.chat-job-reference:disabled { cursor: wait; }
+.job-card.job-card--referenced { border-color: #5f7fd4; box-shadow: 0 0 0 3px #244ddb18; animation: none; scroll-margin-top: 14px; }
 .chat-typing { padding: 5px 2px; }
 .chat-typing > span[aria-hidden] { display: flex; align-items: center; gap: 5px; min-height: 15px; }
 .chat-typing i { width: 6px; height: 6px; border-radius: 50%; background: #8190a9; animation: chat-typing-pulse 1.3s ease-in-out infinite; }

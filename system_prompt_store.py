@@ -121,6 +121,38 @@ angegebene Gewichtung der aktuellen selbst gestalteten Persönlichkeit.
 }
 
 
+CHAT_GUIDANCE_VERSION = 'linked-proactive-chat-v1'
+CHAT_GUIDANCE = """
+STELLENBEZÜGE UND PROAKTIVE RÜCKFRAGEN (v1):
+Wenn du eine konkrete Stelle erwähnst, kennzeichne sie in assistant_message als
+[Stellentitel](job:ID). Nutze ausschließlich die exakte ID und den Titel einer
+tatsächlich im aktuellen Eingabe-JSON übergebenen Stelle. Der Verweis öffnet ihre
+Karte in der Ergebnisliste. Erfinde keine IDs und verwende keine externen Links.
+Nenne das Unternehmen bei Bedarf zusätzlich. In Kartenbegründungen sind keine
+solchen Verweise erforderlich.
+
+Berate proaktiv: Prüfe die vorliegenden Stellen auf konkrete Übereinstimmungen,
+Zielkonflikte und Abweichungen von ausdrücklich genannten Nutzerwünschen, etwa
+Ort, Technologie oder Tätigkeit. Benenne die wichtigste belegte Abweichung kurz
+und biete einen passenden nächsten Schritt im Gespräch an. Beispiel nur bei
+entsprechenden Ortsangaben: Einige Stellen liegen in Nürnberg oder Erlangen statt
+am gewünschten Ort München. Eine sinnvolle Rückfrage wäre dann, ob Münchner
+Stellen bei der nächsten Sortierung Vorrang haben sollen. Ohne belegte Abweichung
+erfindest du keine. Ändere Suche oder Prioritäten erst nach der Nutzerantwort;
+führe keine zusätzliche Suche allein aufgrund deiner Vermutung aus.
+
+Die eine konkrete abschließende Rückfrage steht IMMER in einem eigenen Absatz,
+getrennt durch zwei Zeilenumbrüche. Sie greift den wichtigsten offenen Punkt auf
+und bietet eine leicht beantwortbare Entscheidung statt einer allgemeinen
+Hilfsfloskel. Bestehende Regeln zu follow_up_allowed, bereits geklärten Wünschen
+und abgelehnten Rückfragen gelten weiterhin. Antworte weiterhin auf Deutsch,
+kurz und präzise, soweit die selbst gewählte Ausdrucksweise nichts anderes verlangt.
+""".strip()
+
+for _policy in ('career_fixed', 'custom_career'):
+    DEFAULT_SYSTEM_PROMPTS[_policy] += '\n\n' + CHAT_GUIDANCE
+
+
 class PromptConflict(ValueError):
     """The administrator edited an outdated prompt revision."""
 
@@ -211,6 +243,23 @@ class SystemPromptStore:
                 db.execute("UPDATE system_prompts SET text=?, revision=revision+1, sha256=?, updated_at=? WHERE policy='career_fixed'",
                            (corrected, _sha256(corrected), now))
                 db.execute("UPDATE system_prompt_state SET revision=revision+1 WHERE singleton=1")
+            # Apply this requested behaviour once to the editable B/C bases.
+            # Existing participant snapshots stay immutable; later admin edits
+            # may freely change/remove the guidance without it being reinserted.
+            db.execute("CREATE TABLE IF NOT EXISTS system_prompt_migrations (name TEXT PRIMARY KEY, applied_at TEXT NOT NULL)")
+            if not db.execute("SELECT 1 FROM system_prompt_migrations WHERE name=?", (CHAT_GUIDANCE_VERSION,)).fetchone():
+                changed = False
+                for policy in ('career_fixed', 'custom_career'):
+                    saved = db.execute("SELECT text FROM system_prompts WHERE policy=?", (policy,)).fetchone()[0]
+                    if CHAT_GUIDANCE in saved:
+                        continue
+                    updated = _validated_text(policy, saved + '\n\n' + CHAT_GUIDANCE)
+                    db.execute("UPDATE system_prompts SET text=?, revision=revision+1, sha256=?, updated_at=? WHERE policy=?",
+                               (updated, _sha256(updated), now, policy))
+                    changed = True
+                if changed:
+                    db.execute("UPDATE system_prompt_state SET revision=revision+1 WHERE singleton=1")
+                db.execute("INSERT INTO system_prompt_migrations VALUES (?, ?)", (CHAT_GUIDANCE_VERSION, now))
 
 
     def _read(self, db) -> dict:

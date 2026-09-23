@@ -156,8 +156,10 @@ def public_state(state):
     return public
 
 
-def welcome_message(result):
+def welcome_message(result, *, prompt_policy=None):
     """Use final card counts, not model guesses or the whole prefiltered corpus."""
+    if prompt_policy == 'unprompted':
+        return result['assistant_message']
     jobs = result['jobs']
     total = len(jobs)
     if resolve_advisor(result.get('advisor'))['neutral']:
@@ -903,7 +905,7 @@ def create_app(config=None, *, retriever=None, llm=None):
             result = yield from match_steps(body.profile.model_dump(), advisor=search_advisor,
                 chat_context={'follow_up_allowed': follow_up_allowed({'messages': []})},
                 prompt_policy=policy, system_prompt=frozen_prompt)
-            result['assistant_message'] = welcome_message(result)
+            result['assistant_message'] = welcome_message(result, prompt_policy=policy)
             state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None, '_system_prompt_snapshot': frozen_prompt,
                      '_experiment_id': assigned.get('experiment_id') if assigned else None, '_user_chat_count': 0, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
                                             'advisor_name': resolve_advisor(result['advisor'])['name']}]}

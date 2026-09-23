@@ -49,3 +49,5 @@
 .admin-study-metadata > h2 { margin:0 0 10px; }
 .study-metadata-search { display:grid; gap:6px; max-width:360px; margin:18px 0; }
 .study-metadata-search input { min-height:44px; border:1px solid #cbd7e8; border-radius:8px; padding:10px; font:inherit; }
+.admin-export-help { margin-top: 10px; font-size: 13px; color: #64738a; }
+.admin-export-help summary { cursor: pointer; color: #3557b4; }
