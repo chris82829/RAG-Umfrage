@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import hashlib
 import re
 import sqlite3
-from chat_text import COMPACT_CHAT_INSTRUCTIONS, LEGACY_COMPACT_CHAT_INSTRUCTIONS, COMPACT_CHAT_VERSION, update_dialogue_rules
+from chat_text import COMPACT_CHAT_INSTRUCTIONS, LEGACY_COMPACT_CHAT_INSTRUCTIONS, COMPACT_CHAT_VERSION, update_dialogue_rules, remove_retired_chat_guidance
 
 
 PROMPT_POLICIES = ("unprompted", "career_fixed", "custom_career")
@@ -122,7 +122,7 @@ angegebene Gewichtung der aktuellen selbst gestalteten Persönlichkeit.
 }
 
 
-CHAT_GUIDANCE_VERSION = COMPACT_CHAT_VERSION
+CHAT_GUIDANCE_VERSION = COMPACT_CHAT_VERSION + ":retired-v2-variants"
 LEGACY_CHAT_GUIDANCE = """
 STELLENBEZÜGE UND PROAKTIVE RÜCKFRAGEN (v1):
 Wenn du eine konkrete Stelle erwähnst, kennzeichne sie in assistant_message als
@@ -263,12 +263,12 @@ class SystemPromptStore:
                 changed = False
                 for policy in ('career_fixed', 'custom_career'):
                     saved = db.execute("SELECT text FROM system_prompts WHERE policy=?", (policy,)).fetchone()[0]
-                    if CHAT_GUIDANCE in saved:
-                        continue
                     # Remove only our exact previous link-format block, never
                     # administrator text or immutable participant snapshots.
-                    base = update_dialogue_rules(saved.replace(LEGACY_CHAT_GUIDANCE, '').replace(LEGACY_COMPACT_CHAT_GUIDANCE, '').strip())
-                    updated = _validated_text(policy, base + '\n\n' + CHAT_GUIDANCE)
+                    base = remove_retired_chat_guidance(update_dialogue_rules(saved.replace(LEGACY_CHAT_GUIDANCE, ''))).strip()
+                    updated = _validated_text(policy, base if CHAT_GUIDANCE in base else base + '\n\n' + CHAT_GUIDANCE)
+                    if updated == saved:
+                        continue
                     db.execute("UPDATE system_prompts SET text=?, revision=revision+1, sha256=?, updated_at=? WHERE policy=?",
                                (updated, _sha256(updated), now, policy))
                     changed = True

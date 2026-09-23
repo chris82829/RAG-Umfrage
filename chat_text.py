@@ -34,6 +34,52 @@ Diese Darstellungsvorgabe verändert keine Fakten, Bewertungen oder Gewichte.
 """.strip()
 
 
+LEGACY_COMPACT_CHAT_VARIANTS = (LEGACY_COMPACT_CHAT_INSTRUCTIONS,
+    """VERBINDLICHES KURZFORMAT FÜR assistant_message (v2):
+Höchstens 45 Wörter und 380 Zeichen insgesamt, einschließlich Rückfrage.
+Bei einer Suchansprache oder einem Stellenvergleich: zwei kurze Aufzählungspunkte,
+jeweils in einer eigenen Zeile mit '- Stellentitel: ein konkreter passender Beleg'.
+Verwende die exakten Stellentitel aus den Daten, damit sie anklickbar bleiben.
+Kürze den Beleg, nicht den Titel. Bei sehr langen Titeln genügt ein Stellenpunkt.
+Bei nur einer passenden Stelle genügt ebenfalls ein Punkt. Keine Zusammenfassung.
+Nenne niemals Job-IDs, job:-Verweise, Markdown-Links oder technische Kennungen.
+Schreibe keine Begrüßung, Trefferzahl, Hinweise zur Ergebnisansicht oder den Satz
+über 'Weitere Stellen anzeigen'; die Oberfläche zeigt die Trefferzahl selbst.
+Wenn eine konkrete Rückfrage sinnvoll und follow_up_allowed wahr ist, stelle
+genau eine kurze Frage in einem eigenen Absatz, möglichst höchstens 80 Zeichen.
+Halte die gewählte Persönlichkeit innerhalb dieses knappen Formats bei.
+Diese Darstellungsvorgabe verändert keine Fakten, Bewertungen oder Gewichte.""",
+    """VERBINDLICHES KURZFORMAT FÜR assistant_message (v2):
+Höchstens 45 Wörter und 380 Zeichen insgesamt, einschließlich Rückfrage.
+Bei einer Suchansprache oder einem Stellenvergleich: zwei kurze Aufzählungspunkte,
+jeweils in einer eigenen Zeile mit '- Stellentitel: ein konkreter passender Beleg'.
+Verwende die exakten Stellentitel aus den Daten, damit sie anklickbar bleiben.
+Kürze den Beleg, nicht den Titel. Bei sehr langen Titeln genügt ein Stellenpunkt.
+Bei nur einer passenden Stelle genügt ebenfalls ein Punkt. Keine Zusammenfassung.
+Nenne niemals Job-IDs, job:-Verweise, Markdown-Links oder technische Kennungen.
+Die Stellen-Scores reichen von 1 bis 100 Punkten, niemals von 1 bis 10.
+Übernimm erwähnte Scores exakt aus den bereitgestellten Daten (z. B. 85/100).
+Erfinde keine Punktzahl, rechne sie nicht auf zehn um und nenne sie nicht Prozent.
+Schreibe keine Begrüßung, Trefferzahl, Hinweise zur Ergebnisansicht oder den Satz
+über 'Weitere Stellen anzeigen'; die Oberfläche zeigt die Trefferzahl selbst.
+Wenn eine konkrete Rückfrage sinnvoll und follow_up_allowed wahr ist, stelle
+genau eine kurze Frage in einem eigenen Absatz, möglichst höchstens 80 Zeichen.
+Halte die gewählte Persönlichkeit innerhalb dieses knappen Formats bei.
+Diese Darstellungsvorgabe verändert keine Fakten, Bewertungen oder Gewichte.""",
+)
+LEGACY_PROACTIVE_GUIDANCE = """Berate proaktiv: Prüfe die Stellen auf belegte Übereinstimmungen und Unterschiede
+zu den ausdrücklich genannten Wünschen, etwa Ort, Technologie oder Tätigkeit.
+Die kurze Rückfrage soll helfen, diese Stellen sinnvoll zu gruppieren oder neu
+zu sortieren. Frage nicht nach bereits geklärten oder abgelehnten Punkten.
+Erfinde keine Abweichung und ändere Prioritäten erst nach der Nutzerantwort."""
+
+
+def remove_retired_chat_guidance(text: str) -> str:
+    for old in LEGACY_COMPACT_CHAT_VARIANTS:
+        text = text.replace(old + '\n\n' + LEGACY_PROACTIVE_GUIDANCE, '').replace(old, '')
+    return text
+
+
 COMPACT_CHAT_INSTRUCTIONS = """
 VERBINDLICHES KURZFORMAT FÜR assistant_message (v3, ersetzt ältere Listenregeln):
 Beantworte ZUERST die konkrete aktuelle Nutzernachricht. Sie bestimmt Inhalt und
@@ -202,7 +248,7 @@ def update_dialogue_rules(text: str) -> str:
 def chat_instructions(base: str) -> str:
     # Old participant snapshots remain immutable. The versioned runtime layer
     # replaces retired presentation rules for text calls only, never scoring.
-    base = update_dialogue_rules(base).replace(LEGACY_COMPACT_CHAT_INSTRUCTIONS, '').replace(COMPACT_CHAT_INSTRUCTIONS, '').strip()
+    base = remove_retired_chat_guidance(update_dialogue_rules(base)).replace(COMPACT_CHAT_INSTRUCTIONS, '').strip()
     return base + '\n\n' + COMPACT_CHAT_INSTRUCTIONS
 
 

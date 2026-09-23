@@ -235,3 +235,20 @@ def test_runtime_replaces_obsolete_limits_and_followup_rules_without_mutating_sn
     assert 'Meine Administratoreinstellung.' in result
     assert result.count('VERBINDLICHES KURZFORMAT') == 1
     assert old in snapshot
+
+
+def test_all_deployed_v2_variants_are_removed_even_when_new_guidance_is_already_present(tmp_path):
+    from chat_text import LEGACY_COMPACT_CHAT_VARIANTS, chat_instructions
+    for index, old in enumerate(LEGACY_COMPACT_CHAT_VARIANTS):
+        store=SystemPromptStore(tmp_path/f'variant-{index}.db')
+        saved=store.get()
+        prompts={p:entry['text'] for p,entry in saved['prompts'].items()}
+        prompts['career_fixed']=old+'\n\n'+prompts['career_fixed']+'\nMeine Regel.'
+        store.update(saved['revision'],prompts)
+        with sqlite3.connect(store.path) as db:
+            db.execute('DELETE FROM system_prompt_migrations WHERE name=?',(CHAT_GUIDANCE_VERSION,))
+        migrated=SystemPromptStore(store.path).snapshot('career_fixed')['text']
+        assert '380 Zeichen' not in migrated
+        assert migrated.count(CHAT_GUIDANCE)==1
+        assert 'Meine Regel.' in migrated
+        assert '380 Zeichen' not in chat_instructions(prompts['career_fixed'])
