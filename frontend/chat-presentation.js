@@ -6,7 +6,7 @@ export function removeChatGenderSuffixes(text, streaming = false) {
   return streaming ? value.replace(/[ \t]*\(\s*[mwfdx](?:\s*[/|]\s*(?:[mwfdx](?:\s*[/|]\s*[mwfdx]?)?)?)?\s*$/i, '') : value;
 }
 
-// Only references to jobs in the current result set become interactive.
+// Only references to supplied, server-grounded job records become interactive.
 export function jobReferenceParts(text, jobs = []) {
   text = removeChatGenderSuffixes(text);
   const byId = new Map(jobs.map(job => [String(job.id), job]));
@@ -77,9 +77,11 @@ export function jobReferenceParts(text, jobs = []) {
 export function separateFollowUp(text) {
   const value = text.replace(/\*\*([^*]+)\*\*/g, '$1').trim();
   if (!value.endsWith('?')) return {body: value, question: ''};
-  const segments = [...new Intl.Segmenter('de', {granularity: 'sentence'}).segment(value)];
+  // Job-title punctuation belongs to a title, not to a sentence boundary.
+  const masked = value.replace(/\[[^\]\n]+\]\(job:[^)]+\)/g, match=>match.replace(/[.!?]/g, '·'));
+  const segments = [...new Intl.Segmenter('de', {granularity: 'sentence'}).segment(masked)];
   const last = segments.at(-1);
-  return {body: value.slice(0, last.index).trimEnd(), question: last.segment.trim()};
+  return {body: value.slice(0, last.index).trimEnd(), question: value.slice(last.index).trim()};
 }
 
 export function previewParts(parts, limit = 620) {
@@ -118,7 +120,8 @@ export function chatContentBlocks(text) {
     if (item) {
       flush();
       if (blocks.at(-1)?.type !== 'jobs') blocks.push({type: 'jobs', items: []});
-      const split = item[1].indexOf(': ');
+      const ranges = [...item[1].matchAll(/\[[^\]\n]+\]\(job:[^)]+\)/g)].map(match=>[match.index,match.index+match[0].length]);
+      const split = [...item[1].matchAll(/: /g)].find(match=>!ranges.some(([start,end])=>match.index>=start&&match.index<end))?.index ?? -1;
       blocks.at(-1).items.push({title: split < 0 ? item[1] : item[1].slice(0, split),
         description: split < 0 ? '' : item[1].slice(split + 2)});
     } else if (!line.trim()) flush();

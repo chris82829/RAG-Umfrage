@@ -1217,3 +1217,25 @@ festgelegt; aktuell gibt es keinen erfundenen Termin und keine automatische Ausl
 Die Trennung schafft keine pauschale Anonymitätsgarantie: Forschungsdaten bleiben
 pseudonymisiert, E-Mail-Adressen sind personenbezogen, und derselbe Server verarbeitet
 beide Anfragen. Es wird jedoch keine direkte Datenbankzuordnung gespeichert.
+
+### Verlässliche Stellenlinks in B und C
+
+Die Darstellungsversion `grounded-job-links-v4` ergänzt die B/C-Textaufrufe um
+verbindliche interne Stellenverweise. `[Stellentitel](job:ID)` wird gegen die
+serverseitig übergebenen Stellen geprüft und mit dem tatsächlichen Titel gerendert.
+Im Chat sieht man nur den anklickbaren Titel; Unternehmen, Ort und Erklärung bleiben
+normaler Text. Eindeutige vollständige Titel und die bekannte Verkürzung ohne
+„im Bereich“ werden zusätzlich deterministisch erkannt. Mehrdeutige Titel und
+unbekannte IDs führen niemals zu einem geratenen Ziel. Allgemeine Berufsrichtungen
+bleiben Text. Das ist keine Garantie für jede beliebige Umschreibung des Modells.
+
+Die Verknüpfung gilt für Einführung, Folgefragen, Alternativen und neue Suchen.
+Nur erwähnte Stellen werden mit ihren Anzeigendaten am jeweiligen Assistant-Turn
+festgehalten; private Retrievalfelder und Scores werden dafür nicht kopiert.
+Bei einer neuen Suche bleiben ältere Links erhalten: aktuelle Treffer öffnen ihre
+Karte (gegebenenfalls auch Platz 11–20), frühere Treffer eine gekennzeichnete
+Detailansicht ohne Änderung der aktuellen Rangfolge. Diese historische Detailansicht
+zählt nicht als Exposition einer aktuellen Rangposition in der Ranking-Telemetrie.
+Die Referenzen haben dieselbe flüchtige Lebensdauer wie die bestehende Chatsitzung.
+A bleibt ohne interaktive Stellenverweise. Scoring, Suchgewichte und LLM-Modell sind
+unverändert; bestehende Prompt-Snapshots werden nicht überschrieben.

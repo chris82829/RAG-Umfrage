@@ -63,7 +63,9 @@ def test_welcome_is_two_bullets_short_question_and_bounded(policy):
     assert message.count("Passende Aufgaben mit Python.") == 15
     assert len([line for line in message.splitlines() if line.startswith('- ')]) == 2
     assert message.endswith('\n\n' + question)
-    assert 'job:' not in message and '123' not in message and '[' not in message
+    assert '[Python-Stelle](job:123)' in message
+    assert '[Datenanalyse](job:456)' in message
+    assert 'job:' not in clean_job_references(message)
     assert 'Weitere Stellen anzeigen' not in message
 
 

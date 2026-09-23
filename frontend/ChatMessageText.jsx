@@ -27,7 +27,7 @@ export function RichChatText({text, jobs, onOpenJob, busy = false, streaming = f
   </div>;
 }
 
-export default function ChatMessageText({text, assistant, enhanced = false, jobs = [], onOpenJob, busy = false}) {
+export default function ChatMessageText({text, assistant, enhanced = false, jobs = [], references = [], onOpenJob, busy = false}) {
   const [expanded, setExpanded] = useState(false);
   if (!assistant) return <div className="message-bubble"><div className="message-text">{text}</div></div>;
   const displayText = removeChatGenderSuffixes(text);
@@ -35,7 +35,8 @@ export default function ChatMessageText({text, assistant, enhanced = false, jobs
   const blocks = chatContentBlocks(body);
   // Collapse only complete blocks. Never replace part of a sentence with dots.
   const collapsible = displayText.length > 700 && blocks.length > 2;
-  const render = value => enhanced ? renderReferences(value, jobs, onOpenJob, busy) : plainJobReferences(value, jobs);
+  const linkedJobs = [...references, ...jobs.filter(job=>!references.some(ref=>String(ref.id)===String(job.id)))];
+  const render = value => enhanced ? renderReferences(value, linkedJobs, onOpenJob, busy) : plainJobReferences(value, jobs);
   return <div className="message-bubble"><div className="message-text message-text--rich">
     <ChatBody blocks={collapsible && !expanded ? blocks.slice(0, 2) : blocks} render={render} />
     {collapsible && <button type="button" className="message-expand" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? 'Weniger anzeigen' : 'Mehr anzeigen'}</button>}

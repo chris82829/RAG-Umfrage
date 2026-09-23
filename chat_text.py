@@ -5,7 +5,7 @@ COMPACT_CHAT_VERSION = 'request-first-dialogue-v3'
 MAX_BC_ANSWER_CHARS = None
 MAX_BC_WELCOME_CHARS = None
 SCORE_SCALE = {'minimum': 1, 'maximum': 100, 'unit': 'Punkte', 'is_probability': False}
-CHAT_PRESENTATION_VERSION = 'request-first-complete-sentences-v3'
+CHAT_PRESENTATION_VERSION = 'grounded-job-links-v4'
 
 INITIAL_CHAT_FORMAT_VERSION = 'initial-job-bullets-proactive-v2'
 INITIAL_CHAT_INSTRUCTIONS = """
@@ -280,7 +280,7 @@ def chat_instructions(base: str) -> str:
     # Old participant snapshots remain immutable. The versioned runtime layer
     # replaces retired presentation rules for text calls only, never scoring.
     base = remove_retired_chat_guidance(update_dialogue_rules(base)).replace(COMPACT_CHAT_INSTRUCTIONS, '').strip()
-    return base + '\n\n' + COMPACT_CHAT_INSTRUCTIONS
+    return base + '\n\n' + COMPACT_CHAT_INSTRUCTIONS + '\n\n' + JOB_REFERENCE_INSTRUCTIONS
 
 
 def sentence_parts(text: str) -> list[str]:
@@ -290,9 +290,9 @@ def sentence_parts(text: str) -> list[str]:
     return [part.replace('\ue000', '.') for part in re.split(r'(?<=[.!?])\s+', protected)]
 
 
-def format_chat_answer(text: str) -> str:
+def format_chat_answer(text: str, jobs=None) -> str:
     """Clean display syntax without dropping, truncating or reordering content."""
-    return clean_job_references(text)
+    return clean_job_references(text) if jobs is None else linked_chat_answer(text, jobs)
 
 
 def remove_gender_suffixes(text: str) -> str:
@@ -311,3 +311,68 @@ def clean_job_references(text: str) -> str:
     text = re.sub(r'\\?\(?\bjob:[\w%.-]*\\?\)?', '', text, flags=re.I)
     text = re.sub(r'[;,.]?\s*weitere findest du über\s*[„"«]?Weitere Stellen anzeigen[“"»]?\.?', '', text, flags=re.I)
     return re.sub(r'…|\.{3,}', '', remove_gender_suffixes(text)).strip()
+
+# Internal link markup is transport metadata. The UI displays only the title.
+JOB_REFERENCE_INSTRUCTIONS = """
+VERBINDLICHE STELLENVERKNÜPFUNG (ersetzt frühere Verbote interner Linksyntax):
+Wenn du in assistant_message eine konkrete übergebene Stelle nennst, verwende
+immer [Exakter Stellentitel](job:ID) mit ihrer tatsächlich übergebenen ID.
+Das gilt auch für Alternativen, neue Suchergebnisse, Vergleiche und Rückfragen.
+Die Oberfläche zeigt nur den anklickbaren Titel; ID und Linksyntax bleiben unsichtbar.
+Verlinke nur den Stellentitel, nicht Unternehmen, Orte oder ganze Absätze. Verwende
+keine externen Links und erfinde keine Stellen oder IDs. Allgemeine Berufsrichtungen
+sind keine konkreten Anzeigen und brauchen keinen Link. Beantworte weiterhin zuerst
+die Nutzerfrage; füge keine Stelle nur zur Erzeugung eines Links hinzu.
+""".strip()
+
+JOB_REFERENCE_PATTERN = re.compile(
+    r'\\*\[([^\]\n]+?)\\*\][ \t]*\\*\([ \t]*job[ \t]*:[ \t]*([^\s)\\]+)[ \t]*\\*\)', re.I)
+
+
+def linked_chat_answer(text, jobs):
+    """Keep only grounded IDs, canonicalize labels, and link exact legacy titles."""
+    from urllib.parse import quote, unquote
+    text = text.replace('\ue100', '').replace('\ue101', '')
+    by_id = {str(job['id']): job for job in jobs if job.get('id') is not None}
+    held = []
+    def hold(job):
+        label = remove_gender_suffixes(job.get('title') or '').replace('[', '［').replace(']', '］')
+        held.append(f'[{label}](job:{quote(str(job["id"]), safe="")})')
+        return f'\ue100{len(held)-1}\ue101'
+    def explicit(match):
+        job = by_id.get(unquote(match[2]))
+        return hold(job) if job else match[1]
+    value = clean_job_references(JOB_REFERENCE_PATTERN.sub(explicit, text))
+    names = {}
+    for job in by_id.values():
+        title = re.sub(r'\s+', ' ', remove_gender_suffixes(job.get('title') or '')).strip()
+        for name in {title, re.sub(r'\bim Bereich\s+', '', title, flags=re.I)}:
+            if len(name) < 5:
+                continue
+            key = name.casefold()
+            if key not in names:
+                names[key] = job
+            elif names[key] is not None and str(names[key]['id']) != str(job['id']):
+                names[key] = None
+    unique = {name: job for name, job in names.items() if job is not None}
+    if unique:
+        pattern = re.compile(r'(?<!\w)(?:' + '|'.join(
+            re.escape(name).replace(r'\ ', r'\s+') for name in sorted(unique, key=len, reverse=True)
+        ) + r')(?!\w)', re.I)
+        value = pattern.sub(lambda match: hold(unique[re.sub(r'\s+', ' ', match[0]).casefold()]), value)
+    return re.sub(r'\ue100(\d+)\ue101', lambda match: held[int(match[1])], value)
+
+
+def assistant_chat_message(content, advisor_name, jobs, policy):
+    """Pin referenced source details to this turn so later searches cannot lose links."""
+    from urllib.parse import unquote
+    message = {'role': 'assistant', 'content': content, 'advisor_name': advisor_name}
+    if policy not in ('career_fixed', 'custom_career'):
+        return message
+    message['content'] = linked_chat_answer(content, jobs)
+    ids = {unquote(match[2]) for match in JOB_REFERENCE_PATTERN.finditer(message['content'])}
+    fields = {'id', 'title', 'company', 'employment_types', 'location', 'remote', 'hours_min',
+              'hours_max', 'summary', 'tasks', 'requirements', 'benefits', 'application_url', 'professional_fields'}
+    message['job_references'] = [{key: value for key, value in job.items() if key in fields}
+                                 for job in jobs if str(job.get('id')) in ids]
+    return message

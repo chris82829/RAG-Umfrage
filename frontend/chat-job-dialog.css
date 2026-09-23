@@ -1,0 +1,3 @@
+.chat-job-dialog{width:min(720px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:20px;border:1px solid #d5def0;border-radius:16px;color:#23324c;background:#fff}
+.chat-job-dialog::backdrop{background:#14213b70}.chat-job-dialog>header{display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:600}.chat-job-dialog>header button{min-height:44px;border:1px solid #cbd7ef;border-radius:8px;padding:8px 12px;background:#fff;color:#294bd7;font:inherit;cursor:pointer}.chat-job-dialog>p{font-size:14px;line-height:1.5}.chat-job-dialog .job-card{margin:0}.chat-job-dialog .job-card--referenced{box-shadow:none}
+@media(max-width:480px){.chat-job-dialog{padding:12px}.chat-job-dialog>header{font-size:14px}}

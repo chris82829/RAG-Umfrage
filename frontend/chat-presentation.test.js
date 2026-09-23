@@ -161,3 +161,14 @@ test('plain titles remain linked alongside explicit references in the same messa
   const parts=jobReferenceParts('[Kurz](job:123) und Data Analyst',[jobs[0],jobs[1]]);
   assert.deepEqual(parts.filter(p=>p.job).map(p=>p.job.id),['123','456']);
 });
+
+test('title punctuation inside a reference does not split a job bullet or follow-up',()=>{
+ const title='Werkstudent: Data Engineering bei Dr. Beispiel';
+ const text=`- [${title}](job:17): Python passt.\n\nMöchtest du [${title}](job:17)?`;
+ const {body,question}=separateFollowUp(text);
+ assert.equal(question,`Möchtest du [${title}](job:17)?`);
+ const [block]=chatContentBlocks(body);
+ assert.equal(block.items[0].title,`[${title}](job:17)`);
+ assert.equal(block.items[0].description,'Python passt.');
+ assert.equal(jobReferenceParts(block.items[0].title,[{id:'17',title}]).filter(p=>p.job).length,1);
+});

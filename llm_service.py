@@ -1269,7 +1269,7 @@ class OpenAIService:
                 ChatDecision,
                 stream=stream,
                 domain_rules=False,
-                answer_formatter=format_chat_answer,
+                answer_formatter=lambda text: format_chat_answer(text, jobs),
             )
             return result.model_dump()
         if resolved['neutral']:
@@ -1501,7 +1501,9 @@ class OpenAIService:
             explanation_instructions = chat_instructions(instructions)
             if context.get('initial_intro'):
                 explanation_instructions += '\n\n' + INITIAL_CHAT_INSTRUCTIONS
-            answer_formatter = format_chat_answer
+            previous_jobs = [candidate.get('job', candidate) for candidate in context.get('jobs', [])]
+            reference_jobs = jobs + [job for job in previous_jobs if job['id'] not in valid_ids]
+            answer_formatter = lambda text: format_chat_answer(text, reference_jobs)
         explanation_result = yield from self._parse_steps(
             explanation_instructions, explanation_data,
             _candidate_reranking_schema(selected_ids, cached=True),

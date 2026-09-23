@@ -40,7 +40,7 @@ from survey_store import SurveyConflict, SurveyStore, SurveyRequest, SurveyDraft
 from privacy import PrivacyStore, ConsentInput, ConsentRequired, load_notice, token_hash
 from study_release import StudyReleases
 from system_prompt_store import SystemPromptStore
-from chat_text import format_chat_answer
+from chat_text import format_chat_answer, assistant_chat_message
 from chat_completion import conclude_custom_chat, custom_chat_preview
 from admin import register_admin
 from raffle import RaffleStore, register_raffle
@@ -181,7 +181,7 @@ def welcome_message(result, *, prompt_policy=None):
         found = f'{total} Stellen' if total != 1 else 'Eine Stelle'
         reference = 'diese Stellen' if total != 1 else 'diese Stelle'
         overview = f'Hallo! {found} gefunden und bewertet. Du kannst mich alles über {reference} fragen. Hier eine kleine Auswahl:'
-        return overview + '\n\n' + format_chat_answer(result['assistant_message'])
+        return overview + '\n\n' + format_chat_answer(result['assistant_message'], jobs)
     # Match the initial visibility policy in frontend/result-visibility.js.
     visible = min(total, 10)
     if not total:
@@ -931,8 +931,7 @@ def create_app(config=None, *, retriever=None, llm=None):
                 prompt_policy=policy, system_prompt=frozen_prompt)
             result['assistant_message'] = welcome_message(result, prompt_policy=policy)
             state = {**result, 'advisor_selection':selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': assigned['arm'] if assigned else None, '_test_arm': test_arm(), '_personality_policy': assigned['personality_policy'] if assigned else None, '_system_prompt_snapshot': frozen_prompt,
-                     '_experiment_id': assigned.get('experiment_id') if assigned else None, '_user_chat_count': 0, 'messages': [{'role': 'assistant', 'content': result['assistant_message'],
-                                            'advisor_name': resolve_advisor(result['advisor'])['name']}]}
+                     '_experiment_id': assigned.get('experiment_id') if assigned else None, '_user_chat_count': 0, 'messages': [assistant_chat_message(result['assistant_message'], resolve_advisor(result['advisor'])['name'], result['jobs'], policy)]}
             session_id = sessions.create(state, before_save=consent_link('chat', selection=selection, timings=timings))
             return {'session_id': session_id, **public_state(state), 'chat_usage': chat_usage(state)}
 
@@ -1148,9 +1147,16 @@ def create_app(config=None, *, retriever=None, llm=None):
                 # Questions preserve jobs, scores, pool and search persona exactly.
                 result = {**state, 'profile': profile, 'advisor': advisor, 'assistant_message': answer}
             result['chat_action'] = action
-            messages = state['messages'] + ([{'role': 'user', 'content': body.message}] if body.message else [])
-            messages.append({'role': 'assistant', 'content': result['assistant_message'],
-                             'advisor_name': resolve_advisor(result['advisor'])['name']})
+            reference_jobs = result['jobs'] + [job for job in state['jobs']
+                if str(job['id']) not in {str(current['id']) for current in result['jobs']}]
+            # Upgrade older turns while their previous result set is still available.
+            messages = [assistant_chat_message(message['content'], message.get('advisor_name', ''), state['jobs'], policy)
+                        if message['role'] == 'assistant' and 'job_references' not in message else message
+                        for message in state['messages']]
+            messages += ([{'role': 'user', 'content': body.message}] if body.message else [])
+            reply = assistant_chat_message(result['assistant_message'], resolve_advisor(result['advisor'])['name'], reference_jobs, policy)
+            result['assistant_message'] = reply['content']
+            messages.append(reply)
             new_state = {**result, 'advisor_selection':applied_selection, 'advisor_mlds': advisor_to_mlds(result['advisor']), '_study_arm': state.get('_study_arm'), '_test_arm': state.get('_test_arm'), '_personality_policy': state.get('_personality_policy'), '_system_prompt_snapshot': frozen_prompt,
                          '_experiment_id': state.get('_experiment_id'), 'messages': messages[-100:],
                          '_user_chat_count': state.get('_user_chat_count', sum(message.get('role') == 'user' for message in state['messages'])) + int(bool(body.message))}
@@ -1168,7 +1174,7 @@ def create_app(config=None, *, retriever=None, llm=None):
                 else:
                     successful = new_state['_user_chat_count']
                 if successful == 3:
-                    final = conclude_custom_chat(new_state['assistant_message'], new_state['jobs'])
+                    final = conclude_custom_chat(new_state['assistant_message'], reference_jobs)
                     new_state['assistant_message'] = final
                     new_state['messages'][-1]['content'] = final
             sessions.update(body.session_id, new_state, version, before_save=finalize_turn)
