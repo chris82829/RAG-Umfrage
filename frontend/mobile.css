@@ -9,7 +9,7 @@
   .assistant-actions > .mobile-edit-action { display:flex; }
   .topbar .topbar-inner .topbar-journey { display:none; }
   .topbar.topbar--with-journey .topbar-inner { grid-template-columns:minmax(0,1fr) auto; }
-  .topbar .topbar-inner .brand-name { width:auto; max-width:none; white-space:nowrap; }
+  .topbar .topbar-inner .brand-name { width:auto; max-width:120px; white-space:normal; }
   .topbar .topbar-inner .brand { font-size:18px; }
   .mobile-view-switch { display:flex; flex:none; gap:8px; padding:8px 12px; background:white; border-bottom:1px solid var(--line); }
   .mobile-view-switch--results { order:3; border-bottom:0; border-top:1px solid #dce4f2; padding-bottom:max(8px,env(safe-area-inset-bottom)); box-shadow:0 -3px 12px #20365a0a; }
@@ -62,4 +62,10 @@
   .assistant-action-area { display:none; }
   .chat-feed { padding-top:12px; padding-bottom:12px; }
   .chat-bottom { padding-top:6px; }
+}
+
+@media (max-width: 430px) {
+  .topbar .topbar-inner { grid-template-columns:minmax(0,1fr) auto; }
+  .topbar .topbar-inner .brand { font-size:16px; }
+  .topbar .topbar-inner .local-status { max-width:165px; }
 }

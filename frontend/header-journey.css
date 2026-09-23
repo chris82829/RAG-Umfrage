@@ -112,8 +112,8 @@
 
 @media (max-width: 1100px) {
   .topbar .topbar-inner { min-height: 72px; padding: 12px 24px; gap: 20px; }
-  .topbar.topbar--with-journey .topbar-inner { grid-template-columns: minmax(0, 1fr) auto; }
-  .topbar.topbar--with-journey .local-status { display: none; }
+  .topbar.topbar--with-journey .topbar-inner { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .topbar.topbar--with-journey .local-status { display: flex; }
   .topbar.topbar--with-journey .topbar-journey { justify-self: end; }
 }
 
@@ -138,4 +138,13 @@
   .topbar .topbar-inner .brand-name { width: 64px; max-width: 64px; white-space: normal; }
   .topbar .topbar-inner .brand-compass { width: 30px; height: 30px; border-radius: 9px; }
   .topbar .topbar-inner .local-status { padding: 6px 9px; font-size: 11px; white-space: normal; }
+}
+
+.study-arm-label {
+  flex: none;
+  border-left: 1px solid #dce3ee;
+  padding-left: 7px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
 }

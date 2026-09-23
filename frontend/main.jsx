@@ -644,7 +644,7 @@ export function App({studyArm = 'B', personalityPolicy = policyForArm(studyArm),
       <div className="topbar-inner">
         {isEmbeddedSurvey ? <div className="brand"><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></div> : <a href="/" className="brand" aria-label="DIANA Startseite" onClick={event => navigate('about', event)}><CompassAvatar className="brand-compass" /><span className="brand-name">DIANA Jobsuche</span></a>}
         {showHeaderJourney && <div className="topbar-journey"><JourneyGuide showPersonalityStep={showPersonalityStep} iconOnly activeStep={activeStep} completedSteps={completedSteps} busy={busy || booting} hasSession={!!session} /></div>}
-        <div className="local-status"><i aria-hidden="true" />{allDemo ? `${total} fiktive Beispielstellen` : `${total.toLocaleString('de-DE')} Stellenanzeigen`}</div>
+        <div className="local-status"><i aria-hidden="true" /><span>{allDemo ? `${total} fiktive Beispielstellen` : `${total.toLocaleString('de-DE')} Stellenanzeigen`}</span>{['A', 'B', 'C'].includes(studyArm) && <span className="study-arm-label" aria-label={`Gruppe ${studyArm}`}>{studyArm}</span>}</div>
       </div>
     </header>
     {(session || onboardingStarted) && <nav className={`mobile-view-switch${session ? ' mobile-view-switch--results' : ''}`} aria-label="Stellen und Chat">
