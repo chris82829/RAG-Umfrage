@@ -44,16 +44,17 @@ class CapturingResponses:
         if schema.__name__.endswith("RerankingResult"):
             data = json.loads(options["input"][-1]["content"])
             jobs = data.get("jobs") or data.get("candidates") or []
-            rankings = []
+            rankings = {}
             for job in jobs:
-                rankings.append({
-                    "job_id": job["id"],
+                rankings[job["id"]] = {
                     "components": {"technical_fit": 80, "preferences_fit": 70,
                                    "technical_depth": 65, "learning": 60,
                                    "innovation": 55, "clarity": 75},
                     "reasons": ["Python passt zur Aufgabe.", "Die Tätigkeit ist konkret beschrieben."],
                     "matched_skills": ["Python"], "missing_skills": [],
-                })
+                }
+                if "Cached" in schema.__name__:
+                    rankings[job["id"]].pop("components")
             payload = {"rankings": rankings, "assistant_message": "Python passt. Was ist dir wichtiger: Datenpipelines oder Analysen?"}
         else:
             payload = {"action": "answer", "profile_patch": neutral_patch(),

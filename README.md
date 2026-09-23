@@ -865,6 +865,12 @@ Alle aktuellen OpenAI-Aufrufe verwenden seit dem 22.09.2026 den festen Snapshot
 **`gpt-5.4-nano-2026-03-17`** (GPT-5.4 nano), einheitlich in A, B und C
 sowie auf den Testseiten. Historische Messungen mit GPT-5.4 bleiben als solche erhalten.
 Der Modellname wird nicht automatisch auf einen anderen Snapshot umgestellt.
+Das Ausgabeformat für Bewertungen enthält seit dem 23.09.2026 für jede tatsächlich
+übergebene Stellen-ID ein Pflichtfeld. Dadurch kann das Modell den Top-20-Pool
+nicht durch ausgelassene, doppelte oder erfundene IDs verkürzen. Die Anwendung
+wandelt diese Zuordnung anschließend in die bisherige Ergebnisliste um; Scores,
+Gewichte und Prompttexte bleiben unverändert. Dies gilt auch für Neubewertungen
+mit gespeicherten Teilbewertungen und für Streaming.
 Neue Teilnahmen werden dem verwendeten Systemstand zugeordnet; alte Antworten
 ohne Nachweis bleiben als unbekannt gekennzeichnet. Details: [ADMIN.md](ADMIN.md).
 [GPT-5.4 nano](https://developers.openai.com/api/docs/models/gpt-5.4-nano),

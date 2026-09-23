@@ -14,7 +14,7 @@ from hashlib import sha256
 from time import perf_counter
 from typing import Annotated, Any, Generator, Literal, TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, create_model, field_validator, model_validator
 from pydantic_core import from_json
 from advisor import resolve_advisor, score_from_components
 
@@ -125,12 +125,15 @@ class ScoreComponents(_StrictModel):
     clarity: ComponentValue | None
 
 
-class RankedJob(_StrictModel):
-    job_id: str = Field(min_length=1)
+class JobAssessment(_StrictModel):
     components: ScoreComponents
     reasons: list[ShortText] = Field(min_length=2, max_length=3)
     matched_skills: list[str]
     missing_skills: list[str]
+
+
+class RankedJob(JobAssessment):
+    job_id: str = Field(min_length=1)
 
 
 class RerankingResult(_PublicAnswer):
@@ -138,16 +141,53 @@ class RerankingResult(_PublicAnswer):
     assistant_message: str = Field(min_length=1)
 
 
-class CachedRankedJob(_StrictModel):
-    job_id: str = Field(min_length=1)
+class CachedJobAssessment(_StrictModel):
     reasons: list[ShortText] = Field(min_length=2, max_length=3)
     matched_skills: list[str]
     missing_skills: list[str]
 
 
+class CachedRankedJob(CachedJobAssessment):
+    job_id: str = Field(min_length=1)
+
+
 class CachedRerankingResult(_PublicAnswer):
     rankings: list[CachedRankedJob] = Field(min_length=1, max_length=20)
     assistant_message: str = Field(min_length=1)
+
+
+def _candidate_reranking_schema(job_ids: list[str], *, cached: bool = False):
+    """Require exactly one assessment per supplied ID in the API's JSON schema.
+
+    A variable-length list let Nano return only a subset of the pool. Required
+    object properties enforce coverage and disallow invented IDs without retries,
+    extra prompts, or fabricated scores. Aliases keep arbitrary job IDs separate
+    from Pydantic's internal field names. The public API still returns a list.
+    """
+    assessment = CachedJobAssessment if cached else JobAssessment
+    rankings = create_model(
+        "CandidateAssessments",
+        __base__=_StrictModel,
+        **{f"candidate_{index}": (assessment, Field(alias=job_id))
+           for index, job_id in enumerate(job_ids)},
+    )
+    return create_model(
+        "CandidateCachedRerankingResult" if cached else "CandidateRerankingResult",
+        __base__=_PublicAnswer,
+        rankings=(rankings, ...),
+        assistant_message=(str, Field(min_length=1)),
+    )
+
+
+def _candidate_reranking_result(result, *, cached: bool = False):
+    schema = CachedRerankingResult if cached else RerankingResult
+    return schema.model_validate({
+        "rankings": [
+            {"job_id": job_id, **assessment}
+            for job_id, assessment in result.rankings.model_dump(by_alias=True).items()
+        ],
+        "assistant_message": result.assistant_message,
+    })
 
 
 _SAFETY_INSTRUCTIONS = """
@@ -1001,7 +1041,7 @@ class OpenAIService:
             if parsed is None:
                 raise ValueError("Missing structured output or refusal")
             # Re-validate even injected clients rather than trusting their type.
-            payload = parsed.model_dump() if isinstance(parsed, BaseModel) else parsed
+            payload = parsed.model_dump(by_alias=True) if isinstance(parsed, BaseModel) else parsed
             result = schema.model_validate(payload)
             outcome = "parsed"
             return result
@@ -1196,7 +1236,6 @@ class OpenAIService:
                 "message": _text(chat_message, 6000) if chat_message is not None else "",
                 "requested_count": count,
             }
-            response_schema = RerankingResult
             domain_rules = False
         elif prompt_policy in ("career_fixed", "custom_career"):
             instructions = effective_prompt
@@ -1219,7 +1258,6 @@ class OpenAIService:
                 "fixed_components": fixed,
                 "selected_job_ids": selected_ids,
             }
-            response_schema = CachedRerankingResult if fixed is not None else RerankingResult
             domain_rules = False
         else:
             instructions = (
@@ -1246,8 +1284,10 @@ class OpenAIService:
                 "fixed_components": fixed,
                 "selected_job_ids": selected_ids,
             }
-            response_schema = CachedRerankingResult if fixed is not None else RerankingResult
             domain_rules = True
+        response_schema = _candidate_reranking_schema(
+            [job["id"] for job in jobs], cached=fixed is not None,
+        )
         result = yield from self._parse_steps(
             instructions,
             request_data,
@@ -1256,6 +1296,7 @@ class OpenAIService:
             stream=stream,
             domain_rules=domain_rules,
         )
+        result = _candidate_reranking_result(result, cached=fixed is not None)
         returned_ids = [ranking.job_id for ranking in result.rankings]
         if (
             len(returned_ids) != count
