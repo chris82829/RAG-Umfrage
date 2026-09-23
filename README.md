@@ -625,6 +625,18 @@ ist dann das terminale Ereignis. Ohne diesen Accept-Header bleiben JSON-Antworte
 und deren HTTP-Status unverändert. Die Webseite sendet bei Verbindungsfehlern
 keinen Auftrag automatisch erneut, sondern prüft wie bisher den Sitzungsstand.
 
+Innerhalb eines noch nicht abgeschlossenen KI-Aufrufs gibt es höchstens einen
+automatischen zweiten Versuch bei Verbindungs-/Streamabbrüchen, temporären
+HTTP-Fehlern oder ungültiger strukturierter Ausgabe. Nach einem Streamfehler wird
+die vollständige Antwort ohne Streaming angefordert. Modell, Prompts und Eingaben
+bleiben gleich; SDK-interne Wiederholungen sind deaktiviert. Authentifizierungs-,
+Guthabenfehler und explizite Ablehnungen werden nicht wiederholt. Erst ein gültiges
+Endergebnis speichert Profil/Chat und verbraucht genau eine Studiennachricht;
+zwei Fehlversuche geben den reservierten Platz wieder frei. Dies gilt auch für
+die reguläre Umfrage in A/B/C. Die Logs enthalten Versuchszahl, feste Fehlerart
+und Validierungsfehlertypen, aber keine Chattexte, Profile oder Fehlerantworten.
+Regression: `test_llm_recovery.py` (Offline-SDK- und HTTP-Umfragetests).
+
 Nicht erwähnte Filter und Präferenzen bleiben erhalten. Der Server vergleicht die validierten
 Profile und erzwingt eine neue Suche bei Änderungen der Retrieval-Eingaben; bloße
 Listenreihenfolge und Groß-/Kleinschreibung zählen nicht als fachliche Änderung.

@@ -12,7 +12,7 @@ import json
 import re
 import logging
 from hashlib import sha256
-from time import perf_counter
+from time import perf_counter, sleep
 from typing import Annotated, Any, Generator, Literal, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, create_model, field_validator, model_validator
@@ -56,6 +56,43 @@ class LLMUnavailable(RuntimeError):
     """A safe error message suitable for returning to the API caller."""
 
 
+class _ResponseFailure(Exception):
+    """Fixed internal error labels, never provider or participant text."""
+
+    def __init__(self, kind, retryable=False):
+        self.kind = kind
+        self.retryable = retryable
+
+
+class _RetryableLLMUnavailable(LLMUnavailable):
+    pass
+
+
+def _failure_kind(exc):
+    """Classify errors without logging their bodies, validation input or paths."""
+    import httpx2 as httpx
+    from openai import APIConnectionError, APIError, APIStatusError, APITimeoutError
+
+    if isinstance(exc, _ResponseFailure):
+        return exc.kind, exc.retryable
+    if isinstance(exc, ValidationError):
+        return 'invalid_structure', True
+    if isinstance(exc, (APITimeoutError, httpx.TimeoutException)):
+        return 'timeout', True
+    if isinstance(exc, (APIConnectionError, httpx.TransportError)):
+        return 'connection', True
+    if isinstance(exc, APIStatusError):
+        if getattr(exc, 'code', None) == 'insufficient_quota':
+            return 'quota', False
+        return 'http_error', exc.status_code in (408, 409, 429) or exc.status_code >= 500
+    if isinstance(exc, APIError):
+        return 'stream_error', getattr(exc, 'code', None) in ('server_error', 'rate_limit_exceeded')
+    # The SDK raises this when a stream ends before its terminal event.
+    if isinstance(exc, RuntimeError) and str(exc) == "Didn't receive a `response.completed` event.":
+        return 'stream_incomplete', True
+    return 'internal_error', False
+
+
 class _StrictModel(BaseModel):
     model_config = ConfigDict(
         extra="forbid", str_strip_whitespace=True, allow_inf_nan=False, strict=True
@@ -72,8 +109,12 @@ class FilterPatch(_StrictModel):
     employment_types: list[EmploymentType] | None = Field(max_length=8)
     locations: list[ShortText] | None = Field(max_length=10)
     remote: list[RemoteType] | None = Field(max_length=4)
-    max_hours: float | None = Field(gt=0, le=80)
-    clear_max_hours: bool
+    max_hours: float | None = Field(gt=0, le=80, description=(
+        'Neue ausdrücklich gewünschte maximale Wochenstunden; null bedeutet keine Änderung. '
+        'Stunden aus einer besprochenen Stellenanzeige ändern das Suchprofil nicht.'))
+    clear_max_hours: bool = Field(description=(
+        'Nur true, wenn der Nutzer ausdrücklich sein bisheriges Stundenlimit aufheben möchte. '
+        'Dann muss max_hours null sein. Bei bloßen Fragen zu Stellen: false.'))
 
     @model_validator(mode="after")
     def reject_conflicting_hours(self) -> "FilterPatch":
@@ -82,11 +123,22 @@ class FilterPatch(_StrictModel):
         return self
 
 
+class KeepOrSetHoursPatch(FilterPatch):
+    clear_max_hours: Literal[False]
+
+
+class ClearHoursPatch(FilterPatch):
+    max_hours: None
+    clear_max_hours: Literal[True]
+
+
 class ProfilePatch(_StrictModel):
     query: str | None = Field(max_length=3000)
     skills: list[ShortText] | None = Field(max_length=60)
     preferences: list[ShortText] | None = Field(max_length=30)
-    filters: FilterPatch
+    # Expose the cross-field constraint in the provider's JSON Schema too.
+    # Previously it was only checked locally after generating the whole answer.
+    filters: KeepOrSetHoursPatch | ClearHoursPatch
 
 
 class _PublicAnswer(_StrictModel):
@@ -980,7 +1032,9 @@ class OpenAIService:
                 self._client = OpenAI(
                     api_key=self._api_key,
                     timeout=REQUEST_TIMEOUT_SECONDS,
-                    max_retries=1,
+                    # One shared retry budget also covers streaming/validation
+                    # failures; do not multiply it with hidden SDK retries.
+                    max_retries=0,
                 )
             except Exception:
                 raise LLMUnavailable("Die OpenAI-Anbindung konnte nicht initialisiert werden.") from None
@@ -990,6 +1044,22 @@ class OpenAIService:
         return _complete(self._parse_steps(*args, **kwargs))
 
     def _parse_steps(
+        self, instructions, data, schema, *, max_output_tokens=MAX_OUTPUT_TOKENS,
+        stream=False, domain_rules=True, answer_formatter=None,
+    ):
+        for attempt in (1, 2):
+            try:
+                return (yield from self._parse_attempt_steps(
+                    instructions, data, schema, max_output_tokens=max_output_tokens,
+                    # After a broken stream, request a complete validated reply.
+                    stream=stream and attempt == 1, domain_rules=domain_rules,
+                    answer_formatter=answer_formatter, attempt=attempt))
+            except _RetryableLLMUnavailable:
+                if attempt == 2:
+                    raise
+                sleep(0.5)
+
+    def _parse_attempt_steps(
         self,
         instructions: str | None,
         data: dict,
@@ -999,12 +1069,16 @@ class OpenAIService:
         stream: bool = False,
         domain_rules: bool = True,
         answer_formatter=None,
+        attempt: int = 1,
     ) -> Generator[dict, None, _ResultT]:
         started = perf_counter()
         api_status = "not_received"
         outcome = "upstream_error"
         http_status = None
         input_tokens = output_tokens = reasoning_tokens = None
+        failure_kind = 'none'
+        retryable = False
+        validation_types = 'none'
         try:
             model_input = [
                 {"role": "user", "content": json.dumps(data, ensure_ascii=False, allow_nan=False)}
@@ -1027,6 +1101,17 @@ class OpenAIService:
                 previous = ""
                 with self._get_client().responses.stream(**options) as events:
                     for event in events:
+                        if event.type in ('response.incomplete', 'response.failed'):
+                            api_status = 'incomplete' if event.type == 'response.incomplete' else 'failed'
+                            # The streaming SDK otherwise hides these behind a
+                            # generic missing-response.completed exception.
+                            reason = getattr(getattr(event.response, 'incomplete_details', None), 'reason', None)
+                            code = getattr(getattr(event.response, 'error', None), 'code', None)
+                            if reason == 'content_filter':
+                                raise _ResponseFailure('refusal')
+                            if reason == 'max_output_tokens':
+                                raise _ResponseFailure('output_limit')
+                            raise _ResponseFailure('response_failed', code in ('server_error', 'rate_limit_exceeded'))
                         if event.type != "response.output_text.delta":
                             continue
                         # Decode only structured public output, never reasoning,
@@ -1061,10 +1146,14 @@ class OpenAIService:
                 value if type(value) is int and value >= 0 else None for value in token_values
             )
             if api_status != "completed":
-                raise ValueError("Incomplete model response")
+                reason = getattr(getattr(response, 'incomplete_details', None), 'reason', None)
+                raise _ResponseFailure('output_limit' if reason == 'max_output_tokens' else 'incomplete_response')
             parsed = getattr(response, "output_parsed", None)
             if parsed is None:
-                raise ValueError("Missing structured output or refusal")
+                refused = any(getattr(part, 'type', None) == 'refusal'
+                              for item in (getattr(response, 'output', None) or [])
+                              for part in (getattr(item, 'content', None) or []))
+                raise _ResponseFailure('refusal' if refused else 'missing_output', not refused)
             # Re-validate even injected clients rather than trusting their type.
             payload = parsed.model_dump(by_alias=True) if isinstance(parsed, BaseModel) else parsed
             result = schema.model_validate(payload)
@@ -1078,10 +1167,17 @@ class OpenAIService:
             outcome = "unavailable"
             raise
         except Exception as exc:
+            failure_kind, retryable = _failure_kind(exc)
+            if isinstance(exc, ValidationError):
+                validation_types = ','.join(sorted({error['type'] for error in exc.errors(
+                    include_input=False, include_context=False, include_url=False)}))
+            if failure_kind in ('invalid_structure', 'missing_output', 'refusal', 'output_limit', 'incomplete_response'):
+                outcome = 'invalid_response'
             status_code = getattr(exc, "status_code", None)
             http_status = status_code if type(status_code) is int and 100 <= status_code <= 599 else None
             # Never surface provider response bodies, API keys, or CV content.
-            raise LLMUnavailable(
+            error_type = _RetryableLLMUnavailable if retryable else LLMUnavailable
+            raise error_type(
                 "Die KI-Auswertung ist gerade nicht verfügbar oder hat keine gültige Antwort geliefert."
             ) from None
         finally:
@@ -1089,10 +1185,12 @@ class OpenAIService:
             # response, exception body, credentials or user-provided log fields.
             self._performance_logger.info(
                 "llm_request schema=%s model=%s reasoning_effort=%s api_status=%s outcome=%s http_status=%s "
-                "elapsed_ms=%d input_tokens=%s output_tokens=%s reasoning_tokens=%s",
+                "elapsed_ms=%d input_tokens=%s output_tokens=%s reasoning_tokens=%s "
+                "attempt=%d failure_kind=%s retryable=%s validation_types=%s",
                 schema.__name__, MODEL, REASONING_EFFORT, api_status, outcome, http_status,
                 round((perf_counter() - started) * 1000),
                 input_tokens, output_tokens, reasoning_tokens,
+                attempt, failure_kind, retryable, validation_types,
             )
 
     def generate_persona(self, profile: dict) -> dict:
