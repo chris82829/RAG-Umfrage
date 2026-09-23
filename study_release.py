@@ -35,7 +35,7 @@ class StudyReleases:
                  'web-dist/index.html']
         files += ['persona_mlds.py', 'study_usage.py', 'survey_definition_v7.json', 'survey_definition_v8.json', 'survey_definition_v9.json', 'survey_definition_v10.json', 'survey_definition_v11.json', 'survey_definition_v12.json', 'survey_definition_v13.json', 'survey_definition_v14.json', 'study_context.py', 'V14-METHODS.md', 'requirements-analysis.txt', 'survey_migrations.py', 'study_metrics.py', 'study_chat_limit.py', 'system_prompt_store.py', 'test_access.py', 'STUDY-PROTOCOL.md']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'research/v14').glob('*')) if path.is_file()]
-        files += ['study_progress.py', 'study_telemetry.py', 'migrations/012_study_telemetry.sql', 'chat_text.py', 'chat_completion.py']
+        files += ['study_progress.py', 'study_telemetry.py', 'migrations/012_study_telemetry.sql', 'chat_text.py', 'chat_completion.py', 'raffle.py']
         files += [path.relative_to(root).as_posix() for path in sorted((root/'personas').glob('*')) if path.is_file()]
         sources = {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files if (root/name).is_file()}
         packages = {}

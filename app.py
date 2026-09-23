@@ -43,6 +43,7 @@ from system_prompt_store import SystemPromptStore
 from chat_text import format_chat_answer
 from chat_completion import conclude_custom_chat, custom_chat_preview
 from admin import register_admin
+from raffle import RaffleStore, register_raffle
 
 BASE_DIR = Path(__file__).resolve().parent
 MATCHING_POLICY_VERSION = 'employment-only-v1'
@@ -200,6 +201,7 @@ def create_app(config=None, *, retriever=None, llm=None):
     app = Flask(__name__)
     app.config.from_mapping(
         DATABASE_PATH=os.getenv('DATABASE_PATH', 'instance/jobs.sqlite3'),
+        RAFFLE_DATABASE_PATH=os.getenv('RAFFLE_DATABASE_PATH'),
         SEED_DUMMY_DATA=os.getenv('SEED_DUMMY_DATA', 'true').lower() == 'true',
         REQUIRE_COMPLETE_INDEX=os.getenv('REQUIRE_COMPLETE_INDEX', 'false').lower() == 'true',
         EMBEDDING_CACHE_DIR=os.getenv('EMBEDDING_CACHE_DIR', '.cache/embeddings'),
@@ -241,6 +243,9 @@ def create_app(config=None, *, retriever=None, llm=None):
     notice = load_notice(app.config['PRIVACY_SETTINGS_PATH'])
     releases = StudyReleases(db_path, BASE_DIR, store.filter_jobs({}))
     surveys = SurveyStore(db_path)
+    raffle = RaffleStore(db_path, project_path(app.config['RAFFLE_DATABASE_PATH'])
+                        if app.config['RAFFLE_DATABASE_PATH'] else db_path.with_name('raffle.sqlite3'))
+    app.extensions['raffle_store'] = raffle
     assignments = StudyAssignments(surveys, privacy, notice)
     personality_templates = load_templates()
     neutral_personality = load_neutral_advisor()
@@ -493,6 +498,7 @@ def create_app(config=None, *, retriever=None, llm=None):
 
     telemetry = register_telemetry(app, privacy, surveys, sessions,
                                    request_notice, consent_token, test_arm)
+    register_raffle(app, raffle, privacy, notice, consent_token, test_arm)
 
     @app.before_request
     def require_consent():

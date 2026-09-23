@@ -1173,3 +1173,47 @@ dritten Turn den Abschluss ohne die eigentliche Antwort zu kürzen.
 Das versionierte Verhalten ist `request-first-dialogue-v3`. Frühere
 Teilnehmer-Prompts bleiben als Snapshots erhalten; die Laufzeit-Darstellungsvorgabe
 wird über die Release-Metadaten nachvollziehbar versioniert.
+
+### Optionales Gewinnspiel nach Abschluss
+
+Auf der Abschlussseite steht neben den Teilnahme-ID-/Löschaktionen „Am Gewinnspiel
+teilnehmen“. Erst nach einer serverseitig bestätigten abgeschlossenen Umfrage kann
+mit einer gültigen E-Mail-Adresse und separater Einwilligung eine Anmeldung erfolgen.
+Testseiten und unvollständige Umfragen sind ausgeschlossen. Es werden keine
+E-Mails automatisch versendet. Die Adresse bleibt nur bis zur Anmeldung im
+Formularspeicher des Browsers; sie wird nicht in Sitzungsspeicher oder Telemetrie
+übernommen und nicht an das LLM gesendet.
+
+Die eigene SQLite-Datei `instance/raffle.sqlite3` (auf dem öffentlichen Server:
+`/data/instance/raffle.sqlite3`) enthält nur die normalisierte E-Mail-Adresse und
+die Fassung der separaten Einwilligung. Optional kann `RAFFLE_DATABASE_PATH` einen
+anderen Dateipfad festlegen; die Studiendatenbank selbst ist nicht zulässig.
+`raffle_entries` hat keine Teilnahme-ID, Gruppe, Antwortdaten, fortlaufende ID oder
+Zeitstempel. Die Tabelle verwendet `WITHOUT ROWID`. Die Dateiberechtigung ist 0600.
+Keine Gewinnspieladresse erscheint in einem Umfrage-, Metadaten- oder Analyseexport.
+
+In der Studiendatenbank enthält `raffle_claims` ausschließlich die bereits bekannte
+Einwilligungs-Prüfsumme, um die Nutzung der einmaligen Anmeldemöglichkeit festzuhalten.
+Es gibt keinen gemeinsamen Schlüssel zwischen dieser Tabelle und den E-Mail-Adressen.
+Anmeldung und Verbrauch der Berechtigung werden in einer SQLite-Transaktion über
+beide Dateien gespeichert. Beide Dateien müssen dafür im bisherigen Rollback-Journal-
+Modus bleiben; nicht auf WAL umstellen. Wiederholungen nach Netzfehlern und parallele
+Tabs erzeugen keine zusätzlichen Anmeldungen. E-Mail-Adressen werden ohne Beachtung
+der Groß-/Kleinschreibung dedupliziert; das bestätigt nicht deren Inhaberschaft.
+
+Unter **Verwaltung → Gewinnspiel** stehen die Anzahl, ein separater E-Mail-CSV-Export,
+Öffnen/Schließen der Anmeldung sowie die Löschung einer einzelnen Adresse oder aller
+Adressen zur Verfügung. Alle mutierenden Admin-Aufrufe erfordern Sitzung und CSRF-Token.
+„Alle Gewinnspieladressen löschen“ schließt die Anmeldung, löscht aber keine
+Forschungsdaten. „Alle Teilnahmen löschen“ und ein Studienwiderruf löschen umgekehrt
+keine Gewinnspieladressen: Dafür fehlt absichtlich die Zuordnung. Die Formularhinweise
+nennen den separaten Widerruf anhand der eigenen E-Mail-Adresse.
+
+Nach Abwicklung des Gewinnspiels muss die Studienleitung die Adressen über diesen
+separaten Bereich löschen und Exporte sowie eventuelle separate Sicherungen ebenfalls
+bereinigen. Die bestehende Sicherung nur der Studiendatenbank enthält die E-Mail-Datei
+nicht. Gewinne, Teilnahmebedingungen und Anmeldeschluss werden organisatorisch
+festgelegt; aktuell gibt es keinen erfundenen Termin und keine automatische Auslosung.
+Die Trennung schafft keine pauschale Anonymitätsgarantie: Forschungsdaten bleiben
+pseudonymisiert, E-Mail-Adressen sind personenbezogen, und derselbe Server verarbeitet
+beide Anfragen. Es wird jedoch keine direkte Datenbankzuordnung gespeichert.

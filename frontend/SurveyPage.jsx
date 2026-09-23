@@ -7,6 +7,7 @@ import SearchLoadingDialog from './SearchLoadingDialog.jsx';
 import {createSurveyAutosave} from './survey-autosave.js';
 import {consentHeaders} from './privacy.js';
 import ParticipationId from './ParticipationId.jsx';
+import RaffleSignup from './RaffleSignup.jsx';
 import './action-motion.css';
 import { isSurveyChatCompletion, isSurveyCompletion, requestSurveyChat, requestSurveyProgress, readSurveySearchContext } from './survey-progress.js';
 
@@ -364,7 +365,7 @@ export default function SurveyPage({ initial, participationId }) {
     <div className="survey-questionnaire" hidden={systemActive || (!state.submitted && (!assignmentReady || !hydrated))}>
       <header className="survey-header"><a href="/" className="survey-brand" aria-label="Über DIANA und Christoph Scharnagl"><span><Compass size={23} strokeWidth={1.7} /></span><strong>DIANA<small>Umfrage</small></strong></a><span className="survey-header-label">{state.submitted ? 'Abgeschlossen' : 'Deine Erfahrung mit dem Suchsystem'}</span></header>
       <main className="survey-main">
-        {state.submitted ? <div className="survey-thanks"><span className="survey-thanks-icon"><CheckCheck size={32} /></span><h1 ref={heading} tabIndex={-1}>Danke für deine Teilnahme!</h1><p>Deine Antworten wurden gespeichert. Du hilfst uns damit, die KI-gestützte Jobsuche weiterzuentwickeln.</p><ParticipationId value={participationId}/><a className="survey-back" href="/"><ArrowLeft size={17} />Zur Vorstellung</a></div>
+        {state.submitted ? <div className="survey-thanks"><span className="survey-thanks-icon"><CheckCheck size={32} /></span><h1 ref={heading} tabIndex={-1}>Danke für deine Teilnahme!</h1><p>Deine Antworten wurden gespeichert. Du hilfst uns damit, die KI-gestützte Jobsuche weiterzuentwickeln.</p><ParticipationId value={participationId} actions={<RaffleSignup/>}/><a className="survey-back" href="/"><ArrowLeft size={17} />Zur Vorstellung</a></div>
           : assignmentReady && hydrated && group && <SurveyForm version={state.version} group={group} answers={state.answers} onChange={change} onSubmit={send} onBack={back} busy={busy} errors={errors} error={error} formRef={form} headingRef={heading} searchSuggestion={state.searchGoalSuggestion} saveStatus={saveStatus} onRetry={retrySave} />}
       </main>
     </div>

@@ -1,0 +1,13 @@
+.raffle-open{display:inline-flex;align-items:center;gap:8px;min-height:44px;font:inherit}
+.raffle-dialog{width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow-y:auto;box-sizing:border-box;border:1px solid #d5def0;border-radius:18px;padding:24px;color:#23324c;background:white;box-shadow:0 16px 55px #18264b35;text-align:left}
+.raffle-dialog::backdrop{background:#14213b70}
+.raffle-dialog .raffle-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.raffle-heading h2{font-size:22px;margin:0}.raffle-dialog button{cursor:pointer;border:1px solid #cbd7ef;border-radius:9px;padding:10px 14px;background:white;color:#294bd7;min-height:44px;font:inherit}.raffle-heading button{display:grid;place-items:center;padding:10px}
+.raffle-dialog button.survey-primary{background:#294bd7;color:white}.raffle-dialog button:disabled{opacity:.55;cursor:default}
+.survey-page .raffle-dialog p{font-size:14px;line-height:1.6;max-width:none;margin:16px 0}
+.raffle-email{display:grid;gap:8px;font-weight:600}.raffle-email input{width:100%;min-height:46px;box-sizing:border-box;border:1px solid #bfcce4;border-radius:9px;padding:10px 12px;font:inherit;font-size:16px}
+.raffle-dialog details{font-size:13px;line-height:1.6}.raffle-dialog summary{cursor:pointer;padding:8px 0}.raffle-dialog a{overflow-wrap:anywhere}
+.raffle-consent{display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.6;margin:18px 0}.raffle-consent input{flex:0 0 auto;margin-top:4px;width:18px;height:18px}
+.raffle-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}.raffle-error{color:#a22b1c;background:#fff3f1;padding:12px;border-radius:8px}
+.admin-raffle{padding:24px;background:white;border:1px solid #d5def0;border-radius:16px}.admin-raffle-actions{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.admin-raffle label{display:grid;gap:8px;margin:16px 0}.admin-raffle input{max-width:480px;width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd7ef;border-radius:8px;font:inherit;font-size:16px}
+@media(max-width:480px){.raffle-dialog{padding:20px}.raffle-heading h2{font-size:20px}.raffle-actions{display:grid;grid-template-columns:1fr;width:100%}.raffle-actions .survey-primary{grid-row:1}.admin-raffle{padding:16px}}

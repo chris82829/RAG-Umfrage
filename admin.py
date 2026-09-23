@@ -78,6 +78,46 @@ def register_admin(app, surveys, privacy, releases, sessions, notice, system_pro
     def study_status():
         return jsonify(privacy.study_status(notice))
 
+    @bp.get('/raffle')
+    @protected
+    def raffle_summary():
+        return jsonify(app.extensions['raffle_store'].summary())
+
+    @bp.put('/raffle')
+    @protected
+    def raffle_configure():
+        body=request.get_json(silent=True)
+        if not isinstance(body,dict) or set(body)!={'enabled'} or type(body['enabled']) is not bool:
+            return error('Bitte einen gültigen Anmeldestatus angeben.',400)
+        return jsonify(app.extensions['raffle_store'].configure(body['enabled']))
+
+    @bp.get('/raffle/export')
+    @protected
+    def raffle_export():
+        response=make_response(app.extensions['raffle_store'].export())
+        response.headers['Content-Type']='text/csv; charset=utf-8'
+        response.headers['Content-Disposition']='attachment; filename="diana_gewinnspiel_email.csv"'
+        response.headers['X-Content-Type-Options']='nosniff'
+        return response
+
+    @bp.delete('/raffle')
+    @protected
+    def raffle_delete():
+        body=request.get_json(silent=True)
+        if not isinstance(body,dict):
+            return error('Bitte bestätige die Löschung.',400)
+        store=app.extensions['raffle_store']
+        if body=={'confirmation':'ALLE GEWINNSPIELADRESSEN LÖSCHEN'}:
+            return jsonify(store.delete())
+        if set(body)=={'email'}:
+            if not isinstance(body['email'],str):
+                return error('Bitte gib eine gültige E-Mail-Adresse ein.',400)
+            try:
+                return jsonify(store.delete(body['email']))
+            except ValueError:
+                return error('Bitte gib eine gültige E-Mail-Adresse ein.',400)
+        return error('Bitte bestätige die Löschung.',400)
+
     @bp.put('/study-status')
     @protected
     def update_study_status():
